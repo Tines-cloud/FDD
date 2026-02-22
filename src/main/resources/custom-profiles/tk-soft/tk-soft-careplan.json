@@ -1,0 +1,150 @@
+{
+  "resourceType": "StructureDefinition",
+  "id": "tk-soft-careplan",
+  "url": "https://tk-soft.example.com/fhir/StructureDefinition/CarePlan",
+  "name": "TkSoftCarePlan",
+  "title": "TK-Soft CarePlan Profile",
+  "status": "active",
+  "fhirVersion": "4.0.1",
+  "kind": "resource",
+  "abstract": false,
+  "type": "CarePlan",
+  "baseDefinition": "http://hl7.org/fhir/StructureDefinition/CarePlan",
+  "derivation": "constraint",
+  "publisher": "TK-Soft",
+  "differential": {
+    "element": [
+      {
+        "id": "CarePlan",
+        "path": "CarePlan",
+        "mustSupport": false
+      },
+      {
+        "id": "CarePlan.extension",
+        "path": "CarePlan.extension",
+        "slicing": {
+          "discriminator": [
+            {
+              "type": "value",
+              "path": "url"
+            }
+          ],
+          "ordered": false,
+          "rules": "open"
+        }
+      },
+      {
+        "id": "CarePlan.extension:reviewSchedule",
+        "path": "CarePlan.extension",
+        "sliceName": "reviewSchedule",
+        "min": 0,
+        "max": "1",
+        "type": [
+          {
+            "code": "Extension",
+            "profile": [
+              "https://tk-soft.example.com/fhir/StructureDefinition/review-schedule"
+            ]
+          }
+        ],
+        "mustSupport": true
+      },
+      {
+        "id": "CarePlan.status",
+        "path": "CarePlan.status",
+        "mustSupport": true
+      },
+      {
+        "id": "CarePlan.intent",
+        "path": "CarePlan.intent",
+        "mustSupport": true
+      },
+      {
+        "id": "CarePlan.category",
+        "path": "CarePlan.category",
+        "min": 1,
+        "mustSupport": true,
+        "binding": {
+          "strength": "extensible",
+          "valueSet": "https://tk-soft.example.com/fhir/ValueSet/care-plan-category"
+        }
+      },
+      {
+        "id": "CarePlan.title",
+        "path": "CarePlan.title",
+        "mustSupport": true
+      },
+      {
+        "id": "CarePlan.description",
+        "path": "CarePlan.description",
+        "mustSupport": true
+      },
+      {
+        "id": "CarePlan.subject",
+        "path": "CarePlan.subject",
+        "min": 1,
+        "type": [
+          {
+            "code": "Reference",
+            "targetProfile": [
+              "https://tk-soft.example.com/fhir/StructureDefinition/Patient"
+            ]
+          }
+        ],
+        "mustSupport": true
+      },
+      {
+        "id": "CarePlan.encounter",
+        "path": "CarePlan.encounter",
+        "type": [
+          {
+            "code": "Reference",
+            "targetProfile": [
+              "https://tk-soft.example.com/fhir/StructureDefinition/Encounter"
+            ]
+          }
+        ],
+        "mustSupport": true
+      },
+      {
+        "id": "CarePlan.period",
+        "path": "CarePlan.period",
+        "mustSupport": true
+      },
+      {
+        "id": "CarePlan.author",
+        "path": "CarePlan.author",
+        "type": [
+          {
+            "code": "Reference",
+            "targetProfile": [
+              "https://tk-soft.example.com/fhir/StructureDefinition/Practitioner"
+            ]
+          }
+        ],
+        "mustSupport": true
+      },
+      {
+        "id": "CarePlan.goal",
+        "path": "CarePlan.goal",
+        "mustSupport": true
+      },
+      {
+        "id": "CarePlan.activity",
+        "path": "CarePlan.activity",
+        "min": 1,
+        "mustSupport": true
+      },
+      {
+        "id": "CarePlan.activity.detail",
+        "path": "CarePlan.activity.detail",
+        "mustSupport": true
+      },
+      {
+        "id": "CarePlan.note",
+        "path": "CarePlan.note",
+        "mustSupport": true
+      }
+    ]
+  }
+}

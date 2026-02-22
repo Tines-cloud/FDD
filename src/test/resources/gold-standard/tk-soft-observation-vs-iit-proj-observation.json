@@ -1,0 +1,307 @@
+{
+  "pairId" : "tk-soft-observation-vs-iit-proj-observation",
+  "sourceClasspath" : "custom-profiles/tk-soft/tk-soft-observation.json",
+  "targetClasspath" : "custom-profiles/iit-proj/iit-proj-observation.json",
+  "drifts" : [ {
+    "id" : "rule-1",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Observation",
+    "targetPath" : "Observation",
+    "description" : "Constraints added in target: [iit-obs-1, iit-obs-2, iit-obs-3]",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-2",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Observation",
+    "targetPath" : "Observation",
+    "description" : "Constraints removed in target: [tk-obs-1, tk-obs-2]",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-3",
+    "type" : "CARDINALITY",
+    "sourcePath" : "Observation.identifier",
+    "targetPath" : "Observation.identifier",
+    "description" : "Cardinality changed: [0..*] -> [1..*]",
+    "severity" : "ERROR"
+  }, {
+    "id" : "rule-4",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Observation.identifier",
+    "targetPath" : "Observation.identifier",
+    "description" : "MustSupport added in target",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-5",
+    "type" : "TERMINOLOGY",
+    "sourcePath" : "Observation.category:vitalSigns",
+    "targetPath" : "Observation.category:vitalSigns",
+    "description" : "Pattern value changed: 'org.hl7.fhir.r4.model.CodeableConcept@122d41cb' -> 'org.hl7.fhir.r4.model.CodeableConcept@f72ebc6'",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-6",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Observation.category:vitalSigns",
+    "targetPath" : "Observation.category:vitalSigns",
+    "description" : "MustSupport added in target",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-7",
+    "type" : "TERMINOLOGY",
+    "sourcePath" : "Observation.category:laboratory",
+    "targetPath" : "Observation.category:laboratory",
+    "description" : "Pattern value changed: 'org.hl7.fhir.r4.model.CodeableConcept@597fcf0a' -> 'org.hl7.fhir.r4.model.CodeableConcept@5d6cbd7'",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-8",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Observation.category:laboratory",
+    "targetPath" : "Observation.category:laboratory",
+    "description" : "MustSupport added in target",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-9",
+    "type" : "TERMINOLOGY",
+    "sourcePath" : "Observation.code",
+    "targetPath" : "Observation.code",
+    "description" : "Binding changed: extensible(https://tk-soft.example.com/fhir/ValueSet/observation-code) -> example(http://hl7.org/fhir/ValueSet/observation-codes)",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-10",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Observation.code.coding",
+    "targetPath" : "Observation.code.coding",
+    "description" : "Slicing changed: none -> rules=open, discriminators=[pattern:$this]",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-11",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Observation.subject",
+    "targetPath" : "Observation.subject",
+    "description" : "Reference target profile changed: [https://tk-soft.example.com/fhir/StructureDefinition/Patient] -> [https://iit-proj.example.com/fhir/StructureDefinition/Patient]",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-12",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Observation.encounter",
+    "targetPath" : "Observation.encounter",
+    "description" : "Reference target profile changed: [https://tk-soft.example.com/fhir/StructureDefinition/Encounter] -> [https://iit-proj.example.com/fhir/StructureDefinition/Encounter]",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-13",
+    "type" : "CARDINALITY",
+    "sourcePath" : "Observation.performer",
+    "targetPath" : "Observation.performer",
+    "description" : "Cardinality changed: [1..*] -> [0..0]",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-14",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Observation.performer",
+    "targetPath" : "Observation.performer",
+    "description" : "Reference target profile changed: [https://tk-soft.example.com/fhir/StructureDefinition/Organization, https://tk-soft.example.com/fhir/StructureDefinition/Practitioner] -> [http://hl7.org/fhir/StructureDefinition/CareTeam, http://hl7.org/fhir/StructureDefinition/Organization, http://hl7.org/fhir/StructureDefinition/Patient, http://hl7.org/fhir/StructureDefinition/Practitioner, http://hl7.org/fhir/StructureDefinition/PractitionerRole, http://hl7.org/fhir/StructureDefinition/RelatedPerson]",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-15",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Observation.performer",
+    "targetPath" : "Observation.performer",
+    "description" : "MustSupport removed in target",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-16",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Observation.value[x]",
+    "targetPath" : "Observation.value[x]",
+    "description" : "Type changed: [CodeableConcept, Quantity, string] -> [CodeableConcept, Quantity, boolean, integer, string]",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-17",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Observation.note",
+    "targetPath" : "Observation.note",
+    "description" : "MustSupport added in target",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-18",
+    "type" : "TERMINOLOGY",
+    "sourcePath" : "Observation.bodySite",
+    "targetPath" : "Observation.bodySite",
+    "description" : "Binding changed: extensible(http://hl7.org/fhir/ValueSet/body-site) -> example(http://hl7.org/fhir/ValueSet/body-site)",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-19",
+    "type" : "TERMINOLOGY",
+    "sourcePath" : "Observation.method",
+    "targetPath" : "Observation.method",
+    "description" : "Binding changed: extensible(https://tk-soft.example.com/fhir/ValueSet/observation-method) -> example(http://hl7.org/fhir/ValueSet/observation-methods)",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-20",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Observation.referenceRange.type",
+    "targetPath" : "Observation.referenceRange.type",
+    "description" : "MustSupport removed in target",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-21",
+    "type" : "EXTENSION",
+    "sourcePath" : "",
+    "targetPath" : "Observation.extension:studyTimepoint",
+    "description" : "Extension added in target profile: Observation.extension:studyTimepoint (required)",
+    "severity" : "ERROR"
+  }, {
+    "id" : "rule-22",
+    "type" : "EXTENSION",
+    "sourcePath" : "",
+    "targetPath" : "Observation.extension:dataQualityFlag",
+    "description" : "Extension added in target profile: Observation.extension:dataQualityFlag",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-23",
+    "type" : "EXTENSION",
+    "sourcePath" : "",
+    "targetPath" : "Observation.extension:queryStatus",
+    "description" : "Extension added in target profile: Observation.extension:queryStatus",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-24",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "",
+    "targetPath" : "Observation.identifier.id",
+    "description" : "Element added in target profile: Observation.identifier.id",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-25",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "",
+    "targetPath" : "Observation.identifier.extension",
+    "description" : "Element added in target profile: Observation.identifier.extension",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-26",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "",
+    "targetPath" : "Observation.identifier.use",
+    "description" : "Element added in target profile: Observation.identifier.use",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-27",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "",
+    "targetPath" : "Observation.identifier.type",
+    "description" : "Element added in target profile: Observation.identifier.type",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-28",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "",
+    "targetPath" : "Observation.identifier.system",
+    "description" : "Element added in target profile: Observation.identifier.system",
+    "severity" : "ERROR"
+  }, {
+    "id" : "rule-29",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "",
+    "targetPath" : "Observation.identifier.value",
+    "description" : "Element added in target profile: Observation.identifier.value",
+    "severity" : "ERROR"
+  }, {
+    "id" : "rule-30",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "",
+    "targetPath" : "Observation.identifier.period",
+    "description" : "Element added in target profile: Observation.identifier.period",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-31",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "",
+    "targetPath" : "Observation.identifier.assigner",
+    "description" : "Element added in target profile: Observation.identifier.assigner",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-32",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "",
+    "targetPath" : "Observation.category:studyEndpoint",
+    "description" : "New slice 'studyEndpoint' added in target profile",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-33",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "",
+    "targetPath" : "Observation.code.coding:loinc",
+    "description" : "New slice 'loinc' added in target profile",
+    "severity" : "ERROR"
+  }, {
+    "id" : "rule-34",
+    "type" : "EXTENSION",
+    "sourcePath" : "Observation.extension:deviceUsed",
+    "targetPath" : "",
+    "description" : "Extension removed in target profile: Observation.extension:deviceUsed (was mustSupport)",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-35",
+    "type" : "EXTENSION",
+    "sourcePath" : "Observation.extension:bodyPosition",
+    "targetPath" : "",
+    "description" : "Extension removed in target profile: Observation.extension:bodyPosition (was mustSupport)",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-36",
+    "type" : "EXTENSION",
+    "sourcePath" : "Observation.extension:observationMethod",
+    "targetPath" : "",
+    "description" : "Extension removed in target profile: Observation.extension:observationMethod (was mustSupport)",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-37",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Observation.code.coding.id",
+    "targetPath" : "",
+    "description" : "Element removed in target profile: Observation.code.coding.id",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-38",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Observation.code.coding.extension",
+    "targetPath" : "",
+    "description" : "Element removed in target profile: Observation.code.coding.extension",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-39",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Observation.code.coding.system",
+    "targetPath" : "",
+    "description" : "Element removed in target profile: Observation.code.coding.system (was required)",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-40",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Observation.code.coding.version",
+    "targetPath" : "",
+    "description" : "Element removed in target profile: Observation.code.coding.version",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-41",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Observation.code.coding.code",
+    "targetPath" : "",
+    "description" : "Element removed in target profile: Observation.code.coding.code (was required)",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-42",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Observation.code.coding.display",
+    "targetPath" : "",
+    "description" : "Element removed in target profile: Observation.code.coding.display",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-43",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Observation.code.coding.userSelected",
+    "targetPath" : "",
+    "description" : "Element removed in target profile: Observation.code.coding.userSelected",
+    "severity" : "INFO"
+  } ]
+}

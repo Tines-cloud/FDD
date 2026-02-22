@@ -1,0 +1,158 @@
+{
+  "resourceType": "StructureDefinition",
+  "id": "hemas-diagnosticreport",
+  "url": "https://hemas.example.com/fhir/StructureDefinition/DiagnosticReport",
+  "version": "1.0.0",
+  "name": "HemasDiagnosticReport",
+  "title": "Hemas DiagnosticReport Profile",
+  "status": "active",
+  "date": "2025-01-15",
+  "publisher": "Hemas Holdings",
+  "description": "Hemas hospital group DiagnosticReport profile requiring encounter linkage, mandatory specimen, single category, report verification, and conclusion documentation.",
+  "fhirVersion": "4.0.1",
+  "kind": "resource",
+  "abstract": false,
+  "type": "DiagnosticReport",
+  "baseDefinition": "http://hl7.org/fhir/StructureDefinition/DiagnosticReport",
+  "derivation": "constraint",
+  "differential": {
+    "element": [
+      {
+        "id": "DiagnosticReport",
+        "path": "DiagnosticReport",
+        "short": "Hemas hospital diagnostic report",
+        "definition": "A diagnostic report within the Hemas hospital group, requiring encounter linkage, specimen tracking, and report verification."
+      },
+      {
+        "id": "DiagnosticReport.extension",
+        "path": "DiagnosticReport.extension",
+        "slicing": {
+          "discriminator": [
+            {
+              "type": "value",
+              "path": "url"
+            }
+          ],
+          "ordered": false,
+          "rules": "open"
+        }
+      },
+      {
+        "id": "DiagnosticReport.extension:reportVerifiedBy",
+        "path": "DiagnosticReport.extension",
+        "sliceName": "reportVerifiedBy",
+        "short": "Practitioner who verified the report",
+        "definition": "Identifies the practitioner who verified and signed off on the diagnostic report.",
+        "min": 0,
+        "max": "1",
+        "type": [
+          {
+            "code": "Extension",
+            "profile": [
+              "https://hemas.example.com/fhir/StructureDefinition/diagnosticreport-verified-by"
+            ]
+          }
+        ],
+        "mustSupport": true
+      },
+      {
+        "id": "DiagnosticReport.status",
+        "path": "DiagnosticReport.status",
+        "short": "Report status",
+        "mustSupport": true
+      },
+      {
+        "id": "DiagnosticReport.category",
+        "path": "DiagnosticReport.category",
+        "short": "Report category",
+        "definition": "Hemas restricts to a single category per diagnostic report for departmental classification.",
+        "min": 1,
+        "max": "1",
+        "mustSupport": true
+      },
+      {
+        "id": "DiagnosticReport.code",
+        "path": "DiagnosticReport.code",
+        "short": "Report code",
+        "mustSupport": true
+      },
+      {
+        "id": "DiagnosticReport.subject",
+        "path": "DiagnosticReport.subject",
+        "short": "Patient who is the subject of the report",
+        "min": 1,
+        "type": [
+          {
+            "code": "Reference",
+            "targetProfile": [
+              "https://hemas.example.com/fhir/StructureDefinition/Patient"
+            ]
+          }
+        ],
+        "mustSupport": true
+      },
+      {
+        "id": "DiagnosticReport.encounter",
+        "path": "DiagnosticReport.encounter",
+        "short": "Associated hospital encounter",
+        "definition": "All Hemas diagnostic reports must be linked to an encounter for admission tracking.",
+        "min": 1,
+        "type": [
+          {
+            "code": "Reference",
+            "targetProfile": [
+              "https://hemas.example.com/fhir/StructureDefinition/Encounter"
+            ]
+          }
+        ],
+        "mustSupport": true
+      },
+      {
+        "id": "DiagnosticReport.effective[x]",
+        "path": "DiagnosticReport.effective[x]",
+        "short": "Clinically relevant time for the report",
+        "mustSupport": true
+      },
+      {
+        "id": "DiagnosticReport.performer",
+        "path": "DiagnosticReport.performer",
+        "short": "Practitioner responsible for the report",
+        "type": [
+          {
+            "code": "Reference",
+            "targetProfile": [
+              "https://hemas.example.com/fhir/StructureDefinition/Practitioner"
+            ]
+          }
+        ],
+        "mustSupport": true
+      },
+      {
+        "id": "DiagnosticReport.specimen",
+        "path": "DiagnosticReport.specimen",
+        "short": "Specimens used in the report",
+        "definition": "At least one specimen is required for all Hemas diagnostic reports.",
+        "min": 1,
+        "mustSupport": true
+      },
+      {
+        "id": "DiagnosticReport.result",
+        "path": "DiagnosticReport.result",
+        "short": "Observation results",
+        "mustSupport": true
+      },
+      {
+        "id": "DiagnosticReport.conclusion",
+        "path": "DiagnosticReport.conclusion",
+        "short": "Clinical conclusion",
+        "mustSupport": true
+      },
+      {
+        "id": "DiagnosticReport.conclusionCode",
+        "path": "DiagnosticReport.conclusionCode",
+        "short": "Coded conclusion",
+        "mustSupport": true
+      }
+    ]
+  }
+}

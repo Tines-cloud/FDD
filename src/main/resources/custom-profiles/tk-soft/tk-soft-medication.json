@@ -1,0 +1,282 @@
+{
+  "resourceType": "StructureDefinition",
+  "id": "tk-soft-medication",
+  "url": "https://tk-soft.example.com/fhir/StructureDefinition/Medication",
+  "name": "TkSoftMedication",
+  "title": "TK-Soft Medication Profile",
+  "status": "active",
+  "version": "1.0.0",
+  "experimental": false,
+  "date": "2026-02-28",
+  "publisher": "TK-Soft Healthcare",
+  "contact": [
+    {
+      "name": "TK-Soft Healthcare",
+      "telecom": [
+        {
+          "system": "url",
+          "value": "https://tk-soft.example.com"
+        }
+      ]
+    }
+  ],
+  "jurisdiction": [
+    {
+      "coding": [
+        {
+          "system": "urn:iso:std:iso:3166",
+          "code": "LK",
+          "display": "Sri Lanka"
+        }
+      ]
+    }
+  ],
+  "copyright": "Copyright (c) 2026 TK-Soft Healthcare. All rights reserved.",
+  "mapping": [
+    {
+      "identity": "rim",
+      "uri": "http://hl7.org/v3",
+      "name": "RIM Mapping"
+    },
+    {
+      "identity": "w5",
+      "uri": "http://hl7.org/fhir/fivews",
+      "name": "FiveWs Pattern Mapping"
+    },
+    {
+      "identity": "script10.6",
+      "uri": "http://ncpdp.org/SCRIPT10_6",
+      "name": "Mapping to NCPDP SCRIPT 10.6"
+    },
+    {
+      "identity": "v2",
+      "uri": "http://hl7.org/v2",
+      "name": "HL7 V2 Mapping"
+    }
+  ],
+  "fhirVersion": "4.0.1",
+  "kind": "resource",
+  "abstract": false,
+  "type": "Medication",
+  "baseDefinition": "http://hl7.org/fhir/StructureDefinition/Medication",
+  "derivation": "constraint",
+  "differential": {
+    "element": [
+      {
+        "id": "Medication",
+        "path": "Medication",
+        "constraint": [
+          {
+            "key": "tk-med-1",
+            "severity": "error",
+            "human": "Medication must have a code",
+            "expression": "code.exists()"
+          },
+          {
+            "key": "tk-med-2",
+            "severity": "warning",
+            "human": "Medications should have a form or an ingredient",
+            "expression": "form.exists() or ingredient.exists()"
+          }
+        ]
+      },
+      {
+        "id": "Medication.extension",
+        "path": "Medication.extension",
+        "slicing": {
+          "discriminator": [
+            {
+              "type": "value",
+              "path": "url"
+            }
+          ],
+          "ordered": false,
+          "rules": "open"
+        }
+      },
+      {
+        "id": "Medication.extension:genericName",
+        "path": "Medication.extension",
+        "sliceName": "genericName",
+        "min": 0,
+        "max": "1",
+        "type": [
+          {
+            "code": "Extension",
+            "profile": [
+              "https://tk-soft.example.com/fhir/StructureDefinition/generic-name"
+            ]
+          }
+        ],
+        "mustSupport": true
+      },
+      {
+        "id": "Medication.extension:brandName",
+        "path": "Medication.extension",
+        "sliceName": "brandName",
+        "min": 0,
+        "max": "1",
+        "type": [
+          {
+            "code": "Extension",
+            "profile": [
+              "https://tk-soft.example.com/fhir/StructureDefinition/brand-name"
+            ]
+          }
+        ],
+        "mustSupport": true
+      },
+      {
+        "id": "Medication.extension:controlledSubstanceSchedule",
+        "path": "Medication.extension",
+        "sliceName": "controlledSubstanceSchedule",
+        "min": 0,
+        "max": "1",
+        "type": [
+          {
+            "code": "Extension",
+            "profile": [
+              "https://tk-soft.example.com/fhir/StructureDefinition/controlled-substance-schedule"
+            ]
+          }
+        ],
+        "mustSupport": true
+      },
+      {
+        "id": "Medication.code",
+        "path": "Medication.code",
+        "min": 1,
+        "mustSupport": true,
+        "binding": {
+          "strength": "extensible",
+          "valueSet": "https://tk-soft.example.com/fhir/ValueSet/medication-code"
+        }
+      },
+      {
+        "id": "Medication.code.coding",
+        "path": "Medication.code.coding",
+        "min": 1,
+        "mustSupport": true,
+        "slicing": {
+          "discriminator": [
+            {
+              "type": "pattern",
+              "path": "$this"
+            }
+          ],
+          "rules": "open"
+        }
+      },
+      {
+        "id": "Medication.code.coding:rxnorm",
+        "path": "Medication.code.coding",
+        "sliceName": "rxnorm",
+        "min": 0,
+        "max": "1",
+        "patternCoding": {
+          "system": "http://www.nlm.nih.gov/research/umls/rxnorm"
+        },
+        "mustSupport": true
+      },
+      {
+        "id": "Medication.code.coding:ndc",
+        "path": "Medication.code.coding",
+        "sliceName": "ndc",
+        "min": 0,
+        "max": "1",
+        "patternCoding": {
+          "system": "http://hl7.org/fhir/sid/ndc"
+        },
+        "mustSupport": true
+      },
+      {
+        "id": "Medication.code.text",
+        "path": "Medication.code.text",
+        "mustSupport": true
+      },
+      {
+        "id": "Medication.status",
+        "path": "Medication.status",
+        "mustSupport": true,
+        "binding": {
+          "strength": "required",
+          "valueSet": "http://hl7.org/fhir/ValueSet/medication-status"
+        }
+      },
+      {
+        "id": "Medication.manufacturer",
+        "path": "Medication.manufacturer",
+        "type": [
+          {
+            "code": "Reference",
+            "targetProfile": [
+              "https://tk-soft.example.com/fhir/StructureDefinition/Organization"
+            ]
+          }
+        ],
+        "mustSupport": true
+      },
+      {
+        "id": "Medication.form",
+        "path": "Medication.form",
+        "mustSupport": true,
+        "binding": {
+          "strength": "extensible",
+          "valueSet": "https://tk-soft.example.com/fhir/ValueSet/medication-form"
+        }
+      },
+      {
+        "id": "Medication.amount",
+        "path": "Medication.amount",
+        "mustSupport": true
+      },
+      {
+        "id": "Medication.ingredient",
+        "path": "Medication.ingredient",
+        "mustSupport": true
+      },
+      {
+        "id": "Medication.ingredient.item[x]",
+        "path": "Medication.ingredient.item[x]",
+        "type": [
+          {
+            "code": "CodeableConcept"
+          },
+          {
+            "code": "Reference",
+            "targetProfile": [
+              "http://hl7.org/fhir/StructureDefinition/Substance",
+              "http://hl7.org/fhir/StructureDefinition/Medication"
+            ]
+          }
+        ],
+        "mustSupport": true
+      },
+      {
+        "id": "Medication.ingredient.isActive",
+        "path": "Medication.ingredient.isActive",
+        "mustSupport": true
+      },
+      {
+        "id": "Medication.ingredient.strength",
+        "path": "Medication.ingredient.strength",
+        "mustSupport": true
+      },
+      {
+        "id": "Medication.batch",
+        "path": "Medication.batch",
+        "mustSupport": true
+      },
+      {
+        "id": "Medication.batch.lotNumber",
+        "path": "Medication.batch.lotNumber",
+        "mustSupport": true
+      },
+      {
+        "id": "Medication.batch.expirationDate",
+        "path": "Medication.batch.expirationDate",
+        "mustSupport": true
+      }
+    ]
+  }
+}

@@ -1,0 +1,54 @@
+Analyse the semantic drift between the following two FHIR profiles.
+
+## Profile Context
+
+{{profileContext}}
+
+## Rule-Based Pre-Analysis (Seed Items)
+
+The following drift items were detected by a deterministic structural comparator.
+These items are PRE-VALIDATED and accurate - include ALL of them in your output.
+Do NOT contradict, omit, or downgrade any seed item. You MAY improve the description
+wording if you have better context, but the type, paths, and severity must not change.
+
+{{ruleBasedSeeds}}
+
+## Instructions
+
+- Compare every element in the source profile with the corresponding element in the target profile.
+- Report ALL differences across TERMINOLOGY, EXTENSION, STRUCTURAL, CARDINALITY, and VERSION categories.
+- Use the element paths exactly as they appear in the profiles (including slice notation like `Patient.extension:employeeId`).
+- Be thorough - missing a drift item is worse than reporting a borderline false positive.
+- Include all seed items above PLUS any additional semantic drift you detect.
+
+Specific checks - verify each of these explicitly:
+1. Cardinality (min/max): check BOTH min and max for every element.
+2. Binding strength AND valueSet URL: a valueSet URL change is drift even if strength is unchanged.
+3. Fixed values (fixed[x]): any addition, removal, or change is ERROR-level drift.
+4. Pattern values (pattern[x]): any addition, removal, or change is WARNING-level drift.
+5. Default values (defaultValue[x]): any addition, removal, or change is WARNING-level drift.
+6. meaningWhenMissing: any change is INFO-level drift.
+7. Named extension slices: check every `path:sliceName` element in both profiles.
+8. Constraint expressions: for constraints with the same key in both profiles, check if the
+   expression or severity changed - report as STRUCTURAL drift if so.
+9. Type code changes: report if the type code list changes for any element.
+10. Reference target profiles: report if targetProfile URLs change on Reference-type elements.
+
+Extension detection - check these specifically:
+- Look for elements with paths like `Patient.extension:X` or `Patient.modifierExtension:X` in each profile.
+- Any such named slice present in source but not in target -> EXTENSION type, sourcePath="Patient.extension:X", targetPath="".
+- Any such named slice present in target but not in source -> EXTENSION type, sourcePath="", targetPath="Patient.extension:X".
+- Report each missing/extra named extension as a separate EXTENSION drift item.
+
+Granularity - avoid redundant sub-element expansion:
+- When an element (e.g., `Patient.identifier`) is being added to or removed from a profile, report
+  ONE item at the parent element level only. Do NOT emit separate items for every child sub-element
+  (e.g., `Patient.identifier.id`, `Patient.identifier.use`, etc.) unless those children have
+  independent specific differences (cardinality, terminology, or extension changes).
+
+Severity assignment - follow the rules in the system prompt precisely:
+  - ERROR   : min cardinality increased, binding tightened to "required", fixed value added/changed, isModifier changed.
+  - WARNING : max cardinality tightened, extension added/removed, binding relaxed, constraint expression changed.
+  - INFO    : mustSupport/isSummary changed, cardinality relaxed, defaultValue/meaningWhenMissing changed.
+
+- Return a JSON array of drift items following the schema specified in the system prompt.

@@ -1,0 +1,14 @@
+/gradlew text eol=lf
+*.bat text eol=crlf
+*.jar binary
+
+# Source files - always LF
+*.kt    text eol=lf
+*.java  text eol=lf
+*.yaml  text eol=lf
+*.yml   text eol=lf
+*.json  text eol=lf
+*.xml   text eol=lf
+*.md    text eol=lf
+*.sh    text eol=lf
+*.properties text eol=lf

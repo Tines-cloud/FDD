@@ -1,0 +1,123 @@
+{
+  "resourceType": "StructureDefinition",
+  "id": "iit-proj-medicationrequest",
+  "url": "https://iit-proj.example.com/fhir/StructureDefinition/MedicationRequest",
+  "name": "IitProjMedicationRequest",
+  "title": "IIT-Proj MedicationRequest Profile",
+  "status": "active",
+  "publisher": "IIT-Proj",
+  "description": "MedicationRequest profile for IIT-Proj research institution. Requester and recorder are blinded (max=0). No encounter requirement. Includes trial medication code tracking.",
+  "fhirVersion": "4.0.1",
+  "kind": "resource",
+  "abstract": false,
+  "type": "MedicationRequest",
+  "baseDefinition": "http://hl7.org/fhir/StructureDefinition/MedicationRequest",
+  "derivation": "constraint",
+  "differential": {
+    "element": [
+      {
+        "id": "MedicationRequest.extension",
+        "path": "MedicationRequest.extension",
+        "slicing": {
+          "discriminator": [
+            {
+              "type": "value",
+              "path": "url"
+            }
+          ],
+          "ordered": false,
+          "rules": "open"
+        }
+      },
+      {
+        "id": "MedicationRequest.extension:trialMedicationCode",
+        "path": "MedicationRequest.extension",
+        "sliceName": "trialMedicationCode",
+        "min": 0,
+        "max": "1",
+        "type": [
+          {
+            "code": "Extension",
+            "profile": [
+              "https://iit-proj.example.com/fhir/StructureDefinition/medicationrequest-trial-medication-code"
+            ]
+          }
+        ],
+        "mustSupport": true,
+        "short": "Internal trial medication identifier for blinded studies"
+      },
+      {
+        "id": "MedicationRequest.status",
+        "path": "MedicationRequest.status",
+        "mustSupport": true
+      },
+      {
+        "id": "MedicationRequest.intent",
+        "path": "MedicationRequest.intent",
+        "mustSupport": true
+      },
+      {
+        "id": "MedicationRequest.category",
+        "path": "MedicationRequest.category",
+        "mustSupport": true
+      },
+      {
+        "id": "MedicationRequest.reported[x]",
+        "path": "MedicationRequest.reported[x]",
+        "mustSupport": true
+      },
+      {
+        "id": "MedicationRequest.medication[x]",
+        "path": "MedicationRequest.medication[x]",
+        "mustSupport": true
+      },
+      {
+        "id": "MedicationRequest.subject",
+        "path": "MedicationRequest.subject",
+        "min": 1,
+        "mustSupport": true,
+        "type": [
+          {
+            "code": "Reference",
+            "targetProfile": [
+              "https://iit-proj.example.com/fhir/StructureDefinition/Patient"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "MedicationRequest.encounter",
+        "path": "MedicationRequest.encounter",
+        "mustSupport": true
+      },
+      {
+        "id": "MedicationRequest.requester",
+        "path": "MedicationRequest.requester",
+        "max": "0",
+        "short": "Requester blinded in research context"
+      },
+      {
+        "id": "MedicationRequest.recorder",
+        "path": "MedicationRequest.recorder",
+        "max": "0",
+        "short": "Recorder blinded in research context"
+      },
+      {
+        "id": "MedicationRequest.reasonCode",
+        "path": "MedicationRequest.reasonCode",
+        "mustSupport": true
+      },
+      {
+        "id": "MedicationRequest.note",
+        "path": "MedicationRequest.note",
+        "max": "1",
+        "short": "Limited to a single note per medication request"
+      },
+      {
+        "id": "MedicationRequest.dosageInstruction",
+        "path": "MedicationRequest.dosageInstruction",
+        "mustSupport": true
+      }
+    ]
+  }
+}

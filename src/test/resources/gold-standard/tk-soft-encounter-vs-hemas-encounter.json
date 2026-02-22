@@ -1,0 +1,216 @@
+{
+  "pairId" : "tk-soft-encounter-vs-hemas-encounter",
+  "sourceClasspath" : "custom-profiles/tk-soft/tk-soft-encounter.json",
+  "targetClasspath" : "custom-profiles/hemas/hemas-encounter.json",
+  "drifts" : [ {
+    "id" : "rule-1",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Encounter",
+    "targetPath" : "Encounter",
+    "description" : "Constraints added in target: [hemas-enc-1, hemas-enc-2, hemas-enc-3]",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-2",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Encounter",
+    "targetPath" : "Encounter",
+    "description" : "Constraints removed in target: [tk-enc-1, tk-enc-2]",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-3",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Encounter.identifier",
+    "targetPath" : "Encounter.identifier",
+    "description" : "Slicing changed: none -> rules=open, discriminators=[pattern:type]",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-4",
+    "type" : "CARDINALITY",
+    "sourcePath" : "Encounter.identifier.type",
+    "targetPath" : "Encounter.identifier.type",
+    "description" : "Cardinality changed: [0..1] -> [1..1]",
+    "severity" : "ERROR"
+  }, {
+    "id" : "rule-5",
+    "type" : "TERMINOLOGY",
+    "sourcePath" : "Encounter.identifier.type",
+    "targetPath" : "Encounter.identifier.type",
+    "description" : "Pattern value changed: 'none' -> 'org.hl7.fhir.r4.model.CodeableConcept@e4b7c76'",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-6",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Encounter.identifier.type",
+    "targetPath" : "Encounter.identifier.type",
+    "description" : "MustSupport added in target",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-7",
+    "type" : "TERMINOLOGY",
+    "sourcePath" : "Encounter.identifier.system",
+    "targetPath" : "Encounter.identifier.system",
+    "description" : "Fixed value changed: 'none' -> 'https://hemas.example.com/fhir/sid/admission-number'",
+    "severity" : "ERROR"
+  }, {
+    "id" : "rule-8",
+    "type" : "TERMINOLOGY",
+    "sourcePath" : "Encounter.type",
+    "targetPath" : "Encounter.type",
+    "description" : "Binding changed: extensible(https://tk-soft.example.com/fhir/ValueSet/encounter-type) -> extensible(https://hemas.example.com/fhir/ValueSet/encounter-type)",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-9",
+    "type" : "TERMINOLOGY",
+    "sourcePath" : "Encounter.serviceType",
+    "targetPath" : "Encounter.serviceType",
+    "description" : "Binding changed: example(http://hl7.org/fhir/ValueSet/service-type) -> extensible(https://hemas.example.com/fhir/ValueSet/service-type)",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-10",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Encounter.serviceType",
+    "targetPath" : "Encounter.serviceType",
+    "description" : "MustSupport added in target",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-11",
+    "type" : "TERMINOLOGY",
+    "sourcePath" : "Encounter.priority",
+    "targetPath" : "Encounter.priority",
+    "description" : "Binding changed: extensible(https://tk-soft.example.com/fhir/ValueSet/encounter-priority) -> extensible(https://hemas.example.com/fhir/ValueSet/encounter-priority)",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-12",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Encounter.priority",
+    "targetPath" : "Encounter.priority",
+    "description" : "MustSupport added in target",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-13",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Encounter.subject",
+    "targetPath" : "Encounter.subject",
+    "description" : "Reference target profile changed: [https://tk-soft.example.com/fhir/StructureDefinition/Patient] -> [https://hemas.example.com/fhir/StructureDefinition/Patient]",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-14",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Encounter.participant.individual",
+    "targetPath" : "Encounter.participant.individual",
+    "description" : "Reference target profile changed: [https://tk-soft.example.com/fhir/StructureDefinition/Practitioner] -> [http://hl7.org/fhir/StructureDefinition/Practitioner, http://hl7.org/fhir/StructureDefinition/PractitionerRole, http://hl7.org/fhir/StructureDefinition/RelatedPerson]",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-15",
+    "type" : "TERMINOLOGY",
+    "sourcePath" : "Encounter.reasonCode",
+    "targetPath" : "Encounter.reasonCode",
+    "description" : "Binding changed: extensible(https://tk-soft.example.com/fhir/ValueSet/encounter-reason) -> preferred(http://hl7.org/fhir/ValueSet/encounter-reason)",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-16",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Encounter.diagnosis.condition",
+    "targetPath" : "Encounter.diagnosis.condition",
+    "description" : "Reference target profile changed: [https://tk-soft.example.com/fhir/StructureDefinition/Condition] -> [http://hl7.org/fhir/StructureDefinition/Condition, http://hl7.org/fhir/StructureDefinition/Procedure]",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-17",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Encounter.hospitalization.preAdmissionIdentifier",
+    "targetPath" : "Encounter.hospitalization.preAdmissionIdentifier",
+    "description" : "MustSupport added in target",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-18",
+    "type" : "TERMINOLOGY",
+    "sourcePath" : "Encounter.hospitalization.admitSource",
+    "targetPath" : "Encounter.hospitalization.admitSource",
+    "description" : "Binding changed: extensible(https://tk-soft.example.com/fhir/ValueSet/admit-source) -> extensible(https://hemas.example.com/fhir/ValueSet/admit-source)",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-19",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Encounter.hospitalization.dietPreference",
+    "targetPath" : "Encounter.hospitalization.dietPreference",
+    "description" : "MustSupport added in target",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-20",
+    "type" : "TERMINOLOGY",
+    "sourcePath" : "Encounter.hospitalization.dischargeDisposition",
+    "targetPath" : "Encounter.hospitalization.dischargeDisposition",
+    "description" : "Binding changed: extensible(https://tk-soft.example.com/fhir/ValueSet/discharge-disposition) -> extensible(https://hemas.example.com/fhir/ValueSet/discharge-disposition)",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-21",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Encounter.location.location",
+    "targetPath" : "Encounter.location.location",
+    "description" : "Reference target profile changed: [https://tk-soft.example.com/fhir/StructureDefinition/Location] -> [http://hl7.org/fhir/StructureDefinition/Location]",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-22",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Encounter.location.status",
+    "targetPath" : "Encounter.location.status",
+    "description" : "MustSupport added in target",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-23",
+    "type" : "CARDINALITY",
+    "sourcePath" : "Encounter.serviceProvider",
+    "targetPath" : "Encounter.serviceProvider",
+    "description" : "Cardinality changed: [0..1] -> [1..1]",
+    "severity" : "ERROR"
+  }, {
+    "id" : "rule-24",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Encounter.serviceProvider",
+    "targetPath" : "Encounter.serviceProvider",
+    "description" : "Reference target profile changed: [https://tk-soft.example.com/fhir/StructureDefinition/Organization] -> [https://hemas.example.com/fhir/StructureDefinition/Organization]",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-25",
+    "type" : "EXTENSION",
+    "sourcePath" : "",
+    "targetPath" : "Encounter.extension:bedNumber",
+    "description" : "Extension added in target profile: Encounter.extension:bedNumber",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-26",
+    "type" : "EXTENSION",
+    "sourcePath" : "",
+    "targetPath" : "Encounter.extension:wardName",
+    "description" : "Extension added in target profile: Encounter.extension:wardName",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-27",
+    "type" : "EXTENSION",
+    "sourcePath" : "",
+    "targetPath" : "Encounter.extension:attendingConsultant",
+    "description" : "Extension added in target profile: Encounter.extension:attendingConsultant",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-28",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "",
+    "targetPath" : "Encounter.identifier:admissionNumber",
+    "description" : "New slice 'admissionNumber' added in target profile",
+    "severity" : "ERROR"
+  }, {
+    "id" : "rule-29",
+    "type" : "EXTENSION",
+    "sourcePath" : "Encounter.extension:wardTransfer",
+    "targetPath" : "",
+    "description" : "Extension removed in target profile: Encounter.extension:wardTransfer (was mustSupport)",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-30",
+    "type" : "EXTENSION",
+    "sourcePath" : "Encounter.extension:triageCategory",
+    "targetPath" : "",
+    "description" : "Extension removed in target profile: Encounter.extension:triageCategory (was mustSupport)",
+    "severity" : "WARNING"
+  } ]
+}

@@ -1,0 +1,244 @@
+{
+  "pairId" : "au-core-immunization-vs-us-core-immunization",
+  "sourceClasspath" : "standard-profiles/au-core/StructureDefinition-au-core-immunization.json",
+  "targetClasspath" : "standard-profiles/us-core/StructureDefinition-us-core-immunization.json",
+  "drifts" : [ {
+    "id" : "rule-1",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Immunization",
+    "targetPath" : "Immunization",
+    "description" : "Constraints added in target: [us-core-5]",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-2",
+    "type" : "TERMINOLOGY",
+    "sourcePath" : "Immunization.status",
+    "targetPath" : "Immunization.status",
+    "description" : "Binding changed: required(http://hl7.org/fhir/ValueSet/immunization-status|4.0.1) -> required(http://hl7.org/fhir/ValueSet/immunization-status)",
+    "severity" : "ERROR"
+  }, {
+    "id" : "rule-3",
+    "type" : "EXTENSION",
+    "sourcePath" : "Immunization.status",
+    "targetPath" : "Immunization.status.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+    "description" : "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-4",
+    "type" : "EXTENSION",
+    "sourcePath" : "Immunization.status.extension(http://hl7.org/fhir/StructureDefinition/obligation)",
+    "targetPath" : "Immunization.status",
+    "description" : "Extension removed in target element: http://hl7.org/fhir/StructureDefinition/obligation",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-5",
+    "type" : "TERMINOLOGY",
+    "sourcePath" : "Immunization.statusReason",
+    "targetPath" : "Immunization.statusReason",
+    "description" : "Binding changed: preferred(https://healthterminologies.gov.au/fhir/ValueSet/reason-vaccine-not-administered-3) -> example(http://hl7.org/fhir/ValueSet/immunization-status-reason)",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-6",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Immunization.statusReason",
+    "targetPath" : "Immunization.statusReason",
+    "description" : "MustSupport added in target",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-7",
+    "type" : "EXTENSION",
+    "sourcePath" : "Immunization.statusReason",
+    "targetPath" : "Immunization.statusReason.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+    "description" : "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-8",
+    "type" : "TERMINOLOGY",
+    "sourcePath" : "Immunization.vaccineCode",
+    "targetPath" : "Immunization.vaccineCode",
+    "description" : "Binding changed: example(http://hl7.org/fhir/ValueSet/vaccine-code) -> extensible(http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1010.6)",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-9",
+    "type" : "EXTENSION",
+    "sourcePath" : "Immunization.vaccineCode",
+    "targetPath" : "Immunization.vaccineCode.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+    "description" : "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-10",
+    "type" : "EXTENSION",
+    "sourcePath" : "Immunization.vaccineCode.extension(http://hl7.org/fhir/StructureDefinition/obligation)",
+    "targetPath" : "Immunization.vaccineCode",
+    "description" : "Extension removed in target element: http://hl7.org/fhir/StructureDefinition/obligation",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-11",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Immunization.patient",
+    "targetPath" : "Immunization.patient",
+    "description" : "Reference target profile changed: [http://hl7.org.au/fhir/core/StructureDefinition/au-core-patient] -> [http://hl7.org/fhir/us/core/StructureDefinition/us-core-patient]",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-12",
+    "type" : "EXTENSION",
+    "sourcePath" : "Immunization.patient",
+    "targetPath" : "Immunization.patient.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+    "description" : "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-13",
+    "type" : "EXTENSION",
+    "sourcePath" : "Immunization.patient.extension(http://hl7.org/fhir/StructureDefinition/obligation)",
+    "targetPath" : "Immunization.patient",
+    "description" : "Extension removed in target element: http://hl7.org/fhir/StructureDefinition/obligation",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-14",
+    "type" : "EXTENSION",
+    "sourcePath" : "Immunization.occurrence[x]",
+    "targetPath" : "Immunization.occurrence[x].extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+    "description" : "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-15",
+    "type" : "EXTENSION",
+    "sourcePath" : "Immunization.occurrence[x].extension(http://hl7.org/fhir/StructureDefinition/obligation)",
+    "targetPath" : "Immunization.occurrence[x]",
+    "description" : "Extension removed in target element: http://hl7.org/fhir/StructureDefinition/obligation",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-16",
+    "type" : "EXTENSION",
+    "sourcePath" : "Immunization.primarySource",
+    "targetPath" : "Immunization.primarySource.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+    "description" : "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-17",
+    "type" : "EXTENSION",
+    "sourcePath" : "Immunization.primarySource.extension(http://hl7.org/fhir/StructureDefinition/obligation)",
+    "targetPath" : "Immunization.primarySource",
+    "description" : "Extension removed in target element: http://hl7.org/fhir/StructureDefinition/obligation",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-18",
+    "type" : "TERMINOLOGY",
+    "sourcePath" : "Immunization.site",
+    "targetPath" : "Immunization.site",
+    "description" : "Binding changed: preferred(https://healthterminologies.gov.au/fhir/ValueSet/immunisation-anatomical-site-1) -> example(http://hl7.org/fhir/ValueSet/immunization-site)",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-19",
+    "type" : "TERMINOLOGY",
+    "sourcePath" : "Immunization.route",
+    "targetPath" : "Immunization.route",
+    "description" : "Binding changed: preferred(https://healthterminologies.gov.au/fhir/ValueSet/immunisation-route-of-administration-1) -> example(http://hl7.org/fhir/ValueSet/immunization-route)",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-20",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Immunization.performer",
+    "targetPath" : "Immunization.performer",
+    "description" : "Slicing changed: rules=open, discriminators=[pattern:function] -> none",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-21",
+    "type" : "CARDINALITY",
+    "sourcePath" : "Immunization.performer.function",
+    "targetPath" : "Immunization.performer.function",
+    "description" : "Cardinality changed: [1..1] -> [0..1]",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-22",
+    "type" : "TERMINOLOGY",
+    "sourcePath" : "Immunization.performer.function",
+    "targetPath" : "Immunization.performer.function",
+    "description" : "Pattern value changed: 'org.hl7.fhir.r4.model.CodeableConcept@6debeb41' -> 'none'",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-23",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Immunization.note",
+    "targetPath" : "Immunization.note",
+    "description" : "MustSupport removed in target",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-24",
+    "type" : "EXTENSION",
+    "sourcePath" : "Immunization.note.extension(http://hl7.org/fhir/StructureDefinition/obligation)",
+    "targetPath" : "Immunization.note",
+    "description" : "Extension removed in target element: http://hl7.org/fhir/StructureDefinition/obligation",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-25",
+    "type" : "TERMINOLOGY",
+    "sourcePath" : "Immunization.reasonCode",
+    "targetPath" : "Immunization.reasonCode",
+    "description" : "Binding changed: preferred(https://healthterminologies.gov.au/fhir/ValueSet/reason-vaccine-administered-1) -> example(http://hl7.org/fhir/ValueSet/immunization-reason)",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-26",
+    "type" : "TERMINOLOGY",
+    "sourcePath" : "Immunization.protocolApplied.targetDisease",
+    "targetPath" : "Immunization.protocolApplied.targetDisease",
+    "description" : "Binding changed: preferred(https://healthterminologies.gov.au/fhir/ValueSet/vaccination-target-disease-1) -> example(http://hl7.org/fhir/ValueSet/immunization-target-disease)",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-27",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Immunization.vaccineCode.id",
+    "targetPath" : "",
+    "description" : "Element removed in target profile: Immunization.vaccineCode.id",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-28",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Immunization.vaccineCode.extension",
+    "targetPath" : "",
+    "description" : "Element removed in target profile: Immunization.vaccineCode.extension",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-29",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Immunization.vaccineCode.coding",
+    "targetPath" : "",
+    "description" : "Element removed in target profile: Immunization.vaccineCode.coding",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-30",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Immunization.vaccineCode.coding:amtVaccineCode",
+    "targetPath" : "",
+    "description" : "Slice 'amtVaccineCode' removed in target profile",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-31",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Immunization.vaccineCode.coding:airVaccineCode",
+    "targetPath" : "",
+    "description" : "Slice 'airVaccineCode' removed in target profile",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-32",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Immunization.vaccineCode.text",
+    "targetPath" : "",
+    "description" : "Element removed in target profile: Immunization.vaccineCode.text",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-33",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Immunization.performer:administeredBy",
+    "targetPath" : "",
+    "description" : "Slice 'administeredBy' removed in target profile",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-34",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Immunization.performer:approvedBy",
+    "targetPath" : "",
+    "description" : "Slice 'approvedBy' removed in target profile",
+    "severity" : "INFO"
+  } ]
+}

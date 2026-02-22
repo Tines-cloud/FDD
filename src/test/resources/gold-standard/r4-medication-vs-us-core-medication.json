@@ -1,0 +1,34 @@
+{
+  "pairId" : "r4-medication-vs-us-core-medication",
+  "sourceClasspath" : "standard-profiles/r4/medication.profile.json",
+  "targetClasspath" : "standard-profiles/us-core/StructureDefinition-us-core-medication.json",
+  "drifts" : [ {
+    "id" : "rule-1",
+    "type" : "CARDINALITY",
+    "sourcePath" : "Medication.code",
+    "targetPath" : "Medication.code",
+    "description" : "Cardinality changed: [0..1] -> [1..1]",
+    "severity" : "ERROR"
+  }, {
+    "id" : "rule-2",
+    "type" : "TERMINOLOGY",
+    "sourcePath" : "Medication.code",
+    "targetPath" : "Medication.code",
+    "description" : "Binding changed: example(http://hl7.org/fhir/ValueSet/medication-codes) -> extensible(http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1010.4)",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-3",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Medication.code",
+    "targetPath" : "Medication.code",
+    "description" : "MustSupport added in target",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-4",
+    "type" : "EXTENSION",
+    "sourcePath" : "Medication.code",
+    "targetPath" : "Medication.code.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+    "description" : "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+    "severity" : "WARNING"
+  } ]
+}

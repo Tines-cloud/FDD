@@ -1,0 +1,169 @@
+{
+  "resourceType": "StructureDefinition",
+  "id": "hemas-medicationrequest",
+  "url": "https://hemas.example.com/fhir/StructureDefinition/MedicationRequest",
+  "version": "1.0.0",
+  "name": "HemasMedicationRequest",
+  "title": "Hemas MedicationRequest Profile",
+  "status": "active",
+  "date": "2025-01-15",
+  "publisher": "Hemas Holdings",
+  "description": "Hemas hospital group MedicationRequest profile requiring encounter linkage, pharmacy verification, and single-category classification for hospital formulary management.",
+  "fhirVersion": "4.0.1",
+  "kind": "resource",
+  "abstract": false,
+  "type": "MedicationRequest",
+  "baseDefinition": "http://hl7.org/fhir/StructureDefinition/MedicationRequest",
+  "derivation": "constraint",
+  "differential": {
+    "element": [
+      {
+        "id": "MedicationRequest",
+        "path": "MedicationRequest",
+        "short": "Hemas hospital medication request",
+        "definition": "A medication request within the Hemas hospital group, requiring encounter linkage and pharmacy verification tracking."
+      },
+      {
+        "id": "MedicationRequest.extension",
+        "path": "MedicationRequest.extension",
+        "slicing": {
+          "discriminator": [
+            {
+              "type": "value",
+              "path": "url"
+            }
+          ],
+          "ordered": false,
+          "rules": "open"
+        }
+      },
+      {
+        "id": "MedicationRequest.extension:pharmacyVerification",
+        "path": "MedicationRequest.extension",
+        "sliceName": "pharmacyVerification",
+        "short": "Pharmacy verification status",
+        "definition": "Tracks whether the medication request has been verified by the hospital pharmacy.",
+        "min": 0,
+        "max": "1",
+        "type": [
+          {
+            "code": "Extension",
+            "profile": [
+              "https://hemas.example.com/fhir/StructureDefinition/medicationrequest-pharmacy-verification"
+            ]
+          }
+        ],
+        "mustSupport": true
+      },
+      {
+        "id": "MedicationRequest.status",
+        "path": "MedicationRequest.status",
+        "short": "Medication request status",
+        "mustSupport": true
+      },
+      {
+        "id": "MedicationRequest.intent",
+        "path": "MedicationRequest.intent",
+        "short": "Medication request intent",
+        "mustSupport": true
+      },
+      {
+        "id": "MedicationRequest.category",
+        "path": "MedicationRequest.category",
+        "short": "Medication request category",
+        "definition": "Hemas restricts to a single category per medication request for formulary classification.",
+        "max": "1",
+        "mustSupport": true
+      },
+      {
+        "id": "MedicationRequest.medication[x]",
+        "path": "MedicationRequest.medication[x]",
+        "short": "Medication being requested",
+        "mustSupport": true
+      },
+      {
+        "id": "MedicationRequest.subject",
+        "path": "MedicationRequest.subject",
+        "short": "Patient for the medication request",
+        "min": 1,
+        "type": [
+          {
+            "code": "Reference",
+            "targetProfile": [
+              "https://hemas.example.com/fhir/StructureDefinition/Patient"
+            ]
+          }
+        ],
+        "mustSupport": true
+      },
+      {
+        "id": "MedicationRequest.encounter",
+        "path": "MedicationRequest.encounter",
+        "short": "Associated hospital encounter",
+        "definition": "All Hemas medication requests must be linked to an encounter for admission tracking.",
+        "min": 1,
+        "type": [
+          {
+            "code": "Reference",
+            "targetProfile": [
+              "https://hemas.example.com/fhir/StructureDefinition/Encounter"
+            ]
+          }
+        ],
+        "mustSupport": true
+      },
+      {
+        "id": "MedicationRequest.requester",
+        "path": "MedicationRequest.requester",
+        "short": "Prescribing practitioner",
+        "min": 1,
+        "type": [
+          {
+            "code": "Reference",
+            "targetProfile": [
+              "https://hemas.example.com/fhir/StructureDefinition/Practitioner"
+            ]
+          }
+        ],
+        "mustSupport": true
+      },
+      {
+        "id": "MedicationRequest.recorder",
+        "path": "MedicationRequest.recorder",
+        "short": "Person who entered the request",
+        "mustSupport": true
+      },
+      {
+        "id": "MedicationRequest.reasonCode",
+        "path": "MedicationRequest.reasonCode",
+        "short": "Reason for the medication request",
+        "mustSupport": true
+      },
+      {
+        "id": "MedicationRequest.note",
+        "path": "MedicationRequest.note",
+        "short": "Additional notes",
+        "mustSupport": true
+      },
+      {
+        "id": "MedicationRequest.dosageInstruction",
+        "path": "MedicationRequest.dosageInstruction",
+        "short": "Dosage instructions",
+        "min": 1,
+        "mustSupport": true
+      },
+      {
+        "id": "MedicationRequest.dispenseRequest",
+        "path": "MedicationRequest.dispenseRequest",
+        "short": "Dispensing details",
+        "mustSupport": true
+      },
+      {
+        "id": "MedicationRequest.substitution",
+        "path": "MedicationRequest.substitution",
+        "short": "Substitution details",
+        "mustSupport": true
+      }
+    ]
+  }
+}

@@ -1,0 +1,325 @@
+{
+  "resourceType": "StructureDefinition",
+  "id": "tk-soft-encounter",
+  "url": "https://tk-soft.example.com/fhir/StructureDefinition/Encounter",
+  "name": "TkSoftEncounter",
+  "title": "TK-Soft Encounter Profile",
+  "status": "active",
+  "version": "1.0.0",
+  "experimental": false,
+  "date": "2026-02-28",
+  "publisher": "TK-Soft Healthcare",
+  "contact": [
+    {
+      "name": "TK-Soft Healthcare",
+      "telecom": [
+        {
+          "system": "url",
+          "value": "https://tk-soft.example.com"
+        }
+      ]
+    }
+  ],
+  "jurisdiction": [
+    {
+      "coding": [
+        {
+          "system": "urn:iso:std:iso:3166",
+          "code": "LK",
+          "display": "Sri Lanka"
+        }
+      ]
+    }
+  ],
+  "copyright": "Copyright (c) 2026 TK-Soft Healthcare. All rights reserved.",
+  "mapping": [
+    {
+      "identity": "rim",
+      "uri": "http://hl7.org/v3",
+      "name": "RIM Mapping"
+    },
+    {
+      "identity": "w5",
+      "uri": "http://hl7.org/fhir/fivews",
+      "name": "FiveWs Pattern Mapping"
+    },
+    {
+      "identity": "v2",
+      "uri": "http://hl7.org/v2",
+      "name": "HL7 V2 Mapping"
+    }
+  ],
+  "fhirVersion": "4.0.1",
+  "kind": "resource",
+  "abstract": false,
+  "type": "Encounter",
+  "baseDefinition": "http://hl7.org/fhir/StructureDefinition/Encounter",
+  "derivation": "constraint",
+  "differential": {
+    "element": [
+      {
+        "id": "Encounter",
+        "path": "Encounter",
+        "constraint": [
+          {
+            "key": "tk-enc-1",
+            "severity": "error",
+            "human": "Encounter must have a period when status is finished",
+            "expression": "status = 'finished' implies period.exists()"
+          },
+          {
+            "key": "tk-enc-2",
+            "severity": "warning",
+            "human": "Inpatient encounters should have hospitalization details",
+            "expression": "class.code = 'IMP' implies hospitalization.exists()"
+          }
+        ]
+      },
+      {
+        "id": "Encounter.extension",
+        "path": "Encounter.extension",
+        "slicing": {
+          "discriminator": [
+            {
+              "type": "value",
+              "path": "url"
+            }
+          ],
+          "ordered": false,
+          "rules": "open"
+        }
+      },
+      {
+        "id": "Encounter.extension:wardTransfer",
+        "path": "Encounter.extension",
+        "sliceName": "wardTransfer",
+        "min": 0,
+        "max": "*",
+        "type": [
+          {
+            "code": "Extension",
+            "profile": [
+              "https://tk-soft.example.com/fhir/StructureDefinition/ward-transfer"
+            ]
+          }
+        ],
+        "mustSupport": true
+      },
+      {
+        "id": "Encounter.extension:triageCategory",
+        "path": "Encounter.extension",
+        "sliceName": "triageCategory",
+        "min": 0,
+        "max": "1",
+        "type": [
+          {
+            "code": "Extension",
+            "profile": [
+              "https://tk-soft.example.com/fhir/StructureDefinition/triage-category"
+            ]
+          }
+        ],
+        "mustSupport": true
+      },
+      {
+        "id": "Encounter.identifier",
+        "path": "Encounter.identifier",
+        "min": 1,
+        "mustSupport": true
+      },
+      {
+        "id": "Encounter.identifier.system",
+        "path": "Encounter.identifier.system",
+        "min": 1,
+        "mustSupport": true
+      },
+      {
+        "id": "Encounter.identifier.value",
+        "path": "Encounter.identifier.value",
+        "min": 1,
+        "mustSupport": true
+      },
+      {
+        "id": "Encounter.status",
+        "path": "Encounter.status",
+        "mustSupport": true,
+        "binding": {
+          "strength": "required",
+          "valueSet": "http://hl7.org/fhir/ValueSet/encounter-status"
+        }
+      },
+      {
+        "id": "Encounter.class",
+        "path": "Encounter.class",
+        "mustSupport": true,
+        "binding": {
+          "strength": "extensible",
+          "valueSet": "http://terminology.hl7.org/ValueSet/v3-ActEncounterCode"
+        }
+      },
+      {
+        "id": "Encounter.type",
+        "path": "Encounter.type",
+        "min": 1,
+        "mustSupport": true,
+        "binding": {
+          "strength": "extensible",
+          "valueSet": "https://tk-soft.example.com/fhir/ValueSet/encounter-type"
+        }
+      },
+      {
+        "id": "Encounter.priority",
+        "path": "Encounter.priority",
+        "binding": {
+          "strength": "extensible",
+          "valueSet": "https://tk-soft.example.com/fhir/ValueSet/encounter-priority"
+        }
+      },
+      {
+        "id": "Encounter.subject",
+        "path": "Encounter.subject",
+        "min": 1,
+        "type": [
+          {
+            "code": "Reference",
+            "targetProfile": [
+              "https://tk-soft.example.com/fhir/StructureDefinition/Patient"
+            ]
+          }
+        ],
+        "mustSupport": true
+      },
+      {
+        "id": "Encounter.participant",
+        "path": "Encounter.participant",
+        "min": 1,
+        "mustSupport": true
+      },
+      {
+        "id": "Encounter.participant.type",
+        "path": "Encounter.participant.type",
+        "mustSupport": true,
+        "binding": {
+          "strength": "extensible",
+          "valueSet": "http://hl7.org/fhir/ValueSet/encounter-participant-type"
+        }
+      },
+      {
+        "id": "Encounter.participant.individual",
+        "path": "Encounter.participant.individual",
+        "type": [
+          {
+            "code": "Reference",
+            "targetProfile": [
+              "https://tk-soft.example.com/fhir/StructureDefinition/Practitioner"
+            ]
+          }
+        ],
+        "mustSupport": true
+      },
+      {
+        "id": "Encounter.period",
+        "path": "Encounter.period",
+        "min": 1,
+        "mustSupport": true
+      },
+      {
+        "id": "Encounter.period.start",
+        "path": "Encounter.period.start",
+        "min": 1,
+        "mustSupport": true
+      },
+      {
+        "id": "Encounter.reasonCode",
+        "path": "Encounter.reasonCode",
+        "min": 1,
+        "mustSupport": true,
+        "binding": {
+          "strength": "extensible",
+          "valueSet": "https://tk-soft.example.com/fhir/ValueSet/encounter-reason"
+        }
+      },
+      {
+        "id": "Encounter.diagnosis",
+        "path": "Encounter.diagnosis",
+        "mustSupport": true
+      },
+      {
+        "id": "Encounter.diagnosis.condition",
+        "path": "Encounter.diagnosis.condition",
+        "type": [
+          {
+            "code": "Reference",
+            "targetProfile": [
+              "https://tk-soft.example.com/fhir/StructureDefinition/Condition"
+            ]
+          }
+        ],
+        "mustSupport": true
+      },
+      {
+        "id": "Encounter.diagnosis.use",
+        "path": "Encounter.diagnosis.use",
+        "mustSupport": true,
+        "binding": {
+          "strength": "extensible",
+          "valueSet": "http://hl7.org/fhir/ValueSet/diagnosis-role"
+        }
+      },
+      {
+        "id": "Encounter.hospitalization",
+        "path": "Encounter.hospitalization",
+        "mustSupport": true
+      },
+      {
+        "id": "Encounter.hospitalization.admitSource",
+        "path": "Encounter.hospitalization.admitSource",
+        "mustSupport": true,
+        "binding": {
+          "strength": "extensible",
+          "valueSet": "https://tk-soft.example.com/fhir/ValueSet/admit-source"
+        }
+      },
+      {
+        "id": "Encounter.hospitalization.dischargeDisposition",
+        "path": "Encounter.hospitalization.dischargeDisposition",
+        "mustSupport": true,
+        "binding": {
+          "strength": "extensible",
+          "valueSet": "https://tk-soft.example.com/fhir/ValueSet/discharge-disposition"
+        }
+      },
+      {
+        "id": "Encounter.location",
+        "path": "Encounter.location",
+        "mustSupport": true
+      },
+      {
+        "id": "Encounter.location.location",
+        "path": "Encounter.location.location",
+        "type": [
+          {
+            "code": "Reference",
+            "targetProfile": [
+              "https://tk-soft.example.com/fhir/StructureDefinition/Location"
+            ]
+          }
+        ],
+        "mustSupport": true
+      },
+      {
+        "id": "Encounter.serviceProvider",
+        "path": "Encounter.serviceProvider",
+        "type": [
+          {
+            "code": "Reference",
+            "targetProfile": [
+              "https://tk-soft.example.com/fhir/StructureDefinition/Organization"
+            ]
+          }
+        ],
+        "mustSupport": true
+      }
+    ]
+  }
+}

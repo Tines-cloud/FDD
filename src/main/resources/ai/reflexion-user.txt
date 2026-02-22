@@ -1,0 +1,37 @@
+The following FML code failed to compile.
+
+## FML Code
+
+{{fmlCode}}
+
+## Compilation Errors ({{errorCount}} found - fix ALL in your response)
+
+{{errorList}}
+
+## Profiles
+
+Source Profile: {{sourceCanonical}}
+Target Profile: {{targetCanonical}}
+
+## Drift Report (Semantic Intent)
+
+The following drift items were detected between the two profiles and are the
+INTENDED mapping rules this FML must express. Use this as semantic ground truth
+when fixing - do NOT drop or alter any rule that maps a listed drift item,
+even if rewriting it in a different FML construct.
+
+{{driftReport}}
+
+## Instructions
+
+1. Fix ALL {{errorCount}} error(s) listed above in a single complete rewrite.
+2. Do NOT fix one error while breaking another - address all errors simultaneously.
+3. Do NOT drop, omit, or alter any rule that corresponds to a drift item above.
+4. Preserve all working rules exactly as they are.
+5. EVERY rule MUST have a unique quoted name string before the semicolon:
+   CORRECT:   src.x as v -> tgt.y = v "set-x";
+   WRONG:     src.x as v -> tgt.y = v;
+6. Every rule must end with a semicolon (after the quoted name).
+7. All braces and parentheses must be balanced.
+8. Do NOT use unsupported keywords (`default`, `alias` in `uses` clauses, nested `{}` inside rules).
+9. Output ONLY the corrected FML code - no markdown, no explanations.

@@ -1,0 +1,314 @@
+{
+  "pairId" : "r4-practitioner-vs-us-core-practitioner",
+  "sourceClasspath" : "standard-profiles/r4/practitioner.profile.json",
+  "targetClasspath" : "standard-profiles/us-core/StructureDefinition-us-core-practitioner.json",
+  "drifts" : [ {
+    "id" : "rule-1",
+    "type" : "CARDINALITY",
+    "sourcePath" : "Practitioner.identifier",
+    "targetPath" : "Practitioner.identifier",
+    "description" : "Cardinality changed: [0..*] -> [1..*]",
+    "severity" : "ERROR"
+  }, {
+    "id" : "rule-2",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Practitioner.identifier",
+    "targetPath" : "Practitioner.identifier",
+    "description" : "MustSupport added in target",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-3",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Practitioner.identifier",
+    "targetPath" : "Practitioner.identifier",
+    "description" : "Slicing changed: none -> rules=open, discriminators=[pattern:$this]",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-4",
+    "type" : "CARDINALITY",
+    "sourcePath" : "Practitioner.name",
+    "targetPath" : "Practitioner.name",
+    "description" : "Cardinality changed: [0..*] -> [1..*]",
+    "severity" : "ERROR"
+  }, {
+    "id" : "rule-5",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Practitioner.name",
+    "targetPath" : "Practitioner.name",
+    "description" : "MustSupport added in target",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-6",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Practitioner.telecom",
+    "targetPath" : "Practitioner.telecom",
+    "description" : "MustSupport added in target",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-7",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Practitioner.address",
+    "targetPath" : "Practitioner.address",
+    "description" : "MustSupport added in target",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-8",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "",
+    "targetPath" : "Practitioner.identifier.id",
+    "description" : "Element added in target profile: Practitioner.identifier.id",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-9",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "",
+    "targetPath" : "Practitioner.identifier.extension",
+    "description" : "Element added in target profile: Practitioner.identifier.extension",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-10",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "",
+    "targetPath" : "Practitioner.identifier.use",
+    "description" : "Element added in target profile: Practitioner.identifier.use",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-11",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "",
+    "targetPath" : "Practitioner.identifier.type",
+    "description" : "Element added in target profile: Practitioner.identifier.type",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-12",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "",
+    "targetPath" : "Practitioner.identifier.system",
+    "description" : "Element added in target profile: Practitioner.identifier.system",
+    "severity" : "ERROR"
+  }, {
+    "id" : "rule-13",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "",
+    "targetPath" : "Practitioner.identifier.value",
+    "description" : "Element added in target profile: Practitioner.identifier.value",
+    "severity" : "ERROR"
+  }, {
+    "id" : "rule-14",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "",
+    "targetPath" : "Practitioner.identifier.period",
+    "description" : "Element added in target profile: Practitioner.identifier.period",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-15",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "",
+    "targetPath" : "Practitioner.identifier.assigner",
+    "description" : "Element added in target profile: Practitioner.identifier.assigner",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-16",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "",
+    "targetPath" : "Practitioner.identifier:NPI",
+    "description" : "New slice 'NPI' added in target profile",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-17",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "",
+    "targetPath" : "Practitioner.name.id",
+    "description" : "Element added in target profile: Practitioner.name.id",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-18",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "",
+    "targetPath" : "Practitioner.name.extension",
+    "description" : "Element added in target profile: Practitioner.name.extension",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-19",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "",
+    "targetPath" : "Practitioner.name.use",
+    "description" : "Element added in target profile: Practitioner.name.use",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-20",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "",
+    "targetPath" : "Practitioner.name.text",
+    "description" : "Element added in target profile: Practitioner.name.text",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-21",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "",
+    "targetPath" : "Practitioner.name.family",
+    "description" : "Element added in target profile: Practitioner.name.family",
+    "severity" : "ERROR"
+  }, {
+    "id" : "rule-22",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "",
+    "targetPath" : "Practitioner.name.given",
+    "description" : "Element added in target profile: Practitioner.name.given",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-23",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "",
+    "targetPath" : "Practitioner.name.prefix",
+    "description" : "Element added in target profile: Practitioner.name.prefix",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-24",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "",
+    "targetPath" : "Practitioner.name.suffix",
+    "description" : "Element added in target profile: Practitioner.name.suffix",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-25",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "",
+    "targetPath" : "Practitioner.name.period",
+    "description" : "Element added in target profile: Practitioner.name.period",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-26",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "",
+    "targetPath" : "Practitioner.telecom.id",
+    "description" : "Element added in target profile: Practitioner.telecom.id",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-27",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "",
+    "targetPath" : "Practitioner.telecom.extension",
+    "description" : "Element added in target profile: Practitioner.telecom.extension",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-28",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "",
+    "targetPath" : "Practitioner.telecom.system",
+    "description" : "Element added in target profile: Practitioner.telecom.system",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-29",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "",
+    "targetPath" : "Practitioner.telecom.value",
+    "description" : "Element added in target profile: Practitioner.telecom.value",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-30",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "",
+    "targetPath" : "Practitioner.telecom.use",
+    "description" : "Element added in target profile: Practitioner.telecom.use",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-31",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "",
+    "targetPath" : "Practitioner.telecom.rank",
+    "description" : "Element added in target profile: Practitioner.telecom.rank",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-32",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "",
+    "targetPath" : "Practitioner.telecom.period",
+    "description" : "Element added in target profile: Practitioner.telecom.period",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-33",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "",
+    "targetPath" : "Practitioner.address.id",
+    "description" : "Element added in target profile: Practitioner.address.id",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-34",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "",
+    "targetPath" : "Practitioner.address.extension",
+    "description" : "Element added in target profile: Practitioner.address.extension",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-35",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "",
+    "targetPath" : "Practitioner.address.use",
+    "description" : "Element added in target profile: Practitioner.address.use",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-36",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "",
+    "targetPath" : "Practitioner.address.type",
+    "description" : "Element added in target profile: Practitioner.address.type",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-37",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "",
+    "targetPath" : "Practitioner.address.text",
+    "description" : "Element added in target profile: Practitioner.address.text",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-38",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "",
+    "targetPath" : "Practitioner.address.line",
+    "description" : "Element added in target profile: Practitioner.address.line",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-39",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "",
+    "targetPath" : "Practitioner.address.city",
+    "description" : "Element added in target profile: Practitioner.address.city",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-40",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "",
+    "targetPath" : "Practitioner.address.district",
+    "description" : "Element added in target profile: Practitioner.address.district",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-41",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "",
+    "targetPath" : "Practitioner.address.state",
+    "description" : "Element added in target profile: Practitioner.address.state",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-42",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "",
+    "targetPath" : "Practitioner.address.postalCode",
+    "description" : "Element added in target profile: Practitioner.address.postalCode",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-43",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "",
+    "targetPath" : "Practitioner.address.country",
+    "description" : "Element added in target profile: Practitioner.address.country",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-44",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "",
+    "targetPath" : "Practitioner.address.period",
+    "description" : "Element added in target profile: Practitioner.address.period",
+    "severity" : "INFO"
+  } ]
+}

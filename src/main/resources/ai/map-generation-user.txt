@@ -1,0 +1,50 @@
+Generate a FHIR StructureMap (FML) that resolves the drift items listed in the
+Drift Report below. The drift report is the PRIMARY input - it tells you exactly
+which differences exist between the source and target profiles and need to be
+resolved by the generated mapping.
+
+## Source Profile
+Canonical: {{sourceCanonical}}
+
+## Target Profile
+Canonical: {{targetCanonical}}
+
+## Drift Report (PRIMARY INPUT - drives the repair)
+{{driftReport}}
+
+## Abbreviated Profile Elements (reference only - limited to drift-affected paths)
+{{abbreviatedElements}}
+
+## Instructions
+
+1. Generate a COMPLETE FML map that accounts for ALL drift items from the drift report.
+2. The drift report is your primary guide - each drift item describes a specific
+   difference that must be resolved by the mapping rules.
+3. Use the abbreviated profile elements ONLY as a reference for correct FHIRPath
+   syntax, element types, and cardinality - do NOT invent rules for elements
+   that are not mentioned in the drift report.
+4. Use the correct FML constructs for each drift type:
+   - CARDINALITY  -> copy, provide default values where required fields are missing.
+   - TERMINOLOGY  -> use translate() or direct mapping for code conversions.
+   - EXTENSION    -> create extension elements in the target or map between extensions.
+   - STRUCTURAL   -> map between renamed or reorganised paths.
+   - VERSION      -> handle element renames and restructuring across FHIR versions.
+5. IMPORTANT: Structure your mapping as follows:
+   - One main group that iterates through drift items
+   - For simple 1:1 mappings, use inline rules: src.element as vs -> tgt.element = vs;
+   - For complex transformations, create helper groups and invoke them with 'then'
+   - Example: src.complex as s -> tgt.complex as t then MapComplex(s, t);
+6. Ensure every rule ends with a semicolon.
+7. CRITICAL: Do NOT use nested braces {} within rules. All nested logic must be in separate groups.
+8. Ensure the map URL and name are valid strings.
+9. CRITICAL: EVERY drift item MUST be accounted for in the FML. For items that
+   cannot be mapped, add a comment explaining why. Use these categories:
+   - Items you CAN map: write a proper FML rule with a comment referencing the drift rule ID.
+   - Profile metadata (MustSupport, constraints, uscdi-requirement, obligation extensions):
+     add a comment like: // rule-3: MustSupport change - profile metadata, no instance data impact
+   - Source-only elements removed in target:
+     add a comment like: // rule-82: Patient.extension:birthPlace removed in target - source data not carried over
+   - Target-only extensions with no source data:
+     add a comment like: // rule-50: Patient.extension:race - target-only, no source data available
+   This ensures every drift item is traceable in the FML output.
+10. Output ONLY the FML code (with comments), nothing else.

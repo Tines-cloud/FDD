@@ -1,0 +1,164 @@
+{
+  "resourceType": "StructureDefinition",
+  "id": "hemas-location",
+  "url": "https://hemas.example.com/fhir/StructureDefinition/Location",
+  "version": "1.0.0",
+  "name": "HemasLocation",
+  "title": "Hemas Location Profile",
+  "status": "active",
+  "date": "2025-01-15",
+  "publisher": "Hemas Holdings",
+  "description": "Hemas hospital group Location profile for ward and bed management, with ward type classification, bed capacity tracking, and floor assignment.",
+  "fhirVersion": "4.0.1",
+  "kind": "resource",
+  "abstract": false,
+  "type": "Location",
+  "baseDefinition": "http://hl7.org/fhir/StructureDefinition/Location",
+  "derivation": "constraint",
+  "differential": {
+    "element": [
+      {
+        "id": "Location",
+        "path": "Location",
+        "short": "Hemas hospital location record",
+        "definition": "A location within the Hemas hospital group, supporting ward management, bed capacity tracking, and operational status monitoring."
+      },
+      {
+        "id": "Location.extension",
+        "path": "Location.extension",
+        "slicing": {
+          "discriminator": [
+            {
+              "type": "value",
+              "path": "url"
+            }
+          ],
+          "ordered": false,
+          "rules": "open"
+        }
+      },
+      {
+        "id": "Location.extension:wardType",
+        "path": "Location.extension",
+        "sliceName": "wardType",
+        "short": "Ward type classification",
+        "definition": "The type of ward (e.g., general, ICU, pediatric, maternity).",
+        "min": 0,
+        "max": "1",
+        "type": [
+          {
+            "code": "Extension",
+            "profile": [
+              "https://hemas.example.com/fhir/StructureDefinition/location-ward-type"
+            ]
+          }
+        ],
+        "mustSupport": true
+      },
+      {
+        "id": "Location.extension:bedCapacity",
+        "path": "Location.extension",
+        "sliceName": "bedCapacity",
+        "short": "Bed capacity of the location",
+        "definition": "The total bed capacity of the ward or unit.",
+        "min": 0,
+        "max": "1",
+        "type": [
+          {
+            "code": "Extension",
+            "profile": [
+              "https://hemas.example.com/fhir/StructureDefinition/location-bed-capacity"
+            ]
+          }
+        ],
+        "mustSupport": true
+      },
+      {
+        "id": "Location.extension:floorNumber",
+        "path": "Location.extension",
+        "sliceName": "floorNumber",
+        "short": "Floor number",
+        "definition": "The floor number where the location is situated within the hospital building.",
+        "min": 0,
+        "max": "1",
+        "type": [
+          {
+            "code": "Extension",
+            "profile": [
+              "https://hemas.example.com/fhir/StructureDefinition/location-floor-number"
+            ]
+          }
+        ],
+        "mustSupport": true
+      },
+      {
+        "id": "Location.operationalStatus",
+        "path": "Location.operationalStatus",
+        "short": "Operational status of the location",
+        "mustSupport": true
+      },
+      {
+        "id": "Location.name",
+        "path": "Location.name",
+        "short": "Location name",
+        "min": 1,
+        "mustSupport": true
+      },
+      {
+        "id": "Location.mode",
+        "path": "Location.mode",
+        "short": "Location mode (instance or kind)",
+        "definition": "Required for all Hemas locations to distinguish between specific locations and location types.",
+        "min": 1,
+        "mustSupport": true
+      },
+      {
+        "id": "Location.type",
+        "path": "Location.type",
+        "short": "Type of location",
+        "definition": "Hemas restricts to a single location type for operational clarity.",
+        "min": 1,
+        "max": "1",
+        "mustSupport": true
+      },
+      {
+        "id": "Location.telecom",
+        "path": "Location.telecom",
+        "short": "Contact details for the location",
+        "mustSupport": true
+      },
+      {
+        "id": "Location.address",
+        "path": "Location.address",
+        "short": "Location address",
+        "mustSupport": true
+      },
+      {
+        "id": "Location.physicalType",
+        "path": "Location.physicalType",
+        "short": "Physical type of the location",
+        "mustSupport": true
+      },
+      {
+        "id": "Location.position",
+        "path": "Location.position",
+        "short": "Geographic coordinates",
+        "mustSupport": true
+      },
+      {
+        "id": "Location.managingOrganization",
+        "path": "Location.managingOrganization",
+        "short": "Hemas organization managing this location",
+        "type": [
+          {
+            "code": "Reference",
+            "targetProfile": [
+              "https://hemas.example.com/fhir/StructureDefinition/Organization"
+            ]
+          }
+        ],
+        "mustSupport": true
+      }
+    ]
+  }
+}

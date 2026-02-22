@@ -1,0 +1,267 @@
+{
+  "resourceType": "StructureDefinition",
+  "id": "iit-proj-medication",
+  "url": "https://iit-proj.example.com/fhir/StructureDefinition/Medication",
+  "name": "IitProjMedication",
+  "title": "IIT Research Medication Profile",
+  "status": "active",
+  "version": "1.0.0",
+  "experimental": false,
+  "date": "2026-02-28",
+  "publisher": "IIT-Project FHIR Team",
+  "contact": [
+    {
+      "name": "IIT-Project FHIR Team",
+      "telecom": [
+        {
+          "system": "url",
+          "value": "https://iit-proj.example.com"
+        }
+      ]
+    }
+  ],
+  "jurisdiction": [
+    {
+      "coding": [
+        {
+          "system": "urn:iso:std:iso:3166",
+          "code": "IN",
+          "display": "India"
+        }
+      ]
+    }
+  ],
+  "copyright": "Copyright (c) 2026 IIT-Project FHIR Team. All rights reserved.",
+  "mapping": [
+    {
+      "identity": "rim",
+      "uri": "http://hl7.org/v3",
+      "name": "RIM Mapping"
+    },
+    {
+      "identity": "w5",
+      "uri": "http://hl7.org/fhir/fivews",
+      "name": "FiveWs Pattern Mapping"
+    },
+    {
+      "identity": "script10.6",
+      "uri": "http://ncpdp.org/SCRIPT10_6",
+      "name": "Mapping to NCPDP SCRIPT 10.6"
+    },
+    {
+      "identity": "v2",
+      "uri": "http://hl7.org/v2",
+      "name": "HL7 V2 Mapping"
+    }
+  ],
+  "fhirVersion": "4.0.1",
+  "kind": "resource",
+  "abstract": false,
+  "type": "Medication",
+  "baseDefinition": "http://hl7.org/fhir/StructureDefinition/Medication",
+  "derivation": "constraint",
+  "differential": {
+    "element": [
+      {
+        "id": "Medication",
+        "path": "Medication",
+        "constraint": [
+          {
+            "key": "iit-med-1",
+            "severity": "error",
+            "human": "Investigational drugs must have a study drug identifier",
+            "expression": "code.coding.where(system = 'https://iit-proj.example.com/fhir/CodeSystem/study-drug').exists()"
+          },
+          {
+            "key": "iit-med-2",
+            "severity": "warning",
+            "human": "Blinded medications should not have ingredient details",
+            "expression": "code.coding.where(system = 'https://iit-proj.example.com/fhir/CodeSystem/blinded-drug').exists() implies ingredient.empty()"
+          }
+        ]
+      },
+      {
+        "id": "Medication.extension",
+        "path": "Medication.extension",
+        "slicing": {
+          "discriminator": [
+            {
+              "type": "value",
+              "path": "url"
+            }
+          ],
+          "ordered": false,
+          "rules": "open"
+        }
+      },
+      {
+        "id": "Medication.extension:investigationalStatus",
+        "path": "Medication.extension",
+        "sliceName": "investigationalStatus",
+        "min": 1,
+        "max": "1",
+        "type": [
+          {
+            "code": "Extension",
+            "profile": [
+              "https://iit-proj.example.com/fhir/StructureDefinition/investigational-status"
+            ]
+          }
+        ],
+        "mustSupport": true
+      },
+      {
+        "id": "Medication.extension:blindingCode",
+        "path": "Medication.extension",
+        "sliceName": "blindingCode",
+        "min": 0,
+        "max": "1",
+        "type": [
+          {
+            "code": "Extension",
+            "profile": [
+              "https://iit-proj.example.com/fhir/StructureDefinition/blinding-code"
+            ]
+          }
+        ],
+        "mustSupport": true
+      },
+      {
+        "id": "Medication.extension:protocolReference",
+        "path": "Medication.extension",
+        "sliceName": "protocolReference",
+        "min": 0,
+        "max": "1",
+        "type": [
+          {
+            "code": "Extension",
+            "profile": [
+              "https://iit-proj.example.com/fhir/StructureDefinition/protocol-reference"
+            ]
+          }
+        ],
+        "mustSupport": true
+      },
+      {
+        "id": "Medication.code",
+        "path": "Medication.code",
+        "min": 1,
+        "mustSupport": true
+      },
+      {
+        "id": "Medication.code.coding",
+        "path": "Medication.code.coding",
+        "min": 1,
+        "mustSupport": true,
+        "slicing": {
+          "discriminator": [
+            {
+              "type": "pattern",
+              "path": "$this"
+            }
+          ],
+          "rules": "open"
+        }
+      },
+      {
+        "id": "Medication.code.coding:studyDrug",
+        "path": "Medication.code.coding",
+        "sliceName": "studyDrug",
+        "min": 1,
+        "max": "1",
+        "patternCoding": {
+          "system": "https://iit-proj.example.com/fhir/CodeSystem/study-drug"
+        },
+        "mustSupport": true
+      },
+      {
+        "id": "Medication.code.coding:blindedDrug",
+        "path": "Medication.code.coding",
+        "sliceName": "blindedDrug",
+        "min": 0,
+        "max": "1",
+        "patternCoding": {
+          "system": "https://iit-proj.example.com/fhir/CodeSystem/blinded-drug"
+        },
+        "mustSupport": true
+      },
+      {
+        "id": "Medication.code.text",
+        "path": "Medication.code.text",
+        "mustSupport": true
+      },
+      {
+        "id": "Medication.status",
+        "path": "Medication.status",
+        "mustSupport": true,
+        "binding": {
+          "strength": "required",
+          "valueSet": "http://hl7.org/fhir/ValueSet/medication-status"
+        }
+      },
+      {
+        "id": "Medication.manufacturer",
+        "path": "Medication.manufacturer",
+        "max": "0",
+        "comment": "Manufacturer blinded in research context"
+      },
+      {
+        "id": "Medication.form",
+        "path": "Medication.form",
+        "mustSupport": true,
+        "binding": {
+          "strength": "extensible",
+          "valueSet": "https://iit-proj.example.com/fhir/ValueSet/medication-form"
+        }
+      },
+      {
+        "id": "Medication.amount",
+        "path": "Medication.amount",
+        "mustSupport": true
+      },
+      {
+        "id": "Medication.ingredient",
+        "path": "Medication.ingredient",
+        "mustSupport": true
+      },
+      {
+        "id": "Medication.ingredient.item[x]",
+        "path": "Medication.ingredient.item[x]",
+        "type": [
+          {
+            "code": "CodeableConcept"
+          }
+        ],
+        "mustSupport": true
+      },
+      {
+        "id": "Medication.ingredient.isActive",
+        "path": "Medication.ingredient.isActive",
+        "mustSupport": true
+      },
+      {
+        "id": "Medication.ingredient.strength",
+        "path": "Medication.ingredient.strength",
+        "mustSupport": true
+      },
+      {
+        "id": "Medication.batch",
+        "path": "Medication.batch",
+        "min": 1,
+        "mustSupport": true
+      },
+      {
+        "id": "Medication.batch.lotNumber",
+        "path": "Medication.batch.lotNumber",
+        "min": 1,
+        "mustSupport": true
+      },
+      {
+        "id": "Medication.batch.expirationDate",
+        "path": "Medication.batch.expirationDate",
+        "min": 1,
+        "mustSupport": true
+      }
+    ]
+  }
+}
