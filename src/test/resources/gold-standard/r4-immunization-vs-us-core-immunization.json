@@ -1,0 +1,63 @@
+{
+  "pairId": "r4-immunization-vs-us-core-immunization",
+  "sourceCanonical": "http://hl7.org/fhir/StructureDefinition/Immunization",
+  "targetCanonical": "http://hl7.org/fhir/us/core/StructureDefinition/us-core-immunization",
+  "drifts": [
+    {
+      "id": "status-must-support",
+      "type": "STRUCTURAL",
+      "sourcePath": "Immunization.status",
+      "targetPath": "Immunization.status",
+      "description": "US Core marks status as mustSupport; base R4 does not",
+      "severity": "WARNING"
+    },
+    {
+      "id": "statusreason-must-support",
+      "type": "STRUCTURAL",
+      "sourcePath": "Immunization.statusReason",
+      "targetPath": "Immunization.statusReason",
+      "description": "US Core marks statusReason as mustSupport; base R4 does not",
+      "severity": "WARNING"
+    },
+    {
+      "id": "vaccinecode-must-support",
+      "type": "STRUCTURAL",
+      "sourcePath": "Immunization.vaccineCode",
+      "targetPath": "Immunization.vaccineCode",
+      "description": "US Core marks vaccineCode as mustSupport; base R4 does not",
+      "severity": "WARNING"
+    },
+    {
+      "id": "vaccinecode-binding",
+      "type": "TERMINOLOGY",
+      "sourcePath": "Immunization.vaccineCode",
+      "targetPath": "Immunization.vaccineCode",
+      "description": "US Core binds vaccineCode to us-core-vaccines-cvx ValueSet with extensible binding instead of example binding",
+      "severity": "WARNING"
+    },
+    {
+      "id": "patient-must-support",
+      "type": "STRUCTURAL",
+      "sourcePath": "Immunization.patient",
+      "targetPath": "Immunization.patient",
+      "description": "US Core marks patient as mustSupport and constrains reference to US Core Patient",
+      "severity": "WARNING"
+    },
+    {
+      "id": "occurrence-must-support",
+      "type": "STRUCTURAL",
+      "sourcePath": "Immunization.occurrence[x]",
+      "targetPath": "Immunization.occurrence[x]",
+      "description": "US Core marks occurrence[x] as mustSupport; base R4 does not",
+      "severity": "WARNING"
+    },
+    {
+      "id": "primarysource-must-support",
+      "type": "STRUCTURAL",
+      "sourcePath": "Immunization.primarySource",
+      "targetPath": "Immunization.primarySource",
+      "description": "US Core marks primarySource as mustSupport; base R4 does not",
+      "severity": "WARNING"
+    }
+  ]
+}

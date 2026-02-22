@@ -1,0 +1,119 @@
+{
+  "pairId": "r4-vs-us-core-patient",
+  "sourceCanonical": "http://hl7.org/fhir/StructureDefinition/Patient",
+  "targetCanonical": "http://hl7.org/fhir/us/core/StructureDefinition/us-core-patient",
+  "drifts": [
+    {
+      "id": "identifier-cardinality",
+      "type": "CARDINALITY",
+      "sourcePath": "Patient.identifier",
+      "targetPath": "Patient.identifier",
+      "description": "US Core requires at least one identifier (1..*) while base R4 allows none (0..*)",
+      "severity": "ERROR"
+    },
+    {
+      "id": "name-cardinality",
+      "type": "CARDINALITY",
+      "sourcePath": "Patient.name",
+      "targetPath": "Patient.name",
+      "description": "US Core requires at least one name (1..*) while base R4 allows none (0..*)",
+      "severity": "ERROR"
+    },
+    {
+      "id": "gender-must-support",
+      "type": "STRUCTURAL",
+      "sourcePath": "Patient.gender",
+      "targetPath": "Patient.gender",
+      "description": "US Core marks gender as mustSupport; base R4 does not",
+      "severity": "WARNING"
+    },
+    {
+      "id": "race-extension",
+      "type": "EXTENSION",
+      "sourcePath": "Patient",
+      "targetPath": "Patient.extension:race",
+      "description": "US Core adds the us-core-race extension not present in base R4",
+      "severity": "WARNING"
+    },
+    {
+      "id": "ethnicity-extension",
+      "type": "EXTENSION",
+      "sourcePath": "Patient",
+      "targetPath": "Patient.extension:ethnicity",
+      "description": "US Core adds the us-core-ethnicity extension not present in base R4",
+      "severity": "WARNING"
+    },
+    {
+      "id": "birthsex-extension",
+      "type": "EXTENSION",
+      "sourcePath": "Patient",
+      "targetPath": "Patient.extension:birthsex",
+      "description": "US Core adds a birth sex extension not present in base R4",
+      "severity": "INFO"
+    },
+    {
+      "id": "gender-binding",
+      "type": "TERMINOLOGY",
+      "sourcePath": "Patient.gender",
+      "targetPath": "Patient.gender",
+      "description": "Both use AdministrativeGender with required binding but the binding context and OID reference differ",
+      "severity": "INFO"
+    },
+    {
+      "id": "telecom-system-must-support",
+      "type": "STRUCTURAL",
+      "sourcePath": "Patient.telecom.system",
+      "targetPath": "Patient.telecom.system",
+      "description": "US Core marks telecom.system as mustSupport; base R4 does not",
+      "severity": "WARNING"
+    },
+    {
+      "id": "telecom-value-must-support",
+      "type": "STRUCTURAL",
+      "sourcePath": "Patient.telecom.value",
+      "targetPath": "Patient.telecom.value",
+      "description": "US Core marks telecom.value as mustSupport; base R4 does not",
+      "severity": "WARNING"
+    },
+    {
+      "id": "address-line-must-support",
+      "type": "STRUCTURAL",
+      "sourcePath": "Patient.address.line",
+      "targetPath": "Patient.address.line",
+      "description": "US Core marks address.line as mustSupport; base R4 does not",
+      "severity": "WARNING"
+    },
+    {
+      "id": "address-city-must-support",
+      "type": "STRUCTURAL",
+      "sourcePath": "Patient.address.city",
+      "targetPath": "Patient.address.city",
+      "description": "US Core marks address.city as mustSupport; base R4 does not",
+      "severity": "WARNING"
+    },
+    {
+      "id": "address-state-must-support",
+      "type": "STRUCTURAL",
+      "sourcePath": "Patient.address.state",
+      "targetPath": "Patient.address.state",
+      "description": "US Core marks address.state as mustSupport; base R4 does not",
+      "severity": "WARNING"
+    },
+    {
+      "id": "address-postalcode-must-support",
+      "type": "STRUCTURAL",
+      "sourcePath": "Patient.address.postalCode",
+      "targetPath": "Patient.address.postalCode",
+      "description": "US Core marks address.postalCode as mustSupport; base R4 does not",
+      "severity": "WARNING"
+    },
+    {
+      "id": "communication-language-must-support",
+      "type": "STRUCTURAL",
+      "sourcePath": "Patient.communication.language",
+      "targetPath": "Patient.communication.language",
+      "description": "US Core marks communication.language as mustSupport; base R4 does not",
+      "severity": "WARNING"
+    }
+  ]
+}

@@ -1,0 +1,87 @@
+{
+  "pairId": "r4-medicationrequest-vs-us-core-medicationrequest",
+  "sourceCanonical": "http://hl7.org/fhir/StructureDefinition/MedicationRequest",
+  "targetCanonical": "http://hl7.org/fhir/us/core/StructureDefinition/us-core-medicationrequest",
+  "drifts": [
+    {
+      "id": "status-must-support",
+      "type": "STRUCTURAL",
+      "sourcePath": "MedicationRequest.status",
+      "targetPath": "MedicationRequest.status",
+      "description": "US Core marks status as mustSupport; base R4 does not",
+      "severity": "WARNING"
+    },
+    {
+      "id": "intent-must-support",
+      "type": "STRUCTURAL",
+      "sourcePath": "MedicationRequest.intent",
+      "targetPath": "MedicationRequest.intent",
+      "description": "US Core marks intent as mustSupport; base R4 does not",
+      "severity": "WARNING"
+    },
+    {
+      "id": "reported-must-support",
+      "type": "STRUCTURAL",
+      "sourcePath": "MedicationRequest.reported[x]",
+      "targetPath": "MedicationRequest.reported[x]",
+      "description": "US Core marks reported[x] as mustSupport; base R4 does not",
+      "severity": "WARNING"
+    },
+    {
+      "id": "medication-must-support",
+      "type": "STRUCTURAL",
+      "sourcePath": "MedicationRequest.medication[x]",
+      "targetPath": "MedicationRequest.medication[x]",
+      "description": "US Core marks medication[x] as mustSupport; base R4 does not",
+      "severity": "WARNING"
+    },
+    {
+      "id": "subject-must-support",
+      "type": "STRUCTURAL",
+      "sourcePath": "MedicationRequest.subject",
+      "targetPath": "MedicationRequest.subject",
+      "description": "US Core marks subject as mustSupport and constrains reference to US Core Patient",
+      "severity": "WARNING"
+    },
+    {
+      "id": "encounter-must-support",
+      "type": "STRUCTURAL",
+      "sourcePath": "MedicationRequest.encounter",
+      "targetPath": "MedicationRequest.encounter",
+      "description": "US Core marks encounter as mustSupport; base R4 does not",
+      "severity": "WARNING"
+    },
+    {
+      "id": "authoredOn-must-support",
+      "type": "STRUCTURAL",
+      "sourcePath": "MedicationRequest.authoredOn",
+      "targetPath": "MedicationRequest.authoredOn",
+      "description": "US Core marks authoredOn as mustSupport; base R4 does not",
+      "severity": "WARNING"
+    },
+    {
+      "id": "requester-must-support",
+      "type": "STRUCTURAL",
+      "sourcePath": "MedicationRequest.requester",
+      "targetPath": "MedicationRequest.requester",
+      "description": "US Core marks requester as mustSupport and constrains to US Core Practitioner",
+      "severity": "WARNING"
+    },
+    {
+      "id": "dosageinstruction-must-support",
+      "type": "STRUCTURAL",
+      "sourcePath": "MedicationRequest.dosageInstruction",
+      "targetPath": "MedicationRequest.dosageInstruction",
+      "description": "US Core marks dosageInstruction as mustSupport; base R4 does not",
+      "severity": "WARNING"
+    },
+    {
+      "id": "dosageinstruction-text-must-support",
+      "type": "STRUCTURAL",
+      "sourcePath": "MedicationRequest.dosageInstruction.text",
+      "targetPath": "MedicationRequest.dosageInstruction.text",
+      "description": "US Core marks dosageInstruction.text as mustSupport; base R4 does not",
+      "severity": "WARNING"
+    }
+  ]
+}

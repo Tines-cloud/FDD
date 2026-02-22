@@ -1,0 +1,63 @@
+{
+  "pairId": "r4-careplan-vs-us-core-careplan",
+  "sourceCanonical": "http://hl7.org/fhir/StructureDefinition/CarePlan",
+  "targetCanonical": "http://hl7.org/fhir/us/core/StructureDefinition/us-core-careplan",
+  "drifts": [
+    {
+      "id": "text-must-support",
+      "type": "STRUCTURAL",
+      "sourcePath": "CarePlan.text",
+      "targetPath": "CarePlan.text",
+      "description": "US Core marks text (narrative) as mustSupport; base R4 does not",
+      "severity": "WARNING"
+    },
+    {
+      "id": "text-status-must-support",
+      "type": "STRUCTURAL",
+      "sourcePath": "CarePlan.text.status",
+      "targetPath": "CarePlan.text.status",
+      "description": "US Core marks text.status as mustSupport and constrains to generated|additional",
+      "severity": "WARNING"
+    },
+    {
+      "id": "status-must-support",
+      "type": "STRUCTURAL",
+      "sourcePath": "CarePlan.status",
+      "targetPath": "CarePlan.status",
+      "description": "US Core marks status as mustSupport; base R4 does not",
+      "severity": "WARNING"
+    },
+    {
+      "id": "intent-must-support",
+      "type": "STRUCTURAL",
+      "sourcePath": "CarePlan.intent",
+      "targetPath": "CarePlan.intent",
+      "description": "US Core marks intent as mustSupport; base R4 does not",
+      "severity": "WARNING"
+    },
+    {
+      "id": "category-cardinality",
+      "type": "CARDINALITY",
+      "sourcePath": "CarePlan.category",
+      "targetPath": "CarePlan.category",
+      "description": "US Core requires at least one category (1..*) while base R4 allows none (0..*)",
+      "severity": "ERROR"
+    },
+    {
+      "id": "category-assessplan-slice",
+      "type": "STRUCTURAL",
+      "sourcePath": "CarePlan.category",
+      "targetPath": "CarePlan.category:AssessPlan",
+      "description": "US Core defines an 'AssessPlan' slice requiring category code 'assess-plan'",
+      "severity": "ERROR"
+    },
+    {
+      "id": "subject-must-support",
+      "type": "STRUCTURAL",
+      "sourcePath": "CarePlan.subject",
+      "targetPath": "CarePlan.subject",
+      "description": "US Core marks subject as mustSupport and constrains reference to US Core Patient",
+      "severity": "WARNING"
+    }
+  ]
+}

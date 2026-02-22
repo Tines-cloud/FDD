@@ -1,0 +1,815 @@
+﻿{
+  "pairId": "hemas-organization-vs-us-core-organization",
+  "drifts": [
+    {
+      "id": "org-base-constraints-added",
+      "description": "New constraints added in target profile: dom-2, dom-3, dom-4, dom-5, dom-6 (related to contained resources and narrative presence), and org-1 (requiring at least a name or an identifier).",
+      "sourcePath": "Organization",
+      "severity": "WARNING",
+      "type": "STRUCTURAL",
+      "targetPath": "Organization"
+    },
+    {
+      "id": "ext-license-number-missing",
+      "description": "Required extension \u0027licenseNumber\u0027 (1..1) from source profile is not present in target profile. This is a breaking change as the source mandates its presence.",
+      "sourcePath": "Organization.extension:licenseNumber",
+      "severity": "ERROR",
+      "type": "EXTENSION",
+      "targetPath": "Organization.extension"
+    },
+    {
+      "id": "ext-accreditation-status-missing",
+      "description": "MustSupport extension \u0027accreditationStatus\u0027 from source profile is not present in target profile. This may lead to loss of important information.",
+      "sourcePath": "Organization.extension:accreditationStatus",
+      "severity": "WARNING",
+      "type": "EXTENSION",
+      "targetPath": "Organization.extension"
+    },
+    {
+      "id": "org-extension-base-constraints-added",
+      "description": "Constraints added to the base \u0027extension\u0027 element in target: \u0027ele-1\u0027 (all FHIR elements must have a value or children) and \u0027ext-1\u0027 (must have either extensions or value[x], not both).",
+      "sourcePath": "Organization.extension",
+      "severity": "WARNING",
+      "type": "STRUCTURAL",
+      "targetPath": "Organization.extension"
+    },
+    {
+      "id": "org-identifier-cardinality-min",
+      "description": "Minimum cardinality changed from 1 (at least one identifier required) in source to 0 (identifiers are optional) in target.",
+      "sourcePath": "Organization.identifier",
+      "severity": "WARNING",
+      "type": "CARDINALITY",
+      "targetPath": "Organization.identifier"
+    },
+    {
+      "id": "org-identifier-issummary-changed",
+      "description": "IsSummary flag changed from false in source to true in target for the base \u0027identifier\u0027 element.",
+      "sourcePath": "Organization.identifier",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Organization.identifier"
+    },
+    {
+      "id": "org-identifier-base-constraints-added",
+      "description": "Constraint \u0027ele-1\u0027 (all FHIR elements must have a value or children) added to the base \u0027identifier\u0027 element in target.",
+      "sourcePath": "Organization.identifier",
+      "severity": "WARNING",
+      "type": "STRUCTURAL",
+      "targetPath": "Organization.identifier"
+    },
+    {
+      "id": "org-identifier-npi-slice-added",
+      "description": "New identifier slice \u0027NPI\u0027 (National Provider Identifier) added in target profile with mustSupport: true and specific validation constraints (us-core-16, us-core-17).",
+      "sourcePath": "",
+      "severity": "WARNING",
+      "type": "STRUCTURAL",
+      "targetPath": "Organization.identifier:NPI"
+    },
+    {
+      "id": "org-identifier-clia-slice-added",
+      "description": "New identifier slice \u0027CLIA\u0027 (Clinical Laboratory Improvement Amendments) added in target profile with specific validation constraint (us-core-18).",
+      "sourcePath": "",
+      "severity": "WARNING",
+      "type": "STRUCTURAL",
+      "targetPath": "Organization.identifier:CLIA"
+    },
+    {
+      "id": "org-identifier-naic-slice-added",
+      "description": "New identifier slice \u0027NAIC\u0027 (National Association of Insurance Commissioners) added in target profile with specific validation constraint (us-core-19).",
+      "sourcePath": "",
+      "severity": "WARNING",
+      "type": "STRUCTURAL",
+      "targetPath": "Organization.identifier:NAIC"
+    },
+    {
+      "id": "org-type-cardinality-min",
+      "description": "Minimum cardinality changed from 1 (at least one type required) in source to 0 (type is optional) in target.",
+      "sourcePath": "Organization.type",
+      "severity": "WARNING",
+      "type": "CARDINALITY",
+      "targetPath": "Organization.type"
+    },
+    {
+      "id": "org-type-binding-added",
+      "description": "Terminology binding added in target: \u0027example\u0027 strength to ValueSet \u0027http://hl7.org/fhir/ValueSet/organization-type\u0027. Source had no explicit binding.",
+      "sourcePath": "Organization.type",
+      "severity": "INFO",
+      "type": "TERMINOLOGY",
+      "targetPath": "Organization.type"
+    },
+    {
+      "id": "org-type-mustsupport-removed",
+      "description": "MustSupport flag changed from true in source to false in target.",
+      "sourcePath": "Organization.type",
+      "severity": "WARNING",
+      "type": "CARDINALITY",
+      "targetPath": "Organization.type"
+    },
+    {
+      "id": "org-type-issummary-changed",
+      "description": "IsSummary flag changed from false in source to true in target.",
+      "sourcePath": "Organization.type",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Organization.type"
+    },
+    {
+      "id": "org-type-constraints-added",
+      "description": "Constraint \u0027ele-1\u0027 (all FHIR elements must have a value or children) added in target.",
+      "sourcePath": "Organization.type",
+      "severity": "WARNING",
+      "type": "STRUCTURAL",
+      "targetPath": "Organization.type"
+    },
+    {
+      "id": "org-name-cardinality-max",
+      "description": "Maximum cardinality changed from * (multiple names allowed) in source to 1 (at most one name) in target.",
+      "sourcePath": "Organization.name",
+      "severity": "WARNING",
+      "type": "CARDINALITY",
+      "targetPath": "Organization.name"
+    },
+    {
+      "id": "org-name-issummary-changed",
+      "description": "IsSummary flag changed from false in source to true in target.",
+      "sourcePath": "Organization.name",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Organization.name"
+    },
+    {
+      "id": "org-name-constraints-added",
+      "description": "Constraint \u0027ele-1\u0027 (all FHIR elements must have a value or children) added in target.",
+      "sourcePath": "Organization.name",
+      "severity": "WARNING",
+      "type": "STRUCTURAL",
+      "targetPath": "Organization.name"
+    },
+    {
+      "id": "org-telecom-constraints-added",
+      "description": "Constraints added in target: \u0027ele-1\u0027 (all FHIR elements must have a value or children) and \u0027org-3\u0027 (telecom use \u0027home\u0027 is not allowed).",
+      "sourcePath": "Organization.telecom",
+      "severity": "WARNING",
+      "type": "STRUCTURAL",
+      "targetPath": "Organization.telecom"
+    },
+    {
+      "id": "org-telecom-system-mustsupport-binding-added",
+      "description": "MustSupport flag added (true) and \u0027required\u0027 binding to ValueSet \u0027http://hl7.org/fhir/ValueSet/contact-point-system|4.0.1\u0027 added in target. Source had implicit definition for this standard element.",
+      "sourcePath": "Organization.telecom.system",
+      "severity": "WARNING",
+      "type": "TERMINOLOGY",
+      "targetPath": "Organization.telecom.system"
+    },
+    {
+      "id": "org-telecom-value-mustsupport-added",
+      "description": "MustSupport flag added (true) in target. Source had implicit definition for this standard element.",
+      "sourcePath": "Organization.telecom.value",
+      "severity": "WARNING",
+      "type": "CARDINALITY",
+      "targetPath": "Organization.telecom.value"
+    },
+    {
+      "id": "org-telecom-use-binding-added",
+      "description": "\u0027required\u0027 binding to ValueSet \u0027http://hl7.org/fhir/ValueSet/contact-point-use|4.0.1\u0027 added in target. Source had implicit definition for this standard element.",
+      "sourcePath": "Organization.telecom.use",
+      "severity": "WARNING",
+      "type": "TERMINOLOGY",
+      "targetPath": "Organization.telecom.use"
+    },
+    {
+      "id": "org-address-constraints-added",
+      "description": "Constraints added in target: \u0027ele-1\u0027 (all FHIR elements must have a value or children) and \u0027org-2\u0027 (address use \u0027home\u0027 is not allowed).",
+      "sourcePath": "Organization.address",
+      "severity": "WARNING",
+      "type": "STRUCTURAL",
+      "targetPath": "Organization.address"
+    },
+    {
+      "id": "org-address-use-binding-added",
+      "description": "\u0027required\u0027 binding to ValueSet \u0027http://hl7.org/fhir/ValueSet/address-use|4.0.1\u0027 added in target. Source had implicit definition for this standard element.",
+      "sourcePath": "Organization.address.use",
+      "severity": "WARNING",
+      "type": "TERMINOLOGY",
+      "targetPath": "Organization.address.use"
+    },
+    {
+      "id": "org-address-type-binding-added",
+      "description": "\u0027required\u0027 binding to ValueSet \u0027http://hl7.org/fhir/ValueSet/address-type|4.0.1\u0027 added in target. Source had implicit definition for this standard element.",
+      "sourcePath": "Organization.address.type",
+      "severity": "WARNING",
+      "type": "TERMINOLOGY",
+      "targetPath": "Organization.address.type"
+    },
+    {
+      "id": "org-address-line-mustsupport-added",
+      "description": "MustSupport flag added (true) in target. Source had implicit definition for this standard element.",
+      "sourcePath": "Organization.address.line",
+      "severity": "WARNING",
+      "type": "CARDINALITY",
+      "targetPath": "Organization.address.line"
+    },
+    {
+      "id": "org-address-city-mustsupport-added",
+      "description": "MustSupport flag added (true) in target. Source had implicit definition for this standard element.",
+      "sourcePath": "Organization.address.city",
+      "severity": "WARNING",
+      "type": "CARDINALITY",
+      "targetPath": "Organization.address.city"
+    },
+    {
+      "id": "org-address-state-mustsupport-binding-added",
+      "description": "MustSupport flag added (true) and \u0027extensible\u0027 binding to ValueSet \u0027http://hl7.org/fhir/us/core/ValueSet/us-core-usps-state\u0027 added in target. Source had implicit definition for this standard element.",
+      "sourcePath": "Organization.address.state",
+      "severity": "WARNING",
+      "type": "TERMINOLOGY",
+      "targetPath": "Organization.address.state"
+    },
+    {
+      "id": "org-address-postalcode-mustsupport-added",
+      "description": "MustSupport flag added (true) in target. Source had implicit definition for this standard element.",
+      "sourcePath": "Organization.address.postalCode",
+      "severity": "WARNING",
+      "type": "CARDINALITY",
+      "targetPath": "Organization.address.postalCode"
+    },
+    {
+      "id": "org-address-country-mustsupport-added",
+      "description": "MustSupport flag added (true) in target. Source had implicit definition for this standard element.",
+      "sourcePath": "Organization.address.country",
+      "severity": "WARNING",
+      "type": "CARDINALITY",
+      "targetPath": "Organization.address.country"
+    },
+    {
+      "id": "org-partof-cardinality-max",
+      "description": "Maximum cardinality changed from * (multiple parent organizations allowed) in source to 1 (at most one parent organization) in target.",
+      "sourcePath": "Organization.partOf",
+      "severity": "WARNING",
+      "type": "CARDINALITY",
+      "targetPath": "Organization.partOf"
+    },
+    {
+      "id": "org-partof-targetprofile-constrained",
+      "description": "Reference target profile explicitly constrained to \u0027http://hl7.org/fhir/StructureDefinition/Organization\u0027 in target. Source had no explicit constraint, implicitly allowing any Reference.",
+      "sourcePath": "Organization.partOf",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Organization.partOf"
+    },
+    {
+      "id": "org-partof-mustsupport-removed",
+      "description": "MustSupport flag changed from true in source to false in target.",
+      "sourcePath": "Organization.partOf",
+      "severity": "WARNING",
+      "type": "CARDINALITY",
+      "targetPath": "Organization.partOf"
+    },
+    {
+      "id": "org-partof-issummary-changed",
+      "description": "IsSummary flag changed from false in source to true in target.",
+      "sourcePath": "Organization.partOf",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Organization.partOf"
+    },
+    {
+      "id": "org-partof-constraints-added",
+      "description": "Constraint \u0027ele-1\u0027 (all FHIR elements must have a value or children) added in target.",
+      "sourcePath": "Organization.partOf",
+      "severity": "WARNING",
+      "type": "STRUCTURAL",
+      "targetPath": "Organization.partOf"
+    },
+    {
+      "id": "org-contact-cardinality-min",
+      "description": "Minimum cardinality changed from 1 (at least one contact required) in source to 0 (contacts are optional) in target.",
+      "sourcePath": "Organization.contact",
+      "severity": "WARNING",
+      "type": "CARDINALITY",
+      "targetPath": "Organization.contact"
+    },
+    {
+      "id": "org-contact-mustsupport-removed",
+      "description": "MustSupport flag changed from true in source to false in target.",
+      "sourcePath": "Organization.contact",
+      "severity": "WARNING",
+      "type": "CARDINALITY",
+      "targetPath": "Organization.contact"
+    },
+    {
+      "id": "org-contact-constraints-added",
+      "description": "Constraint \u0027ele-1\u0027 (all FHIR elements must have a value or children) added in target.",
+      "sourcePath": "Organization.contact",
+      "severity": "WARNING",
+      "type": "STRUCTURAL",
+      "targetPath": "Organization.contact"
+    },
+    {
+      "id": "org-contact-purpose-cardinality-max",
+      "description": "Maximum cardinality changed from * (multiple purposes allowed) in source to 1 (at most one purpose) in target.",
+      "sourcePath": "Organization.contact.purpose",
+      "severity": "WARNING",
+      "type": "CARDINALITY",
+      "targetPath": "Organization.contact.purpose"
+    },
+    {
+      "id": "org-contact-purpose-binding-added",
+      "description": "Terminology binding added in target: \u0027extensible\u0027 strength to ValueSet \u0027http://hl7.org/fhir/ValueSet/contactentity-type\u0027. Source had no explicit binding.",
+      "sourcePath": "Organization.contact.purpose",
+      "severity": "INFO",
+      "type": "TERMINOLOGY",
+      "targetPath": "Organization.contact.purpose"
+    },
+    {
+      "id": "org-contact-purpose-mustsupport-removed",
+      "description": "MustSupport flag changed from true in source to false in target.",
+      "sourcePath": "Organization.contact.purpose",
+      "severity": "WARNING",
+      "type": "CARDINALITY",
+      "targetPath": "Organization.contact.purpose"
+    },
+    {
+      "id": "org-contact-purpose-constraints-added",
+      "description": "Constraint \u0027ele-1\u0027 (all FHIR elements must have a value or children) added in target.",
+      "sourcePath": "Organization.contact.purpose",
+      "severity": "WARNING",
+      "type": "STRUCTURAL",
+      "targetPath": "Organization.contact.purpose"
+    },
+    {
+      "id": "org-contact-name-cardinality-max",
+      "description": "Maximum cardinality changed from * (multiple names allowed) in source to 1 (at most one name) in target.",
+      "sourcePath": "Organization.contact.name",
+      "severity": "WARNING",
+      "type": "CARDINALITY",
+      "targetPath": "Organization.contact.name"
+    },
+    {
+      "id": "org-contact-name-mustsupport-removed",
+      "description": "MustSupport flag changed from true in source to false in target.",
+      "sourcePath": "Organization.contact.name",
+      "severity": "WARNING",
+      "type": "CARDINALITY",
+      "targetPath": "Organization.contact.name"
+    },
+    {
+      "id": "org-contact-name-constraints-added",
+      "description": "Constraint \u0027ele-1\u0027 (all FHIR elements must have a value or children) added in target.",
+      "sourcePath": "Organization.contact.name",
+      "severity": "WARNING",
+      "type": "STRUCTURAL",
+      "targetPath": "Organization.contact.name"
+    },
+    {
+      "id": "org-contact-telecom-mustsupport-removed",
+      "description": "MustSupport flag changed from true in source to false in target.",
+      "sourcePath": "Organization.contact.telecom",
+      "severity": "WARNING",
+      "type": "CARDINALITY",
+      "targetPath": "Organization.contact.telecom"
+    },
+    {
+      "id": "org-contact-telecom-constraints-added",
+      "description": "Constraint \u0027ele-1\u0027 (all FHIR elements must have a value or children) added in target.",
+      "sourcePath": "Organization.contact.telecom",
+      "severity": "WARNING",
+      "type": "STRUCTURAL",
+      "targetPath": "Organization.contact.telecom"
+    },
+    {
+      "id": "org-id-added",
+      "description": "Element \u0027id\u0027 added in target profile.",
+      "sourcePath": "",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Organization.id"
+    },
+    {
+      "id": "org-meta-added",
+      "description": "Element \u0027meta\u0027 added in target profile.",
+      "sourcePath": "",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Organization.meta"
+    },
+    {
+      "id": "org-implicitrules-added",
+      "description": "Element \u0027implicitRules\u0027 added in target profile.",
+      "sourcePath": "",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Organization.implicitRules"
+    },
+    {
+      "id": "org-language-added-with-binding",
+      "description": "Element \u0027language\u0027 added in target profile with \u0027preferred\u0027 binding to ValueSet \u0027http://hl7.org/fhir/ValueSet/languages\u0027.",
+      "sourcePath": "",
+      "severity": "INFO",
+      "type": "TERMINOLOGY",
+      "targetPath": "Organization.language"
+    },
+    {
+      "id": "org-text-added",
+      "description": "Element \u0027text\u0027 added in target profile.",
+      "sourcePath": "",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Organization.text"
+    },
+    {
+      "id": "org-contained-added",
+      "description": "Element \u0027contained\u0027 added in target profile.",
+      "sourcePath": "",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Organization.contained"
+    },
+    {
+      "id": "org-modifier-extension-added",
+      "description": "Element \u0027modifierExtension\u0027 added in target profile.",
+      "sourcePath": "",
+      "severity": "INFO",
+      "type": "EXTENSION",
+      "targetPath": "Organization.modifierExtension"
+    },
+    {
+      "id": "org-identifier-id-added",
+      "description": "Element \u0027id\u0027 added to Organization.identifier in target profile.",
+      "sourcePath": "",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Organization.identifier.id"
+    },
+    {
+      "id": "org-identifier-extension-added",
+      "description": "Element \u0027extension\u0027 added to Organization.identifier in target profile.",
+      "sourcePath": "",
+      "severity": "INFO",
+      "type": "EXTENSION",
+      "targetPath": "Organization.identifier.extension"
+    },
+    {
+      "id": "org-identifier-use-added-binding",
+      "description": "Element \u0027use\u0027 added to Organization.identifier in target profile with \u0027required\u0027 binding to ValueSet \u0027http://hl7.org/fhir/ValueSet/identifier-use|4.0.1\u0027. Source had implicit definition for this standard element.",
+      "sourcePath": "Organization.identifier.use",
+      "severity": "INFO",
+      "type": "TERMINOLOGY",
+      "targetPath": "Organization.identifier.use"
+    },
+    {
+      "id": "org-identifier-type-added-binding",
+      "description": "Element \u0027type\u0027 added to Organization.identifier in target profile with \u0027extensible\u0027 binding to ValueSet \u0027http://hl7.org/fhir/ValueSet/identifier-type\u0027. Source had implicit definition for this standard element.",
+      "sourcePath": "Organization.identifier.type",
+      "severity": "INFO",
+      "type": "TERMINOLOGY",
+      "targetPath": "Organization.identifier.type"
+    },
+    {
+      "id": "org-identifier-system-added-mustsupport",
+      "description": "Element \u0027system\u0027 added to Organization.identifier in target profile with mustSupport: true. Source had implicit definition for this standard element.",
+      "sourcePath": "Organization.identifier.system",
+      "severity": "INFO",
+      "type": "CARDINALITY",
+      "targetPath": "Organization.identifier.system"
+    },
+    {
+      "id": "org-identifier-value-added-mustsupport",
+      "description": "Element \u0027value\u0027 added to Organization.identifier in target profile with mustSupport: true. Source had implicit definition for this standard element.",
+      "sourcePath": "Organization.identifier.value",
+      "severity": "INFO",
+      "type": "CARDINALITY",
+      "targetPath": "Organization.identifier.value"
+    },
+    {
+      "id": "org-identifier-period-added",
+      "description": "Element \u0027period\u0027 added to Organization.identifier in target profile.",
+      "sourcePath": "",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Organization.identifier.period"
+    },
+    {
+      "id": "org-identifier-assigner-added",
+      "description": "Element \u0027assigner\u0027 added to Organization.identifier in target profile, referencing Organization.",
+      "sourcePath": "",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Organization.identifier.assigner"
+    },
+    {
+      "id": "org-active-added",
+      "description": "Element \u0027active\u0027 added in target profile with cardinality 1..1 and mustSupport: true. This means the target profile requires this element, which is absent in the source, leading to potential validation failures.",
+      "sourcePath": "",
+      "severity": "ERROR",
+      "type": "STRUCTURAL",
+      "targetPath": "Organization.active"
+    },
+    {
+      "id": "org-alias-added",
+      "description": "Element \u0027alias\u0027 added in target profile.",
+      "sourcePath": "",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Organization.alias"
+    },
+    {
+      "id": "org-telecom-id-added",
+      "description": "Element \u0027id\u0027 added to Organization.telecom in target profile.",
+      "sourcePath": "",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Organization.telecom.id"
+    },
+    {
+      "id": "org-telecom-extension-added",
+      "description": "Element \u0027extension\u0027 added to Organization.telecom in target profile.",
+      "sourcePath": "",
+      "severity": "INFO",
+      "type": "EXTENSION",
+      "targetPath": "Organization.telecom.extension"
+    },
+    {
+      "id": "org-telecom-rank-added",
+      "description": "Element \u0027rank\u0027 added to Organization.telecom in target profile.",
+      "sourcePath": "",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Organization.telecom.rank"
+    },
+    {
+      "id": "org-telecom-period-added",
+      "description": "Element \u0027period\u0027 added to Organization.telecom in target profile.",
+      "sourcePath": "",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Organization.telecom.period"
+    },
+    {
+      "id": "org-address-id-added",
+      "description": "Element \u0027id\u0027 added to Organization.address in target profile.",
+      "sourcePath": "",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Organization.address.id"
+    },
+    {
+      "id": "org-address-extension-added",
+      "description": "Element \u0027extension\u0027 added to Organization.address in target profile.",
+      "sourcePath": "",
+      "severity": "INFO",
+      "type": "EXTENSION",
+      "targetPath": "Organization.address.extension"
+    },
+    {
+      "id": "org-address-text-added",
+      "description": "Element \u0027text\u0027 added to Organization.address in target profile.",
+      "sourcePath": "",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Organization.address.text"
+    },
+    {
+      "id": "org-address-district-added",
+      "description": "Element \u0027district\u0027 added to Organization.address in target profile.",
+      "sourcePath": "",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Organization.address.district"
+    },
+    {
+      "id": "org-address-period-added",
+      "description": "Element \u0027period\u0027 added to Organization.address in target profile.",
+      "sourcePath": "",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Organization.address.period"
+    },
+    {
+      "id": "org-contact-id-added",
+      "description": "Element \u0027id\u0027 added to Organization.contact in target profile.",
+      "sourcePath": "",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Organization.contact.id"
+    },
+    {
+      "id": "org-contact-extension-added",
+      "description": "Element \u0027extension\u0027 added to Organization.contact in target profile.",
+      "sourcePath": "",
+      "severity": "INFO",
+      "type": "EXTENSION",
+      "targetPath": "Organization.contact.extension"
+    },
+    {
+      "id": "org-contact-modifier-extension-added",
+      "description": "Element \u0027modifierExtension\u0027 added to Organization.contact in target profile.",
+      "sourcePath": "",
+      "severity": "INFO",
+      "type": "EXTENSION",
+      "targetPath": "Organization.contact.modifierExtension"
+    },
+    {
+      "id": "org-contact-address-added",
+      "description": "Element \u0027address\u0027 added to Organization.contact in target profile.",
+      "sourcePath": "",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Organization.contact.address"
+    },
+    {
+      "id": "org-endpoint-added",
+      "description": "Element \u0027endpoint\u0027 added in target profile.",
+      "sourcePath": "",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Organization.endpoint"
+    },
+    {
+      "id": "rule-2",
+      "description": "Cardinality changed: [0..1] â [0..*]",
+      "sourcePath": "Organization.extension",
+      "severity": "WARNING",
+      "type": "CARDINALITY",
+      "targetPath": "Organization.extension"
+    },
+    {
+      "id": "rule-7",
+      "description": "Pattern value changed: \u0027none\u0027 â \u0027org.hl7.fhir.r4.model.Identifier@7b472e14\u0027",
+      "sourcePath": "Organization.identifier",
+      "severity": "WARNING",
+      "type": "TERMINOLOGY",
+      "targetPath": "Organization.identifier"
+    },
+    {
+      "id": "rule-41",
+      "description": "Element added in target profile: Organization.language",
+      "sourcePath": "",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Organization.language"
+    },
+    {
+      "id": "rule-44",
+      "description": "Element added in target profile: Organization.modifierExtension",
+      "sourcePath": "",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Organization.modifierExtension"
+    },
+    {
+      "id": "rule-46",
+      "description": "Element added in target profile: Organization.identifier.extension",
+      "sourcePath": "",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Organization.identifier.extension"
+    },
+    {
+      "id": "rule-47",
+      "description": "Element added in target profile: Organization.identifier.use",
+      "sourcePath": "",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Organization.identifier.use"
+    },
+    {
+      "id": "rule-48",
+      "description": "Element added in target profile: Organization.identifier.type",
+      "sourcePath": "",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Organization.identifier.type"
+    },
+    {
+      "id": "rule-49",
+      "description": "Element added in target profile: Organization.identifier.system",
+      "sourcePath": "",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Organization.identifier.system"
+    },
+    {
+      "id": "rule-50",
+      "description": "Element added in target profile: Organization.identifier.value",
+      "sourcePath": "",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Organization.identifier.value"
+    },
+    {
+      "id": "rule-56",
+      "description": "Element added in target profile: Organization.telecom.extension",
+      "sourcePath": "",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Organization.telecom.extension"
+    },
+    {
+      "id": "rule-57",
+      "description": "Element added in target profile: Organization.telecom.system",
+      "sourcePath": "",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Organization.telecom.system"
+    },
+    {
+      "id": "rule-58",
+      "description": "Element added in target profile: Organization.telecom.value",
+      "sourcePath": "",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Organization.telecom.value"
+    },
+    {
+      "id": "rule-59",
+      "description": "Element added in target profile: Organization.telecom.use",
+      "sourcePath": "",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Organization.telecom.use"
+    },
+    {
+      "id": "rule-63",
+      "description": "Element added in target profile: Organization.address.extension",
+      "sourcePath": "",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Organization.address.extension"
+    },
+    {
+      "id": "rule-64",
+      "description": "Element added in target profile: Organization.address.use",
+      "sourcePath": "",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Organization.address.use"
+    },
+    {
+      "id": "rule-65",
+      "description": "Element added in target profile: Organization.address.type",
+      "sourcePath": "",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Organization.address.type"
+    },
+    {
+      "id": "rule-67",
+      "description": "Element added in target profile: Organization.address.line",
+      "sourcePath": "",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Organization.address.line"
+    },
+    {
+      "id": "rule-68",
+      "description": "Element added in target profile: Organization.address.city",
+      "sourcePath": "",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Organization.address.city"
+    },
+    {
+      "id": "rule-70",
+      "description": "Element added in target profile: Organization.address.state",
+      "sourcePath": "",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Organization.address.state"
+    },
+    {
+      "id": "rule-71",
+      "description": "Element added in target profile: Organization.address.postalCode",
+      "sourcePath": "",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Organization.address.postalCode"
+    },
+    {
+      "id": "rule-72",
+      "description": "Element added in target profile: Organization.address.country",
+      "sourcePath": "",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Organization.address.country"
+    },
+    {
+      "id": "rule-75",
+      "description": "Element added in target profile: Organization.contact.extension",
+      "sourcePath": "",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Organization.contact.extension"
+    },
+    {
+      "id": "rule-76",
+      "description": "Element added in target profile: Organization.contact.modifierExtension",
+      "sourcePath": "",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Organization.contact.modifierExtension"
+    }
+  ],
+  "sourceCanonical": "https://hemas.example.com/fhir/StructureDefinition/Organization",
+  "targetCanonical": "http://hl7.org/fhir/us/core/StructureDefinition/us-core-organization"
+}

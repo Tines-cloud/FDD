@@ -1,0 +1,95 @@
+{
+  "pairId": "r4-organization-vs-us-core-organization",
+  "sourceCanonical": "http://hl7.org/fhir/StructureDefinition/Organization",
+  "targetCanonical": "http://hl7.org/fhir/us/core/StructureDefinition/us-core-organization",
+  "drifts": [
+    {
+      "id": "identifier-cardinality",
+      "type": "CARDINALITY",
+      "sourcePath": "Organization.identifier",
+      "targetPath": "Organization.identifier",
+      "description": "US Core requires at least one identifier including NPI or CLIA (1..*) while base R4 allows none (0..*)",
+      "severity": "ERROR"
+    },
+    {
+      "id": "name-cardinality",
+      "type": "CARDINALITY",
+      "sourcePath": "Organization.name",
+      "targetPath": "Organization.name",
+      "description": "US Core requires name (1..1) while base R4 allows none (0..1)",
+      "severity": "ERROR"
+    },
+    {
+      "id": "active-cardinality",
+      "type": "CARDINALITY",
+      "sourcePath": "Organization.active",
+      "targetPath": "Organization.active",
+      "description": "US Core requires active (1..1) while base R4 allows none (0..1)",
+      "severity": "ERROR"
+    },
+    {
+      "id": "active-must-support",
+      "type": "STRUCTURAL",
+      "sourcePath": "Organization.active",
+      "targetPath": "Organization.active",
+      "description": "US Core marks active as mustSupport; base R4 does not",
+      "severity": "WARNING"
+    },
+    {
+      "id": "name-must-support",
+      "type": "STRUCTURAL",
+      "sourcePath": "Organization.name",
+      "targetPath": "Organization.name",
+      "description": "US Core marks name as mustSupport; base R4 does not",
+      "severity": "WARNING"
+    },
+    {
+      "id": "telecom-must-support",
+      "type": "STRUCTURAL",
+      "sourcePath": "Organization.telecom",
+      "targetPath": "Organization.telecom",
+      "description": "US Core marks telecom as mustSupport; base R4 does not",
+      "severity": "WARNING"
+    },
+    {
+      "id": "address-must-support",
+      "type": "STRUCTURAL",
+      "sourcePath": "Organization.address",
+      "targetPath": "Organization.address",
+      "description": "US Core marks address as mustSupport; base R4 does not",
+      "severity": "WARNING"
+    },
+    {
+      "id": "address-line-must-support",
+      "type": "STRUCTURAL",
+      "sourcePath": "Organization.address.line",
+      "targetPath": "Organization.address.line",
+      "description": "US Core marks address.line as mustSupport; base R4 does not",
+      "severity": "WARNING"
+    },
+    {
+      "id": "address-city-must-support",
+      "type": "STRUCTURAL",
+      "sourcePath": "Organization.address.city",
+      "targetPath": "Organization.address.city",
+      "description": "US Core marks address.city as mustSupport; base R4 does not",
+      "severity": "WARNING"
+    },
+    {
+      "id": "identifier-npi-slice",
+      "type": "TERMINOLOGY",
+      "sourcePath": "Organization.identifier",
+      "targetPath": "Organization.identifier:NPI",
+      "description": "US Core defines an NPI identifier slice with system http://hl7.org/fhir/sid/us-npi; base R4 has no such constraint",
+      "severity": "WARNING"
+    },
+    {
+      "id": "identifier-clia-slice",
+      "type": "TERMINOLOGY",
+      "sourcePath": "Organization.identifier",
+      "targetPath": "Organization.identifier:CLIA",
+      "description": "US Core defines a CLIA identifier slice; base R4 has no such constraint",
+      "severity": "INFO"
+    }
+  ]
+}

@@ -1,0 +1,23 @@
+spring:
+  application:
+    name: fdd-test
+
+  # Disable all Spring AI auto-configurations for unit tests
+  autoconfigure:
+    exclude:
+      - org.springframework.ai.autoconfigure.openai.OpenAiAutoConfiguration
+      - org.springframework.ai.autoconfigure.anthropic.AnthropicAutoConfiguration
+
+fdd:
+  ai:
+    provider: gemini
+    temperature: 0.0
+    gemini:
+      api-key: test-key-not-real
+      model: gemini-2.5-pro
+  validation:
+    max-attempts: 2
+
+logging:
+  level:
+    com.example.fdd: DEBUG

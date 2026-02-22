@@ -1,0 +1,247 @@
+﻿{
+  "pairId": "iit-proj-patient-vs-hemas-patient",
+  "drifts": [
+    {
+      "id": "patient-root-definition-added",
+      "description": "Root Patient element has \u0027short\u0027 and \u0027definition\u0027 added in target profile.",
+      "sourcePath": "Patient",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Patient"
+    },
+    {
+      "id": "extension-consent-status-removed",
+      "description": "Extension \u0027https://iit-proj.example.com/fhir/StructureDefinition/patient-consent-status\u0027 (slice \u0027consentStatus\u0027) present in source (1..1) but removed in target.",
+      "sourcePath": "Patient.extension:consentStatus",
+      "severity": "ERROR",
+      "type": "EXTENSION",
+      "targetPath": ""
+    },
+    {
+      "id": "extension-enrollment-date-removed",
+      "description": "Extension \u0027https://iit-proj.example.com/fhir/StructureDefinition/patient-enrollment-date\u0027 (slice \u0027enrollmentDate\u0027) present in source (0..1) but removed in target.",
+      "sourcePath": "Patient.extension:enrollmentDate",
+      "severity": "WARNING",
+      "type": "EXTENSION",
+      "targetPath": ""
+    },
+    {
+      "id": "extension-study-arm-removed",
+      "description": "Extension \u0027https://iit-proj.example.com/fhir/StructureDefinition/patient-study-arm\u0027 (slice \u0027studyArm\u0027) present in source (0..1) but removed in target.",
+      "sourcePath": "Patient.extension:studyArm",
+      "severity": "WARNING",
+      "type": "EXTENSION",
+      "targetPath": ""
+    },
+    {
+      "id": "extension-admission-number-added",
+      "description": "Extension \u0027https://hemas.example.com/fhir/StructureDefinition/patient-admission-number\u0027 (slice \u0027admissionNumber\u0027) added in target (1..1).",
+      "sourcePath": "",
+      "severity": "ERROR",
+      "type": "EXTENSION",
+      "targetPath": "Patient.extension:admissionNumber"
+    },
+    {
+      "id": "extension-insurance-provider-added",
+      "description": "Extension \u0027https://hemas.example.com/fhir/StructureDefinition/patient-insurance-provider\u0027 (slice \u0027insuranceProvider\u0027) added in target (0..1).",
+      "sourcePath": "",
+      "severity": "WARNING",
+      "type": "EXTENSION",
+      "targetPath": "Patient.extension:insuranceProvider"
+    },
+    {
+      "id": "patient-identifier-cardinality",
+      "description": "Cardinality changed from [1..1] in source to [1..*] in target.",
+      "sourcePath": "Patient.identifier",
+      "severity": "WARNING",
+      "type": "CARDINALITY",
+      "targetPath": "Patient.identifier"
+    },
+    {
+      "id": "patient-active-cardinality",
+      "description": "Cardinality changed from [0..*] in source to [1..*] in target.",
+      "sourcePath": "Patient.active",
+      "severity": "ERROR",
+      "type": "CARDINALITY",
+      "targetPath": "Patient.active"
+    },
+    {
+      "id": "patient-name-cardinality",
+      "description": "Cardinality changed from [0..*] in source to [1..*] in target.",
+      "sourcePath": "Patient.name",
+      "severity": "ERROR",
+      "type": "CARDINALITY",
+      "targetPath": "Patient.name"
+    },
+    {
+      "id": "patient-telecom-added",
+      "description": "Element \u0027Patient.telecom\u0027 added in target profile with cardinality [1..*].",
+      "sourcePath": "",
+      "severity": "ERROR",
+      "type": "STRUCTURAL",
+      "targetPath": "Patient.telecom"
+    },
+    {
+      "id": "patient-birthdate-cardinality",
+      "description": "Cardinality changed from [0..*] in source to [1..*] in target.",
+      "sourcePath": "Patient.birthDate",
+      "severity": "ERROR",
+      "type": "CARDINALITY",
+      "targetPath": "Patient.birthDate"
+    },
+    {
+      "id": "patient-deceased-removed",
+      "description": "Element \u0027Patient.deceased[x]\u0027 present in source but removed in target.",
+      "sourcePath": "Patient.deceased[x]",
+      "severity": "WARNING",
+      "type": "STRUCTURAL",
+      "targetPath": ""
+    },
+    {
+      "id": "patient-address-cardinality",
+      "description": "Cardinality changed from [0..1] in source to [1..1] in target.",
+      "sourcePath": "Patient.address",
+      "severity": "ERROR",
+      "type": "CARDINALITY",
+      "targetPath": "Patient.address"
+    },
+    {
+      "id": "patient-address-mustsupport-added",
+      "description": "\u0027mustSupport\u0027 flag added for \u0027Patient.address\u0027 in target profile.",
+      "sourcePath": "Patient.address",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Patient.address"
+    },
+    {
+      "id": "patient-maritalstatus-terminology",
+      "description": "ValueSet binding \u0027https://iit-proj.example.com/fhir/ValueSet/research-demographics\u0027 (extensible) present in source but removed in target.",
+      "sourcePath": "Patient.maritalStatus",
+      "severity": "WARNING",
+      "type": "TERMINOLOGY",
+      "targetPath": "Patient.maritalStatus"
+    },
+    {
+      "id": "patient-multiplebirth-removed",
+      "description": "Element \u0027Patient.multipleBirth[x]\u0027 present in source (0..0) but removed in target.",
+      "sourcePath": "Patient.multipleBirth[x]",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": ""
+    },
+    {
+      "id": "patient-photo-removed",
+      "description": "Element \u0027Patient.photo\u0027 present in source (0..0) but removed in target.",
+      "sourcePath": "Patient.photo",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": ""
+    },
+    {
+      "id": "patient-contact-cardinality",
+      "description": "Cardinality changed from [0..0] in source to [1..*] in target.",
+      "sourcePath": "Patient.contact",
+      "severity": "ERROR",
+      "type": "CARDINALITY",
+      "targetPath": "Patient.contact"
+    },
+    {
+      "id": "patient-contact-mustsupport-added",
+      "description": "\u0027mustSupport\u0027 flag added for \u0027Patient.contact\u0027 in target profile.",
+      "sourcePath": "Patient.contact",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Patient.contact"
+    },
+    {
+      "id": "patient-contact-relationship-added",
+      "description": "Element \u0027Patient.contact.relationship\u0027 added in target profile.",
+      "sourcePath": "",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Patient.contact.relationship"
+    },
+    {
+      "id": "patient-contact-name-added",
+      "description": "Element \u0027Patient.contact.name\u0027 added in target profile.",
+      "sourcePath": "",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Patient.contact.name"
+    },
+    {
+      "id": "patient-contact-telecom-added",
+      "description": "Element \u0027Patient.contact.telecom\u0027 added in target profile with cardinality [1..*].",
+      "sourcePath": "",
+      "severity": "ERROR",
+      "type": "STRUCTURAL",
+      "targetPath": "Patient.contact.telecom"
+    },
+    {
+      "id": "patient-communication-cardinality",
+      "description": "Cardinality changed from [0..*] in source to [1..*] in target.",
+      "sourcePath": "Patient.communication",
+      "severity": "ERROR",
+      "type": "CARDINALITY",
+      "targetPath": "Patient.communication"
+    },
+    {
+      "id": "patient-communication-language-added",
+      "description": "Element \u0027Patient.communication.language\u0027 added in target profile.",
+      "sourcePath": "",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Patient.communication.language"
+    },
+    {
+      "id": "patient-generalpractitioner-added",
+      "description": "Element \u0027Patient.generalPractitioner\u0027 added in target profile.",
+      "sourcePath": "",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Patient.generalPractitioner"
+    },
+    {
+      "id": "patient-managingorganization-cardinality",
+      "description": "Cardinality changed from [0..*] in source to [1..*] in target.",
+      "sourcePath": "Patient.managingOrganization",
+      "severity": "ERROR",
+      "type": "CARDINALITY",
+      "targetPath": "Patient.managingOrganization"
+    },
+    {
+      "id": "patient-managingorganization-targetprofile",
+      "description": "Reference target profile changed from \u0027https://iit-proj.example.com/fhir/StructureDefinition/Organization\u0027 to \u0027https://hemas.example.com/fhir/StructureDefinition/Organization\u0027.",
+      "sourcePath": "Patient.managingOrganization",
+      "severity": "WARNING",
+      "type": "STRUCTURAL",
+      "targetPath": "Patient.managingOrganization"
+    },
+    {
+      "id": "patient-link-removed",
+      "description": "Element \u0027Patient.link\u0027 present in source (0..0) but removed in target.",
+      "sourcePath": "Patient.link",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": ""
+    },
+    {
+      "id": "rule-1",
+      "description": "Type profile constraint changed: [https://iit-proj.example.com/fhir/StructureDefinition/patient-study-arm] â [https://hemas.example.com/fhir/StructureDefinition/patient-insurance-provider]",
+      "sourcePath": "Patient.extension",
+      "severity": "WARNING",
+      "type": "STRUCTURAL",
+      "targetPath": "Patient.extension"
+    },
+    {
+      "id": "rule-14",
+      "description": "Element added in target profile: Patient",
+      "sourcePath": "",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Patient"
+    }
+  ],
+  "sourceCanonical": "https://iit-proj.example.com/fhir/StructureDefinition/Patient",
+  "targetCanonical": "https://hemas.example.com/fhir/StructureDefinition/Patient"
+}

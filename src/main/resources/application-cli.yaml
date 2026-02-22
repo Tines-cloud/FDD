@@ -1,0 +1,21 @@
+# ---- CLI Profile ----
+# Activated with: --spring.profiles.active=cli
+# Disables the web server so the process runs the command and exits.
+
+spring:
+  main:
+    web-application-type: none
+
+  autoconfigure:
+    exclude:
+      - org.springframework.ai.autoconfigure.openai.OpenAiAutoConfiguration
+      - org.springframework.ai.autoconfigure.anthropic.AnthropicAutoConfiguration
+
+# Quieter logging for CLI - only warnings and errors from libraries
+logging:
+  level:
+    root: WARN
+    com.example.fdd: INFO
+    com.example.fdd.cli: INFO
+    ca.uhn.fhir: WARN
+    org.springframework: WARN

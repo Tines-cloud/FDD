@@ -1,0 +1,167 @@
+﻿{
+  "pairId": "iit-proj-condition-vs-hemas-condition",
+  "drifts": [
+    {
+      "id": "root-profile-description-added",
+      "description": "Root profile \u0027short\u0027 and \u0027definition\u0027 elements added/modified in target.",
+      "sourcePath": "Condition",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Condition"
+    },
+    {
+      "id": "extension-trial-reported-condition-removed",
+      "description": "Extension \u0027https://iit-proj.example.com/fhir/StructureDefinition/condition-trial-reported\u0027 removed from target profile.",
+      "sourcePath": "Condition.extension:trialReportedCondition",
+      "severity": "WARNING",
+      "type": "EXTENSION",
+      "targetPath": ""
+    },
+    {
+      "id": "extension-admission-diagnosis-added",
+      "description": "Extension \u0027https://hemas.example.com/fhir/StructureDefinition/condition-admission-diagnosis\u0027 added to target profile.",
+      "sourcePath": "",
+      "severity": "WARNING",
+      "type": "EXTENSION",
+      "targetPath": "Condition.extension:admissionDiagnosis"
+    },
+    {
+      "id": "extension-discharge-diagnosis-added",
+      "description": "Extension \u0027https://hemas.example.com/fhir/StructureDefinition/condition-discharge-diagnosis\u0027 added to target profile.",
+      "sourcePath": "",
+      "severity": "WARNING",
+      "type": "EXTENSION",
+      "targetPath": "Condition.extension:dischargeDiagnosis"
+    },
+    {
+      "id": "severity-definition-added",
+      "description": "Definition added for \u0027severity\u0027.",
+      "sourcePath": "Condition.severity",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Condition.severity"
+    },
+    {
+      "id": "subject-target-profile-changed",
+      "description": "Reference target profile changed from \u0027https://iit-proj.example.com/fhir/StructureDefinition/Patient\u0027 to \u0027https://hemas.example.com/fhir/StructureDefinition/Patient\u0027.",
+      "sourcePath": "Condition.subject",
+      "severity": "WARNING",
+      "type": "STRUCTURAL",
+      "targetPath": "Condition.subject"
+    },
+    {
+      "id": "encounter-cardinality-min-increased",
+      "description": "Minimum cardinality changed from 0 to 1, making \u0027encounter\u0027 mandatory.",
+      "sourcePath": "Condition.encounter",
+      "severity": "ERROR",
+      "type": "CARDINALITY",
+      "targetPath": "Condition.encounter"
+    },
+    {
+      "id": "encounter-target-profile-added",
+      "description": "Reference target profile \u0027https://hemas.example.com/fhir/StructureDefinition/Encounter\u0027 added.",
+      "sourcePath": "Condition.encounter",
+      "severity": "WARNING",
+      "type": "STRUCTURAL",
+      "targetPath": "Condition.encounter"
+    },
+    {
+      "id": "encounter-definition-added",
+      "description": "Definition added for \u0027encounter\u0027.",
+      "sourcePath": "Condition.encounter",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Condition.encounter"
+    },
+    {
+      "id": "abatement-removed",
+      "description": "Element \u0027Condition.abatement[x]\u0027 removed from target profile.",
+      "sourcePath": "Condition.abatement[x]",
+      "severity": "WARNING",
+      "type": "STRUCTURAL",
+      "targetPath": ""
+    },
+    {
+      "id": "recordeddate-cardinality-min-increased",
+      "description": "Minimum cardinality changed from 0 to 1, making \u0027recordedDate\u0027 mandatory.",
+      "sourcePath": "Condition.recordedDate",
+      "severity": "ERROR",
+      "type": "CARDINALITY",
+      "targetPath": "Condition.recordedDate"
+    },
+    {
+      "id": "recordeddate-definition-added",
+      "description": "Definition added for \u0027recordedDate\u0027.",
+      "sourcePath": "Condition.recordedDate",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Condition.recordedDate"
+    },
+    {
+      "id": "recorder-cardinality-max-increased",
+      "description": "Maximum cardinality changed from 0 to *, allowing \u0027recorder\u0027 to be present.",
+      "sourcePath": "Condition.recorder",
+      "severity": "WARNING",
+      "type": "CARDINALITY",
+      "targetPath": "Condition.recorder"
+    },
+    {
+      "id": "recorder-mustsupport-added",
+      "description": "MustSupport flag changed from false to true for \u0027recorder\u0027.",
+      "sourcePath": "Condition.recorder",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Condition.recorder"
+    },
+    {
+      "id": "recorder-target-profile-added",
+      "description": "Reference target profile \u0027https://hemas.example.com/fhir/StructureDefinition/Practitioner\u0027 added.",
+      "sourcePath": "Condition.recorder",
+      "severity": "WARNING",
+      "type": "STRUCTURAL",
+      "targetPath": "Condition.recorder"
+    },
+    {
+      "id": "recorder-short-changed",
+      "description": "Short description changed for \u0027recorder\u0027.",
+      "sourcePath": "Condition.recorder",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Condition.recorder"
+    },
+    {
+      "id": "recorder-definition-added",
+      "description": "Definition added for \u0027recorder\u0027.",
+      "sourcePath": "Condition.recorder",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Condition.recorder"
+    },
+    {
+      "id": "asserter-removed",
+      "description": "Element \u0027Condition.asserter\u0027 removed from target profile.",
+      "sourcePath": "Condition.asserter",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": ""
+    },
+    {
+      "id": "rule-1",
+      "description": "Type profile constraint changed: [https://iit-proj.example.com/fhir/StructureDefinition/condition-trial-reported] â [https://hemas.example.com/fhir/StructureDefinition/condition-discharge-diagnosis]",
+      "sourcePath": "Condition.extension",
+      "severity": "WARNING",
+      "type": "STRUCTURAL",
+      "targetPath": "Condition.extension"
+    },
+    {
+      "id": "rule-9",
+      "description": "Element added in target profile: Condition",
+      "sourcePath": "",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Condition"
+    }
+  ],
+  "sourceCanonical": "https://iit-proj.example.com/fhir/StructureDefinition/Condition",
+  "targetCanonical": "https://hemas.example.com/fhir/StructureDefinition/Condition"
+}

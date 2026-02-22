@@ -1,0 +1,333 @@
+{
+  "resourceType": "StructureDefinition",
+  "id": "iit-proj-patient",
+  "url": "https://iit-proj.example.com/fhir/StructureDefinition/Patient",
+  "name": "IitProjPatient",
+  "title": "IIT Research Patient Profile",
+  "status": "active",
+  "version": "1.0.0",
+  "experimental": false,
+  "date": "2026-02-28",
+  "publisher": "IIT-Project FHIR Team",
+  "contact": [
+    {
+      "name": "IIT-Project FHIR Team",
+      "telecom": [
+        {
+          "system": "url",
+          "value": "https://iit-proj.example.com"
+        }
+      ]
+    }
+  ],
+  "jurisdiction": [
+    {
+      "coding": [
+        {
+          "system": "urn:iso:std:iso:3166",
+          "code": "IN",
+          "display": "India"
+        }
+      ]
+    }
+  ],
+  "copyright": "Copyright (c) 2026 IIT-Project FHIR Team. All rights reserved.",
+  "mapping": [
+    {
+      "identity": "rim",
+      "uri": "http://hl7.org/v3",
+      "name": "RIM Mapping"
+    },
+    {
+      "identity": "w5",
+      "uri": "http://hl7.org/fhir/fivews",
+      "name": "FiveWs Pattern Mapping"
+    },
+    {
+      "identity": "cda",
+      "uri": "http://hl7.org/v3/cda",
+      "name": "CDA (R2)"
+    },
+    {
+      "identity": "v2",
+      "uri": "http://hl7.org/v2",
+      "name": "HL7 V2 Mapping"
+    }
+  ],
+  "fhirVersion": "4.0.1",
+  "kind": "resource",
+  "abstract": false,
+  "type": "Patient",
+  "baseDefinition": "http://hl7.org/fhir/StructureDefinition/Patient",
+  "derivation": "constraint",
+  "differential": {
+    "element": [
+      {
+        "id": "Patient",
+        "path": "Patient",
+        "constraint": [
+          {
+            "key": "iit-pat-1",
+            "severity": "error",
+            "human": "Research patient must have a study identifier",
+            "expression": "identifier.where(type.coding.where(code='ANON').exists()).exists()"
+          },
+          {
+            "key": "iit-pat-2",
+            "severity": "warning",
+            "human": "Deceased patients should have a deceased date",
+            "expression": "deceased.exists() implies deceased.ofType(dateTime).exists()"
+          }
+        ]
+      },
+      {
+        "id": "Patient.extension",
+        "path": "Patient.extension",
+        "slicing": {
+          "discriminator": [
+            {
+              "type": "value",
+              "path": "url"
+            }
+          ],
+          "ordered": false,
+          "rules": "open"
+        }
+      },
+      {
+        "id": "Patient.extension:studyEnrollmentDate",
+        "path": "Patient.extension",
+        "sliceName": "studyEnrollmentDate",
+        "min": 1,
+        "max": "1",
+        "type": [
+          {
+            "code": "Extension",
+            "profile": [
+              "https://iit-proj.example.com/fhir/StructureDefinition/study-enrollment-date"
+            ]
+          }
+        ],
+        "mustSupport": true
+      },
+      {
+        "id": "Patient.extension:consentStatus",
+        "path": "Patient.extension",
+        "sliceName": "consentStatus",
+        "min": 1,
+        "max": "1",
+        "type": [
+          {
+            "code": "Extension",
+            "profile": [
+              "https://iit-proj.example.com/fhir/StructureDefinition/consent-status"
+            ]
+          }
+        ],
+        "mustSupport": true
+      },
+      {
+        "id": "Patient.extension:studyArm",
+        "path": "Patient.extension",
+        "sliceName": "studyArm",
+        "min": 0,
+        "max": "1",
+        "type": [
+          {
+            "code": "Extension",
+            "profile": [
+              "https://iit-proj.example.com/fhir/StructureDefinition/study-arm"
+            ]
+          }
+        ],
+        "mustSupport": true
+      },
+      {
+        "id": "Patient.extension:dataUseRestriction",
+        "path": "Patient.extension",
+        "sliceName": "dataUseRestriction",
+        "min": 0,
+        "max": "*",
+        "type": [
+          {
+            "code": "Extension",
+            "profile": [
+              "https://iit-proj.example.com/fhir/StructureDefinition/data-use-restriction"
+            ]
+          }
+        ],
+        "mustSupport": true
+      },
+      {
+        "id": "Patient.identifier",
+        "path": "Patient.identifier",
+        "min": 1,
+        "mustSupport": true,
+        "slicing": {
+          "discriminator": [
+            {
+              "type": "pattern",
+              "path": "type"
+            }
+          ],
+          "rules": "open"
+        }
+      },
+      {
+        "id": "Patient.identifier:studyId",
+        "path": "Patient.identifier",
+        "sliceName": "studyId",
+        "min": 1,
+        "max": "1",
+        "mustSupport": true
+      },
+      {
+        "id": "Patient.identifier:studyId.type",
+        "path": "Patient.identifier.type",
+        "min": 1,
+        "patternCodeableConcept": {
+          "coding": [
+            {
+              "system": "http://terminology.hl7.org/CodeSystem/v2-0203",
+              "code": "ANON"
+            }
+          ]
+        },
+        "mustSupport": true
+      },
+      {
+        "id": "Patient.identifier:studyId.system",
+        "path": "Patient.identifier.system",
+        "min": 1,
+        "fixedUri": "https://iit-proj.example.com/fhir/sid/study-id",
+        "mustSupport": true
+      },
+      {
+        "id": "Patient.identifier:studyId.value",
+        "path": "Patient.identifier.value",
+        "min": 1,
+        "mustSupport": true
+      },
+      {
+        "id": "Patient.identifier:siteId",
+        "path": "Patient.identifier",
+        "sliceName": "siteId",
+        "min": 0,
+        "max": "1",
+        "mustSupport": true
+      },
+      {
+        "id": "Patient.identifier:siteId.type",
+        "path": "Patient.identifier.type",
+        "min": 1,
+        "patternCodeableConcept": {
+          "coding": [
+            {
+              "system": "http://terminology.hl7.org/CodeSystem/v2-0203",
+              "code": "PI"
+            }
+          ]
+        },
+        "mustSupport": true
+      },
+      {
+        "id": "Patient.identifier:siteId.system",
+        "path": "Patient.identifier.system",
+        "min": 1,
+        "mustSupport": true
+      },
+      {
+        "id": "Patient.identifier:siteId.value",
+        "path": "Patient.identifier.value",
+        "min": 1,
+        "mustSupport": true
+      },
+      {
+        "id": "Patient.active",
+        "path": "Patient.active",
+        "min": 1,
+        "mustSupport": true
+      },
+      {
+        "id": "Patient.name",
+        "path": "Patient.name",
+        "max": "0",
+        "comment": "Names excluded for research blinding"
+      },
+      {
+        "id": "Patient.gender",
+        "path": "Patient.gender",
+        "min": 1,
+        "mustSupport": true,
+        "binding": {
+          "strength": "required",
+          "valueSet": "http://hl7.org/fhir/ValueSet/administrative-gender"
+        }
+      },
+      {
+        "id": "Patient.birthDate",
+        "path": "Patient.birthDate",
+        "min": 1,
+        "mustSupport": true
+      },
+      {
+        "id": "Patient.deceased[x]",
+        "path": "Patient.deceased[x]",
+        "type": [
+          {
+            "code": "boolean"
+          },
+          {
+            "code": "dateTime"
+          }
+        ],
+        "mustSupport": true
+      },
+      {
+        "id": "Patient.address",
+        "path": "Patient.address",
+        "max": "0",
+        "comment": "Addresses excluded for research blinding"
+      },
+      {
+        "id": "Patient.photo",
+        "path": "Patient.photo",
+        "max": "0",
+        "comment": "Photos prohibited for research blinding"
+      },
+      {
+        "id": "Patient.communication",
+        "path": "Patient.communication",
+        "mustSupport": true
+      },
+      {
+        "id": "Patient.communication.language",
+        "path": "Patient.communication.language",
+        "mustSupport": true,
+        "binding": {
+          "strength": "extensible",
+          "valueSet": "http://hl7.org/fhir/ValueSet/languages"
+        }
+      },
+      {
+        "id": "Patient.generalPractitioner",
+        "path": "Patient.generalPractitioner",
+        "max": "0",
+        "comment": "GP excluded for research blinding"
+      },
+      {
+        "id": "Patient.managingOrganization",
+        "path": "Patient.managingOrganization",
+        "type": [
+          {
+            "code": "Reference",
+            "targetProfile": [
+              "https://iit-proj.example.com/fhir/StructureDefinition/Organization"
+            ]
+          }
+        ],
+        "mustSupport": true
+      }
+    ]
+  }
+}

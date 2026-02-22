@@ -1,0 +1,87 @@
+spring:
+  application:
+    name: fdd
+
+  # ---- Disable ALL Spring AI auto-configurations ----
+  # We manage ChatModel bean creation manually in AiConfig.
+  # This prevents multiple ChatModel beans from being created simultaneously
+  # when multiple AI provider starters are on the classpath.
+  autoconfigure:
+    exclude:
+      - org.springframework.ai.autoconfigure.openai.OpenAiAutoConfiguration
+      - org.springframework.ai.autoconfigure.anthropic.AnthropicAutoConfiguration
+
+# ---- FHIR Drift Doctor ----
+fdd:
+  ai:
+    # Active LLM provider: openai | anthropic | gemini | mistral
+    provider: gemini
+    temperature: 0.2
+
+    openai:
+      api-key: ${OPENAI_API_KEY:}
+      model: gpt-4o
+      base-url: https://api.openai.com
+
+    anthropic:
+      api-key: ${ANTHROPIC_API_KEY:}
+      model: claude-sonnet-4-20250514
+
+    gemini:
+      api-key: ${GEMINI_API_KEY:}
+      model: gemini-2.5-flash
+      base-url: https://generativelanguage.googleapis.com/v1beta/openai
+
+    mistral:
+      api-key: ${MISTRAL_API_KEY:}
+      model: mistral-large-latest
+      base-url: https://api.mistral.ai/v1
+
+  validation:
+    # Maximum reflexion (self-correction) iterations for Trust-but-Verify loop
+    max-attempts: 3
+
+  cache:
+    # Enable or disable LLM response caching
+    enabled: true
+    # Time-to-live in minutes for cached entries (0 = no expiry)
+    ttl-minutes: 0
+    # Directory for cache files
+    directory: .fdd-cache
+
+  output:
+    # Enable or disable output persistence
+    enabled: true
+    # Root directory where each request writes a timestamped folder
+    directory: output
+
+
+# ---- Actuator ----
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus
+  endpoint:
+    health:
+      show-details: when-authorized
+  metrics:
+    tags:
+      application: fdd
+
+# ---- Logging ----
+logging:
+  level:
+    com.example.fdd: DEBUG
+    ca.uhn.fhir: WARN
+    org.springframework.ai: INFO
+
+# ---- OpenAPI / Swagger ----
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    tags-sorter: alpha
+    operations-sorter: method
+

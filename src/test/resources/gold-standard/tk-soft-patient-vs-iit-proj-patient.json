@@ -1,0 +1,319 @@
+﻿{
+  "pairId": "tk-soft-patient-vs-iit-proj-patient",
+  "drifts": [
+    {
+      "id": "extension-employee-id-removed",
+      "description": "Extension \u0027employeeId\u0027 (https://tk-soft.example.com/fhir/StructureDefinition/patient-employee-id) present in source but absent in target.",
+      "sourcePath": "Patient.extension[url=\u0027https://tk-soft.example.com/fhir/StructureDefinition/patient-employee-id\u0027]",
+      "severity": "WARNING",
+      "type": "EXTENSION",
+      "targetPath": ""
+    },
+    {
+      "id": "extension-preferred-language-removed",
+      "description": "Extension \u0027preferredLanguage\u0027 (https://tk-soft.example.com/fhir/StructureDefinition/patient-preferred-language) present in source but absent in target.",
+      "sourcePath": "Patient.extension[url=\u0027https://tk-soft.example.com/fhir/StructureDefinition/patient-preferred-language\u0027]",
+      "severity": "WARNING",
+      "type": "EXTENSION",
+      "targetPath": ""
+    },
+    {
+      "id": "extension-consent-status-added",
+      "description": "Extension \u0027consentStatus\u0027 (https://iit-proj.example.com/fhir/StructureDefinition/patient-consent-status) present in target but absent in source.",
+      "sourcePath": "",
+      "severity": "INFO",
+      "type": "EXTENSION",
+      "targetPath": "Patient.extension[url=\u0027https://iit-proj.example.com/fhir/StructureDefinition/patient-consent-status\u0027]"
+    },
+    {
+      "id": "extension-consent-status-cardinality-change",
+      "description": "Cardinality changed for extension \u0027consentStatus\u0027: [0..*] (base) â [1..1] (target).",
+      "sourcePath": "Patient.extension[url=\u0027https://iit-proj.example.com/fhir/StructureDefinition/patient-consent-status\u0027]",
+      "severity": "WARNING",
+      "type": "CARDINALITY",
+      "targetPath": "Patient.extension[url=\u0027https://iit-proj.example.com/fhir/StructureDefinition/patient-consent-status\u0027]"
+    },
+    {
+      "id": "extension-consent-status-mustsupport-added",
+      "description": "MustSupport added for extension \u0027consentStatus\u0027.",
+      "sourcePath": "Patient.extension[url=\u0027https://iit-proj.example.com/fhir/StructureDefinition/patient-consent-status\u0027]",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Patient.extension[url=\u0027https://iit-proj.example.com/fhir/StructureDefinition/patient-consent-status\u0027]"
+    },
+    {
+      "id": "extension-enrollment-date-added",
+      "description": "Extension \u0027enrollmentDate\u0027 (https://iit-proj.example.com/fhir/StructureDefinition/patient-enrollment-date) present in target but absent in source.",
+      "sourcePath": "",
+      "severity": "INFO",
+      "type": "EXTENSION",
+      "targetPath": "Patient.extension[url=\u0027https://iit-proj.example.com/fhir/StructureDefinition/patient-enrollment-date\u0027]"
+    },
+    {
+      "id": "extension-enrollment-date-mustsupport-added",
+      "description": "MustSupport added for extension \u0027enrollmentDate\u0027.",
+      "sourcePath": "Patient.extension[url=\u0027https://iit-proj.example.com/fhir/StructureDefinition/patient-enrollment-date\u0027]",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Patient.extension[url=\u0027https://iit-proj.example.com/fhir/StructureDefinition/patient-enrollment-date\u0027]"
+    },
+    {
+      "id": "extension-study-arm-added",
+      "description": "Extension \u0027studyArm\u0027 (https://iit-proj.example.com/fhir/StructureDefinition/patient-study-arm) present in target but absent in source.",
+      "sourcePath": "",
+      "severity": "INFO",
+      "type": "EXTENSION",
+      "targetPath": "Patient.extension[url=\u0027https://iit-proj.example.com/fhir/StructureDefinition/patient-study-arm\u0027]"
+    },
+    {
+      "id": "extension-study-arm-mustsupport-added",
+      "description": "MustSupport added for extension \u0027studyArm\u0027.",
+      "sourcePath": "Patient.extension[url=\u0027https://iit-proj.example.com/fhir/StructureDefinition/patient-study-arm\u0027]",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Patient.extension[url=\u0027https://iit-proj.example.com/fhir/StructureDefinition/patient-study-arm\u0027]"
+    },
+    {
+      "id": "patient-identifier-cardinality-change",
+      "description": "Cardinality changed: [1..*] â [1..1].",
+      "sourcePath": "Patient.identifier",
+      "severity": "WARNING",
+      "type": "CARDINALITY",
+      "targetPath": "Patient.identifier"
+    },
+    {
+      "id": "patient-telecom-removed",
+      "description": "Element \u0027Patient.telecom\u0027 present in source but removed in target.",
+      "sourcePath": "Patient.telecom",
+      "severity": "WARNING",
+      "type": "STRUCTURAL",
+      "targetPath": ""
+    },
+    {
+      "id": "patient-telecom-cardinality-change",
+      "description": "Cardinality changed: [1..3] â [0..0] (element removed).",
+      "sourcePath": "Patient.telecom",
+      "severity": "WARNING",
+      "type": "CARDINALITY",
+      "targetPath": "Patient.telecom"
+    },
+    {
+      "id": "patient-name-cardinality-change",
+      "description": "Cardinality changed: [1..*] â [0..*].",
+      "sourcePath": "Patient.name",
+      "severity": "WARNING",
+      "type": "CARDINALITY",
+      "targetPath": "Patient.name"
+    },
+    {
+      "id": "patient-gender-cardinality-change",
+      "description": "Cardinality changed: [1..*] â [0..*].",
+      "sourcePath": "Patient.gender",
+      "severity": "WARNING",
+      "type": "CARDINALITY",
+      "targetPath": "Patient.gender"
+    },
+    {
+      "id": "patient-birthdate-cardinality-change",
+      "description": "Cardinality changed: [1..*] â [0..*].",
+      "sourcePath": "Patient.birthDate",
+      "severity": "WARNING",
+      "type": "CARDINALITY",
+      "targetPath": "Patient.birthDate"
+    },
+    {
+      "id": "patient-deceased-mustsupport-added",
+      "description": "MustSupport added for \u0027Patient.deceased[x]\u0027 (from base FHIR definition).",
+      "sourcePath": "Patient.deceased[x]",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Patient.deceased[x]"
+    },
+    {
+      "id": "patient-deceased-cardinality-max-changed",
+      "description": "Cardinality max changed for \u0027Patient.deceased[x]\u0027: [0..1] (base) â [0..*] (target).",
+      "sourcePath": "Patient.deceased[x]",
+      "severity": "INFO",
+      "type": "CARDINALITY",
+      "targetPath": "Patient.deceased[x]"
+    },
+    {
+      "id": "patient-address-cardinality-change",
+      "description": "Cardinality changed: [0..*] â [0..1].",
+      "sourcePath": "Patient.address",
+      "severity": "WARNING",
+      "type": "CARDINALITY",
+      "targetPath": "Patient.address"
+    },
+    {
+      "id": "patient-address-mustsupport-removed",
+      "description": "MustSupport removed in target for \u0027Patient.address\u0027.",
+      "sourcePath": "Patient.address",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Patient.address"
+    },
+    {
+      "id": "patient-maritalstatus-terminology-change",
+      "description": "Value set binding changed: extensible(https://tk-soft.example.com/fhir/ValueSet/marital-status) â extensible(https://iit-proj.example.com/fhir/ValueSet/research-demographics).",
+      "sourcePath": "Patient.maritalStatus",
+      "severity": "WARNING",
+      "type": "TERMINOLOGY",
+      "targetPath": "Patient.maritalStatus"
+    },
+    {
+      "id": "patient-maritalstatus-mustsupport-added",
+      "description": "MustSupport added in target for \u0027Patient.maritalStatus\u0027.",
+      "sourcePath": "Patient.maritalStatus",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Patient.maritalStatus"
+    },
+    {
+      "id": "patient-multiplebirth-cardinality-change",
+      "description": "Cardinality changed for \u0027Patient.multipleBirth[x]\u0027: [0..1] (base) â [0..0] (target).",
+      "sourcePath": "Patient.multipleBirth[x]",
+      "severity": "WARNING",
+      "type": "CARDINALITY",
+      "targetPath": "Patient.multipleBirth[x]"
+    },
+    {
+      "id": "patient-contact-cardinality-change",
+      "description": "Cardinality changed: [0..*] â [0..0].",
+      "sourcePath": "Patient.contact",
+      "severity": "WARNING",
+      "type": "CARDINALITY",
+      "targetPath": "Patient.contact"
+    },
+    {
+      "id": "patient-contact-name-removed",
+      "description": "Element \u0027Patient.contact.name\u0027 present in source but removed in target (due to parent \u0027Patient.contact\u0027 cardinality).",
+      "sourcePath": "Patient.contact.name",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": ""
+    },
+    {
+      "id": "patient-contact-telecom-removed",
+      "description": "Element \u0027Patient.contact.telecom\u0027 present in source but removed in target (due to parent \u0027Patient.contact\u0027 cardinality).",
+      "sourcePath": "Patient.contact.telecom",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": ""
+    },
+    {
+      "id": "patient-communication-mustsupport-added",
+      "description": "MustSupport added in target for \u0027Patient.communication\u0027.",
+      "sourcePath": "Patient.communication",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Patient.communication"
+    },
+    {
+      "id": "patient-communication-language-terminology-change",
+      "description": "Value set binding for \u0027Patient.communication.language\u0027 changed from extensible(https://tk-soft.example.com/fhir/ValueSet/languages) to base FHIR BCP-47 (preferred).",
+      "sourcePath": "Patient.communication.language",
+      "severity": "WARNING",
+      "type": "TERMINOLOGY",
+      "targetPath": "Patient.communication.language"
+    },
+    {
+      "id": "patient-communication-language-profiling-removed",
+      "description": "Specific profiling for \u0027Patient.communication.language\u0027 (including value set binding) present in source but removed in target, reverting to base FHIR definition.",
+      "sourcePath": "Patient.communication.language",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Patient.communication.language"
+    },
+    {
+      "id": "patient-generalpractitioner-removed",
+      "description": "Element \u0027Patient.generalPractitioner\u0027 present in source but removed in target.",
+      "sourcePath": "Patient.generalPractitioner",
+      "severity": "WARNING",
+      "type": "STRUCTURAL",
+      "targetPath": ""
+    },
+    {
+      "id": "patient-managingorganization-targetprofile-change",
+      "description": "Reference target profile changed: [https://tk-soft.example.com/fhir/StructureDefinition/Organization] â [https://iit-proj.example.com/fhir/StructureDefinition/Organization].",
+      "sourcePath": "Patient.managingOrganization",
+      "severity": "WARNING",
+      "type": "STRUCTURAL",
+      "targetPath": "Patient.managingOrganization"
+    },
+    {
+      "id": "patient-managingorganization-mustsupport-added",
+      "description": "MustSupport added in target for \u0027Patient.managingOrganization\u0027.",
+      "sourcePath": "Patient.managingOrganization",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Patient.managingOrganization"
+    },
+    {
+      "id": "patient-link-cardinality-change",
+      "description": "Cardinality changed for \u0027Patient.link\u0027: [0..*] (base) â [0..0] (target).",
+      "sourcePath": "Patient.link",
+      "severity": "WARNING",
+      "type": "CARDINALITY",
+      "targetPath": "Patient.link"
+    },
+    {
+      "id": "rule-1",
+      "description": "Type profile constraint changed: [https://tk-soft.example.com/fhir/StructureDefinition/patient-preferred-language] â [https://iit-proj.example.com/fhir/StructureDefinition/patient-study-arm]",
+      "sourcePath": "Patient.extension",
+      "severity": "WARNING",
+      "type": "STRUCTURAL",
+      "targetPath": "Patient.extension"
+    },
+    {
+      "id": "rule-2",
+      "description": "MustSupport added in target",
+      "sourcePath": "Patient.extension",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Patient.extension"
+    },
+    {
+      "id": "rule-15",
+      "description": "Element added in target profile: Patient.deceased[x]",
+      "sourcePath": "",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Patient.deceased[x]"
+    },
+    {
+      "id": "rule-16",
+      "description": "Element added in target profile: Patient.multipleBirth[x]",
+      "sourcePath": "",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Patient.multipleBirth[x]"
+    },
+    {
+      "id": "rule-17",
+      "description": "Element added in target profile: Patient.link",
+      "sourcePath": "",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Patient.link"
+    },
+    {
+      "id": "rule-18",
+      "description": "Element removed in target profile: Patient",
+      "sourcePath": "Patient",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": ""
+    },
+    {
+      "id": "rule-22",
+      "description": "Element removed in target profile: Patient.communication.language",
+      "sourcePath": "Patient.communication.language",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": ""
+    }
+  ],
+  "sourceCanonical": "https://tk-soft.example.com/fhir/StructureDefinition/Patient",
+  "targetCanonical": "https://iit-proj.example.com/fhir/StructureDefinition/Patient"
+}

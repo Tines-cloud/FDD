@@ -1,0 +1,231 @@
+﻿{
+  "pairId": "tk-soft-patient-vs-hemas-patient",
+  "drifts": [
+    {
+      "id": "extension-removed-employee-id",
+      "description": "Extension \u0027https://tk-soft.example.com/fhir/StructureDefinition/patient-employee-id\u0027 present in source profile but removed in target profile.",
+      "sourcePath": "Patient.extension:employeeId",
+      "severity": "WARNING",
+      "type": "EXTENSION",
+      "targetPath": ""
+    },
+    {
+      "id": "extension-removed-preferred-language",
+      "description": "Extension \u0027https://tk-soft.example.com/fhir/StructureDefinition/patient-preferred-language\u0027 present in source profile but removed in target profile.",
+      "sourcePath": "Patient.extension:preferredLanguage",
+      "severity": "WARNING",
+      "type": "EXTENSION",
+      "targetPath": ""
+    },
+    {
+      "id": "extension-added-admission-number",
+      "description": "New extension \u0027https://hemas.example.com/fhir/StructureDefinition/patient-admission-number\u0027 added in target profile with cardinality 1..1 and mustSupport: true.",
+      "sourcePath": "",
+      "severity": "ERROR",
+      "type": "EXTENSION",
+      "targetPath": "Patient.extension:admissionNumber"
+    },
+    {
+      "id": "extension-added-insurance-provider",
+      "description": "New extension \u0027https://hemas.example.com/fhir/StructureDefinition/patient-insurance-provider\u0027 added in target profile with mustSupport: true.",
+      "sourcePath": "",
+      "severity": "INFO",
+      "type": "EXTENSION",
+      "targetPath": "Patient.extension:insuranceProvider"
+    },
+    {
+      "id": "cardinality-patient-active-changed",
+      "description": "Cardinality changed from 0..* in source to 1..* in target. This makes the element mandatory.",
+      "sourcePath": "Patient.active",
+      "severity": "ERROR",
+      "type": "CARDINALITY",
+      "targetPath": "Patient.active"
+    },
+    {
+      "id": "cardinality-patient-telecom-changed",
+      "description": "Cardinality changed from 1..3 in source to 1..* in target. The maximum constraint has been relaxed.",
+      "sourcePath": "Patient.telecom",
+      "severity": "WARNING",
+      "type": "CARDINALITY",
+      "targetPath": "Patient.telecom"
+    },
+    {
+      "id": "cardinality-patient-gender-changed",
+      "description": "Cardinality changed from 1..* in source to 0..* in target. This makes the element optional.",
+      "sourcePath": "Patient.gender",
+      "severity": "WARNING",
+      "type": "CARDINALITY",
+      "targetPath": "Patient.gender"
+    },
+    {
+      "id": "cardinality-patient-address-changed",
+      "description": "Cardinality changed from 0..* in source to 1..1 in target. This makes the element mandatory and single-valued.",
+      "sourcePath": "Patient.address",
+      "severity": "ERROR",
+      "type": "CARDINALITY",
+      "targetPath": "Patient.address"
+    },
+    {
+      "id": "terminology-patient-maritalstatus-binding-removed",
+      "description": "Value set binding \u0027https://tk-soft.example.com/fhir/ValueSet/marital-status\u0027 (extensible) present in source but removed in target.",
+      "sourcePath": "Patient.maritalStatus",
+      "severity": "WARNING",
+      "type": "TERMINOLOGY",
+      "targetPath": "Patient.maritalStatus"
+    },
+    {
+      "id": "structural-patient-maritalstatus-mustsupport-added",
+      "description": "MustSupport flag added in target profile (false -\u003e true).",
+      "sourcePath": "Patient.maritalStatus",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Patient.maritalStatus"
+    },
+    {
+      "id": "structural-patient-photo-removed",
+      "description": "Element \u0027Patient.photo\u0027 explicitly constrained to 0..0 in source, effectively removed in target by absence.",
+      "sourcePath": "Patient.photo",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": ""
+    },
+    {
+      "id": "cardinality-patient-contact-changed",
+      "description": "Cardinality changed from 0..* in source to 1..* in target. This makes the element mandatory.",
+      "sourcePath": "Patient.contact",
+      "severity": "ERROR",
+      "type": "CARDINALITY",
+      "targetPath": "Patient.contact"
+    },
+    {
+      "id": "structural-patient-contact-mustsupport-added",
+      "description": "MustSupport flag added in target profile (false -\u003e true).",
+      "sourcePath": "Patient.contact",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Patient.contact"
+    },
+    {
+      "id": "structural-patient-contact-relationship-added",
+      "description": "New element \u0027Patient.contact.relationship\u0027 added in target profile with mustSupport: true.",
+      "sourcePath": "",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Patient.contact.relationship"
+    },
+    {
+      "id": "structural-patient-contact-name-mustsupport-added",
+      "description": "MustSupport flag added in target profile (false -\u003e true).",
+      "sourcePath": "Patient.contact.name",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Patient.contact.name"
+    },
+    {
+      "id": "cardinality-patient-contact-telecom-changed",
+      "description": "Cardinality changed from 0..* in source to 1..* in target. This makes the element mandatory.",
+      "sourcePath": "Patient.contact.telecom",
+      "severity": "ERROR",
+      "type": "CARDINALITY",
+      "targetPath": "Patient.contact.telecom"
+    },
+    {
+      "id": "structural-patient-contact-telecom-mustsupport-added",
+      "description": "MustSupport flag added in target profile (false -\u003e true).",
+      "sourcePath": "Patient.contact.telecom",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Patient.contact.telecom"
+    },
+    {
+      "id": "cardinality-patient-communication-changed",
+      "description": "Cardinality changed from 0..* in source to 1..* in target. This makes the element mandatory.",
+      "sourcePath": "Patient.communication",
+      "severity": "ERROR",
+      "type": "CARDINALITY",
+      "targetPath": "Patient.communication"
+    },
+    {
+      "id": "structural-patient-communication-mustsupport-added",
+      "description": "MustSupport flag added in target profile (false -\u003e true).",
+      "sourcePath": "Patient.communication",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Patient.communication"
+    },
+    {
+      "id": "terminology-patient-communication-language-binding-removed",
+      "description": "Value set binding \u0027https://tk-soft.example.com/fhir/ValueSet/languages\u0027 (extensible) present in source but removed in target.",
+      "sourcePath": "Patient.communication.language",
+      "severity": "WARNING",
+      "type": "TERMINOLOGY",
+      "targetPath": "Patient.communication.language"
+    },
+    {
+      "id": "structural-patient-communication-language-mustsupport-added",
+      "description": "MustSupport flag added in target profile (false -\u003e true).",
+      "sourcePath": "Patient.communication.language",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Patient.communication.language"
+    },
+    {
+      "id": "structural-patient-generalpractitioner-targetprofile-removed",
+      "description": "Reference target profile \u0027https://tk-soft.example.com/fhir/StructureDefinition/Practitioner\u0027 present in source but removed in target, allowing any Practitioner.",
+      "sourcePath": "Patient.generalPractitioner",
+      "severity": "WARNING",
+      "type": "STRUCTURAL",
+      "targetPath": "Patient.generalPractitioner"
+    },
+    {
+      "id": "structural-patient-generalpractitioner-mustsupport-added",
+      "description": "MustSupport flag added in target profile (false -\u003e true).",
+      "sourcePath": "Patient.generalPractitioner",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Patient.generalPractitioner"
+    },
+    {
+      "id": "cardinality-patient-managingorganization-changed",
+      "description": "Cardinality changed from 0..* in source to 1..* in target. This makes the element mandatory.",
+      "sourcePath": "Patient.managingOrganization",
+      "severity": "ERROR",
+      "type": "CARDINALITY",
+      "targetPath": "Patient.managingOrganization"
+    },
+    {
+      "id": "structural-patient-managingorganization-targetprofile-changed",
+      "description": "Reference target profile changed from \u0027https://tk-soft.example.com/fhir/StructureDefinition/Organization\u0027 in source to \u0027https://hemas.example.com/fhir/StructureDefinition/Organization\u0027 in target.",
+      "sourcePath": "Patient.managingOrganization",
+      "severity": "WARNING",
+      "type": "STRUCTURAL",
+      "targetPath": "Patient.managingOrganization"
+    },
+    {
+      "id": "structural-patient-managingorganization-mustsupport-added",
+      "description": "MustSupport flag added in target profile (false -\u003e true).",
+      "sourcePath": "Patient.managingOrganization",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Patient.managingOrganization"
+    },
+    {
+      "id": "rule-1",
+      "description": "Type profile constraint changed: [https://tk-soft.example.com/fhir/StructureDefinition/patient-preferred-language] â [https://hemas.example.com/fhir/StructureDefinition/patient-insurance-provider]",
+      "sourcePath": "Patient.extension",
+      "severity": "WARNING",
+      "type": "STRUCTURAL",
+      "targetPath": "Patient.extension"
+    },
+    {
+      "id": "rule-2",
+      "description": "MustSupport added in target",
+      "sourcePath": "Patient.extension",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Patient.extension"
+    }
+  ],
+  "sourceCanonical": "https://tk-soft.example.com/fhir/StructureDefinition/Patient",
+  "targetCanonical": "https://hemas.example.com/fhir/StructureDefinition/Patient"
+}

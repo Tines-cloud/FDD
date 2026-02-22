@@ -1,0 +1,63 @@
+{
+  "pairId": "r4-allergyintolerance-vs-us-core-allergyintolerance",
+  "sourceCanonical": "http://hl7.org/fhir/StructureDefinition/AllergyIntolerance",
+  "targetCanonical": "http://hl7.org/fhir/us/core/StructureDefinition/us-core-allergyintolerance",
+  "drifts": [
+    {
+      "id": "clinicalstatus-must-support",
+      "type": "STRUCTURAL",
+      "sourcePath": "AllergyIntolerance.clinicalStatus",
+      "targetPath": "AllergyIntolerance.clinicalStatus",
+      "description": "US Core marks clinicalStatus as mustSupport; base R4 does not",
+      "severity": "WARNING"
+    },
+    {
+      "id": "verificationstatus-must-support",
+      "type": "STRUCTURAL",
+      "sourcePath": "AllergyIntolerance.verificationStatus",
+      "targetPath": "AllergyIntolerance.verificationStatus",
+      "description": "US Core marks verificationStatus as mustSupport; base R4 does not",
+      "severity": "WARNING"
+    },
+    {
+      "id": "code-cardinality",
+      "type": "CARDINALITY",
+      "sourcePath": "AllergyIntolerance.code",
+      "targetPath": "AllergyIntolerance.code",
+      "description": "US Core requires code (1..1) while base R4 allows none (0..1)",
+      "severity": "ERROR"
+    },
+    {
+      "id": "code-must-support",
+      "type": "STRUCTURAL",
+      "sourcePath": "AllergyIntolerance.code",
+      "targetPath": "AllergyIntolerance.code",
+      "description": "US Core marks code as mustSupport; base R4 does not",
+      "severity": "WARNING"
+    },
+    {
+      "id": "patient-must-support",
+      "type": "STRUCTURAL",
+      "sourcePath": "AllergyIntolerance.patient",
+      "targetPath": "AllergyIntolerance.patient",
+      "description": "US Core marks patient as mustSupport and constrains reference to US Core Patient",
+      "severity": "WARNING"
+    },
+    {
+      "id": "reaction-must-support",
+      "type": "STRUCTURAL",
+      "sourcePath": "AllergyIntolerance.reaction",
+      "targetPath": "AllergyIntolerance.reaction",
+      "description": "US Core marks reaction as mustSupport; base R4 does not",
+      "severity": "WARNING"
+    },
+    {
+      "id": "reaction-manifestation-must-support",
+      "type": "STRUCTURAL",
+      "sourcePath": "AllergyIntolerance.reaction.manifestation",
+      "targetPath": "AllergyIntolerance.reaction.manifestation",
+      "description": "US Core marks reaction.manifestation as mustSupport; base R4 does not",
+      "severity": "WARNING"
+    }
+  ]
+}

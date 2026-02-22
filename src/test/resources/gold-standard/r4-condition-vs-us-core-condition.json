@@ -1,0 +1,87 @@
+{
+  "pairId": "r4-condition-vs-us-core-condition",
+  "sourceCanonical": "http://hl7.org/fhir/StructureDefinition/Condition",
+  "targetCanonical": "http://hl7.org/fhir/us/core/StructureDefinition/us-core-condition-problems-health-concerns",
+  "drifts": [
+    {
+      "id": "clinicalstatus-must-support",
+      "type": "STRUCTURAL",
+      "sourcePath": "Condition.clinicalStatus",
+      "targetPath": "Condition.clinicalStatus",
+      "description": "US Core marks clinicalStatus as mustSupport; base R4 does not",
+      "severity": "WARNING"
+    },
+    {
+      "id": "verificationstatus-must-support",
+      "type": "STRUCTURAL",
+      "sourcePath": "Condition.verificationStatus",
+      "targetPath": "Condition.verificationStatus",
+      "description": "US Core marks verificationStatus as mustSupport; base R4 does not",
+      "severity": "WARNING"
+    },
+    {
+      "id": "category-cardinality",
+      "type": "CARDINALITY",
+      "sourcePath": "Condition.category",
+      "targetPath": "Condition.category",
+      "description": "US Core requires at least one category (1..*) while base R4 allows none (0..*)",
+      "severity": "ERROR"
+    },
+    {
+      "id": "category-binding",
+      "type": "TERMINOLOGY",
+      "sourcePath": "Condition.category",
+      "targetPath": "Condition.category",
+      "description": "US Core binds category to us-core-condition-category ValueSet with extensible binding instead of condition-category with preferred binding",
+      "severity": "WARNING"
+    },
+    {
+      "id": "code-must-support",
+      "type": "STRUCTURAL",
+      "sourcePath": "Condition.code",
+      "targetPath": "Condition.code",
+      "description": "US Core marks Condition.code as mustSupport; base R4 does not",
+      "severity": "WARNING"
+    },
+    {
+      "id": "code-cardinality",
+      "type": "CARDINALITY",
+      "sourcePath": "Condition.code",
+      "targetPath": "Condition.code",
+      "description": "US Core requires code (1..1) while base R4 allows none (0..1)",
+      "severity": "ERROR"
+    },
+    {
+      "id": "subject-cardinality-type",
+      "type": "STRUCTURAL",
+      "sourcePath": "Condition.subject",
+      "targetPath": "Condition.subject",
+      "description": "US Core constrains subject to reference US Core Patient only, not the broader R4 Patient|Group",
+      "severity": "WARNING"
+    },
+    {
+      "id": "abatement-must-support",
+      "type": "STRUCTURAL",
+      "sourcePath": "Condition.abatement[x]",
+      "targetPath": "Condition.abatement[x]",
+      "description": "US Core marks abatement[x] as mustSupport; base R4 does not",
+      "severity": "WARNING"
+    },
+    {
+      "id": "onset-must-support",
+      "type": "STRUCTURAL",
+      "sourcePath": "Condition.onset[x]",
+      "targetPath": "Condition.onset[x]",
+      "description": "US Core marks onset[x] as mustSupport; base R4 does not",
+      "severity": "WARNING"
+    },
+    {
+      "id": "recordeddate-must-support",
+      "type": "STRUCTURAL",
+      "sourcePath": "Condition.recordedDate",
+      "targetPath": "Condition.recordedDate",
+      "description": "US Core marks recordedDate as mustSupport; base R4 does not",
+      "severity": "WARNING"
+    }
+  ]
+}

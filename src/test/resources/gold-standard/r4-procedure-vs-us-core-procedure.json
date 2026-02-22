@@ -1,0 +1,63 @@
+{
+  "pairId": "r4-procedure-vs-us-core-procedure",
+  "sourceCanonical": "http://hl7.org/fhir/StructureDefinition/Procedure",
+  "targetCanonical": "http://hl7.org/fhir/us/core/StructureDefinition/us-core-procedure",
+  "drifts": [
+    {
+      "id": "status-must-support",
+      "type": "STRUCTURAL",
+      "sourcePath": "Procedure.status",
+      "targetPath": "Procedure.status",
+      "description": "US Core marks status as mustSupport; base R4 does not",
+      "severity": "WARNING"
+    },
+    {
+      "id": "code-must-support",
+      "type": "STRUCTURAL",
+      "sourcePath": "Procedure.code",
+      "targetPath": "Procedure.code",
+      "description": "US Core marks code as mustSupport; base R4 does not",
+      "severity": "WARNING"
+    },
+    {
+      "id": "code-cardinality",
+      "type": "CARDINALITY",
+      "sourcePath": "Procedure.code",
+      "targetPath": "Procedure.code",
+      "description": "US Core requires code (1..1) while base R4 allows none (0..1)",
+      "severity": "ERROR"
+    },
+    {
+      "id": "subject-must-support",
+      "type": "STRUCTURAL",
+      "sourcePath": "Procedure.subject",
+      "targetPath": "Procedure.subject",
+      "description": "US Core marks subject as mustSupport and constrains reference to US Core Patient",
+      "severity": "WARNING"
+    },
+    {
+      "id": "performed-must-support",
+      "type": "STRUCTURAL",
+      "sourcePath": "Procedure.performed[x]",
+      "targetPath": "Procedure.performed[x]",
+      "description": "US Core marks performed[x] as mustSupport; base R4 does not",
+      "severity": "WARNING"
+    },
+    {
+      "id": "code-binding",
+      "type": "TERMINOLOGY",
+      "sourcePath": "Procedure.code",
+      "targetPath": "Procedure.code",
+      "description": "US Core binds code to us-core-procedure-code ValueSet with extensible binding instead of example binding",
+      "severity": "WARNING"
+    },
+    {
+      "id": "focaldevice-must-support",
+      "type": "STRUCTURAL",
+      "sourcePath": "Procedure.focalDevice",
+      "targetPath": "Procedure.focalDevice",
+      "description": "US Core marks focalDevice as mustSupport; base R4 does not",
+      "severity": "INFO"
+    }
+  ]
+}

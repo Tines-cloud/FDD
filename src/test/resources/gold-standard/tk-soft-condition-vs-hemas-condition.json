@@ -1,0 +1,191 @@
+﻿{
+  "pairId": "tk-soft-condition-vs-hemas-condition",
+  "drifts": [
+    {
+      "id": "rule-12",
+      "description": "Root element \u0027Condition\u0027 added with specific metadata (short and definition) in target profile.",
+      "sourcePath": "",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Condition"
+    },
+    {
+      "id": "extension-chronic-disease-removed",
+      "description": "Extension \u0027https://tk-soft.example.com/fhir/StructureDefinition/condition-chronic-disease\u0027 present in source profile is removed in target.",
+      "sourcePath": "Condition.extension:chronicDisease",
+      "severity": "WARNING",
+      "type": "EXTENSION",
+      "targetPath": ""
+    },
+    {
+      "id": "extension-admission-diagnosis-added",
+      "description": "New extension \u0027https://hemas.example.com/fhir/StructureDefinition/condition-admission-diagnosis\u0027 added in target profile.",
+      "sourcePath": "",
+      "severity": "INFO",
+      "type": "EXTENSION",
+      "targetPath": "Condition.extension:admissionDiagnosis"
+    },
+    {
+      "id": "extension-admission-diagnosis-mustsupport-added",
+      "description": "MustSupport flag set to true for new extension \u0027https://hemas.example.com/fhir/StructureDefinition/condition-admission-diagnosis\u0027 in target profile.",
+      "sourcePath": "",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Condition.extension:admissionDiagnosis.mustSupport"
+    },
+    {
+      "id": "extension-discharge-diagnosis-added",
+      "description": "New extension \u0027https://hemas.example.com/fhir/StructureDefinition/condition-discharge-diagnosis\u0027 added in target profile.",
+      "sourcePath": "",
+      "severity": "INFO",
+      "type": "EXTENSION",
+      "targetPath": "Condition.extension:dischargeDiagnosis"
+    },
+    {
+      "id": "extension-discharge-diagnosis-mustsupport-added",
+      "description": "MustSupport flag set to true for new extension \u0027https://hemas.example.com/fhir/StructureDefinition/condition-discharge-diagnosis\u0027 in target profile.",
+      "sourcePath": "",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Condition.extension:dischargeDiagnosis.mustSupport"
+    },
+    {
+      "id": "rule-3",
+      "description": "Cardinality changed from [1..*] in source to [0..*] in target, making the element optional.",
+      "sourcePath": "Condition.clinicalStatus",
+      "severity": "WARNING",
+      "type": "CARDINALITY",
+      "targetPath": "Condition.clinicalStatus"
+    },
+    {
+      "id": "rule-4",
+      "description": "Value set binding removed: \u0027extensible\u0027 binding to \u0027https://tk-soft.example.com/fhir/ValueSet/condition-category\u0027 in source, no binding in target.",
+      "sourcePath": "Condition.category",
+      "severity": "WARNING",
+      "type": "TERMINOLOGY",
+      "targetPath": "Condition.category"
+    },
+    {
+      "id": "rule-5",
+      "description": "Value set binding removed: \u0027extensible\u0027 binding to \u0027https://tk-soft.example.com/fhir/ValueSet/condition-severity\u0027 in source, no binding in target.",
+      "sourcePath": "Condition.severity",
+      "severity": "WARNING",
+      "type": "TERMINOLOGY",
+      "targetPath": "Condition.severity"
+    },
+    {
+      "id": "condition-severity-definition-changed",
+      "description": "Definition changed from null to \u0027Hemas hospitals require severity documentation for triage and resource allocation.\u0027",
+      "sourcePath": "Condition.severity.definition",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Condition.severity.definition"
+    },
+    {
+      "id": "rule-13",
+      "description": "Element \u0027Condition.bodySite\u0027 removed in target profile.",
+      "sourcePath": "Condition.bodySite",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": ""
+    },
+    {
+      "id": "rule-6",
+      "description": "Reference target profile changed from \u0027https://tk-soft.example.com/fhir/StructureDefinition/Patient\u0027 to \u0027https://hemas.example.com/fhir/StructureDefinition/Patient\u0027.",
+      "sourcePath": "Condition.subject",
+      "severity": "WARNING",
+      "type": "STRUCTURAL",
+      "targetPath": "Condition.subject"
+    },
+    {
+      "id": "rule-7",
+      "description": "Cardinality changed from [0..*] in source to [1..*] in target, making the element mandatory.",
+      "sourcePath": "Condition.encounter",
+      "severity": "ERROR",
+      "type": "CARDINALITY",
+      "targetPath": "Condition.encounter"
+    },
+    {
+      "id": "rule-8",
+      "description": "Reference target profile changed from \u0027https://tk-soft.example.com/fhir/StructureDefinition/Encounter\u0027 to \u0027https://hemas.example.com/fhir/StructureDefinition/Encounter\u0027.",
+      "sourcePath": "Condition.encounter",
+      "severity": "WARNING",
+      "type": "STRUCTURAL",
+      "targetPath": "Condition.encounter"
+    },
+    {
+      "id": "condition-encounter-definition-changed",
+      "description": "Definition changed from null to \u0027All Hemas conditions must be linked to an encounter for admission tracking.\u0027",
+      "sourcePath": "Condition.encounter.definition",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Condition.encounter.definition"
+    },
+    {
+      "id": "rule-9",
+      "description": "Cardinality changed from [1..*] in source to [0..*] in target, making the element optional.",
+      "sourcePath": "Condition.onset[x]",
+      "severity": "WARNING",
+      "type": "CARDINALITY",
+      "targetPath": "Condition.onset[x]"
+    },
+    {
+      "id": "rule-14",
+      "description": "Element \u0027Condition.abatement[x]\u0027 removed in target profile.",
+      "sourcePath": "Condition.abatement[x]",
+      "severity": "WARNING",
+      "type": "STRUCTURAL",
+      "targetPath": ""
+    },
+    {
+      "id": "rule-10",
+      "description": "Cardinality changed from [0..*] in source to [1..*] in target, making the element mandatory.",
+      "sourcePath": "Condition.recordedDate",
+      "severity": "ERROR",
+      "type": "CARDINALITY",
+      "targetPath": "Condition.recordedDate"
+    },
+    {
+      "id": "rule-11",
+      "description": "Reference target profile changed from \u0027https://tk-soft.example.com/fhir/StructureDefinition/Practitioner\u0027 to \u0027https://hemas.example.com/fhir/StructureDefinition/Practitioner\u0027.",
+      "sourcePath": "Condition.recorder",
+      "severity": "WARNING",
+      "type": "STRUCTURAL",
+      "targetPath": "Condition.recorder"
+    },
+    {
+      "id": "rule-15",
+      "description": "Element \u0027Condition.asserter\u0027 removed in target profile.",
+      "sourcePath": "Condition.asserter",
+      "severity": "WARNING",
+      "type": "STRUCTURAL",
+      "targetPath": ""
+    },
+    {
+      "id": "rule-16",
+      "description": "Element \u0027Condition.note\u0027 removed in target profile.",
+      "sourcePath": "Condition.note",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": ""
+    },
+    {
+      "id": "rule-1",
+      "description": "Type profile constraint changed: [https://tk-soft.example.com/fhir/StructureDefinition/condition-chronic-disease] â [https://hemas.example.com/fhir/StructureDefinition/condition-discharge-diagnosis]",
+      "sourcePath": "Condition.extension",
+      "severity": "WARNING",
+      "type": "STRUCTURAL",
+      "targetPath": "Condition.extension"
+    },
+    {
+      "id": "rule-2",
+      "description": "MustSupport added in target",
+      "sourcePath": "Condition.extension",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Condition.extension"
+    }
+  ],
+  "sourceCanonical": "https://tk-soft.example.com/fhir/StructureDefinition/Condition",
+  "targetCanonical": "https://hemas.example.com/fhir/StructureDefinition/Condition"
+}

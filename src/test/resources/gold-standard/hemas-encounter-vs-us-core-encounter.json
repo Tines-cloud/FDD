@@ -1,0 +1,1991 @@
+﻿{
+  "pairId": "hemas-encounter-vs-us-core-encounter",
+  "drifts": [
+    {
+      "id": "encounter-root-constraints-added",
+      "description": "Added base FHIR constraints to the root Encounter element in the target profile: [dom-2, dom-3, dom-4, dom-5, dom-6].",
+      "sourcePath": "Encounter",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter"
+    },
+    {
+      "id": "extension-slicing-removed",
+      "description": "Slicing definition for Encounter.extension is removed in the target profile. Source defined slicing by \u0027value:url\u0027, target has no slicing.",
+      "sourcePath": "Encounter.extension",
+      "severity": "ERROR",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.extension"
+    },
+    {
+      "id": "extension-ward-number-removed",
+      "description": "The custom extension \u0027wardNumber\u0027 (profiled to https://hemas.example.com/fhir/StructureDefinition/encounter-ward-number) defined in the source profile is not present in the target profile.",
+      "sourcePath": "Encounter.extension:wardNumber",
+      "severity": "ERROR",
+      "type": "EXTENSION",
+      "targetPath": "Encounter.extension"
+    },
+    {
+      "id": "extension-bed-number-removed",
+      "description": "The custom extension \u0027bedNumber\u0027 (profiled to https://hemas.example.com/fhir/StructureDefinition/encounter-bed-number) defined in the source profile is not present in the target profile.",
+      "sourcePath": "Encounter.extension:bedNumber",
+      "severity": "ERROR",
+      "type": "EXTENSION",
+      "targetPath": "Encounter.extension"
+    },
+    {
+      "id": "mustsupport-ward-number-removed",
+      "description": "MustSupport flag for the \u0027wardNumber\u0027 extension is removed in the target profile (as the extension itself is removed).",
+      "sourcePath": "Encounter.extension:wardNumber",
+      "severity": "ERROR",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.extension"
+    },
+    {
+      "id": "mustsupport-bed-number-removed",
+      "description": "MustSupport flag for the \u0027bedNumber\u0027 extension is removed in the target profile (as the extension itself is removed).",
+      "sourcePath": "Encounter.extension:bedNumber",
+      "severity": "ERROR",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.extension"
+    },
+    {
+      "id": "extension-general-constraints-added",
+      "description": "Added base FHIR constraints [ele-1, ext-1] to the general Encounter.extension element in the target profile.",
+      "sourcePath": "Encounter.extension",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.extension"
+    },
+    {
+      "id": "encounter-status-cardinality-changed",
+      "description": "Cardinality changed from 0..* in source to 1..1 in target. This makes the status element mandatory and single-valued.",
+      "sourcePath": "Encounter.status",
+      "severity": "ERROR",
+      "type": "CARDINALITY",
+      "targetPath": "Encounter.status"
+    },
+    {
+      "id": "encounter-status-binding-added",
+      "description": "Value set binding added in target: \u0027required\u0027 to http://hl7.org/fhir/ValueSet/encounter-status|4.0.1. Source had no binding.",
+      "sourcePath": "Encounter.status",
+      "severity": "ERROR",
+      "type": "TERMINOLOGY",
+      "targetPath": "Encounter.status"
+    },
+    {
+      "id": "encounter-status-ismodifier-changed",
+      "description": "isModifier flag changed from false in source to true in target. This indicates that the status element\u0027s value can change the meaning of the resource.",
+      "sourcePath": "Encounter.status",
+      "severity": "WARNING",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.status"
+    },
+    {
+      "id": "encounter-status-issummary-changed",
+      "description": "isSummary flag changed from false in source to true in target.",
+      "sourcePath": "Encounter.status",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.status"
+    },
+    {
+      "id": "encounter-status-constraints-added",
+      "description": "Added base FHIR constraint [ele-1] to Encounter.status in the target profile.",
+      "sourcePath": "Encounter.status",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.status"
+    },
+    {
+      "id": "encounter-status-uscdi-extension-added",
+      "description": "Added \u0027http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement\u0027 extension to Encounter.status in the target profile.",
+      "sourcePath": "Encounter.status",
+      "severity": "INFO",
+      "type": "EXTENSION",
+      "targetPath": "Encounter.status"
+    },
+    {
+      "id": "encounter-class-cardinality-changed",
+      "description": "Cardinality changed from 0..* in source to 1..1 in target. This makes the class element mandatory and single-valued.",
+      "sourcePath": "Encounter.class",
+      "severity": "ERROR",
+      "type": "CARDINALITY",
+      "targetPath": "Encounter.class"
+    },
+    {
+      "id": "encounter-class-binding-added",
+      "description": "Value set binding added in target: \u0027extensible\u0027 to http://terminology.hl7.org/ValueSet/v3-ActEncounterCode. Source had no binding.",
+      "sourcePath": "Encounter.class",
+      "severity": "WARNING",
+      "type": "TERMINOLOGY",
+      "targetPath": "Encounter.class"
+    },
+    {
+      "id": "encounter-class-issummary-changed",
+      "description": "isSummary flag changed from false in source to true in target.",
+      "sourcePath": "Encounter.class",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.class"
+    },
+    {
+      "id": "encounter-class-constraints-added",
+      "description": "Added base FHIR constraint [ele-1] to Encounter.class in the target profile.",
+      "sourcePath": "Encounter.class",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.class"
+    },
+    {
+      "id": "encounter-class-uscdi-extension-added",
+      "description": "Added \u0027http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement\u0027 extension to Encounter.class in the target profile.",
+      "sourcePath": "Encounter.class",
+      "severity": "INFO",
+      "type": "EXTENSION",
+      "targetPath": "Encounter.class"
+    },
+    {
+      "id": "encounter-type-binding-added",
+      "description": "Value set binding added in target: \u0027extensible\u0027 to http://hl7.org/fhir/us/core/ValueSet/us-core-encounter-type. Source had no binding.",
+      "sourcePath": "Encounter.type",
+      "severity": "WARNING",
+      "type": "TERMINOLOGY",
+      "targetPath": "Encounter.type"
+    },
+    {
+      "id": "encounter-type-issummary-changed",
+      "description": "isSummary flag changed from false in source to true in target.",
+      "sourcePath": "Encounter.type",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.type"
+    },
+    {
+      "id": "encounter-type-constraints-added",
+      "description": "Added base FHIR constraint [ele-1] to Encounter.type in the target profile.",
+      "sourcePath": "Encounter.type",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.type"
+    },
+    {
+      "id": "encounter-type-uscdi-extension-added",
+      "description": "Added \u0027http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement\u0027 extension to Encounter.type in the target profile.",
+      "sourcePath": "Encounter.type",
+      "severity": "INFO",
+      "type": "EXTENSION",
+      "targetPath": "Encounter.type"
+    },
+    {
+      "id": "encounter-subject-cardinality-changed",
+      "description": "Cardinality changed from 1..* in source to 1..1 in target. This restricts the subject to a single reference.",
+      "sourcePath": "Encounter.subject",
+      "severity": "WARNING",
+      "type": "CARDINALITY",
+      "targetPath": "Encounter.subject"
+    },
+    {
+      "id": "encounter-subject-target-profile-changed",
+      "description": "Reference target profile changed from \u0027https://hemas.example.com/fhir/StructureDefinition/Patient\u0027 in source to \u0027http://hl7.org/fhir/us/core/StructureDefinition/us-core-patient\u0027 in target.",
+      "sourcePath": "Encounter.subject.targetProfile",
+      "severity": "WARNING",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.subject.targetProfile"
+    },
+    {
+      "id": "encounter-subject-issummary-changed",
+      "description": "isSummary flag changed from false in source to true in target.",
+      "sourcePath": "Encounter.subject",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.subject"
+    },
+    {
+      "id": "encounter-subject-constraints-added",
+      "description": "Added base FHIR constraint [ele-1] to Encounter.subject in the target profile.",
+      "sourcePath": "Encounter.subject",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.subject"
+    },
+    {
+      "id": "encounter-subject-uscdi-extension-added",
+      "description": "Added \u0027http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement\u0027 extension to Encounter.subject in the target profile.",
+      "sourcePath": "Encounter.subject",
+      "severity": "INFO",
+      "type": "EXTENSION",
+      "targetPath": "Encounter.subject"
+    },
+    {
+      "id": "encounter-participant-cardinality-changed",
+      "description": "Cardinality changed from 1..* in source to 0..* in target. This makes the participant element optional.",
+      "sourcePath": "Encounter.participant",
+      "severity": "ERROR",
+      "type": "CARDINALITY",
+      "targetPath": "Encounter.participant"
+    },
+    {
+      "id": "encounter-participant-issummary-changed",
+      "description": "isSummary flag changed from false in source to true in target.",
+      "sourcePath": "Encounter.participant",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.participant"
+    },
+    {
+      "id": "encounter-participant-constraints-added",
+      "description": "Added base FHIR constraint [ele-1] to Encounter.participant in the target profile.",
+      "sourcePath": "Encounter.participant",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.participant"
+    },
+    {
+      "id": "encounter-participant-uscdi-extension-added",
+      "description": "Added \u0027http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement\u0027 extension to Encounter.participant in the target profile.",
+      "sourcePath": "Encounter.participant",
+      "severity": "INFO",
+      "type": "EXTENSION",
+      "targetPath": "Encounter.participant"
+    },
+    {
+      "id": "encounter-period-cardinality-changed",
+      "description": "Cardinality changed from 1..* in source to 0..1 in target. This makes the period element optional and single-valued.",
+      "sourcePath": "Encounter.period",
+      "severity": "ERROR",
+      "type": "CARDINALITY",
+      "targetPath": "Encounter.period"
+    },
+    {
+      "id": "encounter-period-constraints-added",
+      "description": "Added base FHIR constraint [ele-1] to Encounter.period in the target profile.",
+      "sourcePath": "Encounter.period",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.period"
+    },
+    {
+      "id": "encounter-period-uscdi-extension-added",
+      "description": "Added \u0027http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement\u0027 extension to Encounter.period in the target profile.",
+      "sourcePath": "Encounter.period",
+      "severity": "INFO",
+      "type": "EXTENSION",
+      "targetPath": "Encounter.period"
+    },
+    {
+      "id": "encounter-reasoncode-binding-added",
+      "description": "Value set binding added in target: \u0027preferred\u0027 to http://hl7.org/fhir/ValueSet/encounter-reason. Source had no binding.",
+      "sourcePath": "Encounter.reasonCode",
+      "severity": "WARNING",
+      "type": "TERMINOLOGY",
+      "targetPath": "Encounter.reasonCode"
+    },
+    {
+      "id": "encounter-reasoncode-issummary-changed",
+      "description": "isSummary flag changed from false in source to true in target.",
+      "sourcePath": "Encounter.reasonCode",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.reasonCode"
+    },
+    {
+      "id": "encounter-reasoncode-constraints-added",
+      "description": "Added base FHIR constraint [ele-1] to Encounter.reasonCode in the target profile.",
+      "sourcePath": "Encounter.reasonCode",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.reasonCode"
+    },
+    {
+      "id": "encounter-reasoncode-uscdi-extension-added",
+      "description": "Added \u0027http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement\u0027 extension to Encounter.reasonCode in the target profile.",
+      "sourcePath": "Encounter.reasonCode",
+      "severity": "INFO",
+      "type": "EXTENSION",
+      "targetPath": "Encounter.reasonCode"
+    },
+    {
+      "id": "encounter-diagnosis-cardinality-changed",
+      "description": "Cardinality changed from 1..* in source to 0..* in target. This makes the diagnosis element optional.",
+      "sourcePath": "Encounter.diagnosis",
+      "severity": "ERROR",
+      "type": "CARDINALITY",
+      "targetPath": "Encounter.diagnosis"
+    },
+    {
+      "id": "encounter-diagnosis-mustsupport-removed",
+      "description": "MustSupport flag removed in target profile (was true in source, now false).",
+      "sourcePath": "Encounter.diagnosis",
+      "severity": "WARNING",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.diagnosis"
+    },
+    {
+      "id": "encounter-diagnosis-issummary-changed",
+      "description": "isSummary flag changed from false in source to true in target.",
+      "sourcePath": "Encounter.diagnosis",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.diagnosis"
+    },
+    {
+      "id": "encounter-diagnosis-constraints-added",
+      "description": "Added base FHIR constraint [ele-1] to Encounter.diagnosis in the target profile.",
+      "sourcePath": "Encounter.diagnosis",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.diagnosis"
+    },
+    {
+      "id": "encounter-diagnosis-explicit-type-name-extension-added",
+      "description": "Added \u0027http://hl7.org/fhir/StructureDefinition/structuredefinition-explicit-type-name\u0027 extension to Encounter.diagnosis in the target profile.",
+      "sourcePath": "Encounter.diagnosis",
+      "severity": "INFO",
+      "type": "EXTENSION",
+      "targetPath": "Encounter.diagnosis"
+    },
+    {
+      "id": "encounter-hospitalization-cardinality-changed",
+      "description": "Cardinality changed from 0..* in source to 0..1 in target. This restricts hospitalization details to a single instance.",
+      "sourcePath": "Encounter.hospitalization",
+      "severity": "WARNING",
+      "type": "CARDINALITY",
+      "targetPath": "Encounter.hospitalization"
+    },
+    {
+      "id": "encounter-hospitalization-constraints-added",
+      "description": "Added base FHIR constraint [ele-1] to Encounter.hospitalization in the target profile.",
+      "sourcePath": "Encounter.hospitalization",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.hospitalization"
+    },
+    {
+      "id": "encounter-hospitalization-uscdi-extension-added",
+      "description": "Added \u0027http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement\u0027 extension to Encounter.hospitalization in the target profile.",
+      "sourcePath": "Encounter.hospitalization",
+      "severity": "INFO",
+      "type": "EXTENSION",
+      "targetPath": "Encounter.hospitalization"
+    },
+    {
+      "id": "hospitalization-admitsource-cardinality-changed",
+      "description": "Cardinality changed from 0..* in source to 0..1 in target. This restricts admitSource to a single value.",
+      "sourcePath": "Encounter.hospitalization.admitSource",
+      "severity": "WARNING",
+      "type": "CARDINALITY",
+      "targetPath": "Encounter.hospitalization.admitSource"
+    },
+    {
+      "id": "hospitalization-admitsource-binding-added",
+      "description": "Value set binding added in target: \u0027preferred\u0027 to http://hl7.org/fhir/ValueSet/encounter-admit-source. Source had no binding.",
+      "sourcePath": "Encounter.hospitalization.admitSource",
+      "severity": "WARNING",
+      "type": "TERMINOLOGY",
+      "targetPath": "Encounter.hospitalization.admitSource"
+    },
+    {
+      "id": "hospitalization-admitsource-mustsupport-removed",
+      "description": "MustSupport flag removed in target profile (was true in source, now false).",
+      "sourcePath": "Encounter.hospitalization.admitSource",
+      "severity": "WARNING",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.hospitalization.admitSource"
+    },
+    {
+      "id": "hospitalization-admitsource-constraints-added",
+      "description": "Added base FHIR constraint [ele-1] to Encounter.hospitalization.admitSource in the target profile.",
+      "sourcePath": "Encounter.hospitalization.admitSource",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.hospitalization.admitSource"
+    },
+    {
+      "id": "hospitalization-dischargedisposition-cardinality-changed",
+      "description": "Cardinality changed from 0..* in source to 0..1 in target. This restricts dischargeDisposition to a single value.",
+      "sourcePath": "Encounter.hospitalization.dischargeDisposition",
+      "severity": "WARNING",
+      "type": "CARDINALITY",
+      "targetPath": "Encounter.hospitalization.dischargeDisposition"
+    },
+    {
+      "id": "hospitalization-dischargedisposition-binding-added",
+      "description": "Value set binding added in target: \u0027preferred\u0027 to http://hl7.org/fhir/us/core/ValueSet/us-core-discharge-disposition. Source had no binding.",
+      "sourcePath": "Encounter.hospitalization.dischargeDisposition",
+      "severity": "WARNING",
+      "type": "TERMINOLOGY",
+      "targetPath": "Encounter.hospitalization.dischargeDisposition"
+    },
+    {
+      "id": "hospitalization-dischargedisposition-constraints-added",
+      "description": "Added base FHIR constraint [ele-1] to Encounter.hospitalization.dischargeDisposition in the target profile.",
+      "sourcePath": "Encounter.hospitalization.dischargeDisposition",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.hospitalization.dischargeDisposition"
+    },
+    {
+      "id": "hospitalization-dischargedisposition-uscdi-extension-added",
+      "description": "Added \u0027http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement\u0027 extension to Encounter.hospitalization.dischargeDisposition in the target profile.",
+      "sourcePath": "Encounter.hospitalization.dischargeDisposition",
+      "severity": "INFO",
+      "type": "EXTENSION",
+      "targetPath": "Encounter.hospitalization.dischargeDisposition"
+    },
+    {
+      "id": "encounter-location-constraints-added",
+      "description": "Added base FHIR constraint [ele-1] to Encounter.location in the target profile.",
+      "sourcePath": "Encounter.location",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.location"
+    },
+    {
+      "id": "encounter-location-uscdi-extension-added",
+      "description": "Added \u0027http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement\u0027 extension to Encounter.location in the target profile.",
+      "sourcePath": "Encounter.location",
+      "severity": "INFO",
+      "type": "EXTENSION",
+      "targetPath": "Encounter.location"
+    },
+    {
+      "id": "encounter-serviceprovider-cardinality-changed",
+      "description": "Cardinality changed from 0..* in source to 0..1 in target. This restricts serviceProvider to a single reference.",
+      "sourcePath": "Encounter.serviceProvider",
+      "severity": "WARNING",
+      "type": "CARDINALITY",
+      "targetPath": "Encounter.serviceProvider"
+    },
+    {
+      "id": "encounter-serviceprovider-target-profile-changed",
+      "description": "Reference target profile changed from \u0027https://hemas.example.com/fhir/StructureDefinition/Organization\u0027 in source to \u0027http://hl7.org/fhir/us/core/StructureDefinition/us-core-organization\u0027 in target.",
+      "sourcePath": "Encounter.serviceProvider.targetProfile",
+      "severity": "WARNING",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.serviceProvider.targetProfile"
+    },
+    {
+      "id": "encounter-serviceprovider-constraints-added",
+      "description": "Added base FHIR constraint [ele-1] to Encounter.serviceProvider in the target profile.",
+      "sourcePath": "Encounter.serviceProvider",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.serviceProvider"
+    },
+    {
+      "id": "encounter-serviceprovider-uscdi-extension-added",
+      "description": "Added \u0027http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement\u0027 extension to Encounter.serviceProvider in the target profile.",
+      "sourcePath": "Encounter.serviceProvider",
+      "severity": "INFO",
+      "type": "EXTENSION",
+      "targetPath": "Encounter.serviceProvider"
+    },
+    {
+      "id": "encounter-id-added",
+      "description": "Element Encounter.id added in target profile.",
+      "sourcePath": "Encounter",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.id"
+    },
+    {
+      "id": "encounter-meta-added",
+      "description": "Element Encounter.meta added in target profile.",
+      "sourcePath": "Encounter",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.meta"
+    },
+    {
+      "id": "encounter-implicitrules-added",
+      "description": "Element Encounter.implicitRules added in target profile.",
+      "sourcePath": "Encounter",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.implicitRules"
+    },
+    {
+      "id": "encounter-language-added",
+      "description": "Element Encounter.language added in target profile.",
+      "sourcePath": "Encounter",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.language"
+    },
+    {
+      "id": "encounter-text-added",
+      "description": "Element Encounter.text added in target profile.",
+      "sourcePath": "Encounter",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.text"
+    },
+    {
+      "id": "encounter-contained-added",
+      "description": "Element Encounter.contained added in target profile.",
+      "sourcePath": "Encounter",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.contained"
+    },
+    {
+      "id": "encounter-modifierextension-added",
+      "description": "Element Encounter.modifierExtension added in target profile.",
+      "sourcePath": "Encounter",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.modifierExtension"
+    },
+    {
+      "id": "encounter-identifier-added",
+      "description": "Element Encounter.identifier added in target profile.",
+      "sourcePath": "Encounter",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.identifier"
+    },
+    {
+      "id": "encounter-identifier-mustsupport-added",
+      "description": "Element Encounter.identifier added in target profile with mustSupport=true.",
+      "sourcePath": "Encounter",
+      "severity": "WARNING",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.identifier"
+    },
+    {
+      "id": "encounter-identifier-id-added",
+      "description": "Element Encounter.identifier.id added in target profile.",
+      "sourcePath": "Encounter",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.identifier.id"
+    },
+    {
+      "id": "encounter-identifier-extension-added",
+      "description": "Element Encounter.identifier.extension added in target profile.",
+      "sourcePath": "Encounter",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.identifier.extension"
+    },
+    {
+      "id": "encounter-identifier-use-added",
+      "description": "Element Encounter.identifier.use added in target profile.",
+      "sourcePath": "Encounter",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.identifier.use"
+    },
+    {
+      "id": "encounter-identifier-use-binding-added",
+      "description": "Value set binding added to Encounter.identifier.use in target: \u0027required\u0027 to http://hl7.org/fhir/ValueSet/identifier-use|4.0.1.",
+      "sourcePath": "Encounter",
+      "severity": "ERROR",
+      "type": "TERMINOLOGY",
+      "targetPath": "Encounter.identifier.use"
+    },
+    {
+      "id": "encounter-identifier-type-added",
+      "description": "Element Encounter.identifier.type added in target profile.",
+      "sourcePath": "Encounter",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.identifier.type"
+    },
+    {
+      "id": "encounter-identifier-type-binding-added",
+      "description": "Value set binding added to Encounter.identifier.type in target: \u0027extensible\u0027 to http://hl7.org/fhir/ValueSet/identifier-type.",
+      "sourcePath": "Encounter",
+      "severity": "WARNING",
+      "type": "TERMINOLOGY",
+      "targetPath": "Encounter.identifier.type"
+    },
+    {
+      "id": "encounter-identifier-system-added",
+      "description": "Element Encounter.identifier.system added in target profile with cardinality 1..1 and mustSupport=true. This makes it a mandatory and supported element.",
+      "sourcePath": "Encounter",
+      "severity": "ERROR",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.identifier.system"
+    },
+    {
+      "id": "encounter-identifier-value-added",
+      "description": "Element Encounter.identifier.value added in target profile with cardinality 1..1 and mustSupport=true. This makes it a mandatory and supported element.",
+      "sourcePath": "Encounter",
+      "severity": "ERROR",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.identifier.value"
+    },
+    {
+      "id": "encounter-identifier-period-added",
+      "description": "Element Encounter.identifier.period added in target profile.",
+      "sourcePath": "Encounter",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.identifier.period"
+    },
+    {
+      "id": "encounter-identifier-assigner-added",
+      "description": "Element Encounter.identifier.assigner added in target profile.",
+      "sourcePath": "Encounter",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.identifier.assigner"
+    },
+    {
+      "id": "encounter-identifier-assigner-target-profile-added",
+      "description": "Reference target profile \u0027http://hl7.org/fhir/StructureDefinition/Organization\u0027 added to Encounter.identifier.assigner in target.",
+      "sourcePath": "Encounter",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.identifier.assigner.targetProfile"
+    },
+    {
+      "id": "encounter-statushistory-added",
+      "description": "Element Encounter.statusHistory added in target profile.",
+      "sourcePath": "Encounter",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.statusHistory"
+    },
+    {
+      "id": "encounter-statushistory-id-added",
+      "description": "Element Encounter.statusHistory.id added in target profile.",
+      "sourcePath": "Encounter",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.statusHistory.id"
+    },
+    {
+      "id": "encounter-statushistory-extension-added",
+      "description": "Element Encounter.statusHistory.extension added in target profile.",
+      "sourcePath": "Encounter",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.statusHistory.extension"
+    },
+    {
+      "id": "encounter-statushistory-modifierextension-added",
+      "description": "Element Encounter.statusHistory.modifierExtension added in target profile.",
+      "sourcePath": "Encounter",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.statusHistory.modifierExtension"
+    },
+    {
+      "id": "encounter-statushistory-status-added",
+      "description": "Element Encounter.statusHistory.status added in target profile with cardinality 1..1. This makes it a mandatory element.",
+      "sourcePath": "Encounter",
+      "severity": "ERROR",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.statusHistory.status"
+    },
+    {
+      "id": "encounter-statushistory-status-binding-added",
+      "description": "Value set binding added to Encounter.statusHistory.status in target: \u0027required\u0027 to http://hl7.org/fhir/ValueSet/encounter-status|4.0.1.",
+      "sourcePath": "Encounter",
+      "severity": "ERROR",
+      "type": "TERMINOLOGY",
+      "targetPath": "Encounter.statusHistory.status"
+    },
+    {
+      "id": "encounter-statushistory-period-added",
+      "description": "Element Encounter.statusHistory.period added in target profile with cardinality 1..1. This makes it a mandatory element.",
+      "sourcePath": "Encounter",
+      "severity": "ERROR",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.statusHistory.period"
+    },
+    {
+      "id": "encounter-classhistory-added",
+      "description": "Element Encounter.classHistory added in target profile.",
+      "sourcePath": "Encounter",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.classHistory"
+    },
+    {
+      "id": "encounter-classhistory-id-added",
+      "description": "Element Encounter.classHistory.id added in target profile.",
+      "sourcePath": "Encounter",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.classHistory.id"
+    },
+    {
+      "id": "encounter-classhistory-extension-added",
+      "description": "Element Encounter.classHistory.extension added in target profile.",
+      "sourcePath": "Encounter",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.classHistory.extension"
+    },
+    {
+      "id": "encounter-classhistory-modifierextension-added",
+      "description": "Element Encounter.classHistory.modifierExtension added in target profile.",
+      "sourcePath": "Encounter",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.classHistory.modifierExtension"
+    },
+    {
+      "id": "encounter-classhistory-class-added",
+      "description": "Element Encounter.classHistory.class added in target profile with cardinality 1..1. This makes it a mandatory element.",
+      "sourcePath": "Encounter",
+      "severity": "ERROR",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.classHistory.class"
+    },
+    {
+      "id": "encounter-classhistory-class-binding-added",
+      "description": "Value set binding added to Encounter.classHistory.class in target: \u0027extensible\u0027 to http://terminology.hl7.org/ValueSet/v3-ActEncounterCode.",
+      "sourcePath": "Encounter",
+      "severity": "WARNING",
+      "type": "TERMINOLOGY",
+      "targetPath": "Encounter.classHistory.class"
+    },
+    {
+      "id": "encounter-classhistory-period-added",
+      "description": "Element Encounter.classHistory.period added in target profile with cardinality 1..1. This makes it a mandatory element.",
+      "sourcePath": "Encounter",
+      "severity": "ERROR",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.classHistory.period"
+    },
+    {
+      "id": "encounter-servicetype-added",
+      "description": "Element Encounter.serviceType added in target profile.",
+      "sourcePath": "Encounter",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.serviceType"
+    },
+    {
+      "id": "encounter-servicetype-binding-added",
+      "description": "Value set binding added to Encounter.serviceType in target: \u0027example\u0027 to http://hl7.org/fhir/ValueSet/service-type.",
+      "sourcePath": "Encounter",
+      "severity": "INFO",
+      "type": "TERMINOLOGY",
+      "targetPath": "Encounter.serviceType"
+    },
+    {
+      "id": "encounter-priority-added",
+      "description": "Element Encounter.priority added in target profile.",
+      "sourcePath": "Encounter",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.priority"
+    },
+    {
+      "id": "encounter-priority-binding-added",
+      "description": "Value set binding added to Encounter.priority in target: \u0027example\u0027 to http://terminology.hl7.org/ValueSet/v3-ActPriority.",
+      "sourcePath": "Encounter",
+      "severity": "INFO",
+      "type": "TERMINOLOGY",
+      "targetPath": "Encounter.priority"
+    },
+    {
+      "id": "encounter-episodeofcare-added",
+      "description": "Element Encounter.episodeOfCare added in target profile.",
+      "sourcePath": "Encounter",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.episodeOfCare"
+    },
+    {
+      "id": "encounter-episodeofcare-target-profile-added",
+      "description": "Reference target profile \u0027http://hl7.org/fhir/StructureDefinition/EpisodeOfCare\u0027 added to Encounter.episodeOfCare in target.",
+      "sourcePath": "Encounter",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.episodeOfCare.targetProfile"
+    },
+    {
+      "id": "encounter-basedon-added",
+      "description": "Element Encounter.basedOn added in target profile.",
+      "sourcePath": "Encounter",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.basedOn"
+    },
+    {
+      "id": "encounter-basedon-target-profile-added",
+      "description": "Reference target profile \u0027http://hl7.org/fhir/StructureDefinition/ServiceRequest\u0027 added to Encounter.basedOn in target.",
+      "sourcePath": "Encounter",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.basedOn.targetProfile"
+    },
+    {
+      "id": "encounter-participant-id-added",
+      "description": "Element Encounter.participant.id added in target profile.",
+      "sourcePath": "Encounter.participant",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.participant.id"
+    },
+    {
+      "id": "encounter-participant-extension-added",
+      "description": "Element Encounter.participant.extension added in target profile.",
+      "sourcePath": "Encounter.participant",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.participant.extension"
+    },
+    {
+      "id": "encounter-participant-modifierextension-added",
+      "description": "Element Encounter.participant.modifierExtension added in target profile.",
+      "sourcePath": "Encounter.participant",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.participant.modifierExtension"
+    },
+    {
+      "id": "encounter-participant-type-added",
+      "description": "Element Encounter.participant.type added in target profile.",
+      "sourcePath": "Encounter.participant",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.participant.type"
+    },
+    {
+      "id": "encounter-participant-type-mustsupport-added",
+      "description": "Element Encounter.participant.type added in target profile with mustSupport=true.",
+      "sourcePath": "Encounter.participant",
+      "severity": "WARNING",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.participant.type"
+    },
+    {
+      "id": "encounter-participant-type-binding-added",
+      "description": "Value set binding added to Encounter.participant.type in target: \u0027extensible\u0027 to http://hl7.org/fhir/ValueSet/encounter-participant-type.",
+      "sourcePath": "Encounter.participant",
+      "severity": "WARNING",
+      "type": "TERMINOLOGY",
+      "targetPath": "Encounter.participant.type"
+    },
+    {
+      "id": "encounter-participant-period-added",
+      "description": "Element Encounter.participant.period added in target profile.",
+      "sourcePath": "Encounter.participant",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.participant.period"
+    },
+    {
+      "id": "encounter-participant-period-mustsupport-added",
+      "description": "Element Encounter.participant.period added in target profile with mustSupport=true.",
+      "sourcePath": "Encounter.participant",
+      "severity": "WARNING",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.participant.period"
+    },
+    {
+      "id": "encounter-participant-individual-added",
+      "description": "Element Encounter.participant.individual added in target profile.",
+      "sourcePath": "Encounter.participant",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.participant.individual"
+    },
+    {
+      "id": "encounter-participant-individual-mustsupport-added",
+      "description": "Element Encounter.participant.individual added in target profile with mustSupport=true.",
+      "sourcePath": "Encounter.participant",
+      "severity": "WARNING",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.participant.individual"
+    },
+    {
+      "id": "encounter-participant-individual-target-profiles-added",
+      "description": "Reference target profiles added to Encounter.participant.individual in target: \u0027us-core-practitioner\u0027, \u0027us-core-practitionerrole\u0027, \u0027us-core-relatedperson\u0027.",
+      "sourcePath": "Encounter.participant",
+      "severity": "WARNING",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.participant.individual.targetProfile"
+    },
+    {
+      "id": "encounter-appointment-added",
+      "description": "Element Encounter.appointment added in target profile.",
+      "sourcePath": "Encounter",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.appointment"
+    },
+    {
+      "id": "encounter-appointment-target-profile-added",
+      "description": "Reference target profile \u0027http://hl7.org/fhir/StructureDefinition/Appointment\u0027 added to Encounter.appointment in target.",
+      "sourcePath": "Encounter",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.appointment.targetProfile"
+    },
+    {
+      "id": "encounter-length-added",
+      "description": "Element Encounter.length added in target profile.",
+      "sourcePath": "Encounter",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.length"
+    },
+    {
+      "id": "encounter-reasonreference-added",
+      "description": "Element Encounter.reasonReference added in target profile.",
+      "sourcePath": "Encounter",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.reasonReference"
+    },
+    {
+      "id": "encounter-reasonreference-mustsupport-added",
+      "description": "Element Encounter.reasonReference added in target profile with mustSupport=true.",
+      "sourcePath": "Encounter",
+      "severity": "WARNING",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.reasonReference"
+    },
+    {
+      "id": "encounter-reasonreference-target-profiles-added",
+      "description": "Reference target profiles added to Encounter.reasonReference in target: \u0027us-core-condition-problems-health-concerns\u0027, \u0027us-core-condition-encounter-diagnosis\u0027, \u0027us-core-procedure\u0027, \u0027Observation\u0027, \u0027ImmunizationRecommendation\u0027.",
+      "sourcePath": "Encounter",
+      "severity": "WARNING",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.reasonReference.targetProfile"
+    },
+    {
+      "id": "encounter-diagnosis-id-added",
+      "description": "Element Encounter.diagnosis.id added in target profile.",
+      "sourcePath": "Encounter.diagnosis",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.diagnosis.id"
+    },
+    {
+      "id": "encounter-diagnosis-extension-added",
+      "description": "Element Encounter.diagnosis.extension added in target profile.",
+      "sourcePath": "Encounter.diagnosis",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.diagnosis.extension"
+    },
+    {
+      "id": "encounter-diagnosis-modifierextension-added",
+      "description": "Element Encounter.diagnosis.modifierExtension added in target profile.",
+      "sourcePath": "Encounter.diagnosis",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.diagnosis.modifierExtension"
+    },
+    {
+      "id": "encounter-diagnosis-condition-added",
+      "description": "Element Encounter.diagnosis.condition added in target profile with cardinality 1..1. This makes it a mandatory element within each diagnosis entry.",
+      "sourcePath": "Encounter.diagnosis",
+      "severity": "ERROR",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.diagnosis.condition"
+    },
+    {
+      "id": "encounter-diagnosis-condition-target-profiles-added",
+      "description": "Reference target profiles \u0027http://hl7.org/fhir/StructureDefinition/Condition\u0027, \u0027http://hl7.org/fhir/StructureDefinition/Procedure\u0027 added to Encounter.diagnosis.condition in target.",
+      "sourcePath": "Encounter.diagnosis",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.diagnosis.condition.targetProfile"
+    },
+    {
+      "id": "encounter-diagnosis-use-added",
+      "description": "Element Encounter.diagnosis.use added in target profile.",
+      "sourcePath": "Encounter.diagnosis",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.diagnosis.use"
+    },
+    {
+      "id": "encounter-diagnosis-use-binding-added",
+      "description": "Value set binding added to Encounter.diagnosis.use in target: \u0027preferred\u0027 to http://hl7.org/fhir/ValueSet/diagnosis-role.",
+      "sourcePath": "Encounter.diagnosis",
+      "severity": "WARNING",
+      "type": "TERMINOLOGY",
+      "targetPath": "Encounter.diagnosis.use"
+    },
+    {
+      "id": "encounter-diagnosis-rank-added",
+      "description": "Element Encounter.diagnosis.rank added in target profile.",
+      "sourcePath": "Encounter.diagnosis",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.diagnosis.rank"
+    },
+    {
+      "id": "encounter-account-added",
+      "description": "Element Encounter.account added in target profile.",
+      "sourcePath": "Encounter",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.account"
+    },
+    {
+      "id": "encounter-account-target-profile-added",
+      "description": "Reference target profile \u0027http://hl7.org/fhir/StructureDefinition/Account\u0027 added to Encounter.account in target.",
+      "sourcePath": "Encounter",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.account.targetProfile"
+    },
+    {
+      "id": "encounter-hospitalization-id-added",
+      "description": "Element Encounter.hospitalization.id added in target profile.",
+      "sourcePath": "Encounter.hospitalization",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.hospitalization.id"
+    },
+    {
+      "id": "encounter-hospitalization-extension-added",
+      "description": "Element Encounter.hospitalization.extension added in target profile.",
+      "sourcePath": "Encounter.hospitalization",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.hospitalization.extension"
+    },
+    {
+      "id": "encounter-hospitalization-modifierextension-added",
+      "description": "Element Encounter.hospitalization.modifierExtension added in target profile.",
+      "sourcePath": "Encounter.hospitalization",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.hospitalization.modifierExtension"
+    },
+    {
+      "id": "encounter-hospitalization-preadmissionidentifier-added",
+      "description": "Element Encounter.hospitalization.preAdmissionIdentifier added in target profile.",
+      "sourcePath": "Encounter.hospitalization",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.hospitalization.preAdmissionIdentifier"
+    },
+    {
+      "id": "encounter-hospitalization-origin-added",
+      "description": "Element Encounter.hospitalization.origin added in target profile.",
+      "sourcePath": "Encounter.hospitalization",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.hospitalization.origin"
+    },
+    {
+      "id": "encounter-hospitalization-origin-target-profile-added",
+      "description": "Reference target profiles \u0027http://hl7.org/fhir/StructureDefinition/Location\u0027, \u0027http://hl7.org/fhir/StructureDefinition/Organization\u0027 added to Encounter.hospitalization.origin in target.",
+      "sourcePath": "Encounter.hospitalization",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.hospitalization.origin.targetProfile"
+    },
+    {
+      "id": "encounter-hospitalization-readmission-added",
+      "description": "Element Encounter.hospitalization.reAdmission added in target profile.",
+      "sourcePath": "Encounter.hospitalization",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.hospitalization.reAdmission"
+    },
+    {
+      "id": "encounter-hospitalization-readmission-binding-added",
+      "description": "Value set binding added to Encounter.hospitalization.reAdmission in target: \u0027example\u0027 to http://terminology.hl7.org/ValueSet/v2-0092.",
+      "sourcePath": "Encounter.hospitalization",
+      "severity": "INFO",
+      "type": "TERMINOLOGY",
+      "targetPath": "Encounter.hospitalization.reAdmission"
+    },
+    {
+      "id": "encounter-hospitalization-dietpreference-added",
+      "description": "Element Encounter.hospitalization.dietPreference added in target profile.",
+      "sourcePath": "Encounter.hospitalization",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.hospitalization.dietPreference"
+    },
+    {
+      "id": "encounter-hospitalization-dietpreference-binding-added",
+      "description": "Value set binding added to Encounter.hospitalization.dietPreference in target: \u0027example\u0027 to http://hl7.org/fhir/ValueSet/encounter-diet.",
+      "sourcePath": "Encounter.hospitalization",
+      "severity": "INFO",
+      "type": "TERMINOLOGY",
+      "targetPath": "Encounter.hospitalization.dietPreference"
+    },
+    {
+      "id": "encounter-hospitalization-specialcourtesy-added",
+      "description": "Element Encounter.hospitalization.specialCourtesy added in target profile.",
+      "sourcePath": "Encounter.hospitalization",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.hospitalization.specialCourtesy"
+    },
+    {
+      "id": "encounter-hospitalization-specialcourtesy-binding-added",
+      "description": "Value set binding added to Encounter.hospitalization.specialCourtesy in target: \u0027preferred\u0027 to http://hl7.org/fhir/ValueSet/encounter-special-courtesy.",
+      "sourcePath": "Encounter.hospitalization",
+      "severity": "WARNING",
+      "type": "TERMINOLOGY",
+      "targetPath": "Encounter.hospitalization.specialCourtesy"
+    },
+    {
+      "id": "encounter-hospitalization-specialarrangement-added",
+      "description": "Element Encounter.hospitalization.specialArrangement added in target profile.",
+      "sourcePath": "Encounter.hospitalization",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.hospitalization.specialArrangement"
+    },
+    {
+      "id": "encounter-hospitalization-specialarrangement-binding-added",
+      "description": "Value set binding added to Encounter.hospitalization.specialArrangement in target: \u0027preferred\u0027 to http://hl7.org/fhir/ValueSet/encounter-special-arrangements.",
+      "sourcePath": "Encounter.hospitalization",
+      "severity": "WARNING",
+      "type": "TERMINOLOGY",
+      "targetPath": "Encounter.hospitalization.specialArrangement"
+    },
+    {
+      "id": "encounter-hospitalization-destination-added",
+      "description": "Element Encounter.hospitalization.destination added in target profile.",
+      "sourcePath": "Encounter.hospitalization",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.hospitalization.destination"
+    },
+    {
+      "id": "encounter-hospitalization-destination-target-profile-added",
+      "description": "Reference target profiles \u0027http://hl7.org/fhir/StructureDefinition/Location\u0027, \u0027http://hl7.org/fhir/StructureDefinition/Organization\u0027 added to Encounter.hospitalization.destination in target.",
+      "sourcePath": "Encounter.hospitalization",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.hospitalization.destination.targetProfile"
+    },
+    {
+      "id": "encounter-location-id-added",
+      "description": "Element Encounter.location.id added in target profile.",
+      "sourcePath": "Encounter.location",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.location.id"
+    },
+    {
+      "id": "encounter-location-extension-added",
+      "description": "Element Encounter.location.extension added in target profile.",
+      "sourcePath": "Encounter.location",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.location.extension"
+    },
+    {
+      "id": "encounter-location-modifierextension-added",
+      "description": "Element Encounter.location.modifierExtension added in target profile.",
+      "sourcePath": "Encounter.location",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.location.modifierExtension"
+    },
+    {
+      "id": "encounter-location-location-added",
+      "description": "Element Encounter.location.location added in target profile with cardinality 1..1 and mustSupport=true. This makes it a mandatory and supported element within each location entry.",
+      "sourcePath": "Encounter.location",
+      "severity": "ERROR",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.location.location"
+    },
+    {
+      "id": "encounter-location-location-target-profile-added",
+      "description": "Reference target profile \u0027http://hl7.org/fhir/StructureDefinition/Location\u0027 added to Encounter.location.location in target.",
+      "sourcePath": "Encounter.location",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.location.location.targetProfile"
+    },
+    {
+      "id": "encounter-location-status-added",
+      "description": "Element Encounter.location.status added in target profile.",
+      "sourcePath": "Encounter.location",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.location.status"
+    },
+    {
+      "id": "encounter-location-status-binding-added",
+      "description": "Value set binding added to Encounter.location.status in target: \u0027required\u0027 to http://hl7.org/fhir/ValueSet/encounter-location-status|4.0.1.",
+      "sourcePath": "Encounter.location",
+      "severity": "ERROR",
+      "type": "TERMINOLOGY",
+      "targetPath": "Encounter.location.status"
+    },
+    {
+      "id": "encounter-location-physicaltype-added",
+      "description": "Element Encounter.location.physicalType added in target profile.",
+      "sourcePath": "Encounter.location",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.location.physicalType"
+    },
+    {
+      "id": "encounter-location-physicaltype-binding-added",
+      "description": "Value set binding added to Encounter.location.physicalType in target: \u0027example\u0027 to http://hl7.org/fhir/ValueSet/location-physical-type.",
+      "sourcePath": "Encounter.location",
+      "severity": "INFO",
+      "type": "TERMINOLOGY",
+      "targetPath": "Encounter.location.physicalType"
+    },
+    {
+      "id": "encounter-location-period-added",
+      "description": "Element Encounter.location.period added in target profile.",
+      "sourcePath": "Encounter.location",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.location.period"
+    },
+    {
+      "id": "encounter-partof-added",
+      "description": "Element Encounter.partOf added in target profile.",
+      "sourcePath": "Encounter",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.partOf"
+    },
+    {
+      "id": "encounter-partof-target-profile-added",
+      "description": "Reference target profile \u0027http://hl7.org/fhir/StructureDefinition/Encounter\u0027 added to Encounter.partOf in target.",
+      "sourcePath": "Encounter",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.partOf.targetProfile"
+    },
+    {
+      "id": "encounter-short-changed",
+      "description": "Short description changed from \u0027Hemas hospital encounter record\u0027 to \u0027An interaction during which services are provided to the patient\u0027.",
+      "sourcePath": "Encounter",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter"
+    },
+    {
+      "id": "encounter-definition-changed",
+      "description": "Definition changed from \u0027An encounter at a Hemas hospital, tracking admissions, ward assignments, and hospitalization workflows.\u0027 to \u0027-\u0027.",
+      "sourcePath": "Encounter",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter"
+    },
+    {
+      "id": "encounter-participant-short-changed",
+      "description": "Short description changed from \u0027Participants in the encounter\u0027 to \u0027(USCDI) List of participants involved in the encounter\u0027.",
+      "sourcePath": "Encounter.participant",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.participant"
+    },
+    {
+      "id": "encounter-participant-definition-changed",
+      "description": "Definition changed from \u0027At least one clinical participant is required for all Hemas hospital encounters.\u0027 to \u0027The list of people responsible for providing the service.\u0027.",
+      "sourcePath": "Encounter.participant",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.participant"
+    },
+    {
+      "id": "encounter-period-short-changed",
+      "description": "Short description changed from \u0027Period of the encounter\u0027 to \u0027(USCDI) The start and end time of the encounter\u0027.",
+      "sourcePath": "Encounter.period",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.period"
+    },
+    {
+      "id": "encounter-period-definition-changed",
+      "description": "Definition changed from \u0027Start and end time of the encounter, required for admission/discharge tracking.\u0027 to \u0027The start and end time of the encounter.\u0027.",
+      "sourcePath": "Encounter.period",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.period"
+    },
+    {
+      "id": "encounter-diagnosis-short-changed",
+      "description": "Short description changed from \u0027Diagnoses associated with the encounter\u0027 to \u0027The list of diagnosis relevant to this encounter\u0027.",
+      "sourcePath": "Encounter.diagnosis",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.diagnosis"
+    },
+    {
+      "id": "encounter-diagnosis-definition-changed",
+      "description": "Definition changed from \u0027At least one diagnosis is required for all Hemas hospital encounters.\u0027 to \u0027The list of diagnosis relevant to this encounter.\u0027.",
+      "sourcePath": "Encounter.diagnosis",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.diagnosis"
+    },
+    {
+      "id": "encounter-hospitalization-short-changed",
+      "description": "Short description changed from \u0027Hospitalization details\u0027 to \u0027(USCDI) Details about the admission to a healthcare service\u0027.",
+      "sourcePath": "Encounter.hospitalization",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.hospitalization"
+    },
+    {
+      "id": "encounter-hospitalization-definition-changed",
+      "description": "Definition changed from \u0027Details about the hospitalization including admission source and discharge disposition.\u0027 to \u0027Details about the admission to a healthcare service.\u0027.",
+      "sourcePath": "Encounter.hospitalization",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.hospitalization"
+    },
+    {
+      "id": "encounter-serviceprovider-short-changed",
+      "description": "Short description changed from \u0027Hemas hospital providing the service\u0027 to \u0027(USCDI) The organization (facility) responsible for this encounter\u0027.",
+      "sourcePath": "Encounter.serviceProvider",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.serviceProvider"
+    },
+    {
+      "id": "encounter-serviceprovider-definition-changed",
+      "description": "Definition changed. Source: \u0027Hemas hospital providing the service\u0027. Target: \u0027The organization that is primarily responsible for this Encounter\u0027s services. This MAY be the same as the organization on the Patient record, however it could be different, such as if the actor performing the services was from an external organization (which may be billed seperately) for an external consultation. Refer to the example bundle showing an abbreviated set of Encounters for a colonoscopy.\u0027.",
+      "sourcePath": "Encounter.serviceProvider",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.serviceProvider"
+    },
+    {
+      "id": "rule-2",
+      "description": "Cardinality changed: [0..1] â [0..*]",
+      "sourcePath": "Encounter.extension",
+      "severity": "WARNING",
+      "type": "CARDINALITY",
+      "targetPath": "Encounter.extension"
+    },
+    {
+      "id": "rule-11",
+      "description": "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+      "sourcePath": "Encounter.status",
+      "severity": "WARNING",
+      "type": "EXTENSION",
+      "targetPath": "Encounter.status.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)"
+    },
+    {
+      "id": "rule-16",
+      "description": "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+      "sourcePath": "Encounter.class",
+      "severity": "WARNING",
+      "type": "EXTENSION",
+      "targetPath": "Encounter.class.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)"
+    },
+    {
+      "id": "rule-20",
+      "description": "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+      "sourcePath": "Encounter.type",
+      "severity": "WARNING",
+      "type": "EXTENSION",
+      "targetPath": "Encounter.type.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)"
+    },
+    {
+      "id": "rule-25",
+      "description": "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+      "sourcePath": "Encounter.subject",
+      "severity": "WARNING",
+      "type": "EXTENSION",
+      "targetPath": "Encounter.subject.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)"
+    },
+    {
+      "id": "rule-29",
+      "description": "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+      "sourcePath": "Encounter.participant",
+      "severity": "WARNING",
+      "type": "EXTENSION",
+      "targetPath": "Encounter.participant.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)"
+    },
+    {
+      "id": "rule-32",
+      "description": "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+      "sourcePath": "Encounter.period",
+      "severity": "WARNING",
+      "type": "EXTENSION",
+      "targetPath": "Encounter.period.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)"
+    },
+    {
+      "id": "rule-36",
+      "description": "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+      "sourcePath": "Encounter.reasonCode",
+      "severity": "WARNING",
+      "type": "EXTENSION",
+      "targetPath": "Encounter.reasonCode.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)"
+    },
+    {
+      "id": "rule-41",
+      "description": "Extension added in target element: http://hl7.org/fhir/StructureDefinition/structuredefinition-explicit-type-name",
+      "sourcePath": "Encounter.diagnosis",
+      "severity": "WARNING",
+      "type": "EXTENSION",
+      "targetPath": "Encounter.diagnosis.extension(http://hl7.org/fhir/StructureDefinition/structuredefinition-explicit-type-name)"
+    },
+    {
+      "id": "rule-44",
+      "description": "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+      "sourcePath": "Encounter.hospitalization",
+      "severity": "WARNING",
+      "type": "EXTENSION",
+      "targetPath": "Encounter.hospitalization.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)"
+    },
+    {
+      "id": "rule-52",
+      "description": "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+      "sourcePath": "Encounter.hospitalization.dischargeDisposition",
+      "severity": "WARNING",
+      "type": "EXTENSION",
+      "targetPath": "Encounter.hospitalization.dischargeDisposition.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)"
+    },
+    {
+      "id": "rule-54",
+      "description": "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+      "sourcePath": "Encounter.location",
+      "severity": "WARNING",
+      "type": "EXTENSION",
+      "targetPath": "Encounter.location.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)"
+    },
+    {
+      "id": "rule-58",
+      "description": "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+      "sourcePath": "Encounter.serviceProvider",
+      "severity": "WARNING",
+      "type": "EXTENSION",
+      "targetPath": "Encounter.serviceProvider.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)"
+    },
+    {
+      "id": "rule-59",
+      "description": "Element added in target profile: Encounter.id",
+      "sourcePath": "",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.id"
+    },
+    {
+      "id": "rule-60",
+      "description": "Element added in target profile: Encounter.meta",
+      "sourcePath": "",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.meta"
+    },
+    {
+      "id": "rule-61",
+      "description": "Element added in target profile: Encounter.implicitRules",
+      "sourcePath": "",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.implicitRules"
+    },
+    {
+      "id": "rule-62",
+      "description": "Element added in target profile: Encounter.language",
+      "sourcePath": "",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.language"
+    },
+    {
+      "id": "rule-63",
+      "description": "Element added in target profile: Encounter.text",
+      "sourcePath": "",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.text"
+    },
+    {
+      "id": "rule-64",
+      "description": "Element added in target profile: Encounter.contained",
+      "sourcePath": "",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.contained"
+    },
+    {
+      "id": "rule-65",
+      "description": "Element added in target profile: Encounter.modifierExtension",
+      "sourcePath": "",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.modifierExtension"
+    },
+    {
+      "id": "rule-66",
+      "description": "Element added in target profile: Encounter.identifier",
+      "sourcePath": "",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.identifier"
+    },
+    {
+      "id": "rule-67",
+      "description": "Element added in target profile: Encounter.identifier.id",
+      "sourcePath": "",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.identifier.id"
+    },
+    {
+      "id": "rule-68",
+      "description": "Element added in target profile: Encounter.identifier.extension",
+      "sourcePath": "",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.identifier.extension"
+    },
+    {
+      "id": "rule-69",
+      "description": "Element added in target profile: Encounter.identifier.use",
+      "sourcePath": "",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.identifier.use"
+    },
+    {
+      "id": "rule-70",
+      "description": "Element added in target profile: Encounter.identifier.type",
+      "sourcePath": "",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.identifier.type"
+    },
+    {
+      "id": "rule-71",
+      "description": "Element added in target profile: Encounter.identifier.system",
+      "sourcePath": "",
+      "severity": "ERROR",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.identifier.system"
+    },
+    {
+      "id": "rule-72",
+      "description": "Element added in target profile: Encounter.identifier.value",
+      "sourcePath": "",
+      "severity": "ERROR",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.identifier.value"
+    },
+    {
+      "id": "rule-73",
+      "description": "Element added in target profile: Encounter.identifier.period",
+      "sourcePath": "",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.identifier.period"
+    },
+    {
+      "id": "rule-74",
+      "description": "Element added in target profile: Encounter.identifier.assigner",
+      "sourcePath": "",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.identifier.assigner"
+    },
+    {
+      "id": "rule-75",
+      "description": "Element added in target profile: Encounter.statusHistory",
+      "sourcePath": "",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.statusHistory"
+    },
+    {
+      "id": "rule-76",
+      "description": "Element added in target profile: Encounter.statusHistory.id",
+      "sourcePath": "",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.statusHistory.id"
+    },
+    {
+      "id": "rule-77",
+      "description": "Element added in target profile: Encounter.statusHistory.extension",
+      "sourcePath": "",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.statusHistory.extension"
+    },
+    {
+      "id": "rule-78",
+      "description": "Element added in target profile: Encounter.statusHistory.modifierExtension",
+      "sourcePath": "",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.statusHistory.modifierExtension"
+    },
+    {
+      "id": "rule-79",
+      "description": "Element added in target profile: Encounter.statusHistory.status",
+      "sourcePath": "",
+      "severity": "ERROR",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.statusHistory.status"
+    },
+    {
+      "id": "rule-80",
+      "description": "Element added in target profile: Encounter.statusHistory.period",
+      "sourcePath": "",
+      "severity": "ERROR",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.statusHistory.period"
+    },
+    {
+      "id": "rule-81",
+      "description": "Element added in target profile: Encounter.classHistory",
+      "sourcePath": "",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.classHistory"
+    },
+    {
+      "id": "rule-82",
+      "description": "Element added in target profile: Encounter.classHistory.id",
+      "sourcePath": "",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.classHistory.id"
+    },
+    {
+      "id": "rule-83",
+      "description": "Element added in target profile: Encounter.classHistory.extension",
+      "sourcePath": "",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.classHistory.extension"
+    },
+    {
+      "id": "rule-84",
+      "description": "Element added in target profile: Encounter.classHistory.modifierExtension",
+      "sourcePath": "",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.classHistory.modifierExtension"
+    },
+    {
+      "id": "rule-85",
+      "description": "Element added in target profile: Encounter.classHistory.class",
+      "sourcePath": "",
+      "severity": "ERROR",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.classHistory.class"
+    },
+    {
+      "id": "rule-86",
+      "description": "Element added in target profile: Encounter.classHistory.period",
+      "sourcePath": "",
+      "severity": "ERROR",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.classHistory.period"
+    },
+    {
+      "id": "rule-87",
+      "description": "Element added in target profile: Encounter.serviceType",
+      "sourcePath": "",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.serviceType"
+    },
+    {
+      "id": "rule-88",
+      "description": "Element added in target profile: Encounter.priority",
+      "sourcePath": "",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.priority"
+    },
+    {
+      "id": "rule-89",
+      "description": "Element added in target profile: Encounter.episodeOfCare",
+      "sourcePath": "",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.episodeOfCare"
+    },
+    {
+      "id": "rule-90",
+      "description": "Element added in target profile: Encounter.basedOn",
+      "sourcePath": "",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.basedOn"
+    },
+    {
+      "id": "rule-91",
+      "description": "Element added in target profile: Encounter.participant.id",
+      "sourcePath": "",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.participant.id"
+    },
+    {
+      "id": "rule-92",
+      "description": "Element added in target profile: Encounter.participant.extension",
+      "sourcePath": "",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.participant.extension"
+    },
+    {
+      "id": "rule-93",
+      "description": "Element added in target profile: Encounter.participant.modifierExtension",
+      "sourcePath": "",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.participant.modifierExtension"
+    },
+    {
+      "id": "rule-94",
+      "description": "Element added in target profile: Encounter.participant.type",
+      "sourcePath": "",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.participant.type"
+    },
+    {
+      "id": "rule-95",
+      "description": "Element added in target profile: Encounter.participant.period",
+      "sourcePath": "",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.participant.period"
+    },
+    {
+      "id": "rule-96",
+      "description": "Element added in target profile: Encounter.participant.individual",
+      "sourcePath": "",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.participant.individual"
+    },
+    {
+      "id": "rule-97",
+      "description": "Element added in target profile: Encounter.appointment",
+      "sourcePath": "",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.appointment"
+    },
+    {
+      "id": "rule-98",
+      "description": "Element added in target profile: Encounter.length",
+      "sourcePath": "",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.length"
+    },
+    {
+      "id": "rule-99",
+      "description": "Element added in target profile: Encounter.reasonReference",
+      "sourcePath": "",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.reasonReference"
+    },
+    {
+      "id": "rule-100",
+      "description": "Element added in target profile: Encounter.diagnosis.id",
+      "sourcePath": "",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.diagnosis.id"
+    },
+    {
+      "id": "rule-101",
+      "description": "Element added in target profile: Encounter.diagnosis.extension",
+      "sourcePath": "",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.diagnosis.extension"
+    },
+    {
+      "id": "rule-102",
+      "description": "Element added in target profile: Encounter.diagnosis.modifierExtension",
+      "sourcePath": "",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.diagnosis.modifierExtension"
+    },
+    {
+      "id": "rule-103",
+      "description": "Element added in target profile: Encounter.diagnosis.condition",
+      "sourcePath": "",
+      "severity": "ERROR",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.diagnosis.condition"
+    },
+    {
+      "id": "rule-104",
+      "description": "Element added in target profile: Encounter.diagnosis.use",
+      "sourcePath": "",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.diagnosis.use"
+    },
+    {
+      "id": "rule-105",
+      "description": "Element added in target profile: Encounter.diagnosis.rank",
+      "sourcePath": "",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.diagnosis.rank"
+    },
+    {
+      "id": "rule-106",
+      "description": "Element added in target profile: Encounter.account",
+      "sourcePath": "",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.account"
+    },
+    {
+      "id": "rule-107",
+      "description": "Element added in target profile: Encounter.hospitalization.id",
+      "sourcePath": "",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.hospitalization.id"
+    },
+    {
+      "id": "rule-108",
+      "description": "Element added in target profile: Encounter.hospitalization.extension",
+      "sourcePath": "",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.hospitalization.extension"
+    },
+    {
+      "id": "rule-109",
+      "description": "Element added in target profile: Encounter.hospitalization.modifierExtension",
+      "sourcePath": "",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.hospitalization.modifierExtension"
+    },
+    {
+      "id": "rule-110",
+      "description": "Element added in target profile: Encounter.hospitalization.preAdmissionIdentifier",
+      "sourcePath": "",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.hospitalization.preAdmissionIdentifier"
+    },
+    {
+      "id": "rule-111",
+      "description": "Element added in target profile: Encounter.hospitalization.origin",
+      "sourcePath": "",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.hospitalization.origin"
+    },
+    {
+      "id": "rule-112",
+      "description": "Element added in target profile: Encounter.hospitalization.reAdmission",
+      "sourcePath": "",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.hospitalization.reAdmission"
+    },
+    {
+      "id": "rule-113",
+      "description": "Element added in target profile: Encounter.hospitalization.dietPreference",
+      "sourcePath": "",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.hospitalization.dietPreference"
+    },
+    {
+      "id": "rule-114",
+      "description": "Element added in target profile: Encounter.hospitalization.specialCourtesy",
+      "sourcePath": "",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.hospitalization.specialCourtesy"
+    },
+    {
+      "id": "rule-115",
+      "description": "Element added in target profile: Encounter.hospitalization.specialArrangement",
+      "sourcePath": "",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.hospitalization.specialArrangement"
+    },
+    {
+      "id": "rule-116",
+      "description": "Element added in target profile: Encounter.hospitalization.destination",
+      "sourcePath": "",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.hospitalization.destination"
+    },
+    {
+      "id": "rule-117",
+      "description": "Element added in target profile: Encounter.location.id",
+      "sourcePath": "",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.location.id"
+    },
+    {
+      "id": "rule-118",
+      "description": "Element added in target profile: Encounter.location.extension",
+      "sourcePath": "",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.location.extension"
+    },
+    {
+      "id": "rule-119",
+      "description": "Element added in target profile: Encounter.location.modifierExtension",
+      "sourcePath": "",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.location.modifierExtension"
+    },
+    {
+      "id": "rule-120",
+      "description": "Element added in target profile: Encounter.location.location",
+      "sourcePath": "",
+      "severity": "ERROR",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.location.location"
+    },
+    {
+      "id": "rule-121",
+      "description": "Element added in target profile: Encounter.location.status",
+      "sourcePath": "",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.location.status"
+    },
+    {
+      "id": "rule-122",
+      "description": "Element added in target profile: Encounter.location.physicalType",
+      "sourcePath": "",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.location.physicalType"
+    },
+    {
+      "id": "rule-123",
+      "description": "Element added in target profile: Encounter.location.period",
+      "sourcePath": "",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.location.period"
+    },
+    {
+      "id": "rule-124",
+      "description": "Element added in target profile: Encounter.partOf",
+      "sourcePath": "",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.partOf"
+    }
+  ],
+  "sourceCanonical": "https://hemas.example.com/fhir/StructureDefinition/Encounter",
+  "targetCanonical": "http://hl7.org/fhir/us/core/StructureDefinition/us-core-encounter"
+}

@@ -1,0 +1,34 @@
+The following FML code failed to compile. Please fix it.
+
+## Previous FML Code
+
+{{fmlCode}}
+
+## Compilation Error
+
+{{errorMessage}}
+
+## Profiles
+
+Source Profile: {{sourceCanonical}}
+Target Profile: {{targetCanonical}}
+
+## Drift Report (Semantic Intent)
+
+The following drift items were detected between the two profiles and are the
+INTENDED mapping rules this FML must express. Use this as semantic ground truth
+when fixing the broken rule - do NOT drop or alter any rule that maps a listed
+drift item, even if rewriting it in a different FML construct.
+
+{{driftReport}}
+
+## Instructions
+
+1. Carefully read the compilation error message.
+2. Identify the EXACT line(s) and construct(s) causing the error.
+3. Fix ONLY the issue(s) described in the error message.
+4. Verify that every drift item above still has a corresponding rule after your fix.
+5. Preserve the original map structure, logic, and all working rules.
+6. Ensure every rule ends with a semicolon.
+7. Ensure all braces and parentheses are balanced.
+8. Output ONLY the corrected FML code - no markdown, no explanations.

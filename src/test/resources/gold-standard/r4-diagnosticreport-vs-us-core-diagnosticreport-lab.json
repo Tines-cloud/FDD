@@ -1,0 +1,79 @@
+{
+  "pairId": "r4-diagnosticreport-vs-us-core-diagnosticreport-lab",
+  "sourceCanonical": "http://hl7.org/fhir/StructureDefinition/DiagnosticReport",
+  "targetCanonical": "http://hl7.org/fhir/us/core/StructureDefinition/us-core-diagnosticreport-lab",
+  "drifts": [
+    {
+      "id": "status-must-support",
+      "type": "STRUCTURAL",
+      "sourcePath": "DiagnosticReport.status",
+      "targetPath": "DiagnosticReport.status",
+      "description": "US Core marks status as mustSupport; base R4 does not",
+      "severity": "WARNING"
+    },
+    {
+      "id": "category-cardinality",
+      "type": "CARDINALITY",
+      "sourcePath": "DiagnosticReport.category",
+      "targetPath": "DiagnosticReport.category",
+      "description": "US Core requires at least one category (1..*) while base R4 allows none (0..*)",
+      "severity": "ERROR"
+    },
+    {
+      "id": "category-laboratory-slice",
+      "type": "STRUCTURAL",
+      "sourcePath": "DiagnosticReport.category",
+      "targetPath": "DiagnosticReport.category:LaboratorySlice",
+      "description": "US Core defines a 'LaboratorySlice' requiring category code 'LAB'",
+      "severity": "ERROR"
+    },
+    {
+      "id": "code-must-support",
+      "type": "STRUCTURAL",
+      "sourcePath": "DiagnosticReport.code",
+      "targetPath": "DiagnosticReport.code",
+      "description": "US Core marks code as mustSupport; base R4 does not",
+      "severity": "WARNING"
+    },
+    {
+      "id": "subject-cardinality",
+      "type": "CARDINALITY",
+      "sourcePath": "DiagnosticReport.subject",
+      "targetPath": "DiagnosticReport.subject",
+      "description": "US Core requires subject (1..1) while base R4 allows none (0..1)",
+      "severity": "ERROR"
+    },
+    {
+      "id": "effective-must-support",
+      "type": "STRUCTURAL",
+      "sourcePath": "DiagnosticReport.effective[x]",
+      "targetPath": "DiagnosticReport.effective[x]",
+      "description": "US Core marks effective[x] as mustSupport; base R4 does not",
+      "severity": "WARNING"
+    },
+    {
+      "id": "issued-must-support",
+      "type": "STRUCTURAL",
+      "sourcePath": "DiagnosticReport.issued",
+      "targetPath": "DiagnosticReport.issued",
+      "description": "US Core marks issued as mustSupport; base R4 does not",
+      "severity": "WARNING"
+    },
+    {
+      "id": "performer-must-support",
+      "type": "STRUCTURAL",
+      "sourcePath": "DiagnosticReport.performer",
+      "targetPath": "DiagnosticReport.performer",
+      "description": "US Core marks performer as mustSupport; base R4 does not",
+      "severity": "WARNING"
+    },
+    {
+      "id": "result-must-support",
+      "type": "STRUCTURAL",
+      "sourcePath": "DiagnosticReport.result",
+      "targetPath": "DiagnosticReport.result",
+      "description": "US Core marks result as mustSupport; base R4 does not",
+      "severity": "WARNING"
+    }
+  ]
+}

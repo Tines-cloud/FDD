@@ -1,0 +1,71 @@
+{
+  "pairId": "r4-vs-r5-encounter",
+  "sourceCanonical": "http://hl7.org/fhir/StructureDefinition/Encounter",
+  "targetCanonical": "http://hl7.org/fhir/StructureDefinition/Encounter",
+  "drifts": [
+    {
+      "id": "hospitalization-renamed-to-admission",
+      "type": "VERSION",
+      "sourcePath": "Encounter.hospitalization",
+      "targetPath": "Encounter.admission",
+      "description": "R5 (5.0.0) renames Encounter.hospitalization to Encounter.admission",
+      "severity": "ERROR"
+    },
+    {
+      "id": "class-type-change",
+      "type": "VERSION",
+      "sourcePath": "Encounter.class",
+      "targetPath": "Encounter.class",
+      "description": "R5 (5.0.0) changes Encounter.class from Coding to CodeableConcept",
+      "severity": "ERROR"
+    },
+    {
+      "id": "class-history-removed",
+      "type": "VERSION",
+      "sourcePath": "Encounter.classHistory",
+      "targetPath": "Encounter",
+      "description": "R5 (5.0.0) removes Encounter.classHistory; replaced by tracking via multiple Encounter resources",
+      "severity": "ERROR"
+    },
+    {
+      "id": "status-history-removed",
+      "type": "VERSION",
+      "sourcePath": "Encounter.statusHistory",
+      "targetPath": "Encounter",
+      "description": "R5 (5.0.0) removes Encounter.statusHistory; status tracking is managed differently",
+      "severity": "ERROR"
+    },
+    {
+      "id": "reason-restructured",
+      "type": "VERSION",
+      "sourcePath": "Encounter.reasonCode",
+      "targetPath": "Encounter.reason",
+      "description": "R5 (5.0.0) restructures Encounter.reasonCode and reasonReference into a single Encounter.reason backbone element with use and value sub-elements",
+      "severity": "ERROR"
+    },
+    {
+      "id": "planned-start-date-new",
+      "type": "VERSION",
+      "sourcePath": "Encounter",
+      "targetPath": "Encounter.plannedStartDate",
+      "description": "R5 (5.0.0) adds plannedStartDate element not present in R4",
+      "severity": "WARNING"
+    },
+    {
+      "id": "planned-end-date-new",
+      "type": "VERSION",
+      "sourcePath": "Encounter",
+      "targetPath": "Encounter.plannedEndDate",
+      "description": "R5 (5.0.0) adds plannedEndDate element not present in R4",
+      "severity": "WARNING"
+    },
+    {
+      "id": "virtual-service-new",
+      "type": "VERSION",
+      "sourcePath": "Encounter",
+      "targetPath": "Encounter.virtualService",
+      "description": "R5 (5.0.0) adds virtualService element for telehealth/virtual encounters; not present in R4",
+      "severity": "INFO"
+    }
+  ]
+}

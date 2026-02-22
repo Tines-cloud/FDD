@@ -1,0 +1,79 @@
+{
+  "pairId": "r4-practitioner-vs-us-core-practitioner",
+  "sourceCanonical": "http://hl7.org/fhir/StructureDefinition/Practitioner",
+  "targetCanonical": "http://hl7.org/fhir/us/core/StructureDefinition/us-core-practitioner",
+  "drifts": [
+    {
+      "id": "identifier-cardinality",
+      "type": "CARDINALITY",
+      "sourcePath": "Practitioner.identifier",
+      "targetPath": "Practitioner.identifier",
+      "description": "US Core requires at least one identifier (1..*) including NPI; base R4 allows none (0..*)",
+      "severity": "ERROR"
+    },
+    {
+      "id": "name-cardinality",
+      "type": "CARDINALITY",
+      "sourcePath": "Practitioner.name",
+      "targetPath": "Practitioner.name",
+      "description": "US Core requires at least one name (1..*) while base R4 allows none (0..*)",
+      "severity": "ERROR"
+    },
+    {
+      "id": "name-family-cardinality",
+      "type": "CARDINALITY",
+      "sourcePath": "Practitioner.name.family",
+      "targetPath": "Practitioner.name.family",
+      "description": "US Core requires name.family (1..1) while base R4 allows none (0..1)",
+      "severity": "ERROR"
+    },
+    {
+      "id": "identifier-npi-slice",
+      "type": "TERMINOLOGY",
+      "sourcePath": "Practitioner.identifier",
+      "targetPath": "Practitioner.identifier:NPI",
+      "description": "US Core defines an NPI identifier slice with system http://hl7.org/fhir/sid/us-npi; base R4 has no such slice",
+      "severity": "WARNING"
+    },
+    {
+      "id": "identifier-system-must-support",
+      "type": "STRUCTURAL",
+      "sourcePath": "Practitioner.identifier.system",
+      "targetPath": "Practitioner.identifier.system",
+      "description": "US Core marks identifier.system as mustSupport; base R4 does not",
+      "severity": "WARNING"
+    },
+    {
+      "id": "identifier-value-must-support",
+      "type": "STRUCTURAL",
+      "sourcePath": "Practitioner.identifier.value",
+      "targetPath": "Practitioner.identifier.value",
+      "description": "US Core marks identifier.value as mustSupport; base R4 does not",
+      "severity": "WARNING"
+    },
+    {
+      "id": "name-must-support",
+      "type": "STRUCTURAL",
+      "sourcePath": "Practitioner.name",
+      "targetPath": "Practitioner.name",
+      "description": "US Core marks name as mustSupport; base R4 does not",
+      "severity": "WARNING"
+    },
+    {
+      "id": "address-must-support",
+      "type": "STRUCTURAL",
+      "sourcePath": "Practitioner.address",
+      "targetPath": "Practitioner.address",
+      "description": "US Core marks address as mustSupport; base R4 does not",
+      "severity": "WARNING"
+    },
+    {
+      "id": "telecom-must-support",
+      "type": "STRUCTURAL",
+      "sourcePath": "Practitioner.telecom",
+      "targetPath": "Practitioner.telecom",
+      "description": "US Core marks telecom as mustSupport; base R4 does not",
+      "severity": "WARNING"
+    }
+  ]
+}

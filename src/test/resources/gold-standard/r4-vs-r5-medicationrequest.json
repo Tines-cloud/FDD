@@ -1,0 +1,71 @@
+{
+  "pairId": "r4-vs-r5-medicationrequest",
+  "sourceCanonical": "http://hl7.org/fhir/StructureDefinition/MedicationRequest",
+  "targetCanonical": "http://hl7.org/fhir/StructureDefinition/MedicationRequest",
+  "drifts": [
+    {
+      "id": "medication-type-change",
+      "type": "VERSION",
+      "sourcePath": "MedicationRequest.medication[x]",
+      "targetPath": "MedicationRequest.medication",
+      "description": "R5 (5.0.0) changes medication[x] (CodeableConcept or Reference) to medication as a single CodeableReference type",
+      "severity": "ERROR"
+    },
+    {
+      "id": "reported-type-change",
+      "type": "VERSION",
+      "sourcePath": "MedicationRequest.reported[x]",
+      "targetPath": "MedicationRequest.informationSource",
+      "description": "R5 (5.0.0) replaces reported[x] (boolean or Reference) with informationSource (Reference only)",
+      "severity": "ERROR"
+    },
+    {
+      "id": "status-reason-type-change",
+      "type": "VERSION",
+      "sourcePath": "MedicationRequest.statusReason",
+      "targetPath": "MedicationRequest.statusReason",
+      "description": "R5 (5.0.0) updates statusReason from CodeableConcept to support additional context; value set binding is updated",
+      "severity": "WARNING"
+    },
+    {
+      "id": "performer-new-element",
+      "type": "VERSION",
+      "sourcePath": "MedicationRequest",
+      "targetPath": "MedicationRequest.performer",
+      "description": "R5 (5.0.0) adds a performer element (Reference) for the intended performer of the medication; not present as a standalone element in R4",
+      "severity": "WARNING"
+    },
+    {
+      "id": "reason-type-change",
+      "type": "VERSION",
+      "sourcePath": "MedicationRequest.reasonCode",
+      "targetPath": "MedicationRequest.reason",
+      "description": "R5 (5.0.0) merges reasonCode and reasonReference into a single reason element as CodeableReference",
+      "severity": "ERROR"
+    },
+    {
+      "id": "dispense-request-dose-instruction",
+      "type": "VERSION",
+      "sourcePath": "MedicationRequest.dosageInstruction",
+      "targetPath": "MedicationRequest.dosageInstruction",
+      "description": "R5 (5.0.0) dosageInstruction Dosage type is updated with additional sub-elements and clarified cardinality constraints",
+      "severity": "INFO"
+    },
+    {
+      "id": "substitution-allowed-type-change",
+      "type": "VERSION",
+      "sourcePath": "MedicationRequest.substitution.allowed[x]",
+      "targetPath": "MedicationRequest.substitution.allowed[x]",
+      "description": "R5 (5.0.0) refines the substitution.allowed[x] typing and associated value sets",
+      "severity": "INFO"
+    },
+    {
+      "id": "intent-value-set-update",
+      "type": "TERMINOLOGY",
+      "sourcePath": "MedicationRequest.intent",
+      "targetPath": "MedicationRequest.intent",
+      "description": "R5 (5.0.0) MedicationRequestIntent value set adds new codes and updates definitions compared to R4",
+      "severity": "WARNING"
+    }
+  ]
+}

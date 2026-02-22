@@ -1,0 +1,545 @@
+{
+  "resourceType": "StructureDefinition",
+  "id": "global-health-condition",
+  "url": "http://globalhealth.org/fhir/StructureDefinition/global-health-condition",
+  "version": "1.0.0",
+  "name": "GlobalHealthCondition",
+  "title": "GlobalHealth Standard Condition Profile",
+  "status": "active",
+  "description": "GlobalHealth condition/diagnosis profile. Requires a clinical status, a SNOMED-coded condition, a subject, and the practitioner who recorded it. Onset date and severity are mandatory for primary diagnoses.",
+  "fhirVersion": "4.0.1",
+  "kind": "resource",
+  "abstract": false,
+  "type": "Condition",
+  "baseDefinition": "http://hl7.org/fhir/StructureDefinition/Condition",
+  "derivation": "constraint",
+  "snapshot": {
+    "element": [
+      {
+        "id": "Condition",
+        "path": "Condition",
+        "short": "GlobalHealth Condition",
+        "definition": "A clinical condition, problem, or diagnosis recorded in the GlobalHealth network.",
+        "min": 0,
+        "max": "*"
+      },
+      {
+        "id": "Condition.id",
+        "path": "Condition.id",
+        "short": "Logical id of this artifact",
+        "min": 0,
+        "max": "1",
+        "type": [{ "code": "id" }]
+      },
+      {
+        "id": "Condition.meta",
+        "path": "Condition.meta",
+        "short": "Metadata about the resource",
+        "min": 0,
+        "max": "1",
+        "type": [{ "code": "Meta" }]
+      },
+      {
+        "id": "Condition.language",
+        "path": "Condition.language",
+        "short": "Language of the resource content",
+        "min": 0,
+        "max": "1",
+        "type": [{ "code": "code" }]
+      },
+      {
+        "id": "Condition.text",
+        "path": "Condition.text",
+        "short": "Text summary of the resource",
+        "min": 0,
+        "max": "1",
+        "type": [{ "code": "Narrative" }]
+      },
+      {
+        "id": "Condition.extension",
+        "path": "Condition.extension",
+        "slicing": {
+          "discriminator": [{ "type": "value", "path": "url" }],
+          "ordered": false,
+          "rules": "open"
+        },
+        "min": 0,
+        "max": "*",
+        "type": [{ "code": "Extension" }]
+      },
+      {
+        "id": "Condition.extension:diagnosisConfidence",
+        "path": "Condition.extension",
+        "sliceName": "diagnosisConfidence",
+        "short": "Clinician confidence level for this diagnosis (high | medium | low)",
+        "min": 0,
+        "max": "1",
+        "type": [{ "code": "Extension", "profile": ["http://globalhealth.org/fhir/StructureDefinition/diagnosis-confidence"] }]
+      },
+      {
+        "id": "Condition.identifier",
+        "path": "Condition.identifier",
+        "short": "External IDs for this condition",
+        "min": 1,
+        "max": "*",
+        "type": [{ "code": "Identifier" }],
+        "mustSupport": true
+      },
+      {
+        "id": "Condition.identifier.system",
+        "path": "Condition.identifier.system",
+        "min": 1,
+        "max": "1",
+        "type": [{ "code": "uri" }],
+        "mustSupport": true
+      },
+      {
+        "id": "Condition.identifier.value",
+        "path": "Condition.identifier.value",
+        "min": 1,
+        "max": "1",
+        "type": [{ "code": "string" }],
+        "mustSupport": true
+      },
+      {
+        "id": "Condition.clinicalStatus",
+        "path": "Condition.clinicalStatus",
+        "short": "active | recurrence | relapse | inactive | remission | resolved",
+        "definition": "Clinical status is mandatory in the GlobalHealth network to ensure all conditions have a lifecycle state.",
+        "min": 1,
+        "max": "1",
+        "type": [{ "code": "CodeableConcept" }],
+        "binding": {
+          "strength": "required",
+          "valueSet": "http://hl7.org/fhir/ValueSet/condition-clinical"
+        },
+        "isModifier": true,
+        "mustSupport": true,
+        "constraint": [
+          {
+            "key": "gh-cond-status-1",
+            "severity": "error",
+            "human": "clinicalStatus must contain a code from the condition-clinical value set",
+            "expression": "coding.where(system = 'http://terminology.hl7.org/CodeSystem/condition-clinical').exists()"
+          }
+        ]
+      },
+      {
+        "id": "Condition.clinicalStatus.coding",
+        "path": "Condition.clinicalStatus.coding",
+        "min": 1,
+        "max": "*",
+        "type": [{ "code": "Coding" }],
+        "mustSupport": true
+      },
+      {
+        "id": "Condition.clinicalStatus.coding.system",
+        "path": "Condition.clinicalStatus.coding.system",
+        "min": 1,
+        "max": "1",
+        "type": [{ "code": "uri" }],
+        "fixedUri": "http://terminology.hl7.org/CodeSystem/condition-clinical",
+        "mustSupport": true
+      },
+      {
+        "id": "Condition.clinicalStatus.coding.code",
+        "path": "Condition.clinicalStatus.coding.code",
+        "min": 1,
+        "max": "1",
+        "type": [{ "code": "code" }],
+        "mustSupport": true
+      },
+      {
+        "id": "Condition.verificationStatus",
+        "path": "Condition.verificationStatus",
+        "short": "unconfirmed | provisional | differential | confirmed | refuted | entered-in-error",
+        "min": 1,
+        "max": "1",
+        "type": [{ "code": "CodeableConcept" }],
+        "binding": {
+          "strength": "required",
+          "valueSet": "http://hl7.org/fhir/ValueSet/condition-ver-status"
+        },
+        "isModifier": true,
+        "mustSupport": true
+      },
+      {
+        "id": "Condition.verificationStatus.coding",
+        "path": "Condition.verificationStatus.coding",
+        "min": 1,
+        "max": "*",
+        "type": [{ "code": "Coding" }],
+        "mustSupport": true
+      },
+      {
+        "id": "Condition.category",
+        "path": "Condition.category",
+        "short": "problem-list-item | encounter-diagnosis",
+        "min": 1,
+        "max": "*",
+        "type": [{ "code": "CodeableConcept" }],
+        "binding": {
+          "strength": "extensible",
+          "valueSet": "http://hl7.org/fhir/ValueSet/condition-category"
+        },
+        "mustSupport": true
+      },
+      {
+        "id": "Condition.severity",
+        "path": "Condition.severity",
+        "short": "Subjective severity of condition (SNOMED CT)",
+        "min": 1,
+        "max": "1",
+        "type": [{ "code": "CodeableConcept" }],
+        "binding": {
+          "strength": "required",
+          "valueSet": "http://hl7.org/fhir/ValueSet/condition-severity"
+        },
+        "mustSupport": true
+      },
+      {
+        "id": "Condition.code",
+        "path": "Condition.code",
+        "short": "Identification of the condition (SNOMED CT or ICD-10)",
+        "definition": "Must be coded using SNOMED CT or ICD-10. Free-text-only conditions are not accepted by the GlobalHealth network.",
+        "min": 1,
+        "max": "1",
+        "type": [{ "code": "CodeableConcept" }],
+        "binding": {
+          "strength": "required",
+          "valueSet": "http://globalhealth.org/fhir/ValueSet/condition-codes"
+        },
+        "mustSupport": true,
+        "constraint": [
+          {
+            "key": "gh-cond-code-1",
+            "severity": "error",
+            "human": "Condition code must contain at least one structured coding",
+            "expression": "coding.exists() and coding.where(system.exists() and code.exists()).exists()"
+          }
+        ]
+      },
+      {
+        "id": "Condition.code.coding",
+        "path": "Condition.code.coding",
+        "min": 1,
+        "max": "*",
+        "type": [{ "code": "Coding" }],
+        "mustSupport": true
+      },
+      {
+        "id": "Condition.code.coding.system",
+        "path": "Condition.code.coding.system",
+        "min": 1,
+        "max": "1",
+        "type": [{ "code": "uri" }],
+        "mustSupport": true
+      },
+      {
+        "id": "Condition.code.coding.code",
+        "path": "Condition.code.coding.code",
+        "min": 1,
+        "max": "1",
+        "type": [{ "code": "code" }],
+        "mustSupport": true
+      },
+      {
+        "id": "Condition.code.coding.display",
+        "path": "Condition.code.coding.display",
+        "min": 1,
+        "max": "1",
+        "type": [{ "code": "string" }],
+        "mustSupport": true
+      },
+      {
+        "id": "Condition.bodySite",
+        "path": "Condition.bodySite",
+        "short": "Anatomical location (SNOMED CT)",
+        "min": 0,
+        "max": "*",
+        "type": [{ "code": "CodeableConcept" }],
+        "binding": {
+          "strength": "extensible",
+          "valueSet": "http://hl7.org/fhir/ValueSet/body-site"
+        }
+      },
+      {
+        "id": "Condition.subject",
+        "path": "Condition.subject",
+        "short": "Who has the condition",
+        "min": 1,
+        "max": "1",
+        "type": [{ "code": "Reference", "targetProfile": ["http://hl7.org/fhir/StructureDefinition/Patient"] }],
+        "mustSupport": true
+      },
+      {
+        "id": "Condition.encounter",
+        "path": "Condition.encounter",
+        "short": "Encounter created as part of",
+        "min": 0,
+        "max": "1",
+        "type": [{ "code": "Reference", "targetProfile": ["http://hl7.org/fhir/StructureDefinition/Encounter"] }],
+        "mustSupport": true
+      },
+      {
+        "id": "Condition.onsetDateTime",
+        "path": "Condition.onsetDateTime",
+        "short": "Estimated or actual date the condition began",
+        "min": 1,
+        "max": "1",
+        "type": [{ "code": "dateTime" }],
+        "mustSupport": true
+      },
+      {
+        "id": "Condition.abatementDateTime",
+        "path": "Condition.abatementDateTime",
+        "short": "When in resolution/remission",
+        "min": 0,
+        "max": "1",
+        "type": [{ "code": "dateTime" }]
+      },
+      {
+        "id": "Condition.recordedDate",
+        "path": "Condition.recordedDate",
+        "short": "Date record was first recorded",
+        "min": 1,
+        "max": "1",
+        "type": [{ "code": "dateTime" }],
+        "mustSupport": true
+      },
+      {
+        "id": "Condition.recorder",
+        "path": "Condition.recorder",
+        "short": "Who recorded the condition",
+        "min": 1,
+        "max": "1",
+        "type": [
+          { "code": "Reference", "targetProfile": ["http://hl7.org/fhir/StructureDefinition/Practitioner"] },
+          { "code": "Reference", "targetProfile": ["http://hl7.org/fhir/StructureDefinition/PractitionerRole"] }
+        ],
+        "mustSupport": true
+      },
+      {
+        "id": "Condition.asserter",
+        "path": "Condition.asserter",
+        "short": "Person who asserts this condition",
+        "min": 0,
+        "max": "1",
+        "type": [
+          { "code": "Reference", "targetProfile": ["http://hl7.org/fhir/StructureDefinition/Practitioner"] },
+          { "code": "Reference", "targetProfile": ["http://hl7.org/fhir/StructureDefinition/Patient"] }
+        ]
+      },
+      {
+        "id": "Condition.stage",
+        "path": "Condition.stage",
+        "short": "Stage/grade, usually assessed formally",
+        "min": 0,
+        "max": "*",
+        "type": [{ "code": "BackboneElement" }]
+      },
+      {
+        "id": "Condition.stage.summary",
+        "path": "Condition.stage.summary",
+        "min": 0,
+        "max": "1",
+        "type": [{ "code": "CodeableConcept" }],
+        "binding": {
+          "strength": "extensible",
+          "valueSet": "http://hl7.org/fhir/ValueSet/condition-stage"
+        }
+      },
+      {
+        "id": "Condition.stage.type",
+        "path": "Condition.stage.type",
+        "min": 0,
+        "max": "1",
+        "type": [{ "code": "CodeableConcept" }],
+        "binding": {
+          "strength": "extensible",
+          "valueSet": "http://hl7.org/fhir/ValueSet/condition-stage-type"
+        }
+      },
+      {
+        "id": "Condition.evidence",
+        "path": "Condition.evidence",
+        "short": "Supporting evidence",
+        "min": 0,
+        "max": "*",
+        "type": [{ "code": "BackboneElement" }]
+      },
+      {
+        "id": "Condition.evidence.code",
+        "path": "Condition.evidence.code",
+        "min": 0,
+        "max": "*",
+        "type": [{ "code": "CodeableConcept" }],
+        "binding": {
+          "strength": "extensible",
+          "valueSet": "http://hl7.org/fhir/ValueSet/manifestation-or-symptom"
+        }
+      },
+      {
+        "id": "Condition.evidence.detail",
+        "path": "Condition.evidence.detail",
+        "min": 0,
+        "max": "*",
+        "type": [{ "code": "Reference", "targetProfile": ["http://hl7.org/fhir/StructureDefinition/Resource"] }]
+      },
+      {
+        "id": "Condition.note",
+        "path": "Condition.note",
+        "short": "Additional information about the condition",
+        "min": 0,
+        "max": "*",
+        "type": [{ "code": "Annotation" }]
+      }
+    ]
+  },
+  "differential": {
+    "element": [
+      {
+        "id": "Condition.identifier",
+        "path": "Condition.identifier",
+        "min": 1,
+        "mustSupport": true
+      },
+      {
+        "id": "Condition.identifier.system",
+        "path": "Condition.identifier.system",
+        "min": 1,
+        "mustSupport": true
+      },
+      {
+        "id": "Condition.identifier.value",
+        "path": "Condition.identifier.value",
+        "min": 1,
+        "mustSupport": true
+      },
+      {
+        "id": "Condition.clinicalStatus",
+        "path": "Condition.clinicalStatus",
+        "min": 1,
+        "binding": {
+          "strength": "required",
+          "valueSet": "http://hl7.org/fhir/ValueSet/condition-clinical"
+        },
+        "mustSupport": true
+      },
+      {
+        "id": "Condition.clinicalStatus.coding",
+        "path": "Condition.clinicalStatus.coding",
+        "min": 1,
+        "mustSupport": true
+      },
+      {
+        "id": "Condition.clinicalStatus.coding.system",
+        "path": "Condition.clinicalStatus.coding.system",
+        "min": 1,
+        "fixedUri": "http://terminology.hl7.org/CodeSystem/condition-clinical",
+        "mustSupport": true
+      },
+      {
+        "id": "Condition.clinicalStatus.coding.code",
+        "path": "Condition.clinicalStatus.coding.code",
+        "min": 1,
+        "mustSupport": true
+      },
+      {
+        "id": "Condition.verificationStatus",
+        "path": "Condition.verificationStatus",
+        "min": 1,
+        "binding": {
+          "strength": "required",
+          "valueSet": "http://hl7.org/fhir/ValueSet/condition-ver-status"
+        },
+        "mustSupport": true
+      },
+      {
+        "id": "Condition.verificationStatus.coding",
+        "path": "Condition.verificationStatus.coding",
+        "min": 1,
+        "mustSupport": true
+      },
+      {
+        "id": "Condition.category",
+        "path": "Condition.category",
+        "min": 1,
+        "mustSupport": true
+      },
+      {
+        "id": "Condition.severity",
+        "path": "Condition.severity",
+        "min": 1,
+        "binding": {
+          "strength": "required",
+          "valueSet": "http://hl7.org/fhir/ValueSet/condition-severity"
+        },
+        "mustSupport": true
+      },
+      {
+        "id": "Condition.code",
+        "path": "Condition.code",
+        "min": 1,
+        "binding": {
+          "strength": "required",
+          "valueSet": "http://globalhealth.org/fhir/ValueSet/condition-codes"
+        },
+        "mustSupport": true
+      },
+      {
+        "id": "Condition.code.coding",
+        "path": "Condition.code.coding",
+        "min": 1,
+        "mustSupport": true
+      },
+      {
+        "id": "Condition.code.coding.system",
+        "path": "Condition.code.coding.system",
+        "min": 1,
+        "mustSupport": true
+      },
+      {
+        "id": "Condition.code.coding.code",
+        "path": "Condition.code.coding.code",
+        "min": 1,
+        "mustSupport": true
+      },
+      {
+        "id": "Condition.code.coding.display",
+        "path": "Condition.code.coding.display",
+        "min": 1,
+        "mustSupport": true
+      },
+      {
+        "id": "Condition.subject",
+        "path": "Condition.subject",
+        "min": 1,
+        "type": [{ "code": "Reference", "targetProfile": ["http://hl7.org/fhir/StructureDefinition/Patient"] }],
+        "mustSupport": true
+      },
+      {
+        "id": "Condition.onsetDateTime",
+        "path": "Condition.onsetDateTime",
+        "min": 1,
+        "mustSupport": true
+      },
+      {
+        "id": "Condition.recordedDate",
+        "path": "Condition.recordedDate",
+        "min": 1,
+        "mustSupport": true
+      },
+      {
+        "id": "Condition.recorder",
+        "path": "Condition.recorder",
+        "min": 1,
+        "type": [
+          { "code": "Reference", "targetProfile": ["http://hl7.org/fhir/StructureDefinition/Practitioner"] },
+          { "code": "Reference", "targetProfile": ["http://hl7.org/fhir/StructureDefinition/PractitionerRole"] }
+        ],
+        "mustSupport": true
+      }
+    ]
+  }
+}

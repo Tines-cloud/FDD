@@ -1,0 +1,959 @@
+﻿{
+  "pairId": "hemas-encounter-vs-r4-encounter",
+  "drifts": [
+    {
+      "id": "rule-1",
+      "description": "Constraints added in target: [dom-2, dom-3, dom-4, dom-5, dom-6]",
+      "sourcePath": "Encounter",
+      "severity": "WARNING",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter"
+    },
+    {
+      "id": "structural-encounter-short-definition-changed",
+      "description": "Short description changed from \u0027Hemas hospital encounter record\u0027 to \u0027An interaction during which services are provided to the patient\u0027. Definition changed.",
+      "sourcePath": "Encounter",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter"
+    },
+    {
+      "id": "structural-encounter-extension-slicing-added",
+      "description": "Source profile defines slicing for \u0027Encounter.extension\u0027 with discriminator \u0027value:url\u0027, which is not explicitly defined for the base \u0027Encounter.extension\u0027 in the target profile.",
+      "sourcePath": "Encounter.extension",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.extension"
+    },
+    {
+      "id": "rule-5",
+      "description": "Constraints added in target: [ele-1, ext-1]",
+      "sourcePath": "Encounter.extension",
+      "severity": "WARNING",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.extension"
+    },
+    {
+      "id": "extension-ward-number-missing",
+      "description": "Custom extension \u0027https://hemas.example.com/fhir/StructureDefinition/encounter-ward-number\u0027 (sliced as \u0027wardNumber\u0027) is present in source with mustSupport:true but not explicitly defined or profiled in target.",
+      "sourcePath": "Encounter.extension:wardNumber",
+      "severity": "ERROR",
+      "type": "EXTENSION",
+      "targetPath": "Encounter.extension"
+    },
+    {
+      "id": "extension-bed-number-missing",
+      "description": "Custom extension \u0027https://hemas.example.com/fhir/StructureDefinition/encounter-bed-number\u0027 (sliced as \u0027bedNumber\u0027) is present in source with mustSupport:true but not explicitly defined or profiled in target.",
+      "sourcePath": "Encounter.extension:bedNumber",
+      "severity": "ERROR",
+      "type": "EXTENSION",
+      "targetPath": "Encounter.extension"
+    },
+    {
+      "id": "rule-6",
+      "description": "Cardinality changed: [0..*] â [1..1]",
+      "sourcePath": "Encounter.status",
+      "severity": "ERROR",
+      "type": "CARDINALITY",
+      "targetPath": "Encounter.status"
+    },
+    {
+      "id": "rule-7",
+      "description": "Binding changed: none(none) â required(http://hl7.org/fhir/ValueSet/encounter-status|4.0.1)",
+      "sourcePath": "Encounter.status",
+      "severity": "ERROR",
+      "type": "TERMINOLOGY",
+      "targetPath": "Encounter.status"
+    },
+    {
+      "id": "rule-8",
+      "description": "MustSupport removed in target",
+      "sourcePath": "Encounter.status",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.status"
+    },
+    {
+      "id": "rule-9",
+      "description": "IsModifier changed: false â true",
+      "sourcePath": "Encounter.status",
+      "severity": "ERROR",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.status"
+    },
+    {
+      "id": "rule-10",
+      "description": "IsSummary changed: false â true",
+      "sourcePath": "Encounter.status",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.status"
+    },
+    {
+      "id": "rule-11",
+      "description": "Constraints added in target: [ele-1]",
+      "sourcePath": "Encounter.status",
+      "severity": "WARNING",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.status"
+    },
+    {
+      "id": "rule-12",
+      "description": "Cardinality changed: [0..*] â [1..1]",
+      "sourcePath": "Encounter.class",
+      "severity": "ERROR",
+      "type": "CARDINALITY",
+      "targetPath": "Encounter.class"
+    },
+    {
+      "id": "rule-13",
+      "description": "Binding changed: none(none) â extensible(http://terminology.hl7.org/ValueSet/v3-ActEncounterCode)",
+      "sourcePath": "Encounter.class",
+      "severity": "WARNING",
+      "type": "TERMINOLOGY",
+      "targetPath": "Encounter.class"
+    },
+    {
+      "id": "rule-14",
+      "description": "MustSupport removed in target",
+      "sourcePath": "Encounter.class",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.class"
+    },
+    {
+      "id": "rule-15",
+      "description": "IsSummary changed: false â true",
+      "sourcePath": "Encounter.class",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.class"
+    },
+    {
+      "id": "rule-16",
+      "description": "Constraints added in target: [ele-1]",
+      "sourcePath": "Encounter.class",
+      "severity": "WARNING",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.class"
+    },
+    {
+      "id": "rule-17",
+      "description": "Cardinality changed: [1..*] â [0..*]",
+      "sourcePath": "Encounter.type",
+      "severity": "WARNING",
+      "type": "CARDINALITY",
+      "targetPath": "Encounter.type"
+    },
+    {
+      "id": "rule-18",
+      "description": "Binding changed: none(none) â example(http://hl7.org/fhir/ValueSet/encounter-type)",
+      "sourcePath": "Encounter.type",
+      "severity": "WARNING",
+      "type": "TERMINOLOGY",
+      "targetPath": "Encounter.type"
+    },
+    {
+      "id": "rule-19",
+      "description": "MustSupport removed in target",
+      "sourcePath": "Encounter.type",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.type"
+    },
+    {
+      "id": "rule-20",
+      "description": "IsSummary changed: false â true",
+      "sourcePath": "Encounter.type",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.type"
+    },
+    {
+      "id": "rule-21",
+      "description": "Constraints added in target: [ele-1]",
+      "sourcePath": "Encounter.type",
+      "severity": "WARNING",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.type"
+    },
+    {
+      "id": "rule-22",
+      "description": "Cardinality changed: [1..*] â [0..1]",
+      "sourcePath": "Encounter.subject",
+      "severity": "WARNING",
+      "type": "CARDINALITY",
+      "targetPath": "Encounter.subject"
+    },
+    {
+      "id": "rule-23",
+      "description": "Reference target profile changed: [https://hemas.example.com/fhir/StructureDefinition/Patient] â [http://hl7.org/fhir/StructureDefinition/Group, http://hl7.org/fhir/StructureDefinition/Patient]",
+      "sourcePath": "Encounter.subject",
+      "severity": "WARNING",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.subject"
+    },
+    {
+      "id": "rule-24",
+      "description": "MustSupport removed in target",
+      "sourcePath": "Encounter.subject",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.subject"
+    },
+    {
+      "id": "rule-25",
+      "description": "IsSummary changed: false â true",
+      "sourcePath": "Encounter.subject",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.subject"
+    },
+    {
+      "id": "rule-26",
+      "description": "Constraints added in target: [ele-1]",
+      "sourcePath": "Encounter.subject",
+      "severity": "WARNING",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.subject"
+    },
+    {
+      "id": "rule-27",
+      "description": "Cardinality changed: [1..*] â [0..*]",
+      "sourcePath": "Encounter.participant",
+      "severity": "WARNING",
+      "type": "CARDINALITY",
+      "targetPath": "Encounter.participant"
+    },
+    {
+      "id": "rule-28",
+      "description": "MustSupport removed in target",
+      "sourcePath": "Encounter.participant",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.participant"
+    },
+    {
+      "id": "rule-29",
+      "description": "IsSummary changed: false â true",
+      "sourcePath": "Encounter.participant",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.participant"
+    },
+    {
+      "id": "rule-30",
+      "description": "Constraints added in target: [ele-1]",
+      "sourcePath": "Encounter.participant",
+      "severity": "WARNING",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.participant"
+    },
+    {
+      "id": "rule-31",
+      "description": "Cardinality changed: [1..*] â [0..1]",
+      "sourcePath": "Encounter.period",
+      "severity": "WARNING",
+      "type": "CARDINALITY",
+      "targetPath": "Encounter.period"
+    },
+    {
+      "id": "rule-32",
+      "description": "MustSupport removed in target",
+      "sourcePath": "Encounter.period",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.period"
+    },
+    {
+      "id": "rule-33",
+      "description": "Constraints added in target: [ele-1]",
+      "sourcePath": "Encounter.period",
+      "severity": "WARNING",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.period"
+    },
+    {
+      "id": "rule-34",
+      "description": "Binding changed: none(none) â preferred(http://hl7.org/fhir/ValueSet/encounter-reason)",
+      "sourcePath": "Encounter.reasonCode",
+      "severity": "WARNING",
+      "type": "TERMINOLOGY",
+      "targetPath": "Encounter.reasonCode"
+    },
+    {
+      "id": "rule-35",
+      "description": "MustSupport removed in target",
+      "sourcePath": "Encounter.reasonCode",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.reasonCode"
+    },
+    {
+      "id": "rule-36",
+      "description": "IsSummary changed: false â true",
+      "sourcePath": "Encounter.reasonCode",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.reasonCode"
+    },
+    {
+      "id": "rule-37",
+      "description": "Constraints added in target: [ele-1]",
+      "sourcePath": "Encounter.reasonCode",
+      "severity": "WARNING",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.reasonCode"
+    },
+    {
+      "id": "rule-38",
+      "description": "Cardinality changed: [1..*] â [0..*]",
+      "sourcePath": "Encounter.diagnosis",
+      "severity": "WARNING",
+      "type": "CARDINALITY",
+      "targetPath": "Encounter.diagnosis"
+    },
+    {
+      "id": "rule-39",
+      "description": "MustSupport removed in target",
+      "sourcePath": "Encounter.diagnosis",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.diagnosis"
+    },
+    {
+      "id": "rule-40",
+      "description": "IsSummary changed: false â true",
+      "sourcePath": "Encounter.diagnosis",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.diagnosis"
+    },
+    {
+      "id": "rule-41",
+      "description": "Constraints added in target: [ele-1]",
+      "sourcePath": "Encounter.diagnosis",
+      "severity": "WARNING",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.diagnosis"
+    },
+    {
+      "id": "rule-42",
+      "description": "Extension added in target element: http://hl7.org/fhir/StructureDefinition/structuredefinition-explicit-type-name",
+      "sourcePath": "Encounter.diagnosis",
+      "severity": "WARNING",
+      "type": "EXTENSION",
+      "targetPath": "Encounter.diagnosis.extension(http://hl7.org/fhir/StructureDefinition/structuredefinition-explicit-type-name)"
+    },
+    {
+      "id": "rule-43",
+      "description": "Cardinality changed: [0..*] â [0..1]",
+      "sourcePath": "Encounter.hospitalization",
+      "severity": "WARNING",
+      "type": "CARDINALITY",
+      "targetPath": "Encounter.hospitalization"
+    },
+    {
+      "id": "rule-44",
+      "description": "MustSupport removed in target",
+      "sourcePath": "Encounter.hospitalization",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.hospitalization"
+    },
+    {
+      "id": "rule-45",
+      "description": "Constraints added in target: [ele-1]",
+      "sourcePath": "Encounter.hospitalization",
+      "severity": "WARNING",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.hospitalization"
+    },
+    {
+      "id": "rule-46",
+      "description": "Cardinality changed: [0..*] â [0..1]",
+      "sourcePath": "Encounter.hospitalization.admitSource",
+      "severity": "WARNING",
+      "type": "CARDINALITY",
+      "targetPath": "Encounter.hospitalization.admitSource"
+    },
+    {
+      "id": "rule-47",
+      "description": "Binding changed: none(none) â preferred(http://hl7.org/fhir/ValueSet/encounter-admit-source)",
+      "sourcePath": "Encounter.hospitalization.admitSource",
+      "severity": "WARNING",
+      "type": "TERMINOLOGY",
+      "targetPath": "Encounter.hospitalization.admitSource"
+    },
+    {
+      "id": "rule-48",
+      "description": "MustSupport removed in target",
+      "sourcePath": "Encounter.hospitalization.admitSource",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.hospitalization.admitSource"
+    },
+    {
+      "id": "rule-49",
+      "description": "Constraints added in target: [ele-1]",
+      "sourcePath": "Encounter.hospitalization.admitSource",
+      "severity": "WARNING",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.hospitalization.admitSource"
+    },
+    {
+      "id": "rule-50",
+      "description": "Cardinality changed: [0..*] â [0..1]",
+      "sourcePath": "Encounter.hospitalization.dischargeDisposition",
+      "severity": "WARNING",
+      "type": "CARDINALITY",
+      "targetPath": "Encounter.hospitalization.dischargeDisposition"
+    },
+    {
+      "id": "rule-51",
+      "description": "Binding changed: none(none) â example(http://hl7.org/fhir/ValueSet/encounter-discharge-disposition)",
+      "sourcePath": "Encounter.hospitalization.dischargeDisposition",
+      "severity": "WARNING",
+      "type": "TERMINOLOGY",
+      "targetPath": "Encounter.hospitalization.dischargeDisposition"
+    },
+    {
+      "id": "rule-52",
+      "description": "MustSupport removed in target",
+      "sourcePath": "Encounter.hospitalization.dischargeDisposition",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.hospitalization.dischargeDisposition"
+    },
+    {
+      "id": "rule-53",
+      "description": "Constraints added in target: [ele-1]",
+      "sourcePath": "Encounter.hospitalization.dischargeDisposition",
+      "severity": "WARNING",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.hospitalization.dischargeDisposition"
+    },
+    {
+      "id": "rule-54",
+      "description": "MustSupport removed in target",
+      "sourcePath": "Encounter.location",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.location"
+    },
+    {
+      "id": "rule-55",
+      "description": "Constraints added in target: [ele-1]",
+      "sourcePath": "Encounter.location",
+      "severity": "WARNING",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.location"
+    },
+    {
+      "id": "rule-56",
+      "description": "Cardinality changed: [0..*] â [0..1]",
+      "sourcePath": "Encounter.serviceProvider",
+      "severity": "WARNING",
+      "type": "CARDINALITY",
+      "targetPath": "Encounter.serviceProvider"
+    },
+    {
+      "id": "rule-57",
+      "description": "Reference target profile changed: [https://hemas.example.com/fhir/StructureDefinition/Organization] â [http://hl7.org/fhir/StructureDefinition/Organization]",
+      "sourcePath": "Encounter.serviceProvider",
+      "severity": "WARNING",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.serviceProvider"
+    },
+    {
+      "id": "rule-58",
+      "description": "MustSupport removed in target",
+      "sourcePath": "Encounter.serviceProvider",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.serviceProvider"
+    },
+    {
+      "id": "rule-59",
+      "description": "Constraints added in target: [ele-1]",
+      "sourcePath": "Encounter.serviceProvider",
+      "severity": "WARNING",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.serviceProvider"
+    },
+    {
+      "id": "rule-60",
+      "description": "Element added in target profile: Encounter.id",
+      "sourcePath": "",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.id"
+    },
+    {
+      "id": "rule-61",
+      "description": "Element added in target profile: Encounter.meta",
+      "sourcePath": "",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.meta"
+    },
+    {
+      "id": "rule-62",
+      "description": "Element added in target profile: Encounter.implicitRules",
+      "sourcePath": "",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.implicitRules"
+    },
+    {
+      "id": "rule-63",
+      "description": "Element added in target profile: Encounter.language",
+      "sourcePath": "",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.language"
+    },
+    {
+      "id": "rule-64",
+      "description": "Element added in target profile: Encounter.text",
+      "sourcePath": "",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.text"
+    },
+    {
+      "id": "rule-65",
+      "description": "Element added in target profile: Encounter.contained",
+      "sourcePath": "",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.contained"
+    },
+    {
+      "id": "rule-66",
+      "description": "Element added in target profile: Encounter.modifierExtension",
+      "sourcePath": "",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.modifierExtension"
+    },
+    {
+      "id": "rule-67",
+      "description": "Element added in target profile: Encounter.identifier",
+      "sourcePath": "",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.identifier"
+    },
+    {
+      "id": "rule-68",
+      "description": "Element added in target profile: Encounter.statusHistory",
+      "sourcePath": "",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.statusHistory"
+    },
+    {
+      "id": "rule-69",
+      "description": "Element added in target profile: Encounter.statusHistory.id",
+      "sourcePath": "",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.statusHistory.id"
+    },
+    {
+      "id": "rule-70",
+      "description": "Element added in target profile: Encounter.statusHistory.extension",
+      "sourcePath": "",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.statusHistory.extension"
+    },
+    {
+      "id": "rule-71",
+      "description": "Element added in target profile: Encounter.statusHistory.modifierExtension",
+      "sourcePath": "",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.statusHistory.modifierExtension"
+    },
+    {
+      "id": "rule-72",
+      "description": "Element added in target profile: Encounter.statusHistory.status (min:1)",
+      "sourcePath": "",
+      "severity": "ERROR",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.statusHistory.status"
+    },
+    {
+      "id": "rule-73",
+      "description": "Element added in target profile: Encounter.statusHistory.period (min:1)",
+      "sourcePath": "",
+      "severity": "ERROR",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.statusHistory.period"
+    },
+    {
+      "id": "rule-74",
+      "description": "Element added in target profile: Encounter.classHistory",
+      "sourcePath": "",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.classHistory"
+    },
+    {
+      "id": "rule-75",
+      "description": "Element added in target profile: Encounter.classHistory.id",
+      "sourcePath": "",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.classHistory.id"
+    },
+    {
+      "id": "rule-76",
+      "description": "Element added in target profile: Encounter.classHistory.extension",
+      "sourcePath": "",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.classHistory.extension"
+    },
+    {
+      "id": "rule-77",
+      "description": "Element added in target profile: Encounter.classHistory.modifierExtension",
+      "sourcePath": "",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.classHistory.modifierExtension"
+    },
+    {
+      "id": "rule-78",
+      "description": "Element added in target profile: Encounter.classHistory.class (min:1)",
+      "sourcePath": "",
+      "severity": "ERROR",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.classHistory.class"
+    },
+    {
+      "id": "rule-79",
+      "description": "Element added in target profile: Encounter.classHistory.period (min:1)",
+      "sourcePath": "",
+      "severity": "ERROR",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.classHistory.period"
+    },
+    {
+      "id": "rule-80",
+      "description": "Element added in target profile: Encounter.serviceType",
+      "sourcePath": "",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.serviceType"
+    },
+    {
+      "id": "rule-81",
+      "description": "Element added in target profile: Encounter.priority",
+      "sourcePath": "",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.priority"
+    },
+    {
+      "id": "rule-82",
+      "description": "Element added in target profile: Encounter.episodeOfCare",
+      "sourcePath": "",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.episodeOfCare"
+    },
+    {
+      "id": "rule-83",
+      "description": "Element added in target profile: Encounter.basedOn",
+      "sourcePath": "",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.basedOn"
+    },
+    {
+      "id": "rule-84",
+      "description": "Element added in target profile: Encounter.participant.id",
+      "sourcePath": "",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.participant.id"
+    },
+    {
+      "id": "rule-85",
+      "description": "Element added in target profile: Encounter.participant.extension",
+      "sourcePath": "",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.participant.extension"
+    },
+    {
+      "id": "rule-86",
+      "description": "Element added in target profile: Encounter.participant.modifierExtension",
+      "sourcePath": "",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.participant.modifierExtension"
+    },
+    {
+      "id": "rule-87",
+      "description": "Element added in target profile: Encounter.participant.type",
+      "sourcePath": "",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.participant.type"
+    },
+    {
+      "id": "rule-88",
+      "description": "Element added in target profile: Encounter.participant.period",
+      "sourcePath": "",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.participant.period"
+    },
+    {
+      "id": "rule-89",
+      "description": "Element added in target profile: Encounter.participant.individual",
+      "sourcePath": "",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.participant.individual"
+    },
+    {
+      "id": "rule-90",
+      "description": "Element added in target profile: Encounter.appointment",
+      "sourcePath": "",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.appointment"
+    },
+    {
+      "id": "rule-91",
+      "description": "Element added in target profile: Encounter.length",
+      "sourcePath": "",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.length"
+    },
+    {
+      "id": "rule-92",
+      "description": "Element added in target profile: Encounter.reasonReference",
+      "sourcePath": "",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.reasonReference"
+    },
+    {
+      "id": "rule-93",
+      "description": "Element added in target profile: Encounter.diagnosis.id",
+      "sourcePath": "",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.diagnosis.id"
+    },
+    {
+      "id": "rule-94",
+      "description": "Element added in target profile: Encounter.diagnosis.extension",
+      "sourcePath": "",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.diagnosis.extension"
+    },
+    {
+      "id": "rule-95",
+      "description": "Element added in target profile: Encounter.diagnosis.modifierExtension",
+      "sourcePath": "",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.diagnosis.modifierExtension"
+    },
+    {
+      "id": "rule-96",
+      "description": "Element added in target profile: Encounter.diagnosis.condition (min:1)",
+      "sourcePath": "",
+      "severity": "ERROR",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.diagnosis.condition"
+    },
+    {
+      "id": "rule-97",
+      "description": "Element added in target profile: Encounter.diagnosis.use",
+      "sourcePath": "",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.diagnosis.use"
+    },
+    {
+      "id": "rule-98",
+      "description": "Element added in target profile: Encounter.diagnosis.rank",
+      "sourcePath": "",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.diagnosis.rank"
+    },
+    {
+      "id": "rule-99",
+      "description": "Element added in target profile: Encounter.account",
+      "sourcePath": "",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.account"
+    },
+    {
+      "id": "rule-100",
+      "description": "Element added in target profile: Encounter.hospitalization.id",
+      "sourcePath": "",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.hospitalization.id"
+    },
+    {
+      "id": "rule-101",
+      "description": "Element added in target profile: Encounter.hospitalization.extension",
+      "sourcePath": "",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.hospitalization.extension"
+    },
+    {
+      "id": "rule-102",
+      "description": "Element added in target profile: Encounter.hospitalization.modifierExtension",
+      "sourcePath": "",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.hospitalization.modifierExtension"
+    },
+    {
+      "id": "rule-103",
+      "description": "Element added in target profile: Encounter.hospitalization.preAdmissionIdentifier",
+      "sourcePath": "",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.hospitalization.preAdmissionIdentifier"
+    },
+    {
+      "id": "rule-104",
+      "description": "Element added in target profile: Encounter.hospitalization.origin",
+      "sourcePath": "",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.hospitalization.origin"
+    },
+    {
+      "id": "rule-105",
+      "description": "Element added in target profile: Encounter.hospitalization.reAdmission",
+      "sourcePath": "",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.hospitalization.reAdmission"
+    },
+    {
+      "id": "rule-106",
+      "description": "Element added in target profile: Encounter.hospitalization.dietPreference",
+      "sourcePath": "",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.hospitalization.dietPreference"
+    },
+    {
+      "id": "rule-107",
+      "description": "Element added in target profile: Encounter.hospitalization.specialCourtesy",
+      "sourcePath": "",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.hospitalization.specialCourtesy"
+    },
+    {
+      "id": "rule-108",
+      "description": "Element added in target profile: Encounter.hospitalization.specialArrangement",
+      "sourcePath": "",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.hospitalization.specialArrangement"
+    },
+    {
+      "id": "rule-109",
+      "description": "Element added in target profile: Encounter.hospitalization.destination",
+      "sourcePath": "",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.hospitalization.destination"
+    },
+    {
+      "id": "rule-110",
+      "description": "Element added in target profile: Encounter.location.id",
+      "sourcePath": "",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.location.id"
+    },
+    {
+      "id": "rule-111",
+      "description": "Element added in target profile: Encounter.location.extension",
+      "sourcePath": "",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.location.extension"
+    },
+    {
+      "id": "rule-112",
+      "description": "Element added in target profile: Encounter.location.modifierExtension",
+      "sourcePath": "",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.location.modifierExtension"
+    },
+    {
+      "id": "rule-113",
+      "description": "Element added in target profile: Encounter.location.location (min:1)",
+      "sourcePath": "",
+      "severity": "ERROR",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.location.location"
+    },
+    {
+      "id": "rule-114",
+      "description": "Element added in target profile: Encounter.location.status",
+      "sourcePath": "",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.location.status"
+    },
+    {
+      "id": "rule-115",
+      "description": "Element added in target profile: Encounter.location.physicalType",
+      "sourcePath": "",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.location.physicalType"
+    },
+    {
+      "id": "rule-116",
+      "description": "Element added in target profile: Encounter.location.period",
+      "sourcePath": "",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.location.period"
+    },
+    {
+      "id": "rule-117",
+      "description": "Element added in target profile: Encounter.partOf",
+      "sourcePath": "",
+      "severity": "INFO",
+      "type": "STRUCTURAL",
+      "targetPath": "Encounter.partOf"
+    },
+    {
+      "id": "rule-2",
+      "description": "Cardinality changed: [0..1] â [0..*]",
+      "sourcePath": "Encounter.extension",
+      "severity": "WARNING",
+      "type": "CARDINALITY",
+      "targetPath": "Encounter.extension"
+    }
+  ],
+  "sourceCanonical": "https://hemas.example.com/fhir/StructureDefinition/Encounter",
+  "targetCanonical": "http://hl7.org/fhir/StructureDefinition/Encounter"
+}

@@ -1,0 +1,173 @@
+{
+  "resourceType": "StructureDefinition",
+  "id": "hemas-immunization",
+  "url": "https://hemas.example.com/fhir/StructureDefinition/Immunization",
+  "version": "1.0.0",
+  "name": "HemasImmunization",
+  "title": "Hemas Immunization Profile",
+  "status": "active",
+  "date": "2025-01-15",
+  "publisher": "Hemas Holdings",
+  "description": "Hemas hospital group Immunization profile requiring encounter linkage, single performer, vaccine program tracking, and administration site documentation.",
+  "fhirVersion": "4.0.1",
+  "kind": "resource",
+  "abstract": false,
+  "type": "Immunization",
+  "baseDefinition": "http://hl7.org/fhir/StructureDefinition/Immunization",
+  "derivation": "constraint",
+  "differential": {
+    "element": [
+      {
+        "id": "Immunization",
+        "path": "Immunization",
+        "short": "Hemas hospital immunization record",
+        "definition": "An immunization event at a Hemas hospital, with vaccine program tracking and mandatory encounter linkage."
+      },
+      {
+        "id": "Immunization.extension",
+        "path": "Immunization.extension",
+        "slicing": {
+          "discriminator": [
+            {
+              "type": "value",
+              "path": "url"
+            }
+          ],
+          "ordered": false,
+          "rules": "open"
+        }
+      },
+      {
+        "id": "Immunization.extension:vaccineProgram",
+        "path": "Immunization.extension",
+        "sliceName": "vaccineProgram",
+        "short": "Vaccine program name",
+        "definition": "The national or institutional vaccine program under which this immunization was administered.",
+        "min": 0,
+        "max": "1",
+        "type": [
+          {
+            "code": "Extension",
+            "profile": [
+              "https://hemas.example.com/fhir/StructureDefinition/immunization-vaccine-program"
+            ]
+          }
+        ],
+        "mustSupport": true
+      },
+      {
+        "id": "Immunization.extension:administeredBy",
+        "path": "Immunization.extension",
+        "sliceName": "administeredBy",
+        "short": "Practitioner who administered the vaccine",
+        "definition": "Reference to the specific practitioner who physically administered the vaccine.",
+        "min": 0,
+        "max": "1",
+        "type": [
+          {
+            "code": "Extension",
+            "profile": [
+              "https://hemas.example.com/fhir/StructureDefinition/immunization-administered-by"
+            ]
+          }
+        ],
+        "mustSupport": true
+      },
+      {
+        "id": "Immunization.status",
+        "path": "Immunization.status",
+        "short": "Immunization status",
+        "mustSupport": true
+      },
+      {
+        "id": "Immunization.vaccineCode",
+        "path": "Immunization.vaccineCode",
+        "short": "Vaccine code",
+        "mustSupport": true
+      },
+      {
+        "id": "Immunization.patient",
+        "path": "Immunization.patient",
+        "short": "Patient who received the vaccine",
+        "min": 1,
+        "type": [
+          {
+            "code": "Reference",
+            "targetProfile": [
+              "https://hemas.example.com/fhir/StructureDefinition/Patient"
+            ]
+          }
+        ],
+        "mustSupport": true
+      },
+      {
+        "id": "Immunization.encounter",
+        "path": "Immunization.encounter",
+        "short": "Associated hospital encounter",
+        "definition": "All Hemas immunizations must be linked to an encounter for admission tracking.",
+        "min": 1,
+        "type": [
+          {
+            "code": "Reference",
+            "targetProfile": [
+              "https://hemas.example.com/fhir/StructureDefinition/Encounter"
+            ]
+          }
+        ],
+        "mustSupport": true
+      },
+      {
+        "id": "Immunization.occurrence[x]",
+        "path": "Immunization.occurrence[x]",
+        "short": "When the immunization occurred",
+        "mustSupport": true
+      },
+      {
+        "id": "Immunization.lotNumber",
+        "path": "Immunization.lotNumber",
+        "short": "Vaccine lot number",
+        "mustSupport": true
+      },
+      {
+        "id": "Immunization.site",
+        "path": "Immunization.site",
+        "short": "Body site of the injection",
+        "mustSupport": true
+      },
+      {
+        "id": "Immunization.route",
+        "path": "Immunization.route",
+        "short": "Route of administration",
+        "mustSupport": true
+      },
+      {
+        "id": "Immunization.performer",
+        "path": "Immunization.performer",
+        "short": "Immunization performer",
+        "definition": "Hemas restricts to a single performer per immunization record.",
+        "max": "1",
+        "mustSupport": true
+      },
+      {
+        "id": "Immunization.performer.actor",
+        "path": "Immunization.performer.actor",
+        "short": "Practitioner who performed the immunization",
+        "type": [
+          {
+            "code": "Reference",
+            "targetProfile": [
+              "https://hemas.example.com/fhir/StructureDefinition/Practitioner"
+            ]
+          }
+        ],
+        "mustSupport": true
+      },
+      {
+        "id": "Immunization.protocolApplied",
+        "path": "Immunization.protocolApplied",
+        "short": "Protocol followed",
+        "mustSupport": true
+      }
+    ]
+  }
+}

@@ -1,0 +1,166 @@
+{
+  "resourceType": "StructureDefinition",
+  "id": "hemas-careplan",
+  "url": "https://hemas.example.com/fhir/StructureDefinition/CarePlan",
+  "version": "1.0.0",
+  "name": "HemasCarePlan",
+  "title": "Hemas CarePlan Profile",
+  "status": "active",
+  "date": "2025-01-15",
+  "publisher": "Hemas Holdings",
+  "description": "Hemas hospital group CarePlan profile requiring encounter linkage, discharge readiness tracking, expected discharge date, and care team coordination for hospital operations.",
+  "fhirVersion": "4.0.1",
+  "kind": "resource",
+  "abstract": false,
+  "type": "CarePlan",
+  "baseDefinition": "http://hl7.org/fhir/StructureDefinition/CarePlan",
+  "derivation": "constraint",
+  "differential": {
+    "element": [
+      {
+        "id": "CarePlan",
+        "path": "CarePlan",
+        "short": "Hemas hospital care plan",
+        "definition": "A care plan within the Hemas hospital group, emphasizing discharge readiness, encounter linkage, and care team coordination."
+      },
+      {
+        "id": "CarePlan.extension",
+        "path": "CarePlan.extension",
+        "slicing": {
+          "discriminator": [
+            {
+              "type": "value",
+              "path": "url"
+            }
+          ],
+          "ordered": false,
+          "rules": "open"
+        }
+      },
+      {
+        "id": "CarePlan.extension:dischargeReadiness",
+        "path": "CarePlan.extension",
+        "sliceName": "dischargeReadiness",
+        "short": "Discharge readiness assessment",
+        "definition": "Assessment of the patient\u0027s readiness for discharge from the hospital.",
+        "min": 0,
+        "max": "1",
+        "type": [
+          {
+            "code": "Extension",
+            "profile": [
+              "https://hemas.example.com/fhir/StructureDefinition/careplan-discharge-readiness"
+            ]
+          }
+        ],
+        "mustSupport": true
+      },
+      {
+        "id": "CarePlan.extension:expectedDischargeDate",
+        "path": "CarePlan.extension",
+        "sliceName": "expectedDischargeDate",
+        "short": "Expected date of discharge",
+        "definition": "The projected discharge date used for bed management and planning.",
+        "min": 0,
+        "max": "1",
+        "type": [
+          {
+            "code": "Extension",
+            "profile": [
+              "https://hemas.example.com/fhir/StructureDefinition/careplan-expected-discharge-date"
+            ]
+          }
+        ],
+        "mustSupport": true
+      },
+      {
+        "id": "CarePlan.status",
+        "path": "CarePlan.status",
+        "short": "Care plan status",
+        "mustSupport": true
+      },
+      {
+        "id": "CarePlan.intent",
+        "path": "CarePlan.intent",
+        "short": "Care plan intent",
+        "mustSupport": true
+      },
+      {
+        "id": "CarePlan.category",
+        "path": "CarePlan.category",
+        "short": "Care plan category",
+        "min": 1,
+        "mustSupport": true
+      },
+      {
+        "id": "CarePlan.subject",
+        "path": "CarePlan.subject",
+        "short": "Patient for the care plan",
+        "min": 1,
+        "type": [
+          {
+            "code": "Reference",
+            "targetProfile": [
+              "https://hemas.example.com/fhir/StructureDefinition/Patient"
+            ]
+          }
+        ],
+        "mustSupport": true
+      },
+      {
+        "id": "CarePlan.encounter",
+        "path": "CarePlan.encounter",
+        "short": "Associated hospital encounter",
+        "definition": "All Hemas care plans must be linked to an encounter for admission tracking and discharge planning.",
+        "min": 1,
+        "type": [
+          {
+            "code": "Reference",
+            "targetProfile": [
+              "https://hemas.example.com/fhir/StructureDefinition/Encounter"
+            ]
+          }
+        ],
+        "mustSupport": true
+      },
+      {
+        "id": "CarePlan.author",
+        "path": "CarePlan.author",
+        "short": "Care plan author",
+        "type": [
+          {
+            "code": "Reference",
+            "targetProfile": [
+              "https://hemas.example.com/fhir/StructureDefinition/Practitioner"
+            ]
+          }
+        ],
+        "mustSupport": true
+      },
+      {
+        "id": "CarePlan.contributor",
+        "path": "CarePlan.contributor",
+        "short": "Care plan contributors",
+        "mustSupport": true
+      },
+      {
+        "id": "CarePlan.careTeam",
+        "path": "CarePlan.careTeam",
+        "short": "Care team involved in the plan",
+        "mustSupport": true
+      },
+      {
+        "id": "CarePlan.goal",
+        "path": "CarePlan.goal",
+        "short": "Care plan goals",
+        "mustSupport": true
+      },
+      {
+        "id": "CarePlan.activity",
+        "path": "CarePlan.activity",
+        "short": "Planned activities",
+        "mustSupport": true
+      }
+    ]
+  }
+}

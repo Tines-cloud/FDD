@@ -1,0 +1,63 @@
+{
+  "pairId": "r4-vs-r5-condition",
+  "sourceCanonical": "http://hl7.org/fhir/StructureDefinition/Condition",
+  "targetCanonical": "http://hl7.org/fhir/StructureDefinition/Condition",
+  "drifts": [
+    {
+      "id": "stage-summary-renamed",
+      "type": "VERSION",
+      "sourcePath": "Condition.stage.summary",
+      "targetPath": "Condition.stage.summary",
+      "description": "R5 (5.0.0) retains stage.summary but the associated value set binding is updated and clarified",
+      "severity": "INFO"
+    },
+    {
+      "id": "participant-new-element",
+      "type": "VERSION",
+      "sourcePath": "Condition",
+      "targetPath": "Condition.participant",
+      "description": "R5 (5.0.0) adds a participant backbone element replacing asserter and recorder individually; not present in R4",
+      "severity": "ERROR"
+    },
+    {
+      "id": "asserter-removed",
+      "type": "VERSION",
+      "sourcePath": "Condition.asserter",
+      "targetPath": "Condition.participant",
+      "description": "R5 (5.0.0) removes Condition.asserter; functionality moved to Condition.participant with function code",
+      "severity": "ERROR"
+    },
+    {
+      "id": "recorder-removed",
+      "type": "VERSION",
+      "sourcePath": "Condition.recorder",
+      "targetPath": "Condition.participant",
+      "description": "R5 (5.0.0) removes Condition.recorder; functionality moved to Condition.participant with function code",
+      "severity": "ERROR"
+    },
+    {
+      "id": "evidence-restructured",
+      "type": "VERSION",
+      "sourcePath": "Condition.evidence",
+      "targetPath": "Condition.evidence",
+      "description": "R5 (5.0.0) restructures evidence from backbone element with code/detail to a CodeableReference type",
+      "severity": "WARNING"
+    },
+    {
+      "id": "body-site-type-change",
+      "type": "VERSION",
+      "sourcePath": "Condition.bodySite",
+      "targetPath": "Condition.bodySite",
+      "description": "R5 (5.0.0) retains bodySite as CodeableConcept but adds a parallel bodyStructure Reference(BodyStructure) element",
+      "severity": "WARNING"
+    },
+    {
+      "id": "onset-updated-types",
+      "type": "VERSION",
+      "sourcePath": "Condition.onset[x]",
+      "targetPath": "Condition.onset[x]",
+      "description": "R5 (5.0.0) onset[x] allowed types are unchanged but the canonical reference version is updated",
+      "severity": "INFO"
+    }
+  ]
+}

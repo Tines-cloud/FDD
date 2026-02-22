@@ -1,0 +1,106 @@
+{
+  "resourceType": "StructureDefinition",
+  "id": "iit-proj-practitioner",
+  "url": "https://iit-proj.example.com/fhir/StructureDefinition/Practitioner",
+  "name": "IitProjPractitioner",
+  "title": "IIT-Proj Practitioner Profile",
+  "status": "active",
+  "publisher": "IIT-Proj",
+  "description": "Practitioner profile for IIT-Proj research institution. Extreme blinding: photo, address, telecom, and name.given are all excluded (max=0). Only research role and identifier are tracked.",
+  "fhirVersion": "4.0.1",
+  "kind": "resource",
+  "abstract": false,
+  "type": "Practitioner",
+  "baseDefinition": "http://hl7.org/fhir/StructureDefinition/Practitioner",
+  "derivation": "constraint",
+  "differential": {
+    "element": [
+      {
+        "id": "Practitioner.extension",
+        "path": "Practitioner.extension",
+        "slicing": {
+          "discriminator": [
+            {
+              "type": "value",
+              "path": "url"
+            }
+          ],
+          "ordered": false,
+          "rules": "open"
+        }
+      },
+      {
+        "id": "Practitioner.extension:researchRole",
+        "path": "Practitioner.extension",
+        "sliceName": "researchRole",
+        "min": 0,
+        "max": "1",
+        "type": [
+          {
+            "code": "Extension",
+            "profile": [
+              "https://iit-proj.example.com/fhir/StructureDefinition/practitioner-research-role"
+            ]
+          }
+        ],
+        "mustSupport": true,
+        "short": "Role of the practitioner within the research study"
+      },
+      {
+        "id": "Practitioner.identifier",
+        "path": "Practitioner.identifier",
+        "min": 1,
+        "mustSupport": true
+      },
+      {
+        "id": "Practitioner.active",
+        "path": "Practitioner.active",
+        "mustSupport": true
+      },
+      {
+        "id": "Practitioner.name",
+        "path": "Practitioner.name",
+        "mustSupport": true
+      },
+      {
+        "id": "Practitioner.name.given",
+        "path": "Practitioner.name.given",
+        "max": "0",
+        "short": "Given name excluded for practitioner blinding"
+      },
+      {
+        "id": "Practitioner.telecom",
+        "path": "Practitioner.telecom",
+        "max": "0",
+        "short": "Telecom excluded for practitioner blinding"
+      },
+      {
+        "id": "Practitioner.address",
+        "path": "Practitioner.address",
+        "max": "0",
+        "short": "Address excluded for practitioner blinding"
+      },
+      {
+        "id": "Practitioner.gender",
+        "path": "Practitioner.gender",
+        "mustSupport": true
+      },
+      {
+        "id": "Practitioner.photo",
+        "path": "Practitioner.photo",
+        "max": "0",
+        "short": "Photos excluded for practitioner blinding"
+      },
+      {
+        "id": "Practitioner.qualification",
+        "path": "Practitioner.qualification",
+        "mustSupport": true
+      },
+      {
+        "id": "Practitioner.communication",
+        "path": "Practitioner.communication",
+        "mustSupport": true
+      }
+    ]
+  }
+}
