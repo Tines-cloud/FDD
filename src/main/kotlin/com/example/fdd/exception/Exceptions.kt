@@ -34,5 +34,13 @@ class DriftAnalysisException(message: String, cause: Throwable? = null) : FddExc
 
 /**
  * Thrown when StructureMap compilation fails after exhausting all reflexion attempts.
+ *
+ * Contains per-attempt failure reasons so callers can inspect exactly what went wrong
+ * at each stage of the Trust-but-Verify / Reflexion loop.
  */
-class MapValidationException(message: String, cause: Throwable? = null) : FddException(message, cause)
+class MapValidationException(
+    message: String,
+    /** Per-attempt error messages, e.g. "Attempt 1: <parse error>", "Attempt 2: <reflexion error>" */
+    val attemptErrors: List<String> = emptyList(),
+    cause: Throwable? = null
+) : FddException(message, cause)

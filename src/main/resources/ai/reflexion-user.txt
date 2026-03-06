@@ -1,6 +1,8 @@
-The following FML code failed to compile. Please fix it.
+The following FML code failed to compile. This is the first repair attempt.
+If this fix still fails, further errors and your responses will be included in the
+conversation so you can learn from each mistake.
 
-## Previous FML Code
+## FML Code
 
 {{fmlCode}}
 

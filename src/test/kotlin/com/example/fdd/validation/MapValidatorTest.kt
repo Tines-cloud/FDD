@@ -48,9 +48,11 @@ class MapValidatorTest {
             validation = ValidationProperties(maxAttempts = 3)
         )
 
+        // loadTemplate always called as loadTemplate(name, map) in bytecode (Kotlin default arg),
+        // so a single two-arg stub covers both the single-arg and two-arg call sites.
         whenever(promptTemplateService.loadTemplate(any(), any())).thenReturn("stub")
-        // Default LLM stub for reflexion path - returns invalid FML so tests stay deterministic
-        whenever(llmClient.chat(any(), any(), any())).thenReturn("invalid fallback")
+        // Default LLM stub for reflexion path - reflexion now uses chatWithHistory (multi-turn)
+        whenever(llmClient.chatWithHistory(any(), any(), any(), any())).thenReturn("invalid fallback")
 
         validator = DefaultMapValidator(fhirContext, llmClient, promptTemplateService, properties)
     }
@@ -72,13 +74,11 @@ class MapValidatorTest {
 
         val result = validator.validateAndRepair(validFml, source, target, emptyDriftReport)
 
-        // The HAPI parser may or may not accept the FML depending on context.
-        // Verify that at least one attempt was made and messages were recorded.
         assertTrue(result.validationMessages.isNotEmpty())
         if (result.syntacticallyValid) {
-            // If HAPI accepted it, LLM reflexion should NOT have been invoked
-            verify(llmClient, never()).chat(any(), any(), any())
-            assertTrue(result.validationMessages[0].contains("successful"))
+            // No reflexion needed - chatWithHistory must not have been invoked
+            verify(llmClient, never()).chatWithHistory(any(), any(), any(), any())
+            assertTrue(result.validationMessages.last().contains("successful"))
         }
     }
 
@@ -87,20 +87,22 @@ class MapValidatorTest {
     fun validateAndRepair_invalidFml_throwsAfterMaxAttempts() {
         val invalidFml = "this is not valid FML"
 
-        // LLM reflexion also returns invalid FML
-        whenever(llmClient.chat(any(), any(), any())).thenReturn("still not valid")
+        // chatWithHistory returns invalid FML on every reflexion turn
+        whenever(llmClient.chatWithHistory(any(), any(), any(), any())).thenReturn("still not valid")
 
         val ex = assertThrows<MapValidationException> {
             validator.validateAndRepair(invalidFml, source, target, emptyDriftReport)
         }
 
         assertTrue(ex.message!!.contains("3 attempts"))
-        // Reflexion should have been called exactly 2 times (after attempt 1 and 2, not after 3)
-        verify(llmClient, times(2)).chat(any(), any(), any())
+        // All 3 attempt errors must appear in the details list
+        assertTrue(ex.attemptErrors.size == 3)
+        // Reflexion is called exactly 2 times (after attempt 1 and 2, not after 3)
+        verify(llmClient, times(2)).chatWithHistory(any(), any(), any(), any())
     }
 
     @Test
-    @DisplayName("Reflexion attempts self-correction for invalid FML")
+    @DisplayName("Reflexion attempts self-correction via multi-turn conversation")
     fun validateAndRepair_reflexionAttemptsSelfCorrection() {
         val invalidFml = "broken FML"
         val improvedFml = """
@@ -114,14 +116,14 @@ class MapValidatorTest {
             }
         """.trimIndent()
 
-        // Reflexion returns improved FML
-        whenever(llmClient.chat(any(), any(), any())).thenReturn(improvedFml)
+        // Reflexion repairs the FML on the first conversation turn
+        whenever(llmClient.chatWithHistory(any(), any(), any(), any())).thenReturn(improvedFml)
 
         val result = validator.validateAndRepair(invalidFml, source, target, emptyDriftReport)
 
-        // Verify reflexion was invoked (at least once)
-        verify(llmClient, org.mockito.kotlin.atLeastOnce()).chat(any(), any(), any())
-        // At least 2 validation messages (initial failure + reflexion attempt)
+        verify(llmClient, org.mockito.kotlin.atLeastOnce()).chatWithHistory(any(), any(), any(), any())
+        // validationMessages contains: [failure from attempt 1, success from attempt 2]
         assertTrue(result.validationMessages.size >= 2)
+        assertTrue(result.validationMessages.last().contains("successful"))
     }
 }

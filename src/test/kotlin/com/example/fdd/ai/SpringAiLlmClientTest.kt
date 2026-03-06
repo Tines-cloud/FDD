@@ -196,4 +196,62 @@ class SpringAiLlmClientTest {
 
         verify(cache).put("sys", "usr", 0.2, "valid response")
     }
+
+    /* ---- chatWithHistory: full message chain is built correctly ---- */
+
+    @Test
+    @DisplayName("chatWithHistory builds SystemMessage + interleaved User/Assistant + new UserMessage")
+    fun chatWithHistory_buildsCorrectMessageChain() {
+        whenever(cache.get(any(), any(), any())).thenReturn(null)
+
+        val assistantMsg = AssistantMessage("fixed FML response")
+        val generation = Generation(assistantMsg)
+        val chatResponse = ChatResponse(listOf(generation))
+        whenever(chatModel.call(any<org.springframework.ai.chat.prompt.Prompt>()))
+            .thenReturn(chatResponse)
+
+        val history = listOf(
+            Pair("first user turn", "first assistant response")
+        )
+
+        val result = client.chatWithHistory("system", history, "second user turn", 0.1)
+
+        assertEquals("fixed FML response", result)
+
+        // Verify prompt message count: System(1) + User(1) + Assistant(1) + User(1) = 4
+        val promptCaptor = argumentCaptor<org.springframework.ai.chat.prompt.Prompt>()
+        verify(chatModel).call(promptCaptor.capture())
+        val messages = promptCaptor.firstValue.instructions
+        assertEquals(4, messages.size, "Expected: System + prior User + prior Assistant + new User")
+    }
+
+    @Test
+    @DisplayName("chatWithHistory with empty history behaves like a single-turn call")
+    fun chatWithHistory_emptyHistory_singleTurn() {
+        whenever(cache.get(any(), any(), any())).thenReturn(null)
+
+        val assistantMsg = AssistantMessage("response")
+        val generation = Generation(assistantMsg)
+        val chatResponse = ChatResponse(listOf(generation))
+        whenever(chatModel.call(any<org.springframework.ai.chat.prompt.Prompt>()))
+            .thenReturn(chatResponse)
+
+        client.chatWithHistory("system", emptyList(), "user message", 0.2)
+
+        val promptCaptor = argumentCaptor<org.springframework.ai.chat.prompt.Prompt>()
+        verify(chatModel).call(promptCaptor.capture())
+        val messages = promptCaptor.firstValue.instructions
+        assertEquals(2, messages.size, "Empty history should give System + User only")
+    }
+
+    @Test
+    @DisplayName("chatWithHistory cache hit skips ChatModel call")
+    fun chatWithHistory_cacheHit_skipsModel() {
+        whenever(cache.get(any(), any(), any())).thenReturn("cached conv response")
+
+        val result = client.chatWithHistory("system", emptyList(), "user", 0.1)
+
+        assertEquals("cached conv response", result)
+        verify(chatModel, never()).call(any<org.springframework.ai.chat.prompt.Prompt>())
+    }
 }

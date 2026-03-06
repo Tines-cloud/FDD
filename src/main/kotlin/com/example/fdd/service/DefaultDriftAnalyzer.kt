@@ -93,7 +93,7 @@ class DefaultDriftAnalyzer(
      * Merge rule-based items with LLM-detected items, de-duplicating by
      * (type, sourcePath, targetPath) triple.
      *
-     * **Merge strategy:** Rule items are prioritised — they are deterministic and always
+     * **Merge strategy:** Rule items are prioritised - they are deterministic and always
      * correct for structural comparison. LLM items are appended only when they add a
      * drift observation not already covered by the rule detector (e.g. semantic renames,
      * cross-version behavioural differences). This prevents the LLM from overriding a
@@ -105,7 +105,7 @@ class DefaultDriftAnalyzer(
         sourceCanonical: String,
         targetCanonical: String
     ): DriftReport {
-        // Rule items are the ground truth — include all of them unconditionally
+        // Rule items are the ground truth - include all of them unconditionally
         val ruleKeys = ruleItems.map { Triple(it.type, it.sourcePath, it.targetPath) }.toSet()
 
         // LLM items are included only when they report something the rules did not catch

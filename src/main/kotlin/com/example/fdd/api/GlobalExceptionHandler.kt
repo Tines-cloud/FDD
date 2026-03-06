@@ -83,8 +83,13 @@ class GlobalExceptionHandler(
         ex: MapValidationException,
         request: HttpServletRequest
     ): ResponseEntity<ErrorResponse> {
-        log.error("Map validation failed: {}", ex.message, ex)
-        val response = ErrorResponse("MAP_VALIDATION_FAILED", ex.message ?: "Map validation failed")
+        log.error("Map validation failed after {} attempt(s): {}", ex.attemptErrors.size, ex.message)
+        ex.attemptErrors.forEachIndexed { idx, msg -> log.error("  [Attempt {}] {}", idx + 1, msg) }
+        val response = ErrorResponse(
+            code = "MAP_VALIDATION_FAILED",
+            message = ex.message ?: "Map validation failed",
+            details = ex.attemptErrors
+        )
         outputStore.writeError(request, response, ex)
         return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(response)
     }

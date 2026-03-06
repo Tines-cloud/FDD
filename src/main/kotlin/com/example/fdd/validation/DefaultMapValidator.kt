@@ -47,7 +47,13 @@ class DefaultMapValidator(
         driftReport: DriftReport
     ): MapGenerationResult {
         var currentFml = fmlCode
-        val messages = mutableListOf<String>()
+        // Raw compilation error per failed attempt - no "Attempt X:" prefix stored here
+        // so the same text can be used in logs, prompts, and formatted API responses cleanly.
+        val failureLog = mutableListOf<String>()
+        // Conversation history for multi-turn reflexion: (userMessage, rawLlmResponse) pairs.
+        // Each turn the LLM sees its own previous FML as an AssistantMessage, so follow-up
+        // turns only need to send the new error - no need to re-transmit the full FML.
+        val conversationHistory = mutableListOf<Pair<String, String>>()
 
         for (attempt in 1..maxAttempts) {
             log.info("Validation attempt {}/{}", attempt, maxAttempts)
@@ -55,19 +61,29 @@ class DefaultMapValidator(
             val compilationResult = tryCompile(currentFml)
 
             if (compilationResult.success) {
-                // Compiled successfully - return immediately, no further attempts needed
-                messages.add("Attempt $attempt: Compilation successful")
-                log.info("FML compiled successfully on attempt {}", attempt)
+                log.info("FML compiled successfully on attempt {}/{}", attempt, maxAttempts)
+
+                // Always log the prior failures so they remain visible even on success.
+                if (attempt > 1) {
+                    log.warn(
+                        "FML required {} reflexion turn(s) before succeeding. Prior failure(s):",
+                        attempt - 1
+                    )
+                    failureLog.forEachIndexed { idx, err -> log.warn("  [Attempt {}] {}", idx + 1, err) }
+                }
+
+                val allMessages = failureLog.mapIndexed { idx, err -> "Attempt ${idx + 1}: $err" } +
+                        listOf("Attempt $attempt: Compilation successful")
                 return MapGenerationResult(
                     structureMapFml = currentFml,
                     syntacticallyValid = true,
-                    validationMessages = messages
+                    validationMessages = allMessages
                 )
             }
 
-            // Compilation failed
+            // Compilation failed - record the raw error
             val errorMsg = compilationResult.error ?: "Unknown compilation error"
-            messages.add("Attempt $attempt: $errorMsg")
+            failureLog.add(errorMsg)
             log.warn("Compilation failed on attempt {}: {}", attempt, errorMsg)
 
             if (attempt == maxAttempts) {
@@ -75,16 +91,21 @@ class DefaultMapValidator(
                 break
             }
 
-            // More attempts remaining - ask the LLM to self-correct before the next attempt
-            log.info("Invoking reflexion after attempt {}/{}", attempt, maxAttempts)
-            currentFml = reflexion(currentFml, errorMsg, source, target, driftReport)
+            // More attempts remaining - continue the reflexion conversation.
+            // Turn 1 sends full context; subsequent turns send only the new error since the
+            // LLM already sees its own prior FML outputs as AssistantMessages.
+            val turnNum = conversationHistory.size + 1
+            log.info("Invoking reflexion conversation turn {} after attempt {}/{}", turnNum, attempt, maxAttempts)
+            currentFml = reflexion(currentFml, errorMsg, source, target, driftReport, conversationHistory)
         }
 
-        // All attempts exhausted without a successful compile
-        log.error("FML validation failed after {} attempts", maxAttempts)
+        // All attempts exhausted - log each per-attempt failure clearly
+        log.error("FML validation exhausted all {} attempts. Per-attempt failure trace:", maxAttempts)
+        failureLog.forEachIndexed { idx, err -> log.error("  [Attempt {}] {}", idx + 1, err) }
+        val formattedMessages = failureLog.mapIndexed { idx, err -> "Attempt ${idx + 1}: $err" }
         throw MapValidationException(
-            "StructureMap compilation failed after $maxAttempts attempts. " +
-                    "Last error: ${messages.lastOrNull() ?: "unknown"}"
+            message = "StructureMap compilation failed after $maxAttempts attempts",
+            attemptErrors = formattedMessages
         )
     }
 
@@ -119,37 +140,75 @@ class DefaultMapValidator(
     /* ---------------- Reflexion ---------------- */
 
     /**
-     * Feed the failed FML, its compilation error, and the original drift report back to the LLM
-     * for self-correction.
+     * Ask the LLM to repair broken FML using a **stateful conversation thread**.
      *
-     * Including the drift report means the LLM can verify that any fix it applies still covers
-     * the semantic differences it was originally asked to map. This closes the gap where a
-     * purely syntax-focused fix silently drops or alters a mapping rule.
+     * - **Turn 1** (empty [conversationHistory]): sends full context - broken FML, current
+     *   parse error, profile canonicals, and the drift report as semantic ground truth.
+     * - **Turn 2+**: sends only the new error. The LLM already sees its own previous FML
+     *   output as an `AssistantMessage`, so there is no need to re-transmit the full code.
+     *   This is both more token-efficient and more effective: the model has explicit memory
+     *   of what it already tried and can reason about why its previous fix was still wrong.
+     *
+     * The raw LLM response (not just the extracted FML) is stored back into
+     * [conversationHistory] so subsequent turns receive the complete assistant turn.
      */
     private fun reflexion(
         fml: String,
         error: String,
         source: StructureDefinition,
         target: StructureDefinition,
-        driftReport: DriftReport
+        driftReport: DriftReport,
+        conversationHistory: MutableList<Pair<String, String>>
     ): String {
-        log.info("Invoking LLM reflexion for error correction")
-
         val systemPrompt = promptTemplateService.loadTemplate("reflexion-system.txt")
-        val userPrompt = promptTemplateService.loadTemplate(
-            "reflexion-user.txt",
-            mapOf(
-                "fmlCode" to fml,
-                "errorMessage" to error,
-                "sourceCanonical" to (source.url ?: ""),
-                "targetCanonical" to (target.url ?: ""),
-                "driftReport" to driftReport.toReflexionContext()
-            )
-        )
 
-        val response = llmClient.chat(systemPrompt, userPrompt, temperature = 0.1)
-        return FmlUtils.extractFml(response)
+        val userMessage: String
+        val rawResponse: String
+
+        if (conversationHistory.isEmpty()) {
+            // ── Turn 1: start a new conversation with the full context ──
+            log.info("Reflexion turn 1: starting conversation with full context")
+            userMessage = promptTemplateService.loadTemplate(
+                "reflexion-user.txt",
+                mapOf(
+                    "fmlCode" to fml,
+                    "errorMessage" to error,
+                    "sourceCanonical" to (source.url ?: ""),
+                    "targetCanonical" to (target.url ?: ""),
+                    "driftReport" to driftReport.toReflexionContext()
+                )
+            )
+            rawResponse = llmClient.chatWithHistory(systemPrompt, emptyList(), userMessage, 0.1)
+        } else {
+            // ── Turn 2+: follow-up - LLM sees its own prior FML as AssistantMessage ──
+            val turnNum = conversationHistory.size + 1
+            log.info("Reflexion turn {}: continuing conversation with new error only", turnNum)
+            userMessage = buildFollowUpMessage(error)
+            rawResponse = llmClient.chatWithHistory(systemPrompt, conversationHistory.toList(), userMessage, 0.1)
+        }
+
+        // Append this turn to history so the next call can build on it
+        conversationHistory.add(Pair(userMessage, rawResponse))
+        return FmlUtils.extractFml(rawResponse)
     }
+
+    /**
+     * Short follow-up message for reflexion turn 2+.
+     * The full FML is already in the conversation context as the LLM's own AssistantMessage.
+     */
+    private fun buildFollowUpMessage(error: String): String = """
+        The FML you generated above is still not compiling.
+
+        New compilation error:
+        $error
+
+        Fix this error. Rules:
+        - Do NOT re-introduce any error type from a previous turn.
+        - Every rule must end with a semicolon.
+        - Do NOT use unsupported keywords (e.g. `default`, `alias` in a `uses` clause).
+        - All braces and parentheses must be balanced.
+        Output ONLY the corrected FML - no markdown, no explanations.
+    """.trimIndent()
 
     /**
      * Converts the drift report into a compact, readable summary for inclusion in the
