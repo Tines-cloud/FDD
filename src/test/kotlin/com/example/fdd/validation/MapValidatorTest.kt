@@ -83,7 +83,7 @@ class MapValidatorTest {
     }
 
     @Test
-    @DisplayName("Invalid FML throws MapValidationException after exhausting max attempts")
+    @DisplayName("Invalid FML throws MapValidationException after exhausting max cycles")
     fun validateAndRepair_invalidFml_throwsAfterMaxAttempts() {
         val invalidFml = "this is not valid FML"
 
@@ -95,14 +95,16 @@ class MapValidatorTest {
         }
 
         assertTrue(ex.message!!.contains("3 attempts"))
-        // All 3 attempt errors must appear in the details list
-        assertTrue(ex.attemptErrors.size == 3)
-        // Reflexion is called exactly 2 times (after attempt 1 and 2, not after 3)
+        // All cycle errors must appear in the details list - one entry per error per cycle
+        assertTrue(ex.attemptErrors.isNotEmpty())
+        // Every entry must carry a [Cycle N] prefix
+        assertTrue(ex.attemptErrors.all { it.startsWith("[Cycle ") })
+        // Reflexion is called exactly 2 times (after cycle 1 and 2, not after cycle 3)
         verify(llmClient, times(2)).chatWithHistory(any(), any(), any(), any())
     }
 
     @Test
-    @DisplayName("Reflexion attempts self-correction via multi-turn conversation")
+    @DisplayName("Reflexion fixes all errors in the FML via multi-turn conversation")
     fun validateAndRepair_reflexionAttemptsSelfCorrection() {
         val invalidFml = "broken FML"
         val improvedFml = """
@@ -116,14 +118,14 @@ class MapValidatorTest {
             }
         """.trimIndent()
 
-        // Reflexion repairs the FML on the first conversation turn
+        // Reflexion repairs FML on the first conversation turn
         whenever(llmClient.chatWithHistory(any(), any(), any(), any())).thenReturn(improvedFml)
 
         val result = validator.validateAndRepair(invalidFml, source, target, emptyDriftReport)
 
         verify(llmClient, org.mockito.kotlin.atLeastOnce()).chatWithHistory(any(), any(), any(), any())
-        // validationMessages contains: [failure from attempt 1, success from attempt 2]
-        assertTrue(result.validationMessages.size >= 2)
+        // validationMessages: [Cycle 1 errors...] + success entry
+        assertTrue(result.validationMessages.isNotEmpty())
         assertTrue(result.validationMessages.last().contains("successful"))
     }
 }

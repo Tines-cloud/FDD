@@ -112,7 +112,7 @@ class SpringAiLlmClient(
             return cached
         }
 
-        // Build the full message chain: System → [User, Assistant]* → User
+        // Build the full message chain: System -> [User, Assistant]* -> User
         val messageList = buildList {
             add(SystemMessage(systemPrompt))
             for ((userMsg, assistantResponse) in history) {

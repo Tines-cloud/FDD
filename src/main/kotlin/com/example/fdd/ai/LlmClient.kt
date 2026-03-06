@@ -26,8 +26,8 @@ interface LlmClient {
      *
      * The [history] list contains interleaved (userMessage, assistantResponse) pairs from all
      * previous turns. The LLM receives the complete message chain:
-     *   SystemMessage → UserMessage → AssistantMessage → UserMessage → AssistantMessage → ...
-     *   → [newUserMessage]
+     *   SystemMessage -> UserMessage -> AssistantMessage -> UserMessage -> AssistantMessage -> ...
+     *   -> [newUserMessage]
      *
      * This enables the LLM to see its own prior outputs and the errors they produced, so it
      * can avoid repeating the same mistake across repair attempts.
