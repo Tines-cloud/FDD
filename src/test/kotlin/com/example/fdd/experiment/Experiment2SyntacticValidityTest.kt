@@ -75,7 +75,7 @@ class Experiment2SyntacticValidityTest {
             log.info("  {} -> valid: {}  messages: {}", r.pairId, r.valid, r.messages.size)
         }
         log.info("---------------------------------------------------")
-        log.info("  Validity Rate: {:.1f}% ({}/{})", validityRate * 100, totalValid, totalGenerated)
+        log.info("  Validity Rate: {}% ({}/{})", "%.1f".format(validityRate * 100), totalValid, totalGenerated)
         log.info("---------------------------------------------------")
 
         assertTrue(validityRate >= 0.0, "Validity rate must be non-negative")

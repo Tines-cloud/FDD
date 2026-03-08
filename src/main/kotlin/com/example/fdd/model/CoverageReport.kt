@@ -17,7 +17,14 @@ enum class CoverageStatus {
     SOURCE_DATA_LOSS,
 
     /** Target element has no equivalent in the source - cannot be populated automatically. */
-    UNMAPPABLE_NO_SOURCE
+    UNMAPPABLE_NO_SOURCE,
+
+    /**
+     * Target element has no source equivalent AND is mandatory (min >= 1) or mustSupport in the
+     * target profile. Leaving it empty will cause the transformed resource to fail validation.
+     * A default-value FML rule or a post-processing enrichment step is REQUIRED.
+     */
+    UNMAPPABLE_REQUIRED
 }
 
 /**
@@ -33,7 +40,9 @@ data class CoverageItem(
     val coverageStatus: CoverageStatus,
     val explanation: String,
     /** How the FML handles this drift (e.g. "MapIdentifier group copies all sub-elements"). */
-    val fmlHandling: String = ""
+    val fmlHandling: String = "",
+    /** For UNMAPPABLE_REQUIRED: the target element's min cardinality (>=1 means required). */
+    val targetMin: Int = 0
 )
 
 /**
@@ -51,5 +60,11 @@ data class CoverageReport(
     val items: List<CoverageItem>,
     val summary: String,
     /** One-line verdict: e.g. "104/104 drifts are correctly handled" */
-    val verdict: String = ""
+    val verdict: String = "",
+    /**
+     * Count of UNMAPPABLE_REQUIRED items: target fields that are mandatory (min>=1) or
+     * mustSupport but have no source equivalent. These will cause validation failures
+     * unless addressed with default-value rules or post-processing.
+     */
+    val criticalUnmappable: Int = 0
 )

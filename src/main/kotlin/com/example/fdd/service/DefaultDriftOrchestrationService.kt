@@ -4,6 +4,7 @@ import com.example.fdd.api.dto.ProfileInput
 import com.example.fdd.exception.FddException
 import com.example.fdd.fhir.ProfileLoader
 import com.example.fdd.model.CoverageReport
+import com.example.fdd.model.CoverageStatus
 import com.example.fdd.model.DriftReport
 import com.example.fdd.model.MapGenerationResult
 import com.example.fdd.validation.DriftProfileValidator
@@ -80,14 +81,47 @@ class DefaultDriftOrchestrationService(
         // --- Stage 4 - Coverage analysis (drift report + FML -> coverage report) ---
         // Deterministic, no LLM cost. Classifies every drift item so the user
         // knows exactly what is mapped, what is dropped, and why.
-        val coverageReport = coverageAnalyzer.analyze(driftReport, validatedResult.structureMapFml)
+        val coverageReport = coverageAnalyzer.analyze(driftReport, validatedResult.structureMapFml, targetSd)
         log.info(
-            "Coverage analysis: {:.1f}% data shareability across {} drift items",
-            coverageReport.dataShareabilityPercent,
+            "Coverage analysis: {}% data shareability across {} drift items",
+            "%.1f".format(coverageReport.dataShareabilityPercent),
             coverageReport.totalDriftItems
         )
 
-        return Triple(driftReport, validatedResult, coverageReport)
+        // Patch FML with ACTION REQUIRED stubs for mandatory unmappable fields
+        val finalResult = if (coverageReport.criticalUnmappable > 0) {
+            val requiredItems = coverageReport.items
+                .filter { it.coverageStatus == CoverageStatus.UNMAPPABLE_REQUIRED }
+            val actionBlock = buildString {
+                appendLine()
+                appendLine("// ============================================================")
+                appendLine("// ⚠️  ACTION REQUIRED: MANDATORY TARGET FIELDS WITH NO SOURCE DATA")
+                appendLine("// The following ${requiredItems.size} field(s) are required (min>=1) in the")
+                appendLine("// target profile but have no equivalent in the source.")
+                appendLine("// The FML above leaves them EMPTY — the transformed resource WILL")
+                appendLine("// FAIL target-profile validation unless you add rules below.")
+                appendLine("//")
+                appendLine("// HOW TO FIX  (add one rule per field inside the group block):")
+                appendLine("//   tgt.<field> = \"DEFAULT_VALUE\" \"rule-name\";")
+                appendLine("//   tgt.status  = \"active\"        \"default-status\";")
+                appendLine("// ============================================================")
+                requiredItems.forEach { item ->
+                    appendLine("//")
+                    appendLine("// FIELD   : ${item.targetPath} (min=${item.targetMin})")
+                    appendLine("// REASON  : ${item.description}")
+                    appendLine("// TODO    : tgt.${item.targetPath.substringAfterLast('.')} = \"REPLACE_ME\" \"default-${item.driftItemId}\";")
+                }
+            }
+            log.warn(
+                "FML patched with ACTION REQUIRED stubs for {} mandatory unmappable field(s)",
+                requiredItems.size
+            )
+            validatedResult.copy(structureMapFml = validatedResult.structureMapFml.trimEnd() + "\n" + actionBlock)
+        } else {
+            validatedResult
+        }
+
+        return Triple(driftReport, finalResult, coverageReport)
     }
 
     /* ---------------- Profile resolution ---------------- */

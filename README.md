@@ -24,24 +24,26 @@ HAPI-FHIR's compiler in a **Trust-but-Verify** reflexion loop.
                      │ + merge        │    │ (batch scanning)  │    └────────────────┘
                      └─────────────────┘    ├──────────────────┤
                                             │ Anti-oscillation │
+                                            │ + regression det │
                                             │ + temp boost     │
                                             └──────────────────┘
 ```
 
 **Four-stage pipeline:**
 
-1. **Profile Resolution** - Load `StructureDefinition` JSON from inline content,
+1. **Profile Resolution** — Load `StructureDefinition` JSON from inline content,
    HTTP URL, canonical URL, classpath resource, or local file path.
-2. **Drift Analysis** - Hybrid: deterministic rule-based detector (all 5 drift types)
+2. **Drift Analysis** — Hybrid: deterministic rule-based detector (all 5 drift types)
    seeds the LLM prompt, results are merged and de-duplicated.
-3. **Repair Generation + Trust-but-Verify** - LLM generates FML code from the `DriftReport`.
+3. **Repair Generation + Trust-but-Verify** — LLM generates FML code from the `DriftReport`.
    HAPI-FHIR compiles it; failures trigger multi-turn reflexion with conversation history.
    Includes `autoFixRuleNames()` (deterministic, zero LLM cost), `collectAllErrors()`
-   (batch scanning), and anti-oscillation detection with temperature boost.
-4. **Coverage Analysis** - Cross-references every drift item against the generated FML.
+   (batch scanning), anti-oscillation detection, and line-level regression detection
+   with temperature boost.
+4. **Coverage Analysis** — Cross-references every drift item against the generated FML.
    Classifies into 5 categories (MAPPED, COVERED_BY_PARENT, NO_RULE_NEEDED,
    SOURCE_DATA_LOSS, UNMAPPABLE_NO_SOURCE). Computes data shareability percentage.
-   Fully deterministic - zero LLM cost.
+   Fully deterministic — zero LLM cost.
 
 **Five drift categories:** `TERMINOLOGY` · `EXTENSION` · `STRUCTURAL` · `CARDINALITY` · `VERSION`
 
@@ -788,11 +790,12 @@ The reflexion loop includes several cost-saving and quality enhancements:
 
 | Feature | Description | LLM Cost |
 |---|---|---|
-| **`autoFixRuleNames()`** | Deterministically adds `"rule_lineN"` names to unnamed complex rules - the #1 most common HAPI compilation error | Zero |
+| **`autoFixRuleNames()`** | Deterministically adds `"rule_lineN"` names to unnamed complex rules — the #1 most common HAPI compilation error | Zero |
 | **`collectAllErrors()`** | Scans FML for ALL compilation errors (not just the first) before sending to LLM in one batch call | Zero (scan) + 1 LLM call |
 | **Multi-turn conversation** | `chatWithHistory()` maintains full conversation context so LLM sees all prior attempts | Same cost, better quality |
 | **Full FML in follow-ups** | Follow-up messages include the full current FML with `>>>` markers on error lines | Same cost, better quality |
-| **Anti-oscillation** | Detects when LLM reverts to previously broken code; boosts temperature 0.1->0.4 and injects warning | Same cost, fewer wasted cycles |
+| **Anti-oscillation** | Detects when LLM reverts to previously broken code; boosts temperature 0.1→0.4 and injects warning | Same cost, fewer wasted cycles |
+| **Line-level regression detection** | Tracks FML before each fix; if a "fix" produces a different error on the same line, injects `REGRESSION DETECTED` with old/new line content and both errors | Same cost, fewer wasted cycles |
 
 ---
 
@@ -817,19 +820,29 @@ output/20260307-013447-882-repair-19a64dfd/
 
 The `coverage-report.txt` classifies every drift item:
 
-| Status | Meaning | Data Impact |
-|---|---|---|
-| `MAPPED` | Actively transformed by an FML rule | ✅ Preserved |
-| `COVERED_BY_PARENT` | Parent element is mapped; sub-elements carry over | ✅ Preserved |
-| `NO_RULE_NEEDED` | Profile metadata (mustSupport, extensions, etc.) | ⚪ No data |
-| `SOURCE_DATA_LOSS` | Source element does not exist in target | ⚠️ Lost |
-| `UNMAPPABLE_NO_SOURCE` | Target element has no source equivalent | ⚠️ Empty |
+| Status | Meaning | Data Impact | Acceptable? |
+|---|---|---|---|
+| `MAPPED` | Actively transformed by an FML rule | ✅ Preserved | ✅ Yes |
+| `COVERED_BY_PARENT` | Parent element is mapped; sub-elements carry over | ✅ Preserved | ✅ Yes |
+| `NO_RULE_NEEDED` | Profile metadata (mustSupport, extensions, etc.) | ⚪ No data | ✅ Yes — no data to transfer |
+| `SOURCE_DATA_LOSS` | Source element does not exist in target | ⚠️ Lost | ✅ Inherently acceptable — the target does not define this field, so no StructureMap can populate it. **Document which fields are dropped for clinical governance review.** |
+| `UNMAPPABLE_NO_SOURCE` | Target element has no source equivalent | ⚠️ Empty | ⚠️ Review required — if `min >= 1` in the target profile, the transformed resource **will fail** target validation. Add a default-value rule or enrichment step. |
 
 **Data Shareability %** = (Mapped + Covered by Parent) / (Total - Metadata) × 100
 
-The actual Data Shareability percentage varies per profile pair - it depends on how
-much structural overlap exists between the source and target profiles. FDD computes
-this dynamically for every request.
+The actual Data Shareability percentage varies per profile pair. FDD now prints an
+**INDUSTRY BENCHMARK** verdict directly in `coverage-report.txt`:
+
+| Range | Verdict |
+|---|---|
+| ≥ 85% | ✅ EXCELLENT — meets USCDI/ONC certification requirements |
+| ≥ 70% | ✅ GOOD — meets HL7 IPS and most national IG standards |
+| ≥ 60% | ⚠️ ACCEPTABLE for cross-national or exploratory mapping |
+| < 60% | ❌ BELOW BASELINE — review profile compatibility |
+
+> **Cross-national mappings (e.g. AU Core ↔ US Core) typically land in the 55–70% range.**
+> This is structurally expected — jurisdiction-specific extensions on both sides cannot
+> be transferred and are correctly reported as source data loss, not as mapping failures.
 
 ---
 
@@ -841,7 +854,7 @@ src/main/kotlin/com/example/fdd/
 ├── api/                            # REST controllers and DTOs
 │   ├── DriftController.kt         # /api/drift/analyze + /api/drift/repair
 │   ├── CacheManagementController.kt # /api/cache/* admin endpoints
-│   ├── GlobalExceptionHandler.kt  # @ControllerAdvice (5 exception types -> HTTP codes)
+│   ├── GlobalExceptionHandler.kt  # @ControllerAdvice (5 exception types → HTTP codes)
 │   ├── ProfileValidationController.kt  # /api/validate/* endpoints
 │   └── dto/                       # Request/Response data classes
 │       ├── AnalyzeRequest.kt      # ProfileInput, AnalyzeRequest, RepairRequest

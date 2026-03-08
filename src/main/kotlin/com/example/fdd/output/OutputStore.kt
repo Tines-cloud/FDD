@@ -254,11 +254,34 @@ class OutputStore(
             sb.appendLine()
         }
 
-        // Category 5: Unmappable
+        // Category 5a: REQUIRED unmappable (UNMAPPABLE_REQUIRED)
+        val requiredUnmappable = grouped[CoverageStatus.UNMAPPABLE_REQUIRED].orEmpty()
+        if (requiredUnmappable.isNotEmpty()) {
+            sb.appendLine(sep)
+            sb.appendLine("❌ CATEGORY 5a: CRITICAL -- REQUIRED TARGET FIELDS WITH NO SOURCE (${requiredUnmappable.size} items)")
+            sb.appendLine("    These fields have min>=1 in the target profile. The FML leaves them EMPTY.")
+            sb.appendLine("    The transformed resource WILL FAIL validation. See ACTION REQUIRED in FML.")
+            sb.appendLine(sep)
+            sb.appendLine()
+            sb.appendLine("%-12s %-8s %-45s %s".format("ID", "min", "Target path: description", "Reason"))
+            sb.appendLine("%-12s %-8s %-45s %s".format("-".repeat(12), "-".repeat(8), "-".repeat(45), "-".repeat(40)))
+            for (item in requiredUnmappable) {
+                sb.appendLine("%-12s %-8s %-45s %s".format(
+                    item.driftItemId,
+                    "min=${item.targetMin}",
+                    truncate("${item.targetPath}: ${item.description}", 45),
+                    item.explanation
+                ))
+            }
+            sb.appendLine()
+        }
+
+        // Category 5b: OPTIONAL unmappable (UNMAPPABLE_NO_SOURCE)
         val unmappable = grouped[CoverageStatus.UNMAPPABLE_NO_SOURCE].orEmpty()
         if (unmappable.isNotEmpty()) {
             sb.appendLine(sep)
-            sb.appendLine("CATEGORY 5: UNMAPPABLE -- NO SOURCE DATA (${unmappable.size} items)")
+            sb.appendLine("⚠️  CATEGORY 5b: OPTIONAL -- TARGET-ONLY FIELDS WITH NO SOURCE (${unmappable.size} items)")
+            sb.appendLine("    These target-only fields (min=0) cannot be populated. Resource will still pass validation.")
             sb.appendLine(sep)
             sb.appendLine()
             sb.appendLine("%-12s %-45s %s".format("Rule(s)", "What", "Why unmappable"))
@@ -284,8 +307,11 @@ class OutputStore(
         if (report.sourceDataLoss > 0) {
             sb.appendLine("  ${report.sourceDataLoss} source data loss (source-only elements not in target)")
         }
+        if (report.criticalUnmappable > 0) {
+            sb.appendLine("  ❌ ${report.criticalUnmappable} CRITICAL unmappable (mandatory target fields min>=1 -- see ACTION REQUIRED in FML)")
+        }
         if (report.unmappableNoSource > 0) {
-            sb.appendLine("  ${report.unmappableNoSource} unmappable (target-only elements with no source data)")
+            sb.appendLine("  ${report.unmappableNoSource} optional unmappable (target-only fields min=0, no source data)")
         }
         sb.appendLine()
 

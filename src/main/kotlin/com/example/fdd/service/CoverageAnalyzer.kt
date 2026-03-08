@@ -5,6 +5,7 @@ import com.example.fdd.model.CoverageReport
 import com.example.fdd.model.CoverageStatus
 import com.example.fdd.model.DriftItem
 import com.example.fdd.model.DriftReport
+import org.hl7.fhir.r4.model.StructureDefinition
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 
@@ -28,15 +29,16 @@ class CoverageAnalyzer {
         "structuredefinition-standards-status"
     )
 
-    fun analyze(driftReport: DriftReport, fml: String): CoverageReport {
+    fun analyze(driftReport: DriftReport, fml: String, targetSd: StructureDefinition? = null): CoverageReport {
         val fmlGroups = extractFmlGroups(fml)
-        val items = driftReport.items.map { classify(it, fml, fmlGroups) }
+        val items = driftReport.items.map { classify(it, fml, fmlGroups, targetSd) }
 
         val mapped = items.count { it.coverageStatus == CoverageStatus.MAPPED }
         val coveredByParent = items.count { it.coverageStatus == CoverageStatus.COVERED_BY_PARENT }
         val noRuleNeeded = items.count { it.coverageStatus == CoverageStatus.NO_RULE_NEEDED }
         val sourceDataLoss = items.count { it.coverageStatus == CoverageStatus.SOURCE_DATA_LOSS }
         val unmappable = items.count { it.coverageStatus == CoverageStatus.UNMAPPABLE_NO_SOURCE }
+        val criticalUnmappable = items.count { it.coverageStatus == CoverageStatus.UNMAPPABLE_REQUIRED }
 
         // Data shareability: items that ARE transferable / items that CAN carry data.
         // Profile metadata items are excluded from the denominator since they never carry data.
@@ -46,14 +48,22 @@ class CoverageAnalyzer {
         val roundedPercent = Math.round(shareabilityPercent * 10) / 10.0
 
         val verdict = buildVerdict(items.size, mapped, coveredByParent, noRuleNeeded,
-            sourceDataLoss, unmappable)
+            sourceDataLoss, unmappable, criticalUnmappable)
         val summary = buildSummary(items.size, mapped, coveredByParent, noRuleNeeded,
-            sourceDataLoss, unmappable, roundedPercent, verdict)
+            sourceDataLoss, unmappable, criticalUnmappable, roundedPercent, verdict)
 
         log.info(
-            "Coverage analysis: {} total, {} mapped, {} by-parent, {} metadata, {} source-loss, {} unmappable, {:.1f}% shareable",
-            items.size, mapped, coveredByParent, noRuleNeeded, sourceDataLoss, unmappable, roundedPercent
+            "Coverage analysis: {} total, {} mapped, {} by-parent, {} metadata, {} source-loss, {} unmappable ({} critical), {}% shareable",
+            items.size, mapped, coveredByParent, noRuleNeeded, sourceDataLoss + unmappable,
+            criticalUnmappable, "%.1f".format(roundedPercent)
         )
+        if (criticalUnmappable > 0) {
+            log.warn(
+                "CRITICAL: {} target field(s) are required (min>=1) but have no source equivalent. " +
+                    "Leaving them empty will cause target-profile validation failure.",
+                criticalUnmappable
+            )
+        }
 
         return CoverageReport(
             totalDriftItems = items.size,
@@ -65,13 +75,14 @@ class CoverageAnalyzer {
             dataShareabilityPercent = roundedPercent,
             items = items,
             summary = summary,
-            verdict = verdict
+            verdict = verdict,
+            criticalUnmappable = criticalUnmappable
         )
     }
 
     /* ---------- Classification ---------- */
 
-    private fun classify(item: DriftItem, fml: String, fmlGroups: List<FmlGroup>): CoverageItem {
+    private fun classify(item: DriftItem, fml: String, fmlGroups: List<FmlGroup>, targetSd: StructureDefinition?): CoverageItem {
         val desc = item.description.lowercase()
         val src = item.sourcePath.trim()
         val tgt = item.targetPath.trim()
@@ -111,12 +122,23 @@ class CoverageAnalyzer {
 
         // 3. Target-only extensions with no source data
         if (src.isBlank() && desc.contains("extension added in target")) {
-            return item.toCoverage(
-                CoverageStatus.UNMAPPABLE_NO_SOURCE,
-                "Target-only extension - no equivalent data exists in the source profile. " +
-                    "Must be populated out-of-band or by a separate data source",
-                "Cannot be auto-populated (no source data)"
-            )
+            val (tgtMin, _) = getTargetElementInfo(targetSd, tgt)
+            return if (tgtMin >= 1) {
+                item.toCoverage(
+                    CoverageStatus.UNMAPPABLE_REQUIRED,
+                    "Target-only REQUIRED extension (min=$tgtMin) - no source equivalent. " +
+                        "Transformed resource will fail validation without this field.",
+                    "ACTION REQUIRED: add default-value FML rule",
+                    tgtMin
+                )
+            } else {
+                item.toCoverage(
+                    CoverageStatus.UNMAPPABLE_NO_SOURCE,
+                    "Target-only extension - no equivalent data exists in the source profile. " +
+                        "Must be populated out-of-band or by a separate data source",
+                    "Cannot be auto-populated (no source data)"
+                )
+            }
         }
 
         // 4. Target-only sub-elements (e.g. "Element added in target profile")
@@ -139,11 +161,22 @@ class CoverageAnalyzer {
                     "${gpGroup.name} group copies all sub-elements"
                 )
             }
-            return item.toCoverage(
-                CoverageStatus.UNMAPPABLE_NO_SOURCE,
-                "Target-only element - no equivalent data in the source profile",
-                "Cannot be auto-populated (no source data)"
-            )
+            val (tgtMin, _) = getTargetElementInfo(targetSd, tgt)
+            return if (tgtMin >= 1) {
+                item.toCoverage(
+                    CoverageStatus.UNMAPPABLE_REQUIRED,
+                    "Target-only REQUIRED element (min=$tgtMin) - no source equivalent. " +
+                        "Transformed resource will fail validation without this field.",
+                    "ACTION REQUIRED: add default-value FML rule",
+                    tgtMin
+                )
+            } else {
+                item.toCoverage(
+                    CoverageStatus.UNMAPPABLE_NO_SOURCE,
+                    "Target-only element - no equivalent data in the source profile",
+                    "Cannot be auto-populated (no source data)"
+                )
+            }
         }
 
         // 5. Both paths present - check if directly mapped in FML
@@ -310,7 +343,17 @@ class CoverageAnalyzer {
         return if (lastDot > 0) withoutExtCall.substring(0, lastDot) else null
     }
 
-    private fun DriftItem.toCoverage(status: CoverageStatus, explanation: String, fmlHandling: String) = CoverageItem(
+    /** Look up min cardinality and mustSupport for a FHIR path in the target StructureDefinition. */
+    private fun getTargetElementInfo(targetSd: StructureDefinition?, targetPath: String): Pair<Int, Boolean> {
+        if (targetSd?.snapshot == null) return 0 to false
+        val cleanPath = targetPath.replace(Regex(":[^.]+"), "").trim()
+        val el = targetSd.snapshot.element.find { it.path == cleanPath } ?: return 0 to false
+        return (el.min ?: 0) to (el.mustSupport ?: false)
+    }
+
+    private fun DriftItem.toCoverage(
+        status: CoverageStatus, explanation: String, fmlHandling: String, targetMin: Int = 0
+    ) = CoverageItem(
         driftItemId = id,
         driftType = type.name,
         sourcePath = sourcePath,
@@ -319,29 +362,32 @@ class CoverageAnalyzer {
         severity = severity,
         coverageStatus = status,
         explanation = explanation,
-        fmlHandling = fmlHandling
+        fmlHandling = fmlHandling,
+        targetMin = targetMin
     )
 
     /* ---------- Report Text Builders ---------- */
 
     private fun buildVerdict(
         total: Int, mapped: Int, coveredByParent: Int, noRuleNeeded: Int,
-        sourceDataLoss: Int, unmappable: Int
+        sourceDataLoss: Int, unmappable: Int, criticalUnmappable: Int = 0
     ): String {
-        val allHandled = (sourceDataLoss == 0 && unmappable == 0)
+        val allHandled = (sourceDataLoss == 0 && unmappable == 0 && criticalUnmappable == 0)
         return if (allHandled) {
             "$total/$total drifts are correctly handled"
         } else {
             val actionable = mapped + coveredByParent + noRuleNeeded
-            val issues = sourceDataLoss + unmappable
-            "$actionable/$total drifts handled, $issues require attention " +
-                "($sourceDataLoss source data loss, $unmappable unmappable)"
+            val issues = sourceDataLoss + unmappable + criticalUnmappable
+            val critNote = if (criticalUnmappable > 0) " [$criticalUnmappable CRITICAL]" else ""
+            "$actionable/$total drifts handled, $issues require attention$critNote " +
+                "($sourceDataLoss source data loss, ${unmappable + criticalUnmappable} unmappable)"
         }
     }
 
     private fun buildSummary(
         total: Int, mapped: Int, coveredByParent: Int, noRuleNeeded: Int,
-        sourceDataLoss: Int, unmappable: Int, shareabilityPercent: Double,
+        sourceDataLoss: Int, unmappable: Int, criticalUnmappable: Int = 0,
+        shareabilityPercent: Double,
         verdict: String
     ): String {
         val shareable = mapped + coveredByParent
@@ -372,22 +418,43 @@ class CoverageAnalyzer {
             appendLine("    Actively mapped in FML           : $mapped")
             appendLine("    Covered by parent/group mapping  : $coveredByParent")
             appendLine("    Source data loss (dropped)        : $sourceDataLoss")
-            appendLine("    Unmappable (no source data)      : $unmappable")
+            appendLine("    Unmappable optional (min=0)       : $unmappable")
+            appendLine("    Unmappable REQUIRED (min>=1) \u274c   : $criticalUnmappable")
             appendLine()
             appendLine("  DATA SHAREABILITY: ${"%.1f".format(shareabilityPercent)}%")
             appendLine("    ($shareable of $dataItems data-carrying items are transferable)")
             appendLine()
+            appendLine("  INDUSTRY BENCHMARK:")
+            when {
+                shareabilityPercent >= 85.0 -> appendLine("    \u2705 EXCELLENT \u2014 meets USCDI/ONC certification requirements (>=85%)")
+                shareabilityPercent >= 70.0 -> appendLine("    \u2705 GOOD \u2014 meets HL7 IPS and most national IG standards (>=70%)")
+                shareabilityPercent >= 60.0 -> appendLine("    \u26a0  ACCEPTABLE for cross-national or exploratory mapping (>=60%)")
+                else                        -> appendLine("    \u274c BELOW BASELINE \u2014 review profile compatibility (<60%)")
+            }
+            appendLine()
+            if (criticalUnmappable > 0) {
+                appendLine("  \u274c CRITICAL: $criticalUnmappable MANDATORY TARGET FIELD(S) HAVE NO SOURCE DATA")
+                appendLine("    These fields are required (min>=1) in the target profile but the source")
+                appendLine("    has no equivalent. The generated FML leaves them EMPTY. Without a fix,")
+                appendLine("    the transformed resource WILL FAIL target-profile validation.")
+                appendLine("    See CATEGORY 5a in the coverage report for the exact field paths.")
+                appendLine("    REQUIRED ACTION: Add a default-value FML rule for each field, e.g.:")
+                appendLine("      tgt.<field> = \"DEFAULT_VALUE\" \"rule-name\";")
+                appendLine("    OR enrich the resource in a post-processing step.")
+                appendLine()
+            }
             if (sourceDataLoss > 0) {
-                appendLine("  WARNING: $sourceDataLoss source element(s) will be LOST during transformation")
-                appendLine("  because the target profile does not define them. This is expected when the")
-                appendLine("  source has domain-specific extensions (e.g. AU-specific fields) that do not")
-                appendLine("  exist in the target domain.")
+                appendLine("  SOURCE DATA LOSS: $sourceDataLoss element(s) \u2014 INHERENTLY ACCEPTABLE")
+                appendLine("    These source elements do not exist in the target profile. No StructureMap")
+                appendLine("    can transfer data the target does not define. This is EXPECTED for cross-")
+                appendLine("    national or cross-domain mappings (e.g. AU-specific fields not in US Core).")
+                appendLine("    Inform clinical staff which fields are dropped so they can assess impact.")
                 appendLine()
             }
             if (unmappable > 0) {
-                appendLine("  WARNING: $unmappable target element(s) CANNOT be auto-populated because no")
-                appendLine("  equivalent data exists in the source profile. These elements must be filled")
-                appendLine("  by an external data source, manual entry, or a post-processing step.")
+                appendLine("  \u26a0  UNMAPPABLE OPTIONAL (TARGET-ONLY): $unmappable element(s)")
+                appendLine("    These target-only fields (min=0) cannot be populated from the source.")
+                appendLine("    The resource will still pass profile validation without them \u2014 optional.")
                 appendLine()
             }
         }

@@ -39,6 +39,9 @@ EXTENSION HANDLING:
 - If an extension exists in source but NOT in target: add a comment noting the data loss.
 - If an extension exists in target but NOT in source: add a comment noting it cannot be mapped.
 - Only map extensions that exist in BOTH source and target.
+- To filter an extension by URL, use the FML 'where' KEYWORD — NOT the FHIRPath .where() function.
+  CORRECT:   src.extension as ext where ext.url = 'http://example.org/my-ext' -> tgt.extension as tExt then MapExt(ext, tExt) "map-ext";
+  INCORRECT: src.extension.where(url='http://example.org/my-ext') as ext -> ...   <- .where() is NOT valid FML syntax
 
 DRIFT ITEM TRACEABILITY:
 - EVERY drift item from the drift report must be traceable in the FML output.

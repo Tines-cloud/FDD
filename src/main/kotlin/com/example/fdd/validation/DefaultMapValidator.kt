@@ -53,6 +53,11 @@ class DefaultMapValidator(
         val conversationHistory = mutableListOf<Pair<String, String>>()
         // Errors from each past cycle, used to warn the LLM not to revert to old broken code.
         val errorsByCycle = mutableListOf<List<String>>()
+        // FML text before each LLM fix attempt, used to detect line-level regressions.
+        val fmlByCycle = mutableListOf<String>()
+
+        // Pre-process: rewrite known LLM syntax anti-patterns before first validation (no LLM cost)
+        currentFml = sanitizeFml(currentFml)
 
         for (cycle in 1..maxAttempts) {
             log.info("Repair cycle {}/{}: scanning FML for ALL errors (no LLM cost)", cycle, maxAttempts)
@@ -84,12 +89,24 @@ class DefaultMapValidator(
             log.warn("Cycle {}: found {} error(s) in total:", cycle, errors.size)
             errors.forEachIndexed { idx, err -> log.warn("  [{}/{}] {}", idx + 1, errors.size, err) }
 
+            // Detect line-level regressions: LLM "fixed" a line but introduced a different error on the same line
+            val regressions = if (errorsByCycle.isNotEmpty()) {
+                detectRegressions(fmlByCycle.last(), currentFml, errorsByCycle.last(), errors)
+            } else emptyList()
+            if (regressions.isNotEmpty()) {
+                log.warn("Regression detected: {} line(s) still have errors after LLM fix attempt", regressions.size)
+                regressions.forEach { r -> log.warn("  Line {}: was [{}] → now [{}]", r.lineNum, r.previousError, r.currentError) }
+            }
+
             if (cycle == maxAttempts) break
+
+            // Save state before LLM fix for regression detection in the next cycle
+            fmlByCycle.add(currentFml)
 
             // ── Send ALL errors to LLM in ONE call ──
             val turnNum = conversationHistory.size + 1
             log.info("Reflexion turn {}: sending ALL {} error(s) in one LLM call", turnNum, errors.size)
-            currentFml = reflexion(currentFml, errors, source, target, driftReport, conversationHistory, errorsByCycle.toList())
+            currentFml = reflexion(currentFml, errors, source, target, driftReport, conversationHistory, errorsByCycle.toList(), regressions)
             // Save this cycle's errors so the next follow-up can warn the LLM not to revert
             errorsByCycle.add(errors)
         }
@@ -104,6 +121,50 @@ class DefaultMapValidator(
     }
 
     /* ---------- FML Compilation + Error Scanning ---------- */
+
+    /** A line-level regression: the LLM's fix replaced one error with another on the same line. */
+    private data class LineRegression(
+        val lineNum: Int,
+        val previousError: String,
+        val currentError: String,
+        val previousLineContent: String,
+        val currentLineContent: String
+    )
+
+    /** Extract the 1-based line number from a HAPI error message like "at 17, 7:". */
+    private fun extractLineNumber(error: String): Int? =
+        Regex("""\bat\s+(\d+)\s*,\s*\d+\s*:""").find(error)
+            ?.groupValues?.get(1)?.toIntOrNull()
+
+    /**
+     * Compare errors from the previous cycle with errors from the current cycle.
+     * If the same line number has errors in both cycles (even different errors),
+     * it means the LLM's "fix" replaced one error with another — a regression.
+     */
+    private fun detectRegressions(
+        previousFml: String,
+        currentFml: String,
+        previousErrors: List<String>,
+        currentErrors: List<String>
+    ): List<LineRegression> {
+        val prevLines = previousFml.lines()
+        val currLines = currentFml.lines()
+        val prevByLine = previousErrors.mapNotNull { err -> extractLineNumber(err)?.let { it to err } }.toMap()
+        val currByLine = currentErrors.mapNotNull { err -> extractLineNumber(err)?.let { it to err } }.toMap()
+
+        return currByLine.mapNotNull { (lineNum, currErr) ->
+            val prevErr = prevByLine[lineNum]
+            if (prevErr != null && prevErr != currErr) {
+                LineRegression(
+                    lineNum = lineNum,
+                    previousError = prevErr,
+                    currentError = currErr,
+                    previousLineContent = prevLines.getOrElse(lineNum - 1) { "" },
+                    currentLineContent = currLines.getOrElse(lineNum - 1) { "" }
+                )
+            } else null
+        }
+    }
 
     /** Try to compile the FML. Returns success/failure with the error message if any. */
     private fun tryCompile(fml: String): CompilationResult {
@@ -173,6 +234,54 @@ class DefaultMapValidator(
      * HAPI requires every rule with -> to end with a quoted name before the semicolon.
      * This fixes them deterministically without any LLM cost.
      */
+    /**
+     * Rewrites known LLM-generated FML anti-patterns into valid HAPI FML syntax.
+     * Runs once before the first validation cycle — zero LLM cost.
+     *
+     * Anti-pattern 1: FHIRPath-style `.where()` in source expressions.
+     *   INVALID:  src.extension.where(url='http://...') as alias ->
+     *   VALID:    src.extension as alias where alias.url = 'http://...' ->
+     *
+     * Anti-pattern 2: `.where()` with property shorthand (no explicit target field name).
+     *   INVALID:  src.extension.where(url='http://...') ->
+     */
+    private fun sanitizeFml(fml: String): String {
+        var result = fml
+        var rewrites = 0
+
+        // Pattern: <base>.where(<prop>='<value>') as <alias>
+        // Rewrite:  <base> as <alias> where <alias>.<prop> = '<value>'
+        val withAlias = Regex(
+            """(\S+)\.where\((\w+)='([^']*)'\)\s+as\s+(\w+)"""
+        )
+        result = withAlias.replace(result) { m ->
+            val base  = m.groupValues[1]
+            val prop  = m.groupValues[2]
+            val value = m.groupValues[3]
+            val alias = m.groupValues[4]
+            rewrites++
+            "$base as $alias where $alias.$prop = '$value'"
+        }
+
+        // Pattern: <base>.where(<prop>="<value>") as <alias>  (double-quoted value)
+        val withAliasDouble = Regex(
+            """(\S+)\.where\((\w+)=\"([^\"]*)\"\)\s+as\s+(\w+)"""
+        )
+        result = withAliasDouble.replace(result) { m ->
+            val base  = m.groupValues[1]
+            val prop  = m.groupValues[2]
+            val value = m.groupValues[3]
+            val alias = m.groupValues[4]
+            rewrites++
+            "$base as $alias where $alias.$prop = '$value'"
+        }
+
+        if (rewrites > 0) {
+            log.info("sanitizeFml: rewrote {} .where() anti-pattern(s) to valid FML", rewrites)
+        }
+        return result
+    }
+
     private fun autoFixRuleNames(fml: String): String {
         var currentFml = fml
         var fixed = 0
@@ -241,7 +350,8 @@ class DefaultMapValidator(
         target: StructureDefinition,
         driftReport: DriftReport,
         conversationHistory: MutableList<Pair<String, String>>,
-        allPriorErrors: List<List<String>>
+        allPriorErrors: List<List<String>>,
+        regressions: List<LineRegression> = emptyList()
     ): String {
         val systemPrompt = promptTemplateService.loadTemplate("reflexion-system.txt")
         val errorList = errors.mapIndexed { idx, err -> "  ${idx + 1}. $err" }.joinToString("\n")
@@ -251,9 +361,13 @@ class DefaultMapValidator(
             allPriorErrors.any { priorCycle -> err in priorCycle }
         }
         val isOscillating = oscillatingErrors.isNotEmpty()
-        val temperature = if (isOscillating) 0.4 else 0.1
+        val hasRegressions = regressions.isNotEmpty()
+        val temperature = if (isOscillating || hasRegressions) 0.4 else 0.1
         if (isOscillating) {
             log.warn("Oscillation detected - {} error(s) already seen in prior cycles, raising temperature to {}", oscillatingErrors.size, temperature)
+        }
+        if (hasRegressions) {
+            log.warn("Line-level regression detected on {} line(s), raising temperature to {}", regressions.size, temperature)
         }
 
         val userMessage: String
@@ -275,8 +389,8 @@ class DefaultMapValidator(
             rawResponse = llmClient.chatWithHistory(systemPrompt, emptyList(), userMessage, temperature)
         } else {
             val turnNum = conversationHistory.size + 1
-            log.info("Reflexion turn {}: presenting {} error(s) to LLM with full FML context (oscillation={})", turnNum, errors.size, isOscillating)
-            userMessage = buildFollowUpMessage(fml, errors, allPriorErrors, oscillatingErrors)
+            log.info("Reflexion turn {}: presenting {} error(s) to LLM with full FML context (oscillation={}, regressions={})", turnNum, errors.size, isOscillating, regressions.size)
+            userMessage = buildFollowUpMessage(fml, errors, allPriorErrors, oscillatingErrors, regressions)
             rawResponse = llmClient.chatWithHistory(systemPrompt, conversationHistory.toList(), userMessage, temperature)
         }
 
@@ -293,7 +407,8 @@ class DefaultMapValidator(
         currentFml: String,
         errors: List<String>,
         allPriorErrors: List<List<String>>,
-        oscillatingErrors: List<String>
+        oscillatingErrors: List<String>,
+        regressions: List<LineRegression> = emptyList()
     ): String {
         val errorList = errors.mapIndexed { idx, err -> "  ${idx + 1}. $err" }.joinToString("\n")
 
@@ -338,12 +453,35 @@ earlier attempts. Try a fundamentally different way to express the same mapping.
             "\n## PREVIOUSLY SEEN ERRORS (DO NOT reintroduce ANY of these)\n$priorLines"
         } else ""
 
+        val regressionSection = if (regressions.isNotEmpty()) {
+            val regLines = regressions.joinToString("\n\n") { r ->
+                """  LINE ${r.lineNum} - YOUR FIX REPLACED ONE ERROR WITH ANOTHER:
+    Before your fix: ${r.previousLineContent.trim()}
+    After your fix:  ${r.currentLineContent.trim()}
+    Previous error:  ${r.previousError}
+    Current error:   ${r.currentError}
+    BOTH versions are wrong. You need a COMPLETELY DIFFERENT approach for this line."""
+            }
+            """
+
+## REGRESSION DETECTED - Your fix introduced NEW errors on the SAME lines!
+Your previous fix attempt did NOT make progress. It replaced errors with
+different errors on the same lines. This means both your old and new code
+for these lines are syntactically wrong.
+
+$regLines
+
+You MUST write these lines using a fundamentally different FML construct.
+Do NOT try minor variations of the same approach — use a different syntax entirely."""
+        } else ""
+
         return """
 Your last FML attempt has ${errors.size} compilation error(s).
 
 ## CURRENT ERRORS (fix ALL of these)
 $errorList
 $snippetSection
+$regressionSection
 $oscillationSection
 $priorSection
 
@@ -354,7 +492,10 @@ $currentFml
 
 ## Rules
 - Fix every error listed under CURRENT ERRORS.
+- Your fix MUST NOT introduce any new compilation errors on any line.
 - Do NOT reintroduce any error from PREVIOUSLY SEEN ERRORS.
+- If REGRESSION DETECTED is shown, your previous approach for those lines failed TWICE.
+  Use a COMPLETELY DIFFERENT FML construct — not a minor variation.
 - The lines marked with >>> in ERROR LOCATION show exactly where the error is.
 - "Complex rules must have an explicit name" means: every rule that uses
   `then` or maps source->target MUST end with a quoted name string before
