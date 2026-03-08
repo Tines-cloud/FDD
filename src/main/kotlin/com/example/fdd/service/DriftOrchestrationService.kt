@@ -1,6 +1,7 @@
 package com.example.fdd.service
 
 import com.example.fdd.api.dto.ProfileInput
+import com.example.fdd.model.CoverageReport
 import com.example.fdd.model.DriftReport
 import com.example.fdd.model.MapGenerationResult
 
@@ -29,7 +30,7 @@ interface DriftOrchestrationService {
      *
      * @param source Identifies the source FHIR profile (JSON, URL, or canonical).
      * @param target Identifies the target FHIR profile (JSON, URL, or canonical).
-     * @return A pair of the [DriftReport] and the validated [MapGenerationResult].
+     * @return A triple of the [DriftReport], the validated [MapGenerationResult], and the [CoverageReport].
      */
-    fun analyzeAndRepair(source: ProfileInput, target: ProfileInput): Pair<DriftReport, MapGenerationResult>
+    fun analyzeAndRepair(source: ProfileInput, target: ProfileInput): Triple<DriftReport, MapGenerationResult, CoverageReport>
 }

@@ -17,7 +17,7 @@ Canonical: {{targetCanonical}}
 
 ## Instructions
 
-1. Generate a COMPLETE FML map that handles ALL drift items from the drift report.
+1. Generate a COMPLETE FML map that accounts for ALL drift items from the drift report.
 2. The drift report is your primary guide - each drift item describes a specific
    difference that must be resolved by the mapping rules.
 3. Use the abbreviated profile elements ONLY as a reference for correct FHIRPath
@@ -37,4 +37,14 @@ Canonical: {{targetCanonical}}
 6. Ensure every rule ends with a semicolon.
 7. CRITICAL: Do NOT use nested braces {} within rules. All nested logic must be in separate groups.
 8. Ensure the map URL and name are valid strings.
-9. Output ONLY the FML code, nothing else.
+9. CRITICAL: EVERY drift item MUST be accounted for in the FML. For items that
+   cannot be mapped, add a comment explaining why. Use these categories:
+   - Items you CAN map: write a proper FML rule with a comment referencing the drift rule ID.
+   - Profile metadata (MustSupport, constraints, uscdi-requirement, obligation extensions):
+     add a comment like: // rule-3: MustSupport change - profile metadata, no instance data impact
+   - Source-only elements removed in target:
+     add a comment like: // rule-82: Patient.extension:birthPlace removed in target - source data not carried over
+   - Target-only extensions with no source data:
+     add a comment like: // rule-50: Patient.extension:race - target-only, no source data available
+   This ensures every drift item is traceable in the FML output.
+10. Output ONLY the FML code (with comments), nothing else.

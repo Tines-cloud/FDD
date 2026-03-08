@@ -28,7 +28,10 @@ even if rewriting it in a different FML construct.
 2. Do NOT fix one error while breaking another - address all errors simultaneously.
 3. Do NOT drop, omit, or alter any rule that corresponds to a drift item above.
 4. Preserve all working rules exactly as they are.
-5. Every rule must end with a semicolon.
-6. All braces and parentheses must be balanced.
-7. Do NOT use unsupported keywords (`default`, `alias` in `uses` clauses, nested `{}` inside rules).
-8. Output ONLY the corrected FML code - no markdown, no explanations.
+5. EVERY rule MUST have a unique quoted name string before the semicolon:
+   CORRECT:   src.x as v -> tgt.y = v "set-x";
+   WRONG:     src.x as v -> tgt.y = v;
+6. Every rule must end with a semicolon (after the quoted name).
+7. All braces and parentheses must be balanced.
+8. Do NOT use unsupported keywords (`default`, `alias` in `uses` clauses, nested `{}` inside rules).
+9. Output ONLY the corrected FML code - no markdown, no explanations.

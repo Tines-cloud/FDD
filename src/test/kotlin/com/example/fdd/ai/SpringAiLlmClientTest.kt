@@ -21,12 +21,10 @@ import org.springframework.ai.chat.model.ChatResponse
 import org.springframework.ai.chat.model.Generation
 
 /**
- * Unit tests for [SpringAiLlmClient].
+ * Tests for SpringAiLlmClient.
  *
- * Verifies LLM communication, cache integration (hit/miss),
- * empty response handling, and error wrapping.
- * Retry behaviour is tested conceptually - Spring's @Retryable is integration-level
- * but we verify the thrown exception types match the retry/noRetry configuration.
+ * Covers cache hit/miss, empty responses, error wrapping,
+ * and multi-turn conversation message building.
  */
 class SpringAiLlmClientTest {
 

@@ -10,6 +10,7 @@ import com.example.fdd.model.DriftItem
 import com.example.fdd.model.DriftReport
 import com.example.fdd.model.DriftType
 import com.example.fdd.model.MapGenerationResult
+import com.example.fdd.service.CoverageAnalyzer
 import com.example.fdd.validation.DriftProfileValidator
 import com.example.fdd.validation.MapValidator
 import org.hl7.fhir.r4.model.StructureDefinition
@@ -42,6 +43,7 @@ class DriftOrchestrationServiceTest {
     private lateinit var driftAnalyzer: DriftAnalyzer
     private lateinit var mapGenerator: MapGenerator
     private lateinit var mapValidator: MapValidator
+    private lateinit var coverageAnalyzer: CoverageAnalyzer
     private lateinit var orchestrator: DefaultDriftOrchestrationService
 
     private val sourceSD = StructureDefinition().apply {
@@ -87,8 +89,9 @@ class DriftOrchestrationServiceTest {
         driftAnalyzer = mock()
         mapGenerator = mock()
         mapValidator = mock()
+        coverageAnalyzer = CoverageAnalyzer()
         orchestrator =
-            DefaultDriftOrchestrationService(profileLoader, driftValidator, driftAnalyzer, mapGenerator, mapValidator)
+            DefaultDriftOrchestrationService(profileLoader, driftValidator, driftAnalyzer, mapGenerator, mapValidator, coverageAnalyzer)
     }
 
     /* ---------------- analyzeDrift() ---------------- */
@@ -286,7 +289,7 @@ class DriftOrchestrationServiceTest {
                 )
             ).thenReturn(validMapResult)
 
-            val (report, mapResult) = orchestrator.analyzeAndRepair(
+            val (report, mapResult, coverageReport) = orchestrator.analyzeAndRepair(
                 source = ProfileInput(json = sourceJson),
                 target = ProfileInput(json = targetJson)
             )

@@ -13,16 +13,13 @@ import org.springframework.retry.annotation.Retryable
 import org.springframework.stereotype.Service
 
 /**
- * [LlmClient] implementation backed by Spring AI's [ChatModel].
+ * Talks to the LLM using Spring AI's ChatModel.
  *
- * The concrete [ChatModel] (OpenAI, Anthropic, Gemini, Mistral) is chosen at startup
- * via the `fdd.ai.provider` property and wired in by [com.example.fdd.config.AiConfig].
+ * The actual provider (OpenAI, Anthropic, Gemini, Mistral) is set in application.yaml
+ * and wired by AiConfig.
  *
- * Retries: Each call is retried up to 3 times on transient failures (HTTP 429,
- * 503, network timeouts) using exponential backoff starting at 1 second.
- *
- * Caching: Responses are stored in [LlmResponseCache] so experiments can be
- * replayed without hitting the LLM API again (toggle via `fdd.cache.enabled`).
+ * - Retries up to 3 times on transient failures (rate limits, timeouts).
+ * - Caches responses so the same request doesn't hit the LLM twice.
  */
 @Service
 class SpringAiLlmClient(
@@ -43,7 +40,7 @@ class SpringAiLlmClient(
         userPrompt: String,
         temperature: Double
     ): String {
-        // -- Check cache first (experiment reproducibility) --
+        // Check cache first
         cache.get(systemPrompt, userPrompt, temperature)?.let { cached ->
             log.info("Returning cached LLM response (cache size={})", cache.size())
             return cached
@@ -73,7 +70,7 @@ class SpringAiLlmClient(
 
             log.debug("LLM response length: {}", response.length)
 
-            // -- Store in cache for subsequent runs --
+            // Store in cache
             cache.put(systemPrompt, userPrompt, temperature, response)
 
             response
@@ -97,9 +94,7 @@ class SpringAiLlmClient(
         newUserMessage: String,
         temperature: Double
     ): String {
-        // Build a single cache-key string from the full conversation so past turns
-        // are part of the lookup - identical follow-ups within the same conversation
-        // can still be served from cache during experiment replay.
+        // Build a cache key from the full conversation so repeated identical calls are cached.
         val combinedUserKey = buildString {
             history.forEachIndexed { i, (userMsg, assistantResponse) ->
                 append("[turn${i + 1}-user]$userMsg\n[turn${i + 1}-assistant]$assistantResponse\n")
@@ -112,7 +107,7 @@ class SpringAiLlmClient(
             return cached
         }
 
-        // Build the full message chain: System -> [User, Assistant]* -> User
+        // Build the message chain: System -> [User, Assistant]* -> User
         val messageList = buildList {
             add(SystemMessage(systemPrompt))
             for ((userMsg, assistantResponse) in history) {

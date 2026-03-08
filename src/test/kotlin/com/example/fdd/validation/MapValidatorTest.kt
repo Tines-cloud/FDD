@@ -21,9 +21,7 @@ import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 
 /**
- * Unit tests for [DefaultMapValidator].
- *
- * Tests the Trust-but-Verify + Reflexion loop logic.
+ * Tests for DefaultMapValidator.
  */
 class MapValidatorTest {
 
@@ -48,10 +46,9 @@ class MapValidatorTest {
             validation = ValidationProperties(maxAttempts = 3)
         )
 
-        // loadTemplate always called as loadTemplate(name, map) in bytecode (Kotlin default arg),
-        // so a single two-arg stub covers both the single-arg and two-arg call sites.
+        // Stub loadTemplate for both single-arg and two-arg calls.
         whenever(promptTemplateService.loadTemplate(any(), any())).thenReturn("stub")
-        // Default LLM stub for reflexion path - reflexion now uses chatWithHistory (multi-turn)
+        // Stub LLM response for repair calls.
         whenever(llmClient.chatWithHistory(any(), any(), any(), any())).thenReturn("invalid fallback")
 
         validator = DefaultMapValidator(fhirContext, llmClient, promptTemplateService, properties)
@@ -60,7 +57,7 @@ class MapValidatorTest {
     @Test
     @DisplayName("Valid FML compiles on first attempt without invoking reflexion")
     fun validateAndRepair_validFml_succeeds() {
-        // A fully-formed FML structure with uses clauses for HAPI compliance:
+        // Valid FML with uses clauses:
         val validFml = """
             map "http://example.org/fhir/StructureMap/test" = "TestMap"
 

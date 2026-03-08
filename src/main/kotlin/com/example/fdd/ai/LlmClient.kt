@@ -1,43 +1,32 @@
 package com.example.fdd.ai
 
 /**
- * Abstraction over the underlying LLM provider.
+ * Interface for talking to an LLM provider.
  *
- * All drift-analysis and map-generation logic communicates with the LLM
- * exclusively through this interface, keeping the service layer decoupled
- * from any specific SDK (Spring AI, LangChain4j, or direct REST).
+ * All drift-analysis and map-generation code use this interface,
+ * so the rest of the app doesn't depend on any specific LLM SDK.
  */
 interface LlmClient {
 
     /**
-     * Send a single-turn chat-completion request with separate system and user prompts.
+     * Send a single message to the LLM and get a response.
      *
-     * @param systemPrompt Instructions that define the LLM's persona and output format.
-     * @param userPrompt   The user-turn content (profile context, drift report, etc.).
-     * @param temperature  Sampling temperature controlling response randomness;
-     *                     lower values produce more deterministic output (default `0.2`).
-     * @return The raw text content of the LLM's response.
-     * @throws com.example.fdd.exception.LlmResponseException on communication or parsing failure.
+     * @param systemPrompt Sets the LLM's role and output format.
+     * @param userPrompt   The actual question or task.
+     * @param temperature  Controls randomness (lower = more predictable, default 0.2).
+     * @return The LLM's response text.
      */
     fun chat(systemPrompt: String, userPrompt: String, temperature: Double = 0.2): String
 
     /**
-     * Send a **multi-turn** chat-completion request, preserving the full conversation history.
+     * Send a message with full conversation history so the LLM can see its own
+     * prior replies and avoid repeating the same mistakes.
      *
-     * The [history] list contains interleaved (userMessage, assistantResponse) pairs from all
-     * previous turns. The LLM receives the complete message chain:
-     *   SystemMessage -> UserMessage -> AssistantMessage -> UserMessage -> AssistantMessage -> ...
-     *   -> [newUserMessage]
-     *
-     * This enables the LLM to see its own prior outputs and the errors they produced, so it
-     * can avoid repeating the same mistake across repair attempts.
-     *
-     * @param systemPrompt   Instructions that define the LLM's persona and output format.
-     * @param history        Previous turns as (userMessage, assistantResponse) pairs - oldest first.
-     * @param newUserMessage The next user turn to append to the conversation.
-     * @param temperature    Sampling temperature (default `0.2`).
-     * @return The raw text of the LLM's next response.
-     * @throws com.example.fdd.exception.LlmResponseException on communication or parsing failure.
+     * @param systemPrompt   Sets the LLM's role and output format.
+     * @param history        Previous (userMessage, llmResponse) pairs, oldest first.
+     * @param newUserMessage The new message to send.
+     * @param temperature    Controls randomness (default 0.2).
+     * @return The LLM's response text.
      */
     fun chatWithHistory(
         systemPrompt: String,

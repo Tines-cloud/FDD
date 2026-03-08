@@ -112,7 +112,7 @@ class CliRunner(
         target: ProfileInput,
         outputContext: OutputStore.OutputContext?
     ): String {
-        val (driftReport, mapResult) = orchestrationService.analyzeAndRepair(source, target)
+        val (driftReport, mapResult, coverageReport) = orchestrationService.analyzeAndRepair(source, target)
         val response = RepairResponse(
             driftReport = driftReport,
             structureMap = mapResult.structureMapFml,
@@ -120,6 +120,7 @@ class CliRunner(
                 syntacticallyValid = mapResult.syntacticallyValid,
                 messages = mapResult.validationMessages
             ),
+            coverage = coverageReport,
             outputDirectory = outputContext?.directory?.toString()
         )
         outputStore.writeRepairResult(outputContext, response)

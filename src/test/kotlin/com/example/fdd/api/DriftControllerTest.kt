@@ -1,5 +1,6 @@
 package com.example.fdd.api
 
+import com.example.fdd.model.CoverageReport
 import com.example.fdd.model.DriftItem
 import com.example.fdd.model.DriftReport
 import com.example.fdd.model.DriftType
@@ -104,8 +105,15 @@ class DriftControllerTest {
             validationMessages = listOf("Attempt 1: Compilation successful")
         )
 
+        val sampleCoverage = CoverageReport(
+            totalDriftItems = 1, mapped = 1, coveredByParent = 0,
+            noRuleNeeded = 0, sourceDataLoss = 0, unmappableNoSource = 0,
+            dataShareabilityPercent = 100.0, items = emptyList(),
+            summary = "All covered", verdict = "1/1 drifts handled"
+        )
+
         whenever(orchestrationService.analyzeAndRepair(source = any(), target = any()))
-            .thenReturn(sampleDriftReport to mapResult)
+            .thenReturn(Triple(sampleDriftReport, mapResult, sampleCoverage))
 
         mockMvc.post("/api/drift/repair") {
             contentType = MediaType.APPLICATION_JSON

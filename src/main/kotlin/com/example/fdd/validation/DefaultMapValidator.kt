@@ -19,18 +19,14 @@ import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
 
 /**
- * Default [MapValidator] implementing the **Batch-Repair** pattern.
+ * Validates FML code by compiling it with HAPI-FHIR and auto-repairs errors using an LLM.
  *
- * Algorithm per repair cycle:
- * 1. Run [collectAllErrors] - a free loop of HAPI re-parse passes that discovers
- *    EVERY syntax error in the FML without any LLM calls.
- * 2. If no errors -> return success immediately.
- * 3. If errors found -> send ONE LLM call with the complete error list so the model
- *    can fix all problems simultaneously.
- * 4. Repeat up to [FddProperties.ValidationProperties.maxAttempts] cycles.
- * 5. If all cycles fail -> throw [MapValidationException] with the full error trace.
- *
- * Cost profile: N errors in one cycle = 1 LLM call (not N calls).
+ * How it works:
+ * 1. Scan the FML for ALL errors using free HAPI re-parse passes (no LLM cost).
+ * 2. If no errors, return success.
+ * 3. If errors found, send them ALL to the LLM in ONE call to fix everything at once.
+ * 4. Repeat up to maxAttempts cycles.
+ * 5. If all cycles fail, throw an exception with the full error history.
  */
 @Component
 class DefaultMapValidator(
@@ -51,17 +47,20 @@ class DefaultMapValidator(
         driftReport: DriftReport
     ): MapGenerationResult {
         var currentFml = fmlCode
-        // Flat list of "[Cycle N] <error>" entries covering every error from every cycle.
-        // One entry per individual error found, prefixed with its cycle number so the
-        // output store can group them for readable reporting.
+        // All errors from every cycle, each prefixed with "[Cycle N]" for grouping in output.
         val failureLog = mutableListOf<String>()
-        // Conversation history for multi-turn reflexion: (userMessage, rawLlmResponse) pairs.
+        // Conversation thread with the LLM: list of (userMessage, llmResponse) pairs.
         val conversationHistory = mutableListOf<Pair<String, String>>()
+        // Errors from each past cycle, used to warn the LLM not to revert to old broken code.
+        val errorsByCycle = mutableListOf<List<String>>()
 
         for (cycle in 1..maxAttempts) {
             log.info("Repair cycle {}/{}: scanning FML for ALL errors (no LLM cost)", cycle, maxAttempts)
 
-            // ── Phase 1: collect ALL errors via free HAPI re-parse passes ──────────────
+            // Auto-fix "Complex rules must have an explicit name" errors (free, no LLM cost)
+            currentFml = autoFixRuleNames(currentFml)
+
+            // ── Scan for ALL errors (free, no LLM cost) ──
             val errors = collectAllErrors(currentFml)
 
             if (errors.isEmpty()) {
@@ -87,10 +86,12 @@ class DefaultMapValidator(
 
             if (cycle == maxAttempts) break
 
-            // ── Phase 2: ONE LLM call to fix ALL errors found this cycle ─────────────
+            // ── Send ALL errors to LLM in ONE call ──
             val turnNum = conversationHistory.size + 1
             log.info("Reflexion turn {}: sending ALL {} error(s) in one LLM call", turnNum, errors.size)
-            currentFml = reflexion(currentFml, errors, source, target, driftReport, conversationHistory)
+            currentFml = reflexion(currentFml, errors, source, target, driftReport, conversationHistory, errorsByCycle.toList())
+            // Save this cycle's errors so the next follow-up can warn the LLM not to revert
+            errorsByCycle.add(errors)
         }
 
         // All cycles exhausted - log the full trace
@@ -102,11 +103,9 @@ class DefaultMapValidator(
         )
     }
 
-    /* ---------------- FML Compilation + Full-Error Scan ---------------- */
+    /* ---------- FML Compilation + Error Scanning ---------- */
 
-    /**
-     * Attempt to parse/compile FML text using HAPI-FHIR's [StructureMapUtilities].
-     */
+    /** Try to compile the FML. Returns success/failure with the error message if any. */
     private fun tryCompile(fml: String): CompilationResult {
         return try {
             val workerContext = createWorkerContext()
@@ -119,30 +118,21 @@ class DefaultMapValidator(
     }
 
     /**
-     * Run repeated HAPI parse passes to discover **every** syntax error in [fml].
+     * Find ALL syntax errors in the FML without any LLM calls.
      *
-     * HAPI's parser is fail-fast - it throws on the first error it encounters and stops.
-     * This method works around that limitation at zero LLM cost:
+     * HAPI stops at the first error it finds. To get around this, we:
+     * 1. Parse the FML.
+     * 2. When it fails, record the error, remove the bad line, and parse again.
+     * 3. Repeat until it compiles cleanly or we can't find the bad line.
      *
-     * 1. Parse the current working copy of the FML.
-     * 2. On error: record the message, extract the 1-based line number from the
-     *    HAPI error text (`"Error in GeneratedMap at LINE, COL: ..."`), remove
-     *    that line from the working copy, and re-parse.
-     * 3. Repeat until either the working copy compiles cleanly or the error does
-     *    not carry a parseable line number (safety exit to avoid infinite loops).
-     *
-     * The returned list contains the raw HAPI error text for every error found
-     * in the **original** FML.  The working copy used for scanning is discarded;
-     * only the error messages are returned.
-     *
-     * @return Ordered list of all error messages found. Empty = no errors.
+     * The working copy is thrown away. Only the error messages are returned.
      */
     private fun collectAllErrors(fml: String): List<String> {
         val errors = mutableListOf<String>()
         val lines = fml.lines().toMutableList()
-        val maxPasses = 50  // safety cap against pathological input
 
-        repeat(maxPasses) {
+        // Each pass removes one line, so we can never need more passes than lines.
+        repeat(lines.size) {
             val currentText = lines.joinToString("\n")
             val result = tryCompile(currentText)
             if (result.success) return errors
@@ -150,25 +140,82 @@ class DefaultMapValidator(
             val errorMsg = result.error ?: return errors
             errors.add(errorMsg)
 
-            // HAPI error format: "Error in GeneratedMap at LINE, COL: <message>"
+            // Try to find the bad line by its line number (e.g. "at 15, 7:")
             val lineNum = Regex("""\bat\s+(\d+)\s*,\s*\d+\s*:""").find(errorMsg)
                 ?.groupValues?.get(1)?.toIntOrNull()
 
             if (lineNum != null && lineNum >= 1 && lineNum <= lines.size) {
                 lines.removeAt(lineNum - 1)
-            } else {
-                // Cannot identify the offending line - stop scanning
-                return errors
+                return@repeat
             }
+
+            // If no line number, try to find the bad keyword in the FML text
+            val badToken = Regex("""['"](\w+)['"]""")
+                .findAll(errorMsg)
+                .lastOrNull()?.groupValues?.get(1)
+
+            if (badToken != null) {
+                val idx = lines.indexOfFirst { it.contains(badToken) }
+                if (idx >= 0) {
+                    lines.removeAt(idx)
+                    return@repeat
+                }
+            }
+
+            // Could not find which line caused the error - stop scanning
+            return errors
         }
         return errors
     }
 
     /**
-     * Create a minimal [IWorkerContext] backed by HAPI-FHIR's default R4
-     * validation support. This is sufficient for FML syntax parsing/compilation.
-     * A full context (with loaded IG profiles) would be required for executing transforms.
+     * Auto-fix "Complex rules must have an explicit name" errors.
+     * HAPI requires every rule with -> to end with a quoted name before the semicolon.
+     * This fixes them deterministically without any LLM cost.
      */
+    private fun autoFixRuleNames(fml: String): String {
+        var currentFml = fml
+        var fixed = 0
+
+        // Keep fixing until no more "Complex rules must have an explicit name" errors
+        repeat(200) {
+            val result = tryCompile(currentFml)
+            if (result.success) {
+                if (fixed > 0) log.info("Auto-fixed {} rule name error(s) without LLM cost", fixed)
+                return currentFml
+            }
+
+            val error = result.error ?: return currentFml
+            if (!error.contains("Complex rules must have an explicit name")) {
+                if (fixed > 0) log.info("Auto-fixed {} rule name error(s) without LLM cost", fixed)
+                return currentFml
+            }
+
+            val lineNum = Regex("""\bat\s+(\d+)\s*,""").find(error)
+                ?.groupValues?.get(1)?.toIntOrNull() ?: return currentFml
+
+            val lines = currentFml.lines().toMutableList()
+            if (lineNum < 1 || lineNum > lines.size) return currentFml
+
+            val line = lines[lineNum - 1]
+            val trimmed = line.trimEnd()
+
+            // Only fix lines ending with ; that don't already have a "name" before ;
+            if (!trimmed.endsWith(";")) return currentFml
+            if (Regex(""""[^"]*"\s*;$""").containsMatchIn(trimmed)) return currentFml
+
+            val indent = line.length - line.trimStart().length
+            val ruleName = "rule_line$lineNum"
+            lines[lineNum - 1] = " ".repeat(indent) + trimmed.dropLast(1).trimEnd() + " \"$ruleName\";"
+            currentFml = lines.joinToString("\n")
+            fixed++
+        }
+
+        if (fixed > 0) log.info("Auto-fixed {} rule name error(s) without LLM cost", fixed)
+        return currentFml
+    }
+
+    /** Create a basic HAPI-FHIR context for FML parsing. */
     private fun createWorkerContext(): IWorkerContext {
         val validationSupport = ValidationSupportChain(
             DefaultProfileValidationSupport(fhirContext)
@@ -176,18 +223,16 @@ class DefaultMapValidator(
         return HapiWorkerContext(fhirContext, validationSupport)
     }
 
-    /* ---------------- Reflexion ---------------- */
+    /* ---------- LLM Repair (Reflexion) ---------- */
 
     /**
-     * Ask the LLM to repair broken FML using a **stateful conversation thread**.
+     * Ask the LLM to fix the broken FML.
      *
-     * Unlike the old single-error approach, each call passes the **complete list** of all
-     * errors found in the current cycle so the model can fix everything simultaneously.
+     * Turn 1: sends the full FML, all errors, profile URLs, and drift report.
+     * Turn 2+: sends all errors AND the current FML with error-line highlights,
+     *          so the LLM can see exactly what is broken.
      *
-     * - **Turn 1**: sends full context - the broken FML, all N errors, profile canonicals,
-     *   and the drift report as semantic ground truth.
-     * - **Turn 2+**: sends only the new error list. The LLM already sees its own previous
-     *   FML output as an `AssistantMessage` so no token cost for re-transmitting the code.
+     * All errors for a cycle are sent in a single call.
      */
     private fun reflexion(
         fml: String,
@@ -195,10 +240,21 @@ class DefaultMapValidator(
         source: StructureDefinition,
         target: StructureDefinition,
         driftReport: DriftReport,
-        conversationHistory: MutableList<Pair<String, String>>
+        conversationHistory: MutableList<Pair<String, String>>,
+        allPriorErrors: List<List<String>>
     ): String {
         val systemPrompt = promptTemplateService.loadTemplate("reflexion-system.txt")
         val errorList = errors.mapIndexed { idx, err -> "  ${idx + 1}. $err" }.joinToString("\n")
+
+        // Detect oscillation: current error already appeared in a prior cycle
+        val oscillatingErrors = errors.filter { err ->
+            allPriorErrors.any { priorCycle -> err in priorCycle }
+        }
+        val isOscillating = oscillatingErrors.isNotEmpty()
+        val temperature = if (isOscillating) 0.4 else 0.1
+        if (isOscillating) {
+            log.warn("Oscillation detected - {} error(s) already seen in prior cycles, raising temperature to {}", oscillatingErrors.size, temperature)
+        }
 
         val userMessage: String
         val rawResponse: String
@@ -216,12 +272,12 @@ class DefaultMapValidator(
                     "driftReport" to driftReport.toReflexionContext()
                 )
             )
-            rawResponse = llmClient.chatWithHistory(systemPrompt, emptyList(), userMessage, 0.1)
+            rawResponse = llmClient.chatWithHistory(systemPrompt, emptyList(), userMessage, temperature)
         } else {
             val turnNum = conversationHistory.size + 1
-            log.info("Reflexion turn {}: presenting {} new error(s) to LLM", turnNum, errors.size)
-            userMessage = buildFollowUpMessage(errors)
-            rawResponse = llmClient.chatWithHistory(systemPrompt, conversationHistory.toList(), userMessage, 0.1)
+            log.info("Reflexion turn {}: presenting {} error(s) to LLM with full FML context (oscillation={})", turnNum, errors.size, isOscillating)
+            userMessage = buildFollowUpMessage(fml, errors, allPriorErrors, oscillatingErrors)
+            rawResponse = llmClient.chatWithHistory(systemPrompt, conversationHistory.toList(), userMessage, temperature)
         }
 
         conversationHistory.add(Pair(userMessage, rawResponse))
@@ -229,32 +285,88 @@ class DefaultMapValidator(
     }
 
     /**
-     * Short follow-up message for reflexion turn 2+.
-     * The full FML is already in the conversation as the LLM's own AssistantMessage.
-     * We only send the new error list - the LLM fixes all of them in one pass.
+     * Build a follow-up message that includes the CURRENT FML, highlights the
+     * exact broken lines, lists current and prior errors, and (if oscillation
+     * is detected) forces the LLM to take a completely different approach.
      */
-    private fun buildFollowUpMessage(errors: List<String>): String {
+    private fun buildFollowUpMessage(
+        currentFml: String,
+        errors: List<String>,
+        allPriorErrors: List<List<String>>,
+        oscillatingErrors: List<String>
+    ): String {
         val errorList = errors.mapIndexed { idx, err -> "  ${idx + 1}. $err" }.joinToString("\n")
+
+        // Build line-level snippets around each error so the LLM sees the broken code
+        val fmlLines = currentFml.lines()
+        val snippets = errors.mapNotNull { err ->
+            val lineNum = Regex("""\bat\s+(\d+)\s*,\s*\d+\s*:""").find(err)
+                ?.groupValues?.get(1)?.toIntOrNull()
+            if (lineNum != null && lineNum in 1..fmlLines.size) {
+                val start = maxOf(0, lineNum - 4)
+                val end = minOf(fmlLines.size - 1, lineNum + 2)
+                val snippet = (start..end).joinToString("\n") { idx ->
+                    val marker = if (idx == lineNum - 1) ">>>" else "   "
+                    "$marker ${idx + 1}: ${fmlLines[idx]}"
+                }
+                "Error at line $lineNum:\n$snippet"
+            } else null
+        }
+        val snippetSection = if (snippets.isNotEmpty()) {
+            "\n## ERROR LOCATION IN YOUR CURRENT FML\n" + snippets.joinToString("\n\n")
+        } else ""
+
+        val oscillationSection = if (oscillatingErrors.isNotEmpty()) {
+            val errLines = oscillatingErrors.joinToString("\n") { "  - $it" }
+            """
+
+## OSCILLATION DETECTED - You are reverting to previously broken code!
+These exact errors already appeared in an earlier cycle:
+$errLines
+Your previous approaches for these lines ALL failed. You MUST use a COMPLETELY
+DIFFERENT syntax or structure for these lines. Do NOT reuse any code from your
+earlier attempts. Try a fundamentally different way to express the same mapping."""
+        } else ""
+
+        val priorSection = if (allPriorErrors.isNotEmpty()) {
+            val priorLines = buildString {
+                allPriorErrors.forEachIndexed { cycleIdx, cycleErrors ->
+                    appendLine("  Cycle ${cycleIdx + 1}:")
+                    cycleErrors.forEach { err -> appendLine("    - $err") }
+                }
+            }
+            "\n## PREVIOUSLY SEEN ERRORS (DO NOT reintroduce ANY of these)\n$priorLines"
+        } else ""
+
         return """
-            The FML you generated above still has ${errors.size} compilation error(s).
+Your last FML attempt has ${errors.size} compilation error(s).
 
-            Fix ALL of the following errors in a single complete rewrite:
+## CURRENT ERRORS (fix ALL of these)
 $errorList
+$snippetSection
+$oscillationSection
+$priorSection
 
-            Rules:
-            - Fix every error listed above simultaneously - do not fix one and break another.
-            - Do NOT re-introduce any error type from a previous turn.
-            - Every rule must end with a semicolon.
-            - Do NOT use unsupported keywords (e.g. `default`, `alias` in a `uses` clause).
-            - All braces and parentheses must be balanced.
-            Output ONLY the corrected FML - no markdown, no explanations.
+## YOUR CURRENT FML (this is your latest code that has the errors above)
+```fml
+$currentFml
+```
+
+## Rules
+- Fix every error listed under CURRENT ERRORS.
+- Do NOT reintroduce any error from PREVIOUSLY SEEN ERRORS.
+- The lines marked with >>> in ERROR LOCATION show exactly where the error is.
+- "Complex rules must have an explicit name" means: every rule that uses
+  `then` or maps source->target MUST end with a quoted name string before
+  the semicolon:  src.x as s -> tgt.y = s "rule-name";
+- Every rule must end with a semicolon.
+- Do NOT use unsupported keywords (`default`, `alias` in `uses` clauses).
+- All braces and parentheses must be balanced.
+Output ONLY the corrected FML - no markdown, no explanations.
         """.trimIndent()
     }
 
-    /**
-     * Converts the drift report into a compact, readable summary for inclusion in the
-     * reflexion prompt. The LLM uses this as semantic ground truth when rewriting broken FML.
-     */
+    /** Turn the drift report into a short summary for the LLM prompt. */
     private fun DriftReport.toReflexionContext(): String {
         if (items.isEmpty()) return "No drift items detected."
         val lines = mutableListOf(
@@ -268,7 +380,7 @@ $errorList
         return lines.joinToString("\n")
     }
 
-    /* ---------------- Internal DTOs ---------------- */
+    /* ---------- Internal DTOs ---------- */
 
     private data class CompilationResult(
         val success: Boolean,

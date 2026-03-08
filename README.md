@@ -9,38 +9,50 @@ HAPI-FHIR's compiler in a **Trust-but-Verify** reflexion loop.
 ## Architecture
 
 ```
-┌────────────────┐     ┌──────────────┐     ┌──────────────────────────────┐
-│  REST API       │────>│  Stage 1     │────>│  Stage 2                     │
-│  /api/drift/    │     │  Drift       │     │  StructureMap                │
-│  analyze|repair │     │  Analysis    │     │  Generation + Validation     │
-└────────────────┘     └──────────────┘     └──────────────────────────────┘
-                              │                         │
-                     ┌────────┴────────┐       ┌────────┴────────┐
-                     │ Rule-based      │       │ LLM-powered     │
-                     │ detector        │       │ FML generation   │
-                     │ (deterministic) │       │ + reflexion      │
-                     └─────────────────┘       │ (Trust-but-Verify)│
-                     │ LLM-powered     │       └──────────────────┘
-                     │ drift analysis  │
-                     │ (hybrid merge)  │
-                     └─────────────────┘
+┌────────────────┐     ┌──────────────┐     ┌──────────────────┐     ┌──────────────┐
+│  REST API       │────>│  Stage 1     │────>│  Stage 2         │────>│  Stage 3     │
+│  /api/drift/    │     │  Drift       │     │  StructureMap    │     │  Coverage    │
+│  analyze|repair │     │  Analysis    │     │  Generation +    │     │  Analysis    │
+└────────────────┘     │  (hybrid)    │     │  Trust-but-Verify│     │ (deterministic)│
+                       └──────────────┘     └──────────────────┘     └──────────────┘
+                              │                    │                        │
+                     ┌────────┴────────┐    ┌──────┴──────────┐    ┌───────┴────────┐
+                     │ Rule-based      │    │ autoFixRuleNames │    │ Cross-reference │
+                     │ detector (20+)  │    │ (zero LLM cost)  │    │ drift vs FML   │
+                     └─────────────────┘    ├──────────────────┤    │ 5 categories   │
+                     │ LLM analysis   │    │ collectAllErrors │    │ + shareability │
+                     │ + merge        │    │ (batch scanning)  │    └────────────────┘
+                     └─────────────────┘    ├──────────────────┤
+                                            │ Anti-oscillation │
+                                            │ + temp boost     │
+                                            └──────────────────┘
 ```
 
-**Three-stage pipeline:**
+**Four-stage pipeline:**
 
 1. **Profile Resolution** - Load `StructureDefinition` JSON from inline content,
    HTTP URL, canonical URL, classpath resource, or local file path.
 2. **Drift Analysis** - Hybrid: deterministic rule-based detector (all 5 drift types)
    seeds the LLM prompt, results are merged and de-duplicated.
-3. **Repair Generation** - LLM generates FML code from the `DriftReport`,
-   HAPI-FHIR compiles it, failures trigger LLM self-correction (reflexion),
-   up to N attempts. Throws `MapValidationException` if all attempts fail.
+3. **Repair Generation + Trust-but-Verify** - LLM generates FML code from the `DriftReport`.
+   HAPI-FHIR compiles it; failures trigger multi-turn reflexion with conversation history.
+   Includes `autoFixRuleNames()` (deterministic, zero LLM cost), `collectAllErrors()`
+   (batch scanning), and anti-oscillation detection with temperature boost.
+4. **Coverage Analysis** - Cross-references every drift item against the generated FML.
+   Classifies into 5 categories (MAPPED, COVERED_BY_PARENT, NO_RULE_NEEDED,
+   SOURCE_DATA_LOSS, UNMAPPABLE_NO_SOURCE). Computes data shareability percentage.
+   Fully deterministic - zero LLM cost.
 
 **Five drift categories:** `TERMINOLOGY` · `EXTENSION` · `STRUCTURAL` · `CARDINALITY` · `VERSION`
 
 **Dual FHIR Context:** R4 (`@Primary`) and R5 (`@Qualifier("r5")`) FhirContext beans with
 separate ValidationSupportChain, parser, and validator instances. R5 profiles are
 automatically detected and validated using the R5 pipeline.
+
+**AI cost per repair request:** Drift analysis (1 LLM call) + Map generation (1 LLM call)
++ Reflexion (0–2 LLM calls, only if compilation fails) + Coverage analysis (0 calls)
++ autoFixRuleNames (0 calls) = **2–4 LLM calls total** (typically 2 if generation succeeds
+on first compile).
 
 ---
 
@@ -147,7 +159,7 @@ You can **mix and match** - e.g. source from a local file, target from a URL.
 ---
 
 ## 1. Swagger UI (Browser)
-
+~~~~
 1. Start the server:
    ```powershell
    .\gradlew.bat bootRun
@@ -755,6 +767,8 @@ annotations used by Experiment 1 to measure detection accuracy (Precision/Recall
 
 ## Validation Behaviour
 
+### Profile Validation
+
 FDD validates all profiles at load time using HAPI-FHIR's `FhirValidator`.
 Certain known false-positive errors are **downgraded** to warnings instead of
 blocking the pipeline:
@@ -768,6 +782,55 @@ blocking the pipeline:
 This applies both to the validation endpoint (`GET /api/validate/*`) and to
 the drift analysis pipeline (profiles loaded for `POST /api/drift/analyze`).
 
+### FML Validation Enhancements (Trust-but-Verify)
+
+The reflexion loop includes several cost-saving and quality enhancements:
+
+| Feature | Description | LLM Cost |
+|---|---|---|
+| **`autoFixRuleNames()`** | Deterministically adds `"rule_lineN"` names to unnamed complex rules - the #1 most common HAPI compilation error | Zero |
+| **`collectAllErrors()`** | Scans FML for ALL compilation errors (not just the first) before sending to LLM in one batch call | Zero (scan) + 1 LLM call |
+| **Multi-turn conversation** | `chatWithHistory()` maintains full conversation context so LLM sees all prior attempts | Same cost, better quality |
+| **Full FML in follow-ups** | Follow-up messages include the full current FML with `>>>` markers on error lines | Same cost, better quality |
+| **Anti-oscillation** | Detects when LLM reverts to previously broken code; boosts temperature 0.1->0.4 and injects warning | Same cost, fewer wasted cycles |
+
+---
+
+## Output Files
+
+Every `/api/drift/repair` request writes a timestamped output folder under `output/`:
+
+```
+output/20260307-013447-882-repair-19a64dfd/
+├── metadata.json          # Request metadata (timestamp, type, labels)
+├── request.json           # Original request body
+├── drift-report.json      # DriftReport (all detected drift items)
+├── response.json          # Full API response (RepairResponse)
+├── validation.json        # ValidationSummary (per-cycle error messages)
+├── coverage-report.json   # CoverageReport (structured, machine-readable)
+├── coverage-report.txt    # Human-readable coverage breakdown (5 categories)
+├── structure-map.fml      # Generated FML code
+└── error.txt / error.json # Error trace (only if validation failed)
+```
+
+### Coverage Report Categories
+
+The `coverage-report.txt` classifies every drift item:
+
+| Status | Meaning | Data Impact |
+|---|---|---|
+| `MAPPED` | Actively transformed by an FML rule | ✅ Preserved |
+| `COVERED_BY_PARENT` | Parent element is mapped; sub-elements carry over | ✅ Preserved |
+| `NO_RULE_NEEDED` | Profile metadata (mustSupport, extensions, etc.) | ⚪ No data |
+| `SOURCE_DATA_LOSS` | Source element does not exist in target | ⚠️ Lost |
+| `UNMAPPABLE_NO_SOURCE` | Target element has no source equivalent | ⚠️ Empty |
+
+**Data Shareability %** = (Mapped + Covered by Parent) / (Total - Metadata) × 100
+
+The actual Data Shareability percentage varies per profile pair - it depends on how
+much structural overlap exists between the source and target profiles. FDD computes
+this dynamically for every request.
+
 ---
 
 ## Project Structure
@@ -778,7 +841,8 @@ src/main/kotlin/com/example/fdd/
 ├── api/                            # REST controllers and DTOs
 │   ├── DriftController.kt         # /api/drift/analyze + /api/drift/repair
 │   ├── CacheManagementController.kt # /api/cache/* admin endpoints
-│   ├── GlobalExceptionHandler.kt  # @ControllerAdvice (8 exception handlers)
+│   ├── GlobalExceptionHandler.kt  # @ControllerAdvice (5 exception types -> HTTP codes)
+│   ├── ProfileValidationController.kt  # /api/validate/* endpoints
 │   └── dto/                       # Request/Response data classes
 │       ├── AnalyzeRequest.kt      # ProfileInput, AnalyzeRequest, RepairRequest
 │       ├── AnalyzeResponse.kt
@@ -812,7 +876,10 @@ src/main/kotlin/com/example/fdd/
 │   ├── DriftItem.kt              # Single drift finding
 │   ├── DriftType.kt              # Enum: 5 drift categories
 │   ├── MapGenerationResult.kt    # FML + validity + messages
+│   ├── CoverageReport.kt         # CoverageReport, CoverageItem, CoverageStatus enum
 │   └── GoldStandardPair.kt       # Gold-standard annotations for experiments
+├── output/                         # File-based output persistence
+│   └── OutputStore.kt             # Timestamped output folders, coverage report builder
 ├── service/                        # Business logic
 │   ├── DriftAnalyzer.kt          # Interface - hybrid drift analysis
 │   ├── DefaultDriftAnalyzer.kt   # Rules + LLM merge implementation
@@ -820,13 +887,17 @@ src/main/kotlin/com/example/fdd/
 │   ├── DefaultRuleBasedDriftDetector.kt  # 20+ rules across 5 drift types
 │   ├── MapGenerator.kt           # Interface - LLM-powered FML generation
 │   ├── DefaultMapGenerator.kt
-│   ├── DriftOrchestrationService.kt     # Interface - pipeline orchestration
+│   ├── CoverageAnalyzer.kt       # Cross-reference drift vs FML (deterministic, no LLM)
+│   ├── ProfileValidationService.kt # Validate all bundled profiles
+│   ├── DriftOrchestrationService.kt     # Interface - 4-stage pipeline orchestration
 │   └── DefaultDriftOrchestrationService.kt
 ├── validation/                     # Trust-but-Verify
 │   ├── MapValidator.kt           # Interface - FML compilation + reflexion
-│   └── DefaultMapValidator.kt    # HAPI StructureMapUtilities + LLM reflexion
+│   ├── DefaultMapValidator.kt    # HAPI StructureMapUtilities + autoFixRuleNames + reflexion
+│   └── DriftProfileValidator.kt  # Pre-flight profile compatibility check
 └── util/
-    └── FmlUtils.kt               # Code-fence stripping utility
+    ├── FmlUtils.kt               # Code-fence stripping utility
+    └── FhirValidationUtils.kt    # Validation downgrading patterns
 
 src/main/resources/
 ├── application.yaml               # Main config (4 LLM providers, cache, actuator)

@@ -122,7 +122,7 @@ class DriftController(
             request.target.label()
         )
 
-        val (driftReport, mapResult) = orchestrationService.analyzeAndRepair(
+        val (driftReport, mapResult, coverageReport) = orchestrationService.analyzeAndRepair(
             source = request.source,
             target = request.target
         )
@@ -134,6 +134,7 @@ class DriftController(
                 syntacticallyValid = mapResult.syntacticallyValid,
                 messages = mapResult.validationMessages
             ),
+            coverage = coverageReport,
             outputDirectory = outputContext?.directory?.toString()
         )
 

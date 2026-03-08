@@ -1,5 +1,6 @@
 package com.example.fdd.api.dto
 
+import com.example.fdd.model.CoverageReport
 import com.example.fdd.model.DriftReport
 
 /**
@@ -9,6 +10,7 @@ data class RepairResponse(
     val driftReport: DriftReport,
     val structureMap: String,
     val validation: ValidationSummary,
+    val coverage: CoverageReport,
     val outputDirectory: String? = null
 )
 

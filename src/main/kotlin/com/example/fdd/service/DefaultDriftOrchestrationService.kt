@@ -3,6 +3,7 @@ package com.example.fdd.service
 import com.example.fdd.api.dto.ProfileInput
 import com.example.fdd.exception.FddException
 import com.example.fdd.fhir.ProfileLoader
+import com.example.fdd.model.CoverageReport
 import com.example.fdd.model.DriftReport
 import com.example.fdd.model.MapGenerationResult
 import com.example.fdd.validation.DriftProfileValidator
@@ -24,7 +25,8 @@ class DefaultDriftOrchestrationService(
     private val driftValidator: DriftProfileValidator,
     private val driftAnalyzer: DriftAnalyzer,
     private val mapGenerator: MapGenerator,
-    private val mapValidator: MapValidator
+    private val mapValidator: MapValidator,
+    private val coverageAnalyzer: CoverageAnalyzer
 ) : DriftOrchestrationService {
 
     private val log = LoggerFactory.getLogger(javaClass)
@@ -40,7 +42,7 @@ class DefaultDriftOrchestrationService(
     override fun analyzeAndRepair(
         source: ProfileInput,
         target: ProfileInput
-    ): Pair<DriftReport, MapGenerationResult> {
+    ): Triple<DriftReport, MapGenerationResult, CoverageReport> {
         val (sourceSd, targetSd) = resolveProfiles(source, target)
         driftValidator.validateCompatibility(sourceSd, targetSd)
 
@@ -75,7 +77,17 @@ class DefaultDriftOrchestrationService(
             validatedResult.syntacticallyValid
         )
 
-        return driftReport to validatedResult
+        // --- Stage 4 - Coverage analysis (drift report + FML -> coverage report) ---
+        // Deterministic, no LLM cost. Classifies every drift item so the user
+        // knows exactly what is mapped, what is dropped, and why.
+        val coverageReport = coverageAnalyzer.analyze(driftReport, validatedResult.structureMapFml)
+        log.info(
+            "Coverage analysis: {:.1f}% data shareability across {} drift items",
+            coverageReport.dataShareabilityPercent,
+            coverageReport.totalDriftItems
+        )
+
+        return Triple(driftReport, validatedResult, coverageReport)
     }
 
     /* ---------------- Profile resolution ---------------- */

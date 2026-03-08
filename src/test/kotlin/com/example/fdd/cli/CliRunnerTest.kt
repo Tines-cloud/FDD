@@ -1,6 +1,7 @@
 package com.example.fdd.cli
 
 import com.example.fdd.api.dto.ProfileInput
+import com.example.fdd.model.CoverageReport
 import com.example.fdd.model.DriftItem
 import com.example.fdd.model.DriftReport
 import com.example.fdd.model.DriftType
@@ -70,6 +71,19 @@ class CliRunnerTest {
         validationMessages = listOf("Attempt 1: Compilation successful")
     )
 
+    private val sampleCoverageReport = CoverageReport(
+        totalDriftItems = 1,
+        mapped = 1,
+        coveredByParent = 0,
+        noRuleNeeded = 0,
+        sourceDataLoss = 0,
+        unmappableNoSource = 0,
+        dataShareabilityPercent = 100.0,
+        items = emptyList(),
+        summary = "All drifts covered",
+        verdict = "1/1 drifts are correctly handled"
+    )
+
     @BeforeEach
     fun setUp() {
         orchestrationService = mock()
@@ -120,7 +134,7 @@ class CliRunnerTest {
     @DisplayName("Repair mode calls analyzeAndRepair and outputs full response JSON")
     fun run_repairMode_outputsRepairResponse() {
         whenever(orchestrationService.analyzeAndRepair(source = any(), target = any()))
-            .thenReturn(sampleDriftReport to sampleMapResult)
+            .thenReturn(Triple(sampleDriftReport, sampleMapResult, sampleCoverageReport))
 
         val args = DefaultApplicationArguments(
             "--mode=repair",

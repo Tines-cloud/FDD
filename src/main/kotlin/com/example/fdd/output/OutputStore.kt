@@ -4,6 +4,8 @@ import com.example.fdd.api.dto.ErrorResponse
 import com.example.fdd.api.dto.RepairResponse
 import com.example.fdd.config.FddProperties
 import com.example.fdd.exception.MapValidationException
+import com.example.fdd.model.CoverageReport
+import com.example.fdd.model.CoverageStatus
 import com.example.fdd.model.DriftReport
 import jakarta.servlet.http.HttpServletRequest
 import org.slf4j.LoggerFactory
@@ -80,6 +82,8 @@ class OutputStore(
         }
         writeJson(context.directory, "drift-report.json", response.driftReport)
         writeJson(context.directory, "validation.json", response.validation)
+        writeJson(context.directory, "coverage-report.json", response.coverage)
+        writeText(context.directory, "coverage-report.txt", response.coverage.summary + buildCoverageDetails(response.coverage))
         writeJson(context.directory, "response.json", response)
         writeText(context.directory, "structure-map.fml", response.structureMap)
     }
@@ -93,11 +97,9 @@ class OutputStore(
     }
 
     /**
-     * Builds a human-readable error report for error.txt.
-     *
-     * For [MapValidationException] the report includes every per-attempt FML compilation
-     * failure with its reason, so it is immediately clear why each reflexion turn failed.
-     * The full Java stack trace is appended at the bottom for debugging.
+     * Build a readable error report for error.txt.
+     * For FML validation failures, it groups errors by cycle so you can see
+     * what went wrong in each repair attempt.
      */
     private fun buildErrorReport(error: ErrorResponse, ex: Exception): String {
         val sb = StringBuilder()
@@ -116,7 +118,7 @@ class OutputStore(
             sb.appendLine("FML COMPILATION FAILURE TRACE")
             sb.appendLine(thin)
 
-            // Group entries by "[Cycle N]" prefix - one cycle = one LLM repair call
+            // Group errors by cycle number from the "[Cycle N]" prefix
             val byCycle = LinkedHashMap<Int, MutableList<String>>()
             ex.attemptErrors.forEach { entry ->
                 val cycleNum = Regex("""^\[Cycle (\d+)\]""").find(entry)
@@ -161,6 +163,139 @@ class OutputStore(
         sb.appendLine(stackTrace(ex))
 
         return sb.toString()
+    }
+
+    /**
+     * Build a detailed per-item breakdown for the coverage report text file.
+     * Groups items by coverage status with table-like formatting for each category.
+     */
+    private fun buildCoverageDetails(report: CoverageReport): String {
+        val sb = StringBuilder()
+        val sep = "=".repeat(72)
+        val thin = "-".repeat(72)
+
+        val grouped = report.items.groupBy { it.coverageStatus }
+
+        // Category 1: Actively Mapped
+        val mapped = grouped[CoverageStatus.MAPPED].orEmpty()
+        if (mapped.isNotEmpty()) {
+            sb.appendLine(sep)
+            sb.appendLine("CATEGORY 1: ACTIVELY MAPPED IN FML (${mapped.size} items) -- COVERED")
+            sb.appendLine(sep)
+            sb.appendLine()
+            sb.appendLine("%-12s %-50s %s".format("Rule(s)", "What", "FML Handling"))
+            sb.appendLine("%-12s %-50s %s".format("-".repeat(12), "-".repeat(50), "-".repeat(40)))
+            for (item in mapped) {
+                sb.appendLine("%-12s %-50s %s".format(
+                    item.driftItemId,
+                    truncate(item.description, 50),
+                    item.fmlHandling
+                ))
+            }
+            sb.appendLine()
+        }
+
+        // Category 2: No Rule Needed (metadata)
+        val metadata = grouped[CoverageStatus.NO_RULE_NEEDED].orEmpty()
+        if (metadata.isNotEmpty()) {
+            sb.appendLine(sep)
+            sb.appendLine("CATEGORY 2: PROFILE METADATA -- NO FML RULE NEEDED (${metadata.size} items)")
+            sb.appendLine(sep)
+            sb.appendLine()
+            sb.appendLine("These are profile-level metadata that DON'T affect instance data transformation:")
+            sb.appendLine()
+            sb.appendLine("%-12s %-50s %s".format("Rule(s)", "What", "Why no FML needed"))
+            sb.appendLine("%-12s %-50s %s".format("-".repeat(12), "-".repeat(50), "-".repeat(40)))
+            for (item in metadata) {
+                sb.appendLine("%-12s %-50s %s".format(
+                    item.driftItemId,
+                    truncate(item.description, 50),
+                    item.explanation
+                ))
+            }
+            sb.appendLine()
+        }
+
+        // Category 3: Covered by Parent
+        val byParent = grouped[CoverageStatus.COVERED_BY_PARENT].orEmpty()
+        if (byParent.isNotEmpty()) {
+            sb.appendLine(sep)
+            sb.appendLine("CATEGORY 3: COVERED BY PARENT/GROUP MAPPING (${byParent.size} items)")
+            sb.appendLine(sep)
+            sb.appendLine()
+            sb.appendLine("%-12s %-50s %s".format("Rule(s)", "What", "FML Handling"))
+            sb.appendLine("%-12s %-50s %s".format("-".repeat(12), "-".repeat(50), "-".repeat(40)))
+            for (item in byParent) {
+                sb.appendLine("%-12s %-50s %s".format(
+                    item.driftItemId,
+                    truncate(item.description, 50),
+                    item.fmlHandling
+                ))
+            }
+            sb.appendLine()
+        }
+
+        // Category 4: Source Data Loss
+        val sourceLoss = grouped[CoverageStatus.SOURCE_DATA_LOSS].orEmpty()
+        if (sourceLoss.isNotEmpty()) {
+            sb.appendLine(sep)
+            sb.appendLine("CATEGORY 4: SOURCE DATA LOSS -- DROPPED IN TRANSFORMATION (${sourceLoss.size} items)")
+            sb.appendLine(sep)
+            sb.appendLine()
+            sb.appendLine("%-12s %-45s %s".format("Rule(s)", "What", "Why"))
+            sb.appendLine("%-12s %-45s %s".format("-".repeat(12), "-".repeat(45), "-".repeat(45)))
+            for (item in sourceLoss) {
+                sb.appendLine("%-12s %-45s %s".format(
+                    item.driftItemId,
+                    truncate("${item.sourcePath}: ${item.description}", 45),
+                    item.fmlHandling
+                ))
+            }
+            sb.appendLine()
+        }
+
+        // Category 5: Unmappable
+        val unmappable = grouped[CoverageStatus.UNMAPPABLE_NO_SOURCE].orEmpty()
+        if (unmappable.isNotEmpty()) {
+            sb.appendLine(sep)
+            sb.appendLine("CATEGORY 5: UNMAPPABLE -- NO SOURCE DATA (${unmappable.size} items)")
+            sb.appendLine(sep)
+            sb.appendLine()
+            sb.appendLine("%-12s %-45s %s".format("Rule(s)", "What", "Why unmappable"))
+            sb.appendLine("%-12s %-45s %s".format("-".repeat(12), "-".repeat(45), "-".repeat(45)))
+            for (item in unmappable) {
+                sb.appendLine("%-12s %-45s %s".format(
+                    item.driftItemId,
+                    truncate("${item.targetPath}: ${item.description}", 45),
+                    item.explanation
+                ))
+            }
+            sb.appendLine()
+        }
+
+        // Verdict
+        sb.appendLine(sep)
+        sb.appendLine("VERDICT: ${report.verdict}")
+        sb.appendLine(sep)
+        sb.appendLine()
+        sb.appendLine("  ${report.mapped} actively mapped with FML rules")
+        sb.appendLine("  ${report.coveredByParent} covered by parent/group mapping")
+        sb.appendLine("  ${report.noRuleNeeded} correctly handled (profile metadata, no data impact)")
+        if (report.sourceDataLoss > 0) {
+            sb.appendLine("  ${report.sourceDataLoss} source data loss (source-only elements not in target)")
+        }
+        if (report.unmappableNoSource > 0) {
+            sb.appendLine("  ${report.unmappableNoSource} unmappable (target-only elements with no source data)")
+        }
+        sb.appendLine()
+
+        return sb.toString()
+    }
+
+    private fun truncate(text: String, maxLen: Int): String {
+        val singleLine = text.replace("\n", " ").trim()
+        return if (singleLine.length <= maxLen) singleLine
+        else singleLine.take(maxLen - 3) + "..."
     }
 
     private fun createRequestDirectory(requestType: String): Path {
