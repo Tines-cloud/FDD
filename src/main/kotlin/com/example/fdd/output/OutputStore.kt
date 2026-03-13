@@ -280,7 +280,7 @@ class OutputStore(
         val unmappable = grouped[CoverageStatus.UNMAPPABLE_NO_SOURCE].orEmpty()
         if (unmappable.isNotEmpty()) {
             sb.appendLine(sep)
-            sb.appendLine("⚠️  CATEGORY 5b: OPTIONAL -- TARGET-ONLY FIELDS WITH NO SOURCE (${unmappable.size} items)")
+            sb.appendLine(" CATEGORY 5b: OPTIONAL -- TARGET-ONLY FIELDS WITH NO SOURCE (${unmappable.size} items)")
             sb.appendLine("    These target-only fields (min=0) cannot be populated. Resource will still pass validation.")
             sb.appendLine(sep)
             sb.appendLine()
@@ -308,7 +308,7 @@ class OutputStore(
             sb.appendLine("  ${report.sourceDataLoss} source data loss (source-only elements not in target)")
         }
         if (report.criticalUnmappable > 0) {
-            sb.appendLine("  ❌ ${report.criticalUnmappable} CRITICAL unmappable (mandatory target fields min>=1 -- see ACTION REQUIRED in FML)")
+            sb.appendLine(" ${report.criticalUnmappable} CRITICAL unmappable (mandatory target fields min>=1 -- see ACTION REQUIRED in FML)")
         }
         if (report.unmappableNoSource > 0) {
             sb.appendLine("  ${report.unmappableNoSource} optional unmappable (target-only fields min=0, no source data)")

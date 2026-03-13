@@ -95,7 +95,7 @@ class DefaultMapValidator(
             } else emptyList()
             if (regressions.isNotEmpty()) {
                 log.warn("Regression detected: {} line(s) still have errors after LLM fix attempt", regressions.size)
-                regressions.forEach { r -> log.warn("  Line {}: was [{}] → now [{}]", r.lineNum, r.previousError, r.currentError) }
+                regressions.forEach { r -> log.warn("  Line {}: was [{}] -> now [{}]", r.lineNum, r.previousError, r.currentError) }
             }
 
             if (cycle == maxAttempts) break
@@ -139,7 +139,7 @@ class DefaultMapValidator(
     /**
      * Compare errors from the previous cycle with errors from the current cycle.
      * If the same line number has errors in both cycles (even different errors),
-     * it means the LLM's "fix" replaced one error with another — a regression.
+     * it means the LLM's "fix" replaced one error with another - a regression.
      */
     private fun detectRegressions(
         previousFml: String,
@@ -236,7 +236,7 @@ class DefaultMapValidator(
      */
     /**
      * Rewrites known LLM-generated FML anti-patterns into valid HAPI FML syntax.
-     * Runs once before the first validation cycle — zero LLM cost.
+     * Runs once before the first validation cycle - zero LLM cost.
      *
      * Anti-pattern 1: FHIRPath-style `.where()` in source expressions.
      *   INVALID:  src.extension.where(url='http://...') as alias ->
@@ -362,7 +362,7 @@ class DefaultMapValidator(
         }
         val isOscillating = oscillatingErrors.isNotEmpty()
         val hasRegressions = regressions.isNotEmpty()
-        val temperature = if (isOscillating || hasRegressions) 0.4 else 0.1
+        val temperature = if (isOscillating || hasRegressions) 0.3 else 0.1
         if (isOscillating) {
             log.warn("Oscillation detected - {} error(s) already seen in prior cycles, raising temperature to {}", oscillatingErrors.size, temperature)
         }
@@ -472,7 +472,7 @@ for these lines are syntactically wrong.
 $regLines
 
 You MUST write these lines using a fundamentally different FML construct.
-Do NOT try minor variations of the same approach — use a different syntax entirely."""
+Do NOT try minor variations of the same approach - use a different syntax entirely."""
         } else ""
 
         return """
@@ -495,7 +495,7 @@ $currentFml
 - Your fix MUST NOT introduce any new compilation errors on any line.
 - Do NOT reintroduce any error from PREVIOUSLY SEEN ERRORS.
 - If REGRESSION DETECTED is shown, your previous approach for those lines failed TWICE.
-  Use a COMPLETELY DIFFERENT FML construct — not a minor variation.
+  Use a COMPLETELY DIFFERENT FML construct - not a minor variation.
 - The lines marked with >>> in ERROR LOCATION show exactly where the error is.
 - "Complex rules must have an explicit name" means: every rule that uses
   `then` or maps source->target MUST end with a quoted name string before

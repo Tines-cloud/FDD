@@ -95,10 +95,10 @@ class DefaultDriftOrchestrationService(
             val actionBlock = buildString {
                 appendLine()
                 appendLine("// ============================================================")
-                appendLine("// ⚠️  ACTION REQUIRED: MANDATORY TARGET FIELDS WITH NO SOURCE DATA")
+                appendLine("//  ACTION REQUIRED: MANDATORY TARGET FIELDS WITH NO SOURCE DATA")
                 appendLine("// The following ${requiredItems.size} field(s) are required (min>=1) in the")
                 appendLine("// target profile but have no equivalent in the source.")
-                appendLine("// The FML above leaves them EMPTY — the transformed resource WILL")
+                appendLine("// The FML above leaves them EMPTY - the transformed resource WILL")
                 appendLine("// FAIL target-profile validation unless you add rules below.")
                 appendLine("//")
                 appendLine("// HOW TO FIX  (add one rule per field inside the group block):")

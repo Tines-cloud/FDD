@@ -19,7 +19,7 @@ from earlier versions that you must NOT reintroduce.
 If you see "REGRESSION DETECTED", it means your fix for a specific line replaced
 one error with a DIFFERENT error on the SAME line. Both your old and new versions
 of that line are wrong. You MUST use a fundamentally different FML syntax or
-construct for that line — not a minor variation of the same approach.
+construct for that line - not a minor variation of the same approach.
 
 Your fix MUST NOT introduce any new compilation errors. If you are unsure about
 the correct syntax, use a simpler construct that you know is valid.
@@ -64,7 +64,7 @@ Every rule MUST follow this pattern:
 - String quoting -> double quotes for URLs/names/rule-names, single quotes for literal values
 - "Found ... expecting a token name" -> usually means a syntax error on that line:
   check for missing quotes, invalid characters, or malformed expressions.
-  COMMON CAUSE: using FHIRPath .where() function in a source path — this is NOT valid FML.
+  COMMON CAUSE: using FHIRPath .where() function in a source path - this is NOT valid FML.
   INCORRECT: src.extension.where(url='http://...') as ext -> ...
   CORRECT:   src.extension as ext where ext.url = 'http://...' -> ...
 - "Found ... expecting ';'" -> previous rule is missing its semicolon or quoted name
