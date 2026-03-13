@@ -1,0 +1,68 @@
+{
+  "resourceType": "Procedure",
+  "id": "r4-procedure-001",
+  "meta": {
+    "profile": [
+      "http://hl7.org/fhir/StructureDefinition/Procedure"
+    ]
+  },
+  "status": "completed",
+  "code": {
+    "coding": [
+      {
+        "system": "http://snomed.info/sct",
+        "code": "80146002",
+        "display": "Appendectomy"
+      }
+    ],
+    "text": "Appendectomy"
+  },
+  "subject": {
+    "reference": "Patient/r4-patient-001",
+    "display": "James Williams"
+  },
+  "encounter": {
+    "reference": "Encounter/r4-encounter-001"
+  },
+  "performedPeriod": {
+    "start": "2025-08-10T14:00:00+00:00",
+    "end": "2025-08-10T15:30:00+00:00"
+  },
+  "performer": [
+    {
+      "function": {
+        "coding": [
+          {
+            "system": "http://snomed.info/sct",
+            "code": "304292004",
+            "display": "Surgeon"
+          }
+        ]
+      },
+      "actor": {
+        "reference": "Practitioner/r4-practitioner-001",
+        "display": "Dr. Emily Chen"
+      }
+    }
+  ],
+  "bodySite": [
+    {
+      "coding": [
+        {
+          "system": "http://snomed.info/sct",
+          "code": "66754008",
+          "display": "Appendix structure"
+        }
+      ]
+    }
+  ],
+  "outcome": {
+    "coding": [
+      {
+        "system": "http://snomed.info/sct",
+        "code": "385669000",
+        "display": "Successful"
+      }
+    ]
+  }
+}

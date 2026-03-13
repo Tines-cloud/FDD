@@ -7,15 +7,15 @@ Profile files used by FHIR Drift Doctor are stored at the classpath roots below:
 
 ```
 src/main/resources/
-├── custom-profiles/
-│   ├── tk-soft/        # TK-Soft organisation custom profiles (14 profiles)
-│   ├── iit-proj/       # IIT Project custom profiles         (14 profiles)
-│   └── hemas/          # Hemas organisation custom profiles  (14 profiles)
-└── standard-profiles/
-    ├── r4/             # Base FHIR R4 StructureDefinitions   (14 profiles)
-    ├── r5/             # Base FHIR R5 StructureDefinitions   (14 profiles)
-    ├── us-core/        # US Core IG profiles                 (14 profiles)
-    └── au-core/        # AU Core IG profiles                 (11 profiles)
+├-- custom-profiles/
+│   ├-- tk-soft/        # TK-Soft organisation custom profiles (14 profiles)
+│   ├-- iit-proj/       # IIT Project custom profiles         (14 profiles)
+│   └-- hemas/          # Hemas organisation custom profiles  (14 profiles)
+└-- standard-profiles/
+    ├-- r4/             # Base FHIR R4 StructureDefinitions   (14 profiles)
+    ├-- r5/             # Base FHIR R5 StructureDefinitions   (14 profiles)
+    ├-- us-core/        # US Core IG profiles                 (14 profiles)
+    └-- au-core/        # AU Core IG profiles                 (11 profiles)
 ```
 
 ## Profile Loading

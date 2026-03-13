@@ -65,7 +65,7 @@ class DefaultMapValidator(
             // Auto-fix "Complex rules must have an explicit name" errors (free, no LLM cost)
             currentFml = autoFixRuleNames(currentFml)
 
-            // ── Scan for ALL errors (free, no LLM cost) ──
+            // -- Scan for ALL errors (free, no LLM cost) --
             val errors = collectAllErrors(currentFml)
 
             if (errors.isEmpty()) {
@@ -103,7 +103,7 @@ class DefaultMapValidator(
             // Save state before LLM fix for regression detection in the next cycle
             fmlByCycle.add(currentFml)
 
-            // ── Send ALL errors to LLM in ONE call ──
+            // -- Send ALL errors to LLM in ONE call --
             val turnNum = conversationHistory.size + 1
             log.info("Reflexion turn {}: sending ALL {} error(s) in one LLM call", turnNum, errors.size)
             currentFml = reflexion(currentFml, errors, source, target, driftReport, conversationHistory, errorsByCycle.toList(), regressions)

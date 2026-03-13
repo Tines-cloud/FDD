@@ -1,0 +1,43 @@
+{
+  "resourceType": "Location",
+  "id": "r4-location-001",
+  "meta": {
+    "profile": [
+      "http://hl7.org/fhir/StructureDefinition/Location"
+    ]
+  },
+  "status": "active",
+  "name": "General Practice Clinic",
+  "description": "Outpatient general practice clinic on the first floor",
+  "mode": "instance",
+  "type": [
+    {
+      "coding": [
+        {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+          "code": "OF",
+          "display": "Outpatient facility"
+        }
+      ]
+    }
+  ],
+  "telecom": [
+    {
+      "system": "phone",
+      "value": "555-234-5678",
+      "use": "work"
+    }
+  ],
+  "address": {
+    "use": "work",
+    "line": ["200 Hospital Drive", "Floor 1"],
+    "city": "Springfield",
+    "state": "IL",
+    "postalCode": "62702",
+    "country": "US"
+  },
+  "managingOrganization": {
+    "reference": "Organization/r4-organization-001",
+    "display": "Springfield General Hospital"
+  }
+}
