@@ -14,7 +14,7 @@ spring:
 fdd:
   ai:
     provider: gemini
-    temperature: 0.1         # Lower temperature for reproducibility
+    temperature: 0.1
 
     openai:
       api-key: ${OPENAI_API_KEY:}
@@ -36,14 +36,14 @@ fdd:
       base-url: https://api.mistral.ai/v1
 
   validation:
-    max-attempts: 5          # More attempts for experiments
+    max-attempts: 5
 
   cache:
     enabled: true
     ttl-minutes: 60
     directory: .fdd-cache
 
-# ---- Logging (verbose for experiment analysis) ----
+# ---- Logging  ----
 logging:
   level:
     com.example.fdd: DEBUG

@@ -3,9 +3,8 @@ spring:
     name: fdd
 
   # ---- Disable ALL Spring AI auto-configurations ----
-  # We manage ChatModel bean creation manually in AiConfig.
-  # This prevents multiple ChatModel beans from being created simultaneously
-  # when multiple AI provider starters are on the classpath.
+  # Manage ChatModel bean creation manually in AiConfig. This prevents multiple ChatModel beans from being created
+  # simultaneously when multiple AI provider starters are on the classpath.
   autoconfigure:
     exclude:
       - org.springframework.ai.autoconfigure.openai.OpenAiAutoConfiguration

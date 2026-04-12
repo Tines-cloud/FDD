@@ -11,7 +11,7 @@ spring:
       - org.springframework.ai.autoconfigure.openai.OpenAiAutoConfiguration
       - org.springframework.ai.autoconfigure.anthropic.AnthropicAutoConfiguration
 
-# Quieter logging for CLI - only warnings and errors from libraries
+# Logging
 logging:
   level:
     root: WARN
