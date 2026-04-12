@@ -78,14 +78,16 @@ class Experiment2SyntacticValidityTest {
             } catch (ex: Exception) {
                 log.error("Failed for pair {}: {}", gold.pairId, ex.message)
                 totalGenerated++
-                results.add(PairResult(
-                    pairId = gold.pairId,
-                    valid = false,
-                    messages = listOf("Exception: ${ex.message}"),
-                    driftItemCount = 0,
-                    dataShareabilityPercent = 0.0,
-                    repairCycles = 0
-                ))
+                results.add(
+                    PairResult(
+                        pairId = gold.pairId,
+                        valid = false,
+                        messages = listOf("Exception: ${ex.message}"),
+                        driftItemCount = 0,
+                        dataShareabilityPercent = 0.0,
+                        repairCycles = 0
+                    )
+                )
             }
         }
 
@@ -95,9 +97,11 @@ class Experiment2SyntacticValidityTest {
         log.info("  EXPERIMENT 2 - Syntactic Validity Rate")
         log.info("---------------------------------------------------")
         results.forEach { r ->
-            log.info("  {} -> valid: {}  drifts: {}  shareability: {}%  messages: {}",
+            log.info(
+                "  {} -> valid: {}  drifts: {}  shareability: {}%  messages: {}",
                 r.pairId, r.valid, r.driftItemCount,
-                "%.1f".format(r.dataShareabilityPercent), r.messages.size)
+                "%.1f".format(r.dataShareabilityPercent), r.messages.size
+            )
         }
         log.info("---------------------------------------------------")
         log.info("  Validity Rate: {}% ({}/{})", "%.1f".format(validityRate * 100), totalValid, totalGenerated)

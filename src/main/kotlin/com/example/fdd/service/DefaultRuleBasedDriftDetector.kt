@@ -457,7 +457,7 @@ class DefaultRuleBasedDriftDetector : RuleBasedDriftDetector {
                             "Slice '${src.sliceName}' removed in target profile"
                         else
                             "Element removed in target profile: $path" +
-                                (if (src.min > 0) " (was required)" else if (src.mustSupport) " (was mustSupport)" else ""),
+                                    (if (src.min > 0) " (was required)" else if (src.mustSupport) " (was mustSupport)" else ""),
                         severity = removedSeverity
                     )
                 )

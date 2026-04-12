@@ -47,10 +47,14 @@ class CoverageAnalyzer {
         val shareabilityPercent = if (dataItems > 0) (shareable.toDouble() / dataItems * 100) else 100.0
         val roundedPercent = Math.round(shareabilityPercent * 10) / 10.0
 
-        val verdict = buildVerdict(items.size, mapped, coveredByParent, noRuleNeeded,
-            sourceDataLoss, unmappable, criticalUnmappable)
-        val summary = buildSummary(items.size, mapped, coveredByParent, noRuleNeeded,
-            sourceDataLoss, unmappable, criticalUnmappable, roundedPercent, verdict)
+        val verdict = buildVerdict(
+            items.size, mapped, coveredByParent, noRuleNeeded,
+            sourceDataLoss, unmappable, criticalUnmappable
+        )
+        val summary = buildSummary(
+            items.size, mapped, coveredByParent, noRuleNeeded,
+            sourceDataLoss, unmappable, criticalUnmappable, roundedPercent, verdict
+        )
 
         log.info(
             "Coverage analysis: {} total, {} mapped, {} by-parent, {} metadata, {} source-loss, {} unmappable ({} critical), {}% shareable",
@@ -60,7 +64,7 @@ class CoverageAnalyzer {
         if (criticalUnmappable > 0) {
             log.warn(
                 "CRITICAL: {} target field(s) are required (min>=1) but have no source equivalent. " +
-                    "Leaving them empty will cause target-profile validation failure.",
+                        "Leaving them empty will cause target-profile validation failure.",
                 criticalUnmappable
             )
         }
@@ -82,7 +86,12 @@ class CoverageAnalyzer {
 
     /* ---------- Classification ---------- */
 
-    private fun classify(item: DriftItem, fml: String, fmlGroups: List<FmlGroup>, targetSd: StructureDefinition?): CoverageItem {
+    private fun classify(
+        item: DriftItem,
+        fml: String,
+        fmlGroups: List<FmlGroup>,
+        targetSd: StructureDefinition?
+    ): CoverageItem {
         val desc = item.description.lowercase()
         val src = item.sourcePath.trim()
         val tgt = item.targetPath.trim()
@@ -93,8 +102,15 @@ class CoverageAnalyzer {
                 desc.contains("mustsupport") -> "MustSupport is a conformance flag, not instance data"
                 desc.contains("constraints removed") || desc.contains("constraints added") ->
                     "Constraints are profile validation rules, not instance data"
-                profileMetadataExtensions.any { ext -> desc.contains(ext, ignoreCase = true) || tgt.contains(ext, ignoreCase = true) } ->
+
+                profileMetadataExtensions.any { ext ->
+                    desc.contains(ext, ignoreCase = true) || tgt.contains(
+                        ext,
+                        ignoreCase = true
+                    )
+                } ->
                     "Profile-level signaling extension, does not appear in instance data"
+
                 else -> "Profile-level metadata, does not affect instance data transformation"
             }
             return item.toCoverage(CoverageStatus.NO_RULE_NEEDED, reason, "No FML rule needed")
@@ -110,6 +126,7 @@ class CoverageAnalyzer {
                     if (group != null) "Generic ${group.name} mapping catches the data"
                     else "FML omission = correct behavior (no target element exists)"
                 }
+
                 desc.contains("element removed") -> "Source-only element - FML correctly omits it"
                 else -> "FML omission = correct behavior (element does not exist in target)"
             }
@@ -127,7 +144,7 @@ class CoverageAnalyzer {
                 item.toCoverage(
                     CoverageStatus.UNMAPPABLE_REQUIRED,
                     "Target-only REQUIRED extension (min=$tgtMin) - no source equivalent. " +
-                        "Transformed resource will fail validation without this field.",
+                            "Transformed resource will fail validation without this field.",
                     "ACTION REQUIRED: add default-value FML rule",
                     tgtMin
                 )
@@ -135,7 +152,7 @@ class CoverageAnalyzer {
                 item.toCoverage(
                     CoverageStatus.UNMAPPABLE_NO_SOURCE,
                     "Target-only extension - no equivalent data exists in the source profile. " +
-                        "Must be populated out-of-band or by a separate data source",
+                            "Must be populated out-of-band or by a separate data source",
                     "Cannot be auto-populated (no source data)"
                 )
             }
@@ -166,7 +183,7 @@ class CoverageAnalyzer {
                 item.toCoverage(
                     CoverageStatus.UNMAPPABLE_REQUIRED,
                     "Target-only REQUIRED element (min=$tgtMin) - no source equivalent. " +
-                        "Transformed resource will fail validation without this field.",
+                            "Transformed resource will fail validation without this field.",
                     "ACTION REQUIRED: add default-value FML rule",
                     tgtMin
                 )
@@ -231,14 +248,19 @@ class CoverageAnalyzer {
         return when {
             driftType == "TERMINOLOGY" && desc.contains("binding changed") ->
                 "${group.name} with translate() for value set conversion"
+
             driftType == "STRUCTURAL" && desc.contains("type profile constraint changed") ->
                 "${group.name} group rewrites type/URL"
+
             driftType == "STRUCTURAL" && desc.contains("slicing changed") ->
                 "Maps generically (slicing removed in target)"
+
             driftType == "CARDINALITY" ->
                 "Direct copy (${if (desc.contains("[1..1] -> [0..1]")) "relaxed" else "changed"} cardinality = safe)"
+
             driftType == "EXTENSION" && desc.contains("extension") && desc.contains("url") ->
                 "${group.name} group rewrites extension URL"
+
             else -> "${group.name} group handles this mapping"
         }
     }
@@ -333,7 +355,7 @@ class CoverageAnalyzer {
         val elementChain = cleanPath.substring(dotIdx + 1)
         val leaf = elementChain.substringAfterLast('.')
         return fml.contains("src.$leaf") || fml.contains("tgt.$leaf") ||
-            fml.contains("src.$elementChain") || fml.contains("tgt.$elementChain")
+                fml.contains("src.$elementChain") || fml.contains("tgt.$elementChain")
     }
 
     private fun parentFhirPath(path: String): String? {
@@ -380,7 +402,7 @@ class CoverageAnalyzer {
             val issues = sourceDataLoss + unmappable + criticalUnmappable
             val critNote = if (criticalUnmappable > 0) " [$criticalUnmappable CRITICAL]" else ""
             "$actionable/$total drifts handled, $issues require attention$critNote " +
-                "($sourceDataLoss source data loss, ${unmappable + criticalUnmappable} unmappable)"
+                    "($sourceDataLoss source data loss, ${unmappable + criticalUnmappable} unmappable)"
         }
     }
 
@@ -429,7 +451,7 @@ class CoverageAnalyzer {
                 shareabilityPercent >= 85.0 -> appendLine("    \u2705 EXCELLENT \u2014 meets USCDI/ONC certification requirements (>=85%)")
                 shareabilityPercent >= 70.0 -> appendLine("    \u2705 GOOD \u2014 meets HL7 IPS and most national IG standards (>=70%)")
                 shareabilityPercent >= 60.0 -> appendLine("    \u26a0  ACCEPTABLE for cross-national or exploratory mapping (>=60%)")
-                else                        -> appendLine("    \u274c BELOW BASELINE \u2014 review profile compatibility (<60%)")
+                else -> appendLine("    \u274c BELOW BASELINE \u2014 review profile compatibility (<60%)")
             }
             appendLine()
             if (criticalUnmappable > 0) {

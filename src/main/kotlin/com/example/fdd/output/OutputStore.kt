@@ -83,7 +83,11 @@ class OutputStore(
         writeJson(context.directory, "drift-report.json", response.driftReport)
         writeJson(context.directory, "validation.json", response.validation)
         writeJson(context.directory, "coverage-report.json", response.coverage)
-        writeText(context.directory, "coverage-report.txt", response.coverage.summary + buildCoverageDetails(response.coverage))
+        writeText(
+            context.directory,
+            "coverage-report.txt",
+            response.coverage.summary + buildCoverageDetails(response.coverage)
+        )
         writeJson(context.directory, "response.json", response)
         writeText(context.directory, "structure-map.fml", response.structureMap)
     }
@@ -186,11 +190,13 @@ class OutputStore(
             sb.appendLine("%-12s %-50s %s".format("Rule(s)", "What", "FML Handling"))
             sb.appendLine("%-12s %-50s %s".format("-".repeat(12), "-".repeat(50), "-".repeat(40)))
             for (item in mapped) {
-                sb.appendLine("%-12s %-50s %s".format(
-                    item.driftItemId,
-                    truncate(item.description, 50),
-                    item.fmlHandling
-                ))
+                sb.appendLine(
+                    "%-12s %-50s %s".format(
+                        item.driftItemId,
+                        truncate(item.description, 50),
+                        item.fmlHandling
+                    )
+                )
             }
             sb.appendLine()
         }
@@ -207,11 +213,13 @@ class OutputStore(
             sb.appendLine("%-12s %-50s %s".format("Rule(s)", "What", "Why no FML needed"))
             sb.appendLine("%-12s %-50s %s".format("-".repeat(12), "-".repeat(50), "-".repeat(40)))
             for (item in metadata) {
-                sb.appendLine("%-12s %-50s %s".format(
-                    item.driftItemId,
-                    truncate(item.description, 50),
-                    item.explanation
-                ))
+                sb.appendLine(
+                    "%-12s %-50s %s".format(
+                        item.driftItemId,
+                        truncate(item.description, 50),
+                        item.explanation
+                    )
+                )
             }
             sb.appendLine()
         }
@@ -226,11 +234,13 @@ class OutputStore(
             sb.appendLine("%-12s %-50s %s".format("Rule(s)", "What", "FML Handling"))
             sb.appendLine("%-12s %-50s %s".format("-".repeat(12), "-".repeat(50), "-".repeat(40)))
             for (item in byParent) {
-                sb.appendLine("%-12s %-50s %s".format(
-                    item.driftItemId,
-                    truncate(item.description, 50),
-                    item.fmlHandling
-                ))
+                sb.appendLine(
+                    "%-12s %-50s %s".format(
+                        item.driftItemId,
+                        truncate(item.description, 50),
+                        item.fmlHandling
+                    )
+                )
             }
             sb.appendLine()
         }
@@ -245,11 +255,13 @@ class OutputStore(
             sb.appendLine("%-12s %-45s %s".format("Rule(s)", "What", "Why"))
             sb.appendLine("%-12s %-45s %s".format("-".repeat(12), "-".repeat(45), "-".repeat(45)))
             for (item in sourceLoss) {
-                sb.appendLine("%-12s %-45s %s".format(
-                    item.driftItemId,
-                    truncate("${item.sourcePath}: ${item.description}", 45),
-                    item.fmlHandling
-                ))
+                sb.appendLine(
+                    "%-12s %-45s %s".format(
+                        item.driftItemId,
+                        truncate("${item.sourcePath}: ${item.description}", 45),
+                        item.fmlHandling
+                    )
+                )
             }
             sb.appendLine()
         }
@@ -266,12 +278,14 @@ class OutputStore(
             sb.appendLine("%-12s %-8s %-45s %s".format("ID", "min", "Target path: description", "Reason"))
             sb.appendLine("%-12s %-8s %-45s %s".format("-".repeat(12), "-".repeat(8), "-".repeat(45), "-".repeat(40)))
             for (item in requiredUnmappable) {
-                sb.appendLine("%-12s %-8s %-45s %s".format(
-                    item.driftItemId,
-                    "min=${item.targetMin}",
-                    truncate("${item.targetPath}: ${item.description}", 45),
-                    item.explanation
-                ))
+                sb.appendLine(
+                    "%-12s %-8s %-45s %s".format(
+                        item.driftItemId,
+                        "min=${item.targetMin}",
+                        truncate("${item.targetPath}: ${item.description}", 45),
+                        item.explanation
+                    )
+                )
             }
             sb.appendLine()
         }
@@ -287,11 +301,13 @@ class OutputStore(
             sb.appendLine("%-12s %-45s %s".format("Rule(s)", "What", "Why unmappable"))
             sb.appendLine("%-12s %-45s %s".format("-".repeat(12), "-".repeat(45), "-".repeat(45)))
             for (item in unmappable) {
-                sb.appendLine("%-12s %-45s %s".format(
-                    item.driftItemId,
-                    truncate("${item.targetPath}: ${item.description}", 45),
-                    item.explanation
-                ))
+                sb.appendLine(
+                    "%-12s %-45s %s".format(
+                        item.driftItemId,
+                        truncate("${item.targetPath}: ${item.description}", 45),
+                        item.explanation
+                    )
+                )
             }
             sb.appendLine()
         }

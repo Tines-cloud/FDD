@@ -25,7 +25,9 @@
     ]
   },
   "type": "allergy",
-  "category": ["medication"],
+  "category": [
+    "medication"
+  ],
   "criticality": "high",
   "code": {
     "coding": [

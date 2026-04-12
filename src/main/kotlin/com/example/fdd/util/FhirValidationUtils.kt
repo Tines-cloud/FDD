@@ -2,6 +2,7 @@ package com.example.fdd.util
 
 import com.example.fdd.util.FhirValidationUtils.downgradablePatterns
 import com.example.fdd.util.FhirValidationUtils.isDowngradableError
+
 /**
  * Shared FHIR validation utilities used across [DefaultProfileLoader] and [ProfileValidationService].
  *

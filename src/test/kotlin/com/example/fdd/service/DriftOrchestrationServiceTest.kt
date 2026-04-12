@@ -10,7 +10,6 @@ import com.example.fdd.model.DriftItem
 import com.example.fdd.model.DriftReport
 import com.example.fdd.model.DriftType
 import com.example.fdd.model.MapGenerationResult
-import com.example.fdd.service.CoverageAnalyzer
 import com.example.fdd.validation.DriftProfileValidator
 import com.example.fdd.validation.MapValidator
 import org.hl7.fhir.r4.model.StructureDefinition
@@ -91,7 +90,14 @@ class DriftOrchestrationServiceTest {
         mapValidator = mock()
         coverageAnalyzer = CoverageAnalyzer()
         orchestrator =
-            DefaultDriftOrchestrationService(profileLoader, driftValidator, driftAnalyzer, mapGenerator, mapValidator, coverageAnalyzer)
+            DefaultDriftOrchestrationService(
+                profileLoader,
+                driftValidator,
+                driftAnalyzer,
+                mapGenerator,
+                mapValidator,
+                coverageAnalyzer
+            )
     }
 
     /* ---------------- analyzeDrift() ---------------- */

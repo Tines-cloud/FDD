@@ -30,7 +30,10 @@
   ],
   "address": {
     "use": "work",
-    "line": ["200 Hospital Drive", "Floor 1"],
+    "line": [
+      "200 Hospital Drive",
+      "Floor 1"
+    ],
     "city": "Springfield",
     "state": "IL",
     "postalCode": "62702",

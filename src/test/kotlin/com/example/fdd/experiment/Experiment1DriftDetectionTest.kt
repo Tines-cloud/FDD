@@ -80,7 +80,8 @@ class Experiment1DriftDetectionTest {
             )
         }
         log.info("-------------------------------------------------------------------")
-        log.info("  Average: P={}  R={}  F1={}",
+        log.info(
+            "  Average: P={}  R={}  F1={}",
             "%.3f".format(avgPrecision),
             "%.3f".format(avgRecall),
             "%.3f".format(avgF1)

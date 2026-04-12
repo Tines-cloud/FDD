@@ -53,9 +53,10 @@ separate ValidationSupportChain, parser, and validator instances. R5 profiles ar
 automatically detected and validated using the R5 pipeline.
 
 **AI cost per repair request:** Drift analysis (1 LLM call) + Map generation (1 LLM call)
+
 + Reflexion (0-2 LLM calls, only if compilation fails) + Coverage analysis (0 calls)
 + autoFixRuleNames (0 calls) = **2-4 LLM calls total** (typically 2 if generation succeeds
-on first compile).
+  on first compile).
 
 ---
 
@@ -162,6 +163,7 @@ You can **mix and match** - e.g. source from a local file, target from a URL.
 ---
 
 ## 1. Swagger UI (Browser)
+
 ~~~~
 1. Start the server:
    ```powershell

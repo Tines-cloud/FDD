@@ -221,7 +221,8 @@ class Experiment3SemanticCorrectnessTest {
         log.info("  EXPERIMENT 3 - End-to-End Semantic Correctness")
         log.info("---------------------------------------------------------------------")
         results.forEach { r ->
-            log.info("  {} -> pipeline={} map={} posted={} uploaded={} transform={} valid={} SUCCESS={}",
+            log.info(
+                "  {} -> pipeline={} map={} posted={} uploaded={} transform={} valid={} SUCCESS={}",
                 r.caseId,
                 if (r.pipelineSuccess) "OK" else "FAIL",
                 if (r.syntacticallyValid) "OK" else "FAIL",
@@ -236,7 +237,8 @@ class Experiment3SemanticCorrectnessTest {
             }
         }
         log.info("-------------------------------------------------------------------")
-        log.info("  Semantic Correctness Rate (SCR): {}% ({}/{})",
+        log.info(
+            "  Semantic Correctness Rate (SCR): {}% ({}/{})",
             "%.1f".format(scr), successfulCases, totalCases
         )
         log.info("---------------------------------------------------------------------")
@@ -263,9 +265,11 @@ class Experiment3SemanticCorrectnessTest {
             if (instanceJson == null) {
                 errorMessage = "Synthetic instance not found: ${testCase.instanceFile}"
                 log.warn(errorMessage)
-                return buildResult(testCase, pipelineSuccess, syntacticallyValid, instancePosted,
+                return buildResult(
+                    testCase, pipelineSuccess, syntacticallyValid, instancePosted,
                     structureMapUploaded, transformExecuted, transformedResourceValid,
-                    driftItemCount, dataShareabilityPercent, errorMessage)
+                    driftItemCount, dataShareabilityPercent, errorMessage
+                )
             }
 
             // Step 2: Run full FDD pipeline
@@ -278,9 +282,11 @@ class Experiment3SemanticCorrectnessTest {
             } catch (ex: Exception) {
                 errorMessage = "Pipeline failed: ${ex.message}"
                 log.warn("FDD pipeline failed for {}: {}", testCase.id, ex.message)
-                return buildResult(testCase, pipelineSuccess, syntacticallyValid, instancePosted,
+                return buildResult(
+                    testCase, pipelineSuccess, syntacticallyValid, instancePosted,
                     structureMapUploaded, transformExecuted, transformedResourceValid,
-                    driftItemCount, dataShareabilityPercent, errorMessage)
+                    driftItemCount, dataShareabilityPercent, errorMessage
+                )
             }
 
             pipelineSuccess = true
@@ -288,14 +294,18 @@ class Experiment3SemanticCorrectnessTest {
             driftItemCount = driftReport.totalDrifts
             dataShareabilityPercent = coverageReport.dataShareabilityPercent
 
-            log.info("Pipeline complete: {} drifts, valid={}, shareability={}%",
-                driftItemCount, syntacticallyValid, "%.1f".format(dataShareabilityPercent))
+            log.info(
+                "Pipeline complete: {} drifts, valid={}, shareability={}%",
+                driftItemCount, syntacticallyValid, "%.1f".format(dataShareabilityPercent)
+            )
 
             if (!syntacticallyValid) {
                 errorMessage = "FML not syntactically valid after repair cycles"
-                return buildResult(testCase, pipelineSuccess, syntacticallyValid, instancePosted,
+                return buildResult(
+                    testCase, pipelineSuccess, syntacticallyValid, instancePosted,
                     structureMapUploaded, transformExecuted, transformedResourceValid,
-                    driftItemCount, dataShareabilityPercent, errorMessage)
+                    driftItemCount, dataShareabilityPercent, errorMessage
+                )
             }
 
             // Step 3: POST source instance to HAPI server
@@ -304,9 +314,11 @@ class Experiment3SemanticCorrectnessTest {
             if (!instancePosted) {
                 errorMessage = "Failed to POST ${testCase.resourceType}: HTTP ${postResponse.statusCode()}"
                 log.warn(errorMessage)
-                return buildResult(testCase, pipelineSuccess, syntacticallyValid, instancePosted,
+                return buildResult(
+                    testCase, pipelineSuccess, syntacticallyValid, instancePosted,
                     structureMapUploaded, transformExecuted, transformedResourceValid,
-                    driftItemCount, dataShareabilityPercent, errorMessage)
+                    driftItemCount, dataShareabilityPercent, errorMessage
+                )
             }
             log.info("Source {} posted to HAPI server (HTTP {})", testCase.resourceType, postResponse.statusCode())
 
@@ -319,7 +331,7 @@ class Experiment3SemanticCorrectnessTest {
                 // fully-parsed StructureMap resources, not raw FML content fields.
                 // This is a known limitation - count pipeline+instance success as partial pass.
                 errorMessage = "StructureMap upload: HTTP ${smResponse.statusCode()} - " +
-                    "HAPI JPA may not support raw FML content field"
+                        "HAPI JPA may not support raw FML content field"
                 log.warn("StructureMap upload failed for {}: HTTP {}", testCase.id, smResponse.statusCode())
             } else {
                 log.info("StructureMap uploaded to HAPI server")
@@ -347,9 +359,11 @@ class Experiment3SemanticCorrectnessTest {
             log.error("Unexpected error in test case {}", testCase.id, ex)
         }
 
-        return buildResult(testCase, pipelineSuccess, syntacticallyValid, instancePosted,
+        return buildResult(
+            testCase, pipelineSuccess, syntacticallyValid, instancePosted,
             structureMapUploaded, transformExecuted, transformedResourceValid,
-            driftItemCount, dataShareabilityPercent, errorMessage)
+            driftItemCount, dataShareabilityPercent, errorMessage
+        )
     }
 
     /* ================================================================

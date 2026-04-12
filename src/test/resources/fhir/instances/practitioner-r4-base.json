@@ -17,8 +17,13 @@
     {
       "use": "official",
       "family": "Chen",
-      "given": ["Emily", "Marie"],
-      "prefix": ["Dr."]
+      "given": [
+        "Emily",
+        "Marie"
+      ],
+      "prefix": [
+        "Dr."
+      ]
     }
   ],
   "telecom": [
@@ -36,7 +41,10 @@
   "address": [
     {
       "use": "work",
-      "line": ["200 Hospital Drive", "Suite 300"],
+      "line": [
+        "200 Hospital Drive",
+        "Suite 300"
+      ],
       "city": "Springfield",
       "state": "IL",
       "postalCode": "62702",

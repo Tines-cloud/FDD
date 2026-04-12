@@ -32,5 +32,8 @@ interface DriftOrchestrationService {
      * @param target Identifies the target FHIR profile (JSON, URL, or canonical).
      * @return A triple of the [DriftReport], the validated [MapGenerationResult], and the [CoverageReport].
      */
-    fun analyzeAndRepair(source: ProfileInput, target: ProfileInput): Triple<DriftReport, MapGenerationResult, CoverageReport>
+    fun analyzeAndRepair(
+        source: ProfileInput,
+        target: ProfileInput
+    ): Triple<DriftReport, MapGenerationResult, CoverageReport>
 }

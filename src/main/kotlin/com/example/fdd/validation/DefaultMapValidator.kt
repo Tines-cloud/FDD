@@ -95,7 +95,14 @@ class DefaultMapValidator(
             } else emptyList()
             if (regressions.isNotEmpty()) {
                 log.warn("Regression detected: {} line(s) still have errors after LLM fix attempt", regressions.size)
-                regressions.forEach { r -> log.warn("  Line {}: was [{}] -> now [{}]", r.lineNum, r.previousError, r.currentError) }
+                regressions.forEach { r ->
+                    log.warn(
+                        "  Line {}: was [{}] -> now [{}]",
+                        r.lineNum,
+                        r.previousError,
+                        r.currentError
+                    )
+                }
             }
 
             if (cycle == maxAttempts) break
@@ -106,7 +113,16 @@ class DefaultMapValidator(
             // -- Send ALL errors to LLM in ONE call --
             val turnNum = conversationHistory.size + 1
             log.info("Reflexion turn {}: sending ALL {} error(s) in one LLM call", turnNum, errors.size)
-            currentFml = reflexion(currentFml, errors, source, target, driftReport, conversationHistory, errorsByCycle.toList(), regressions)
+            currentFml = reflexion(
+                currentFml,
+                errors,
+                source,
+                target,
+                driftReport,
+                conversationHistory,
+                errorsByCycle.toList(),
+                regressions
+            )
             // Save this cycle's errors so the next follow-up can warn the LLM not to revert
             errorsByCycle.add(errors)
         }
@@ -255,8 +271,8 @@ class DefaultMapValidator(
             """(\S+)\.where\((\w+)='([^']*)'\)\s+as\s+(\w+)"""
         )
         result = withAlias.replace(result) { m ->
-            val base  = m.groupValues[1]
-            val prop  = m.groupValues[2]
+            val base = m.groupValues[1]
+            val prop = m.groupValues[2]
             val value = m.groupValues[3]
             val alias = m.groupValues[4]
             rewrites++
@@ -268,8 +284,8 @@ class DefaultMapValidator(
             """(\S+)\.where\((\w+)=\"([^\"]*)\"\)\s+as\s+(\w+)"""
         )
         result = withAliasDouble.replace(result) { m ->
-            val base  = m.groupValues[1]
-            val prop  = m.groupValues[2]
+            val base = m.groupValues[1]
+            val prop = m.groupValues[2]
             val value = m.groupValues[3]
             val alias = m.groupValues[4]
             rewrites++
@@ -364,10 +380,18 @@ class DefaultMapValidator(
         val hasRegressions = regressions.isNotEmpty()
         val temperature = if (isOscillating || hasRegressions) 0.3 else 0.1
         if (isOscillating) {
-            log.warn("Oscillation detected - {} error(s) already seen in prior cycles, raising temperature to {}", oscillatingErrors.size, temperature)
+            log.warn(
+                "Oscillation detected - {} error(s) already seen in prior cycles, raising temperature to {}",
+                oscillatingErrors.size,
+                temperature
+            )
         }
         if (hasRegressions) {
-            log.warn("Line-level regression detected on {} line(s), raising temperature to {}", regressions.size, temperature)
+            log.warn(
+                "Line-level regression detected on {} line(s), raising temperature to {}",
+                regressions.size,
+                temperature
+            )
         }
 
         val userMessage: String
@@ -389,9 +413,16 @@ class DefaultMapValidator(
             rawResponse = llmClient.chatWithHistory(systemPrompt, emptyList(), userMessage, temperature)
         } else {
             val turnNum = conversationHistory.size + 1
-            log.info("Reflexion turn {}: presenting {} error(s) to LLM with full FML context (oscillation={}, regressions={})", turnNum, errors.size, isOscillating, regressions.size)
+            log.info(
+                "Reflexion turn {}: presenting {} error(s) to LLM with full FML context (oscillation={}, regressions={})",
+                turnNum,
+                errors.size,
+                isOscillating,
+                regressions.size
+            )
             userMessage = buildFollowUpMessage(fml, errors, allPriorErrors, oscillatingErrors, regressions)
-            rawResponse = llmClient.chatWithHistory(systemPrompt, conversationHistory.toList(), userMessage, temperature)
+            rawResponse =
+                llmClient.chatWithHistory(systemPrompt, conversationHistory.toList(), userMessage, temperature)
         }
 
         conversationHistory.add(Pair(userMessage, rawResponse))

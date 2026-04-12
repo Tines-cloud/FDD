@@ -36,7 +36,10 @@
     {
       "use": "official",
       "family": "Thompson",
-      "given": ["Sarah", "Jane"]
+      "given": [
+        "Sarah",
+        "Jane"
+      ]
     }
   ],
   "telecom": [
@@ -55,7 +58,9 @@
   "address": [
     {
       "use": "home",
-      "line": ["42 Murray Street"],
+      "line": [
+        "42 Murray Street"
+      ],
       "city": "Sydney",
       "state": "NSW",
       "postalCode": "2000",
