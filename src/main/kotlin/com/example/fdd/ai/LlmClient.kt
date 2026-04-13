@@ -19,8 +19,7 @@ interface LlmClient {
     fun chat(systemPrompt: String, userPrompt: String, temperature: Double = 0.2): String
 
     /**
-     * Send a message with full conversation history so the LLM can see its own
-     * prior replies and avoid repeating the same mistakes.
+     * Send a message with full conversation history so the LLM can see its own prior replies and avoid repeating the same mistakes.
      *
      * @param systemPrompt   Sets the LLM's role and output format.
      * @param history        Previous (userMessage, llmResponse) pairs, oldest first.

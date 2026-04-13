@@ -1,5 +1,6 @@
 package com.example.fdd.ai
 
+import com.example.fdd.ai.impl.PromptTemplateServiceImpl
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertThrows
@@ -14,13 +15,13 @@ import org.junit.jupiter.api.Test
  * Verifies template loading from classpath, Mustache substitution,
  * caching behaviour, and error handling for missing templates.
  */
-class PromptTemplateServiceTest {
+class PromptTemplateServiceImplTest {
 
     private lateinit var service: PromptTemplateService
 
     @BeforeEach
     fun setUp() {
-        service = PromptTemplateService()
+        service = PromptTemplateServiceImpl()
     }
 
     @Test

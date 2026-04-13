@@ -1,5 +1,6 @@
-package com.example.fdd.api
+package com.example.fdd.api.impl
 
+import com.example.fdd.api.IGlobalExceptionHandler
 import com.example.fdd.api.dto.ErrorResponse
 import com.example.fdd.exception.DriftAnalysisException
 import com.example.fdd.exception.FddException
@@ -7,7 +8,7 @@ import com.example.fdd.exception.LlmResponseException
 import com.example.fdd.exception.MapValidationException
 import com.example.fdd.exception.ProfileNotFoundException
 import com.example.fdd.exception.ProfileValidationException
-import com.example.fdd.output.OutputStore
+import com.example.fdd.output.impl.OutputStore
 import jakarta.servlet.http.HttpServletRequest
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus
@@ -19,17 +20,17 @@ import org.springframework.web.bind.annotation.RestControllerAdvice
  * Centralised exception handling for all REST endpoints.
  *
  * Maps domain-specific exceptions to appropriate HTTP status codes and
- * returns a consistent [ErrorResponse] body.
+ * returns a consistent [com.example.fdd.api.dto.ErrorResponse] body.
  */
 @RestControllerAdvice
 class GlobalExceptionHandler(
     private val outputStore: OutputStore
-) {
+) : IGlobalExceptionHandler {
 
     private val log = LoggerFactory.getLogger(javaClass)
 
     @ExceptionHandler(ProfileNotFoundException::class)
-    fun handleProfileNotFound(
+    override fun handleProfileNotFound(
         ex: ProfileNotFoundException,
         request: HttpServletRequest
     ): ResponseEntity<ErrorResponse> {
@@ -42,7 +43,7 @@ class GlobalExceptionHandler(
     }
 
     @ExceptionHandler(ProfileValidationException::class)
-    fun handleProfileValidation(
+    override fun handleProfileValidation(
         ex: ProfileValidationException,
         request: HttpServletRequest
     ): ResponseEntity<ErrorResponse> {
@@ -57,7 +58,7 @@ class GlobalExceptionHandler(
     }
 
     @ExceptionHandler(LlmResponseException::class)
-    fun handleLlmError(
+    override fun handleLlmError(
         ex: LlmResponseException,
         request: HttpServletRequest
     ): ResponseEntity<ErrorResponse> {
@@ -68,7 +69,7 @@ class GlobalExceptionHandler(
     }
 
     @ExceptionHandler(DriftAnalysisException::class)
-    fun handleDriftAnalysisError(
+    override fun handleDriftAnalysisError(
         ex: DriftAnalysisException,
         request: HttpServletRequest
     ): ResponseEntity<ErrorResponse> {
@@ -79,7 +80,7 @@ class GlobalExceptionHandler(
     }
 
     @ExceptionHandler(MapValidationException::class)
-    fun handleMapValidationError(
+    override fun handleMapValidationError(
         ex: MapValidationException,
         request: HttpServletRequest
     ): ResponseEntity<ErrorResponse> {
@@ -95,7 +96,7 @@ class GlobalExceptionHandler(
     }
 
     @ExceptionHandler(FddException::class)
-    fun handleFddException(
+    override fun handleFddException(
         ex: FddException,
         request: HttpServletRequest
     ): ResponseEntity<ErrorResponse> {
@@ -106,7 +107,7 @@ class GlobalExceptionHandler(
     }
 
     @ExceptionHandler(IllegalArgumentException::class)
-    fun handleBadRequest(
+    override fun handleBadRequest(
         ex: IllegalArgumentException,
         request: HttpServletRequest
     ): ResponseEntity<ErrorResponse> {
@@ -117,7 +118,7 @@ class GlobalExceptionHandler(
     }
 
     @ExceptionHandler(Exception::class)
-    fun handleGenericException(
+    override fun handleGenericException(
         ex: Exception,
         request: HttpServletRequest
     ): ResponseEntity<ErrorResponse> {

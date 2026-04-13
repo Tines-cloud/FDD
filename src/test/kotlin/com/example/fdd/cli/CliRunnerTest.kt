@@ -6,7 +6,7 @@ import com.example.fdd.model.DriftItem
 import com.example.fdd.model.DriftReport
 import com.example.fdd.model.DriftType
 import com.example.fdd.model.MapGenerationResult
-import com.example.fdd.output.OutputStore
+import com.example.fdd.output.impl.OutputStore
 import com.example.fdd.service.DriftOrchestrationService
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.assertNotNull

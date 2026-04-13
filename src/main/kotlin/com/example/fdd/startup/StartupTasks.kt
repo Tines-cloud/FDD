@@ -21,7 +21,7 @@ class StartupTasks(
     @EventListener(ApplicationReadyEvent::class)
     fun onApplicationReady() {
         ensureOutputFolder()
-        log.info("=== FHIR Drift Doctor started successfully ===")
+        log.info("--- FHIR Drift Doctor started successfully ---")
     }
 
     /**

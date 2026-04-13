@@ -1,10 +1,11 @@
-package com.example.fdd.service
+package com.example.fdd.service.impl
 
 import com.example.fdd.model.CoverageItem
 import com.example.fdd.model.CoverageReport
 import com.example.fdd.model.CoverageStatus
 import com.example.fdd.model.DriftItem
 import com.example.fdd.model.DriftReport
+import com.example.fdd.service.ICoverageAnalyzer
 import org.hl7.fhir.r4.model.StructureDefinition
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
@@ -16,7 +17,7 @@ import org.springframework.stereotype.Service
  * This is a free, deterministic step (no LLM call) that runs after FML generation.
  */
 @Service
-class CoverageAnalyzer {
+class CoverageAnalyzer : ICoverageAnalyzer {
 
     private val log = LoggerFactory.getLogger(javaClass)
 
@@ -29,7 +30,7 @@ class CoverageAnalyzer {
         "structuredefinition-standards-status"
     )
 
-    fun analyze(driftReport: DriftReport, fml: String, targetSd: StructureDefinition? = null): CoverageReport {
+    override fun analyze(driftReport: DriftReport, fml: String, targetSd: StructureDefinition?): CoverageReport {
         val fmlGroups = extractFmlGroups(fml)
         val items = driftReport.items.map { classify(it, fml, fmlGroups, targetSd) }
 

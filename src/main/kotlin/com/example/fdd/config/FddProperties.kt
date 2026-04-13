@@ -69,7 +69,7 @@ data class ValidationProperties(
 data class CacheProperties(
     /** Whether LLM response caching is enabled. */
     val enabled: Boolean = true,
-    /** Time-to-live in minutes; cached entries older than this are automatically evicted. 0 = no expiry. */
+    /** Time-to-live in minutes cached entries older than this are automatically evicted. 0 = no expiry. */
     val ttlMinutes: Long = 0,
     /** Directory for file-based cache storage. */
     val directory: String = ".fdd-cache"

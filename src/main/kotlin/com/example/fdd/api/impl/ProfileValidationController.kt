@@ -1,7 +1,8 @@
-package com.example.fdd.api
+package com.example.fdd.api.impl
 
+import com.example.fdd.api.IProfileValidationController
 import com.example.fdd.api.dto.ProfileValidationReport
-import com.example.fdd.service.ProfileValidationService
+import com.example.fdd.service.impl.ProfileValidationService
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
@@ -27,7 +28,7 @@ import org.springframework.web.bind.annotation.RestController
 @Tag(name = "Profile Validation", description = "HAPI-FHIR validation of custom and standard FHIR profiles")
 class ProfileValidationController(
     private val profileValidationService: ProfileValidationService
-) {
+) : IProfileValidationController {
 
     private val log = LoggerFactory.getLogger(javaClass)
 
@@ -43,7 +44,7 @@ class ProfileValidationController(
         ApiResponse(responseCode = "200", description = "Validation completed"),
         ApiResponse(responseCode = "500", description = "Unexpected server error")
     )
-    fun validateAllProfiles(): ResponseEntity<ProfileValidationReport> {
+    override fun validateAllProfiles(): ResponseEntity<ProfileValidationReport> {
         log.info("GET /api/validate/profiles - validating all custom profiles")
         val report = profileValidationService.validateAllCustomProfiles()
         return ResponseEntity.ok(report)
@@ -61,7 +62,7 @@ class ProfileValidationController(
         ApiResponse(responseCode = "200", description = "Validation completed"),
         ApiResponse(responseCode = "500", description = "Unexpected server error")
     )
-    fun validateAllStandardProfiles(): ResponseEntity<ProfileValidationReport> {
+    override fun validateAllStandardProfiles(): ResponseEntity<ProfileValidationReport> {
         log.info("GET /api/validate/standard - validating all standard profiles")
         val report = profileValidationService.validateAllStandardProfiles()
         return ResponseEntity.ok(report)
@@ -79,7 +80,7 @@ class ProfileValidationController(
         ApiResponse(responseCode = "200", description = "Validation completed"),
         ApiResponse(responseCode = "500", description = "Unexpected server error")
     )
-    fun validateAll(): ResponseEntity<ProfileValidationReport> {
+    override fun validateAll(): ResponseEntity<ProfileValidationReport> {
         log.info("GET /api/validate/all - validating everything")
         val report = profileValidationService.validateAll()
         return ResponseEntity.ok(report)

@@ -2,7 +2,6 @@ package com.example.fdd.config
 
 import org.springframework.ai.anthropic.AnthropicChatModel
 import org.springframework.ai.anthropic.AnthropicChatOptions
-import org.springframework.ai.anthropic.api.AnthropicApi
 import org.springframework.ai.chat.model.ChatModel
 import org.springframework.ai.openai.OpenAiChatModel
 import org.springframework.ai.openai.OpenAiChatOptions
@@ -54,16 +53,14 @@ class AiConfig {
     @Bean
     @ConditionalOnProperty("fdd.ai.provider", havingValue = "anthropic")
     fun anthropicChatModel(props: FddProperties): ChatModel {
-        val api = AnthropicApi.builder()
-            .apiKey(requireApiKey("anthropic", props.ai.anthropic.apiKey))
-            .build()
         val options = AnthropicChatOptions.builder()
+            .apiKey(requireApiKey("anthropic", props.ai.anthropic.apiKey))
             .model(props.ai.anthropic.model)
             .temperature(props.ai.temperature)
             .build()
+
         return AnthropicChatModel.builder()
-            .anthropicApi(api)
-            .defaultOptions(options)
+            .options(options)
             .build()
     }
 
@@ -111,16 +108,16 @@ private fun requireApiKey(provider: String, key: String): String {
     require(key.isNotBlank()) {
         """
         |
-        |=====================================================
+        |------------------------------------------------------
         |  MISSING API KEY for provider '$provider'
-        |=====================================================
+        |------------------------------------------------------
         |  Set the environment variable before starting:
         |
         |    Windows:    ${'$'}env:${provider.uppercase()}_API_KEY = "API-key-here"
         |    Linux/Mac:  export ${provider.uppercase()}_API_KEY="API-key-here"
         |
         |  Or create a .env file (see .env.example)
-        |=====================================================
+        |--------------------------------------------------------
         """.trimMargin()
     }
     return key

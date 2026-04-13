@@ -1,4 +1,4 @@
-package com.example.fdd.service
+package com.example.fdd.service.impl
 
 import com.example.fdd.ai.LlmClient
 import com.example.fdd.ai.PromptTemplateService
@@ -7,6 +7,8 @@ import com.example.fdd.fhir.ProfileContextBuilder
 import com.example.fdd.model.DriftItem
 import com.example.fdd.model.DriftReport
 import com.example.fdd.model.DriftType
+import com.example.fdd.service.DriftAnalyzer
+import com.example.fdd.service.RuleBasedDriftDetector
 import io.micrometer.core.annotation.Timed
 import org.hl7.fhir.r4.model.StructureDefinition
 import org.slf4j.LoggerFactory
@@ -14,14 +16,14 @@ import org.springframework.stereotype.Service
 import tools.jackson.databind.ObjectMapper
 
 /**
- * Default [DriftAnalyzer] implementation using a hybrid approach.
+ * Default [com.example.fdd.service.DriftAnalyzer] implementation using a hybrid approach.
  *
  * Steps:
  * 1. Build a [com.example.fdd.model.ProfileContext] from both profiles
- *    via [ProfileContextBuilder].
- * 2. Run [RuleBasedDriftDetector] for fast, deterministic checks.
+ *    via [com.example.fdd.fhir.ProfileContextBuilder].
+ * 2. Run [com.example.fdd.service.RuleBasedDriftDetector] for fast, deterministic checks.
  * 3. Pass the rule-based results to the LLM as seed items.
- * 4. Call [LlmClient] and parse the JSON response into a [DriftReport].
+ * 4. Call [com.example.fdd.ai.LlmClient] and parse the JSON response into a [com.example.fdd.model.DriftReport].
  * 5. Merge both result sets, removing duplicates by path + type.
  */
 @Service
@@ -181,7 +183,7 @@ class DefaultDriftAnalyzer(
 
         val start = stripped.indexOf('[')
         val end = stripped.lastIndexOf(']')
-        if (start >= 0 && end > start) {
+        if (start in 0..<end) {
             return stripped.substring(start, end + 1)
         }
         return stripped

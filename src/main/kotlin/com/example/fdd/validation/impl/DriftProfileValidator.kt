@@ -1,6 +1,7 @@
-package com.example.fdd.validation
+package com.example.fdd.validation.impl
 
 import com.example.fdd.exception.FddException
+import com.example.fdd.validation.IDriftProfileValidator
 import org.hl7.fhir.r4.model.StructureDefinition
 import org.springframework.stereotype.Component
 
@@ -14,9 +15,9 @@ import org.springframework.stereotype.Component
  *    not for repair/alignment.
  */
 @Component
-class DriftProfileValidator {
+class DriftProfileValidator : IDriftProfileValidator {
 
-    fun validateCompatibility(source: StructureDefinition, target: StructureDefinition) {
+    override fun validateCompatibility(source: StructureDefinition, target: StructureDefinition) {
         val sourceType = source.type
         val targetType = target.type
 

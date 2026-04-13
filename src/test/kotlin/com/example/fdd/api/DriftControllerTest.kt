@@ -1,11 +1,12 @@
 package com.example.fdd.api
 
+import com.example.fdd.api.impl.DriftController
 import com.example.fdd.model.CoverageReport
 import com.example.fdd.model.DriftItem
 import com.example.fdd.model.DriftReport
 import com.example.fdd.model.DriftType
 import com.example.fdd.model.MapGenerationResult
-import com.example.fdd.output.OutputStore
+import com.example.fdd.output.impl.OutputStore
 import com.example.fdd.service.DriftOrchestrationService
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
@@ -19,7 +20,7 @@ import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.post
 
 /**
- * Unit tests for [DriftController].
+ * Unit tests for [com.example.fdd.api.impl.DriftController].
  *
  * Uses `@WebMvcTest` to load only the web layer with a mocked orchestration service.
  */

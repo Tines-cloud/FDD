@@ -1,8 +1,9 @@
-package com.example.fdd.fhir
+package com.example.fdd.fhir.impl
 
 import ca.uhn.fhir.context.FhirContext
 import ca.uhn.fhir.context.support.DefaultProfileValidationSupport
 import ca.uhn.fhir.context.support.ValidationSupportContext
+import com.example.fdd.fhir.ProfileContextBuilder
 import com.example.fdd.model.BindingSummary
 import com.example.fdd.model.ConstraintSummary
 import com.example.fdd.model.DriftItem
@@ -23,7 +24,7 @@ import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.stereotype.Component
 
 /**
- * Default implementation of [ProfileContextBuilder].
+ * Default implementation of [com.example.fdd.fhir.ProfileContextBuilder].
  *
  * Converts HAPI FHIR profile objects into plain data classes that are serialised
  * to JSON and sent to the LLM. All fields from
@@ -51,9 +52,9 @@ class DefaultProfileContextBuilder(
      * Dedicated R4 validation chain for snapshot generation.
      * Separate from the main validation chain to avoid side-effects.
      * Includes:
-     * - [SnapshotGeneratingValidationSupport] - drives snapshot generation
-     * - [DefaultProfileValidationSupport]     - resolves base R4 StructureDefinitions
-     * - [InMemoryTerminologyServerValidationSupport] - resolves value-set bindings
+     * - [org.hl7.fhir.common.hapi.validation.support.SnapshotGeneratingValidationSupport] - drives snapshot generation
+     * - [ca.uhn.fhir.context.support.DefaultProfileValidationSupport]     - resolves base R4 StructureDefinitions
+     * - [org.hl7.fhir.common.hapi.validation.support.InMemoryTerminologyServerValidationSupport] - resolves value-set bindings
      */
     private val snapshotChainR4: ValidationSupportChain by lazy {
         ValidationSupportChain(
@@ -81,7 +82,7 @@ class DefaultProfileContextBuilder(
      *
      * Uses HAPI FHIR's [SnapshotGeneratingValidationSupport] to expand the differential
      * against the base StructureDefinition (e.g. R4 Patient) and produce a full
-     * element list in [StructureDefinition.snapshot].
+     * element list in [org.hl7.fhir.r4.model.StructureDefinition.snapshot].
      *
      * If generation fails, the method falls back to the differential so the
      * application keeps working rather than throwing an error.
@@ -210,7 +211,7 @@ class DefaultProfileContextBuilder(
     }
 
     /**
-     * Prefer snapshot elements; fall back to differential if the snapshot is absent.
+     * Prefer snapshot elements fall back to differential if the snapshot is absent.
      *
      * Before resolving, calls [ensureSnapshot] so that differential-only profiles
      * (all custom profiles) get their snapshot populated from the R4/R5 base
@@ -233,7 +234,7 @@ class DefaultProfileContextBuilder(
     }
 
     /**
-     * Convert a HAPI [ElementDefinition] into a normalised [ElementSummary].
+     * Convert a HAPI [ElementDefinition] into a normalised [com.example.fdd.model.ElementSummary].
      *
      * Captures **all** semantically meaningful fields so the LLM can detect
      * drift anywhere - we do not pre-decide which fields are relevant.
@@ -295,7 +296,7 @@ class DefaultProfileContextBuilder(
     )
 
     /**
-     * Render a HAPI [Type] value to a concise string for LLM consumption.
+     * Render a HAPI [org.hl7.fhir.r4.model.Type] value to a concise string for LLM consumption.
      * Uses HAPI's built-in primitiveValue where available, otherwise toString().
      */
     private fun Type.toShortString(): String? =

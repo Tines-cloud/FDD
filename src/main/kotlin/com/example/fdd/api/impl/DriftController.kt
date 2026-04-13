@@ -1,11 +1,11 @@
-package com.example.fdd.api
+package com.example.fdd.api.impl
 
-import com.example.fdd.api.dto.AnalyzeRequest
+import com.example.fdd.api.IDriftController
 import com.example.fdd.api.dto.AnalyzeResponse
-import com.example.fdd.api.dto.RepairRequest
 import com.example.fdd.api.dto.RepairResponse
+import com.example.fdd.api.dto.Request
 import com.example.fdd.api.dto.ValidationSummary
-import com.example.fdd.output.OutputStore
+import com.example.fdd.output.impl.OutputStore
 import com.example.fdd.service.DriftOrchestrationService
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.responses.ApiResponse
@@ -34,7 +34,7 @@ import org.springframework.web.bind.annotation.RestController
 class DriftController(
     private val orchestrationService: DriftOrchestrationService,
     private val outputStore: OutputStore
-) {
+) : IDriftController {
 
     private val log = LoggerFactory.getLogger(javaClass)
 
@@ -55,8 +55,8 @@ class DriftController(
         ApiResponse(responseCode = "404", description = "Profile not found by canonical URL"),
         ApiResponse(responseCode = "502", description = "LLM communication failure")
     )
-    fun analyzeDrift(
-        @RequestBody request: AnalyzeRequest,
+    override fun analyzeDrift(
+        @RequestBody request: Request,
         httpRequest: HttpServletRequest
     ): ResponseEntity<AnalyzeResponse> {
         val outputContext = outputStore.createContext(
@@ -103,8 +103,8 @@ class DriftController(
         ApiResponse(responseCode = "422", description = "Drift analysis or map generation failed"),
         ApiResponse(responseCode = "502", description = "LLM communication failure")
     )
-    fun analyzeAndRepair(
-        @RequestBody request: RepairRequest,
+    override fun analyzeAndRepair(
+        @RequestBody request: Request,
         httpRequest: HttpServletRequest
     ): ResponseEntity<RepairResponse> {
         val outputContext = outputStore.createContext(

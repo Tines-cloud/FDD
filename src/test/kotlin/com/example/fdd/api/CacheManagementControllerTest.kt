@@ -2,7 +2,8 @@ package com.example.fdd.api
 
 import com.example.fdd.ai.LlmResponseCache
 import com.example.fdd.ai.PromptTemplateService
-import com.example.fdd.output.OutputStore
+import com.example.fdd.api.impl.CacheManagementController
+import com.example.fdd.output.impl.OutputStore
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.verify
@@ -69,7 +70,7 @@ class CacheManagementControllerTest {
     @Test
     @DisplayName("DELETE /api/cache clears all caches")
     fun clearAllCaches_invokesBothAndReturnsOk() {
-        mockMvc.perform(delete("/api/cache"))
+        mockMvc.perform(delete("/api/cache/allCaches"))
             .andExpect(status().isOk)
             .andExpect(jsonPath("$.status").value("All caches cleared"))
 

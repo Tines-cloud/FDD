@@ -1,4 +1,4 @@
-package com.example.fdd.service
+package com.example.fdd.service.impl
 
 import com.example.fdd.api.dto.ProfileInput
 import com.example.fdd.exception.FddException
@@ -7,17 +7,20 @@ import com.example.fdd.model.CoverageReport
 import com.example.fdd.model.CoverageStatus
 import com.example.fdd.model.DriftReport
 import com.example.fdd.model.MapGenerationResult
-import com.example.fdd.validation.DriftProfileValidator
+import com.example.fdd.service.DriftAnalyzer
+import com.example.fdd.service.DriftOrchestrationService
+import com.example.fdd.service.MapGenerator
 import com.example.fdd.validation.MapValidator
+import com.example.fdd.validation.impl.DriftProfileValidator
 import io.micrometer.core.annotation.Timed
 import org.hl7.fhir.r4.model.StructureDefinition
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 
 /**
- * Default implementation of [DriftOrchestrationService].
+ * Default implementation of [com.example.fdd.service.DriftOrchestrationService].
  *
- * Wires together [ProfileLoader], [DriftAnalyzer], [MapGenerator], and [MapValidator]
+ * Wires together [com.example.fdd.fhir.ProfileLoader], [com.example.fdd.service.DriftAnalyzer], [com.example.fdd.service.MapGenerator], and [com.example.fdd.validation.MapValidator]
  * into a single, cohesive pipeline.
  */
 @Service
@@ -64,7 +67,7 @@ class DefaultDriftOrchestrationService(
         val rawResult = mapGenerator.generateMap(sourceSd, targetSd, driftReport)
 
         // --- Stage 3 - Trust-but-Verify (FML -> validated FML) ---
-        // HAPI-FHIR compiles the FML; on failure the Reflexion loop asks the
+        // HAPI-FHIR compiles the FML on failure the Reflexion loop asks the
         // LLM to self-correct using only the error message and canonical URLs.
         val validatedResult = mapValidator.validateAndRepair(
             fmlCode = rawResult.structureMapFml,
@@ -94,7 +97,7 @@ class DefaultDriftOrchestrationService(
                 .filter { it.coverageStatus == CoverageStatus.UNMAPPABLE_REQUIRED }
             val actionBlock = buildString {
                 appendLine()
-                appendLine("// ============================================================")
+                appendLine("// ------------------------------------------------------------")
                 appendLine("//  ACTION REQUIRED: MANDATORY TARGET FIELDS WITH NO SOURCE DATA")
                 appendLine("// The following ${requiredItems.size} field(s) are required (min>=1) in the")
                 appendLine("// target profile but have no equivalent in the source.")
@@ -104,7 +107,7 @@ class DefaultDriftOrchestrationService(
                 appendLine("// HOW TO FIX  (add one rule per field inside the group block):")
                 appendLine("//   tgt.<field> = \"DEFAULT_VALUE\" \"rule-name\";")
                 appendLine("//   tgt.status  = \"active\"        \"default-status\";")
-                appendLine("// ============================================================")
+                appendLine("// ----------------------------------------------------------")
                 requiredItems.forEach { item ->
                     appendLine("//")
                     appendLine("// FIELD   : ${item.targetPath} (min=${item.targetMin})")

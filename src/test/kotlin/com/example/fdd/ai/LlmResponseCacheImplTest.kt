@@ -1,5 +1,6 @@
 package com.example.fdd.ai
 
+import com.example.fdd.ai.impl.LlmResponseCacheImpl
 import com.example.fdd.config.CacheProperties
 import com.example.fdd.config.FddProperties
 import org.junit.jupiter.api.AfterEach
@@ -17,7 +18,7 @@ import java.nio.file.Path
  * Verifies file-based caching, TTL eviction, SHA-256 keying,
  * and disabled-cache behaviour using a temporary directory.
  */
-class LlmResponseCacheTest {
+class LlmResponseCacheImplTest {
 
     private lateinit var cacheDir: Path
     private lateinit var cache: LlmResponseCache
@@ -28,7 +29,7 @@ class LlmResponseCacheTest {
         val props = FddProperties(
             cache = CacheProperties(enabled = true, ttlMinutes = 60, directory = cacheDir.toString())
         )
-        cache = LlmResponseCache(props)
+        cache = LlmResponseCacheImpl(props)
     }
 
     @AfterEach
@@ -108,7 +109,7 @@ class LlmResponseCacheTest {
         val disabledProps = FddProperties(
             cache = CacheProperties(enabled = false, directory = disabledDir.toString())
         )
-        val disabledCache = LlmResponseCache(disabledProps)
+        val disabledCache = LlmResponseCacheImpl(disabledProps)
 
         disabledCache.put("s", "u", 0.5, "response")
 
@@ -129,7 +130,7 @@ class LlmResponseCacheTest {
         val zeroTtlProps = FddProperties(
             cache = CacheProperties(enabled = true, ttlMinutes = 0, directory = expiredDir.toString())
         )
-        val zeroTtlCache = LlmResponseCache(zeroTtlProps)
+        val zeroTtlCache = LlmResponseCacheImpl(zeroTtlProps)
 
         // ttlMinutes = 0 means no expiry, so entry stays
         zeroTtlCache.put("system", "user", 0.5, "response")

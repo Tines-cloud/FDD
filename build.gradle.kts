@@ -17,7 +17,7 @@ java {
 }
 
 val hapiVersion = "7.6.0"
-val springAiVersion = "2.0.0-SNAPSHOT"
+val springAiVersion = "2.0.0-M4"
 
 repositories {
     mavenCentral()

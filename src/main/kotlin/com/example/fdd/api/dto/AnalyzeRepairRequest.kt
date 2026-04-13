@@ -10,7 +10,7 @@ import io.swagger.v3.oas.annotations.media.Schema
  * 2. `url`       - HTTP(S) URL pointing to a StructureDefinition JSON file.
  * 3. `canonical` - Canonical URL resolved from HAPI-FHIR's built-in R4/R5 definitions.
  * 4. `classpath` - Classpath-relative path to a bundled StructureDefinition JSON file.
- * 5. `file`      - Local file-system path (reads from the server's disk; use in development only).
+ * 5. `file`      - Local file-system path (reads from the server's disk).
  *
  * At least one field must be provided.
  */
@@ -60,36 +60,12 @@ data class ProfileInput(
 }
 
 /**
- * Request body for `POST /api/drift/analyze`.
+ * Request body for `POST /api/drift/analyze` & `POST /api/drift/repair`.
  *
  * Both source and target profiles must be provided using any supported input method.
  */
-@Schema(description = "Request to analyze semantic drift between two FHIR profiles")
-data class AnalyzeRequest(
-    @Schema(description = "Source FHIR profile", required = true)
-    val source: ProfileInput = ProfileInput(),
-
-    @Schema(description = "Target FHIR profile", required = true)
-    val target: ProfileInput = ProfileInput()
-) {
-    fun validate() {
-        require(source.isProvided()) {
-            "Source profile must be provided via 'json', 'url', 'canonical', 'classpath', or 'file'"
-        }
-        require(target.isProvided()) {
-            "Target profile must be provided via 'json', 'url', 'canonical', 'classpath', or 'file'"
-        }
-    }
-}
-
-/**
- * Request body for `POST /api/drift/repair`.
- *
- * Same as [AnalyzeRequest] but semantically distinct - this triggers
- * the full pipeline including StructureMap generation and validation.
- */
-@Schema(description = "Request to analyze drift and generate a validated StructureMap repair")
-data class RepairRequest(
+@Schema(description = "Request to analyze/repair semantic drift between two FHIR profiles")
+data class Request(
     @Schema(description = "Source FHIR profile", required = true)
     val source: ProfileInput = ProfileInput(),
 

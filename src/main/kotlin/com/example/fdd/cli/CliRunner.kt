@@ -3,7 +3,7 @@ package com.example.fdd.cli
 import com.example.fdd.api.dto.ProfileInput
 import com.example.fdd.api.dto.RepairResponse
 import com.example.fdd.api.dto.ValidationSummary
-import com.example.fdd.output.OutputStore
+import com.example.fdd.output.impl.OutputStore
 import com.example.fdd.service.DriftOrchestrationService
 import org.slf4j.LoggerFactory
 import org.springframework.boot.ApplicationArguments
@@ -16,7 +16,6 @@ import java.io.File
 /**
  * CLI runner activated with `--spring.profiles.active=cli`.
  *
- * Reuses the existing [DriftOrchestrationService] pipeline - no code duplication.
  * When this profile is active the embedded web server is disabled
  * (see `application-cli.yaml`), so the process runs the command and exits.
  *

@@ -1,6 +1,7 @@
 package com.example.fdd.fhir
 
 import ca.uhn.fhir.context.FhirContext
+import com.example.fdd.fhir.impl.DefaultProfileContextBuilder
 import com.example.fdd.model.DriftItem
 import com.example.fdd.model.DriftType
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -10,7 +11,7 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 
 /**
- * Unit tests for [DefaultProfileContextBuilder].
+ * Unit tests for [com.example.fdd.fhir.impl.DefaultProfileContextBuilder].
  *
  * Verifies that profile element extraction works correctly with
  * HAPI-FHIR's built-in R4 StructureDefinitions.

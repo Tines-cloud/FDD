@@ -3,8 +3,8 @@ package com.example.fdd.util
 /**
  * Shared utility for working with FHIR Mapping Language (FML) text.
  *
- * Extracted to eliminate duplication between [com.example.fdd.service.DefaultMapGenerator]
- * and [com.example.fdd.validation.DefaultMapValidator].
+ * Extracted to eliminate duplication between [com.example.fdd.service.impl.DefaultMapGenerator]
+ * and [com.example.fdd.validation.impl.DefaultMapValidator].
  */
 object FmlUtils {
 

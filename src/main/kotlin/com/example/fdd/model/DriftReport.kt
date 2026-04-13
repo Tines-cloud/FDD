@@ -14,13 +14,4 @@ data class DriftReport(
 ) {
     /** Total number of drift items detected. */
     val totalDrifts: Int get() = items.size
-
-    /**
-     * Convenience accessor - items grouped by [DriftType].
-     *
-     * Not called in the core pipeline but reserved for experiment metrics
-     * (e.g. per-type precision/recall) and future API response enrichment.
-     */
-    @Suppress("unused")
-    fun groupedByType(): Map<DriftType, List<DriftItem>> = items.groupBy { it.type }
 }

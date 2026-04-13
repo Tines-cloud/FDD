@@ -1,6 +1,7 @@
 package com.example.fdd.validation
 
 import com.example.fdd.exception.FddException
+import com.example.fdd.validation.impl.DriftProfileValidator
 import org.hl7.fhir.r4.model.StructureDefinition
 import org.junit.jupiter.api.Assertions.assertDoesNotThrow
 import org.junit.jupiter.api.DisplayName
@@ -8,7 +9,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 
 /**
- * Unit tests for [DriftProfileValidator].
+ * Unit tests for [com.example.fdd.validation.impl.DriftProfileValidator].
  *
  * Verifies that compatibility checks between source and target profiles are enforced correctly.
  */

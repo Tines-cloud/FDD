@@ -1,4 +1,4 @@
-package com.example.fdd.output
+package com.example.fdd.output.impl
 
 import com.example.fdd.api.dto.ErrorResponse
 import com.example.fdd.api.dto.RepairResponse
@@ -7,6 +7,7 @@ import com.example.fdd.exception.MapValidationException
 import com.example.fdd.model.CoverageReport
 import com.example.fdd.model.CoverageStatus
 import com.example.fdd.model.DriftReport
+import com.example.fdd.output.IOutputStore
 import jakarta.servlet.http.HttpServletRequest
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
@@ -24,7 +25,7 @@ import java.util.UUID
 class OutputStore(
     private val props: FddProperties,
     private val objectMapper: ObjectMapper
-) {
+) : IOutputStore {
 
     companion object {
         const val OUTPUT_CONTEXT_ATTRIBUTE = "fdd.output.context"
@@ -38,7 +39,7 @@ class OutputStore(
     private val log = LoggerFactory.getLogger(javaClass)
     private val timestampFormat = DateTimeFormatter.ofPattern("yyyyMMdd-HHmmss-SSS")
 
-    fun createContext(
+    override fun createContext(
         requestType: String,
         sourceLabel: String,
         targetLabel: String,
@@ -61,14 +62,14 @@ class OutputStore(
         return OutputContext(directory, requestType)
     }
 
-    fun attachToRequest(httpRequest: HttpServletRequest, context: OutputContext?) {
+    override fun attachToRequest(httpRequest: HttpServletRequest, context: OutputContext?) {
         if (context == null) {
             return
         }
         httpRequest.setAttribute(OUTPUT_CONTEXT_ATTRIBUTE, context)
     }
 
-    fun writeAnalyzeResult(context: OutputContext?, driftReport: DriftReport, responsePayload: Any) {
+    override fun writeAnalyzeResult(context: OutputContext?, driftReport: DriftReport, responsePayload: Any) {
         if (context == null) {
             return
         }
@@ -76,7 +77,7 @@ class OutputStore(
         writeJson(context.directory, "response.json", responsePayload)
     }
 
-    fun writeRepairResult(context: OutputContext?, response: RepairResponse) {
+    override fun writeRepairResult(context: OutputContext?, response: RepairResponse) {
         if (context == null) {
             return
         }
@@ -92,7 +93,7 @@ class OutputStore(
         writeText(context.directory, "structure-map.fml", response.structureMap)
     }
 
-    fun writeError(httpRequest: HttpServletRequest, error: ErrorResponse, ex: Exception) {
+    override fun writeError(httpRequest: HttpServletRequest, error: ErrorResponse, ex: Exception) {
         val context = httpRequest.getAttribute(OUTPUT_CONTEXT_ATTRIBUTE) as? OutputContext
             ?: return
 
@@ -102,7 +103,7 @@ class OutputStore(
 
     /**
      * Build a readable error report for error.txt.
-     * For FML validation failures, it groups errors by cycle so you can see
+     * For FML validation failures, it groups errors by cycle so can see
      * what went wrong in each repair attempt.
      */
     private fun buildErrorReport(error: ErrorResponse, ex: Exception): String {
@@ -176,7 +177,6 @@ class OutputStore(
     private fun buildCoverageDetails(report: CoverageReport): String {
         val sb = StringBuilder()
         val sep = "=".repeat(72)
-        val thin = "-".repeat(72)
 
         val grouped = report.items.groupBy { it.coverageStatus }
 
@@ -270,7 +270,7 @@ class OutputStore(
         val requiredUnmappable = grouped[CoverageStatus.UNMAPPABLE_REQUIRED].orEmpty()
         if (requiredUnmappable.isNotEmpty()) {
             sb.appendLine(sep)
-            sb.appendLine("❌ CATEGORY 5a: CRITICAL -- REQUIRED TARGET FIELDS WITH NO SOURCE (${requiredUnmappable.size} items)")
+            sb.appendLine("   CATEGORY 5a: CRITICAL -- REQUIRED TARGET FIELDS WITH NO SOURCE (${requiredUnmappable.size} items)")
             sb.appendLine("    These fields have min>=1 in the target profile. The FML leaves them EMPTY.")
             sb.appendLine("    The transformed resource WILL FAIL validation. See ACTION REQUIRED in FML.")
             sb.appendLine(sep)

@@ -1,15 +1,16 @@
-package com.example.fdd.service
+package com.example.fdd.service.impl
 
 import com.example.fdd.model.DriftItem
 import com.example.fdd.model.DriftType
 import com.example.fdd.model.ProfileContext
+import com.example.fdd.service.RuleBasedDriftDetector
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
 
 /**
  * Default rule-based drift detector implementing deterministic structural comparison.
  *
- * Covers **all five** [DriftType] categories:
+ * Covers **all five** [com.example.fdd.model.DriftType] categories:
  *
  * | # | Category       | Rules                                                       |
  * |---|----------------|-------------------------------------------------------------|
@@ -19,7 +20,7 @@ import org.springframework.stereotype.Component
  * |   |                | isModifier, isSummary, slicing, constraints,                 |
  * |   |                | contentReference, elements added/removed, slice changes      |
  * | 4 | EXTENSION      | Extensions and modifier-extensions added or removed          |
- * | 5 | VERSION        | FHIR version mismatch between profiles                      |
+ * | 5 | VERSION        | FHIR version mismatch between profiles.                      |
  *
  * This deterministic analysis runs in O(n) time (two indexed passes) and
  * provides consistent, reproducible results that complement the LLM's
@@ -54,9 +55,9 @@ class DefaultRuleBasedDriftDetector : RuleBasedDriftDetector {
         val sourceElements = sourceProfile.elements
         val targetElements = targetProfile.elements
 
-        /* ================================================================
+        /* -----------------------------------------------------------------
          * VERSION drift - profile-level FHIR version mismatch
-         * ================================================================ */
+         * ----------------------------------------------------------------- */
         if (sourceProfile.fhirVersion != null && targetProfile.fhirVersion != null &&
             sourceProfile.fhirVersion != targetProfile.fhirVersion
         ) {
@@ -72,9 +73,9 @@ class DefaultRuleBasedDriftDetector : RuleBasedDriftDetector {
             )
         }
 
-        /* ================================================================
+        /* -------------------------------------------------------------------
          * Element-level rules - compare elements present in both profiles
-         * ================================================================ */
+         * ------------------------------------------------------------------- */
         val sourceByPath = sourceElements.associateBy { it.path }
         val targetByPath = targetElements.associateBy { it.path }
 
@@ -375,9 +376,9 @@ class DefaultRuleBasedDriftDetector : RuleBasedDriftDetector {
             }
         }
 
-        /* ================================================================
+        /* -------------------------------------------------------------------
          * STRUCTURAL / EXTENSION: elements present in only one profile
-         * ================================================================ */
+         * ------------------------------------------------------------------- */
 
         /**
          * Returns true if [path] is a named extension or modifier-extension slice,

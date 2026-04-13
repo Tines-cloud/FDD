@@ -1,10 +1,11 @@
-package com.example.fdd.service
+package com.example.fdd.service.impl
 
 import com.example.fdd.ai.LlmClient
 import com.example.fdd.ai.PromptTemplateService
 import com.example.fdd.fhir.ProfileContextBuilder
 import com.example.fdd.model.DriftReport
 import com.example.fdd.model.MapGenerationResult
+import com.example.fdd.service.MapGenerator
 import com.example.fdd.util.FmlUtils
 import io.micrometer.core.annotation.Timed
 import org.hl7.fhir.r4.model.StructureDefinition
@@ -13,7 +14,7 @@ import org.springframework.stereotype.Service
 import tools.jackson.databind.ObjectMapper
 
 /**
- * Default [MapGenerator] implementation - asks the LLM to produce FML code.
+ * Default [com.example.fdd.service.MapGenerator] implementation - asks the LLM to produce FML code.
  *
  * The drift report is the main input. Source and target profiles are used only
  * to extract a short element list for the paths mentioned in the drift items,
@@ -23,7 +24,7 @@ import tools.jackson.databind.ObjectMapper
  * Steps:
  * 1. Build a short element list covering only the drifted paths.
  * 2. Compose system + user prompts.
- * 3. Call [LlmClient] to get FML.
+ * 3. Call [com.example.fdd.ai.LlmClient] to get FML.
  * 4. Strip any markdown fences from the response.
  */
 @Service
@@ -76,7 +77,7 @@ class DefaultMapGenerator(
 
         return MapGenerationResult(
             structureMapFml = fml,
-            syntacticallyValid = false,         // validation is deferred to MapValidator
+            syntacticallyValid = false,
             validationMessages = emptyList()
         )
     }

@@ -3,8 +3,9 @@ package com.example.fdd.api
 import com.example.fdd.api.dto.ProfileValidationReport
 import com.example.fdd.api.dto.ProfileValidationResult
 import com.example.fdd.api.dto.ProfileValidationSummary
-import com.example.fdd.output.OutputStore
-import com.example.fdd.service.ProfileValidationService
+import com.example.fdd.api.impl.ProfileValidationController
+import com.example.fdd.output.impl.OutputStore
+import com.example.fdd.service.impl.ProfileValidationService
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.whenever
@@ -17,7 +18,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPat
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 
 /**
- * Unit tests for [ProfileValidationController].
+ * Unit tests for [com.example.fdd.api.impl.ProfileValidationController].
  *
  * Uses `@WebMvcTest` to test all three validation endpoints at the HTTP layer
  * without loading the full application context. The [ProfileValidationService]

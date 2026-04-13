@@ -1,7 +1,8 @@
-package com.example.fdd.api
+package com.example.fdd.api.impl
 
 import com.example.fdd.ai.LlmResponseCache
 import com.example.fdd.ai.PromptTemplateService
+import com.example.fdd.api.ICacheManagementController
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.slf4j.LoggerFactory
@@ -23,7 +24,7 @@ import org.springframework.web.bind.annotation.RestController
 class CacheManagementController(
     private val llmResponseCache: LlmResponseCache,
     private val promptTemplateService: PromptTemplateService
-) {
+) : ICacheManagementController {
 
     private val log = LoggerFactory.getLogger(javaClass)
 
@@ -32,7 +33,7 @@ class CacheManagementController(
      */
     @GetMapping("/llm/size")
     @Operation(summary = "Get LLM response cache size")
-    fun cacheSize(): ResponseEntity<Map<String, Int>> =
+    override fun cacheSize(): ResponseEntity<Map<String, Int>> =
         ResponseEntity.ok(mapOf("size" to llmResponseCache.size()))
 
     /**
@@ -40,7 +41,7 @@ class CacheManagementController(
      */
     @DeleteMapping("/llm")
     @Operation(summary = "Clear the LLM response cache")
-    fun clearLlmCache(): ResponseEntity<Map<String, String>> {
+    override fun clearLlmCache(): ResponseEntity<Map<String, String>> {
         llmResponseCache.clear()
         log.info("LLM response cache cleared via API")
         return ResponseEntity.ok(mapOf("status" to "LLM response cache cleared"))
@@ -49,12 +50,10 @@ class CacheManagementController(
     /**
      * Clear the in-memory prompt template cache, forcing templates to be
      * re-read from classpath on the next request.
-     *
-     * Useful during development when editing prompt template files.
      */
     @DeleteMapping("/templates")
     @Operation(summary = "Clear the prompt template cache")
-    fun clearTemplateCache(): ResponseEntity<Map<String, String>> {
+    override fun clearTemplateCache(): ResponseEntity<Map<String, String>> {
         promptTemplateService.clearCache()
         log.info("Prompt template cache cleared via API")
         return ResponseEntity.ok(mapOf("status" to "Prompt template cache cleared"))
@@ -63,9 +62,9 @@ class CacheManagementController(
     /**
      * Clear all caches (LLM responses + prompt templates).
      */
-    @DeleteMapping
+    @DeleteMapping("/allCaches")
     @Operation(summary = "Clear all caches")
-    fun clearAllCaches(): ResponseEntity<Map<String, String>> {
+    override fun clearAllCaches(): ResponseEntity<Map<String, String>> {
         llmResponseCache.clear()
         promptTemplateService.clearCache()
         log.info("All caches cleared via API")

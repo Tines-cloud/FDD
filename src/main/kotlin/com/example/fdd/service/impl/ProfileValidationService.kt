@@ -1,12 +1,14 @@
-package com.example.fdd.service
+package com.example.fdd.service.impl
 
 import ca.uhn.fhir.parser.IParser
 import ca.uhn.fhir.validation.FhirValidator
 import ca.uhn.fhir.validation.ResultSeverityEnum
+import ca.uhn.fhir.validation.ValidationResult
 import com.example.fdd.api.dto.ProfileValidationIssue
 import com.example.fdd.api.dto.ProfileValidationReport
 import com.example.fdd.api.dto.ProfileValidationResult
 import com.example.fdd.api.dto.ProfileValidationSummary
+import com.example.fdd.service.IProfileValidationService
 import com.example.fdd.util.FhirValidationUtils
 import org.hl7.fhir.r4.model.StructureDefinition
 import org.slf4j.LoggerFactory
@@ -18,7 +20,7 @@ import org.springframework.stereotype.Service
 // Service that validates FHIR resources on the classpath:
 //   - Custom StructureDefinition profiles under custom-profiles/
 //   - Standard FHIR StructureDefinition profiles under standard-profiles/
-//   R5 profiles are validated using an R5 FhirContext + R5 validator;
+//   R5 profiles are validated using an R5 FhirContext + R5 validator
 //   all other profiles use the default R4 validator.
 @Service
 class ProfileValidationService(
@@ -26,13 +28,13 @@ class ProfileValidationService(
     private val fhirValidator: FhirValidator,
     @Qualifier("r5") private val fhirJsonParserR5: IParser,
     @Qualifier("r5") private val fhirValidatorR5: FhirValidator
-) {
+) : IProfileValidationService {
 
     private val log = LoggerFactory.getLogger(javaClass)
     private val resolver = PathMatchingResourcePatternResolver()
 
     // Validate every *.json file under classpath:custom-profiles/ (recursive)
-    fun validateAllCustomProfiles(): ProfileValidationReport {
+    override fun validateAllCustomProfiles(): ProfileValidationReport {
         log.info("Starting validation of all custom FHIR profiles")
         val pattern = "classpath*:custom-profiles/**/*.json"
         val profileResources = resolver.getResources(pattern)
@@ -56,7 +58,7 @@ class ProfileValidationService(
 
     // Validate every *.json file under classpath:standard-profiles/ (recursive)
     // R5 profiles (source=r5) are validated with the R5 FhirContext + R5 validator
-    fun validateAllStandardProfiles(): ProfileValidationReport {
+    override fun validateAllStandardProfiles(): ProfileValidationReport {
         log.info("Starting validation of all standard FHIR profiles")
         val pattern = "classpath*:standard-profiles/**/*.json"
         val profileResources = resolver.getResources(pattern)
@@ -88,7 +90,7 @@ class ProfileValidationService(
     }
 
     // Validate everything: custom profiles + standard profiles
-    fun validateAll(): ProfileValidationReport {
+    override fun validateAll(): ProfileValidationReport {
         log.info("Starting validation of ALL FHIR profiles")
         val customReport = validateAllCustomProfiles()
         val standardReport = validateAllStandardProfiles()
@@ -151,7 +153,7 @@ class ProfileValidationService(
     private fun toValidationResult(
         name: String, url: String, type: String, pub: String,
         source: String,
-        result: ca.uhn.fhir.validation.ValidationResult,
+        result: ValidationResult,
         identifier: String
     ): ProfileValidationResult {
         // Reclassify known false-positive errors as warnings

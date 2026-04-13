@@ -1,4 +1,4 @@
-package com.example.fdd.fhir
+package com.example.fdd.fhir.impl
 
 import ca.uhn.fhir.context.FhirContext
 import ca.uhn.fhir.parser.IParser
@@ -6,6 +6,7 @@ import ca.uhn.fhir.validation.FhirValidator
 import ca.uhn.fhir.validation.ResultSeverityEnum
 import com.example.fdd.exception.ProfileNotFoundException
 import com.example.fdd.exception.ProfileValidationException
+import com.example.fdd.fhir.ProfileLoader
 import com.example.fdd.util.FhirValidationUtils
 import org.hl7.fhir.r4.model.StructureDefinition
 import org.slf4j.LoggerFactory
@@ -19,9 +20,9 @@ import java.net.http.HttpResponse
 import java.time.Duration
 
 /**
- * Default [ProfileLoader] implementation.
+ * Default [com.example.fdd.fhir.ProfileLoader] implementation.
  *
- * Resolves FHIR [StructureDefinition] profiles from multiple sources:
+ * Resolves FHIR [org.hl7.fhir.r4.model.StructureDefinition] profiles from multiple sources:
  * 1. **Inline JSON** - raw StructureDefinition JSON string.
  * 2. **HTTP(S) URL** - fetches JSON from any public URL (FHIR registries,
  *    GitHub raw links, simplifier.net, build.fhir.org, etc.).
@@ -29,8 +30,8 @@ import java.time.Duration
  * 4. **Classpath** - loaded from bundled classpath resources.
  * 5. **Local file** - read from the server's file system.
  *
- * All profiles are validated using HAPI-FHIR's [FhirValidator] after loading.
- * Profiles with ERROR-level issues are rejected; WARNING-level issues are logged.
+ * All profiles are validated using HAPI-FHIR's [ca.uhn.fhir.validation.FhirValidator] after loading.
+ * Profiles with ERROR-level issues are rejected WARNING-level issues are logged.
  */
 @Component
 class DefaultProfileLoader(
@@ -154,7 +155,7 @@ class DefaultProfileLoader(
     /**
      * Validate a loaded [StructureDefinition] using HAPI-FHIR's instance validator.
      *
-     * Profiles that fail validation with ERROR-level issues are rejected outright;
+     * Profiles that fail validation with ERROR-level issues are rejected outright
      * WARNING-level issues are logged but do not block the pipeline.
      * Known false-positive errors (e.g., HL7 wg extension, missing parent profiles)
      * are downgraded to warnings.

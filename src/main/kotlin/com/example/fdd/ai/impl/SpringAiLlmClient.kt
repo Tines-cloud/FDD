@@ -1,5 +1,7 @@
-package com.example.fdd.ai
+package com.example.fdd.ai.impl
 
+import com.example.fdd.ai.LlmClient
+import com.example.fdd.ai.LlmResponseCache
 import com.example.fdd.exception.LlmResponseException
 import org.slf4j.LoggerFactory
 import org.springframework.ai.chat.messages.AssistantMessage

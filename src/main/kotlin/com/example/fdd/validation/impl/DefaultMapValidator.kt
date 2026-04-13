@@ -1,4 +1,4 @@
-package com.example.fdd.validation
+package com.example.fdd.validation.impl
 
 import ca.uhn.fhir.context.FhirContext
 import ca.uhn.fhir.context.support.DefaultProfileValidationSupport
@@ -9,6 +9,7 @@ import com.example.fdd.exception.MapValidationException
 import com.example.fdd.model.DriftReport
 import com.example.fdd.model.MapGenerationResult
 import com.example.fdd.util.FmlUtils
+import com.example.fdd.validation.MapValidator
 import io.micrometer.core.annotation.Timed
 import org.hl7.fhir.common.hapi.validation.support.ValidationSupportChain
 import org.hl7.fhir.r4.context.IWorkerContext
@@ -325,7 +326,7 @@ class DefaultMapValidator(
             val line = lines[lineNum - 1]
             val trimmed = line.trimEnd()
 
-            // Only fix lines ending with ; that don't already have a "name" before ;
+            // Only fix lines ending with that don't already have a "name" before
             if (!trimmed.endsWith(";")) return currentFml
             if (Regex(""""[^"]*"\s*;$""").containsMatchIn(trimmed)) return currentFml
 
@@ -378,7 +379,7 @@ class DefaultMapValidator(
         }
         val isOscillating = oscillatingErrors.isNotEmpty()
         val hasRegressions = regressions.isNotEmpty()
-        val temperature = if (isOscillating || hasRegressions) 0.3 else 0.1
+        val temperature = if (isOscillating || hasRegressions) 0.2 else 0.1
         if (isOscillating) {
             log.warn(
                 "Oscillation detected - {} error(s) already seen in prior cycles, raising temperature to {}",

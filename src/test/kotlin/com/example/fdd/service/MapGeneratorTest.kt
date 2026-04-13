@@ -8,6 +8,7 @@ import com.example.fdd.model.DriftReport
 import com.example.fdd.model.DriftType
 import com.example.fdd.model.ProfileContext
 import com.example.fdd.model.ProfileSummary
+import com.example.fdd.service.impl.DefaultMapGenerator
 import org.hl7.fhir.r4.model.StructureDefinition
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse

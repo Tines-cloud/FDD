@@ -8,6 +8,7 @@ import com.example.fdd.model.ProfileContext
 import com.example.fdd.model.ProfileSummary
 import com.example.fdd.model.SlicingSummary
 import com.example.fdd.model.TypeSummary
+import com.example.fdd.service.impl.DefaultRuleBasedDriftDetector
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.DisplayName
@@ -15,7 +16,7 @@ import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 
 /**
- * Unit tests for [DefaultRuleBasedDriftDetector].
+ * Unit tests for [com.example.fdd.service.impl.DefaultRuleBasedDriftDetector].
  *
  * Verifies that every [DriftType] category is detected correctly from
  * deterministic structural comparison of [ProfileContext] data.

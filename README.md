@@ -604,7 +604,7 @@ Invoke-RestMethod -Method Post -Uri "http://localhost:8080/api/drift/repair" `
 | `GET`    | `/api/cache/llm/size`  | Number of cached LLM responses |
 | `DELETE` | `/api/cache/llm`       | Clear LLM response cache       |
 | `DELETE` | `/api/cache/templates` | Clear prompt template cache    |
-| `DELETE` | `/api/cache`           | Clear all caches               |
+| `DELETE` | `/api/cache/allCaches`           | Clear all caches               |
 
 ### Monitoring & documentation
 
@@ -884,7 +884,7 @@ src/main/kotlin/com/example/fdd/
 │   ├-- GlobalExceptionHandler.kt  # @ControllerAdvice (5 exception types -> HTTP codes)
 │   ├-- ProfileValidationController.kt  # /api/validate/* endpoints
 │   └-- dto/                       # Request/Response data classes
-│       ├-- AnalyzeRequest.kt      # ProfileInput, AnalyzeRequest, RepairRequest
+│       ├-- AnalyzeRepairRequest.kt      # ProfileInput, Request,
 │       ├-- AnalyzeResponse.kt
 │       ├-- RepairResponse.kt
 │       └-- ErrorResponse.kt
