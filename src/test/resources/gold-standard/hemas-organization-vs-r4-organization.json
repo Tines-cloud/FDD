@@ -1,519 +1,125 @@
-﻿{
-  "pairId": "hemas-organization-vs-r4-organization",
-  "drifts": [
-    {
-      "id": "organization-constraints-added",
-      "description": "Constraints added in target profile: [dom-2, dom-3, dom-4, dom-5, dom-6, org-1]. These are base FHIR validation rules.",
-      "sourcePath": "Organization",
-      "severity": "WARNING",
-      "type": "STRUCTURAL",
-      "targetPath": "Organization"
-    },
-    {
-      "id": "organization-extension-slicing-removed",
-      "description": "Slicing definition for extensions is present in the source profile but absent in the target profile. The target profile allows any extension.",
-      "sourcePath": "Organization.extension",
-      "severity": "INFO",
-      "type": "STRUCTURAL",
-      "targetPath": "Organization.extension"
-    },
-    {
-      "id": "organization-extension-constraints-added",
-      "description": "Constraints added in target profile: [ele-1, ext-1]. These are base FHIR validation rules for extensions.",
-      "sourcePath": "Organization.extension",
-      "severity": "WARNING",
-      "type": "STRUCTURAL",
-      "targetPath": "Organization.extension"
-    },
-    {
-      "id": "extension-license-number-removed",
-      "description": "Custom extension \u0027licenseNumber\u0027 (https://hemas.example.com/fhir/StructureDefinition/organization-license-number) is required (1..1) and mustSupport in the source profile, but is not explicitly defined or constrained in the target (base) profile. Data conforming to the source profile with this extension would be valid, but a system only aware of the target profile might ignore or not understand its significance.",
-      "sourcePath": "Organization.extension:licenseNumber",
-      "severity": "ERROR",
-      "type": "EXTENSION",
-      "targetPath": "Organization.extension"
-    },
-    {
-      "id": "extension-accreditation-status-removed",
-      "description": "Custom extension \u0027accreditationStatus\u0027 (https://hemas.example.com/fhir/StructureDefinition/organization-accreditation-status) is optional (0..1) and mustSupport in the source profile, but is not explicitly defined or constrained in the target (base) profile. Data conforming to the source profile with this extension would be valid, but a system only aware of the target profile might ignore or not understand its significance.",
-      "sourcePath": "Organization.extension:accreditationStatus",
-      "severity": "WARNING",
-      "type": "EXTENSION",
-      "targetPath": "Organization.extension"
-    },
-    {
-      "id": "organization-identifier-cardinality",
-      "description": "Cardinality changed: [1..*] in source (requires at least one identifier) to [0..*] in target (allows zero identifiers). A resource valid against the target might be invalid against the source.",
-      "sourcePath": "Organization.identifier",
-      "severity": "ERROR",
-      "type": "CARDINALITY",
-      "targetPath": "Organization.identifier"
-    },
-    {
-      "id": "organization-identifier-mustsupport",
-      "description": "MustSupport flag removed in target profile (true in source, false in target). Source profile mandates support for this element, target does not.",
-      "sourcePath": "Organization.identifier",
-      "severity": "WARNING",
-      "type": "STRUCTURAL",
-      "targetPath": "Organization.identifier"
-    },
-    {
-      "id": "organization-identifier-issummary",
-      "description": "IsSummary flag changed: false in source to true in target. Target profile marks this element as summary.",
-      "sourcePath": "Organization.identifier",
-      "severity": "INFO",
-      "type": "STRUCTURAL",
-      "targetPath": "Organization.identifier"
-    },
-    {
-      "id": "organization-identifier-type-explicit",
-      "description": "Type definition changed from implicit (empty array) in source to explicit \u0027Identifier\u0027 in target.",
-      "sourcePath": "Organization.identifier",
-      "severity": "INFO",
-      "type": "STRUCTURAL",
-      "targetPath": "Organization.identifier"
-    },
-    {
-      "id": "organization-identifier-constraints-added",
-      "description": "Constraints added in target profile: [ele-1]. This is a base FHIR validation rule.",
-      "sourcePath": "Organization.identifier",
-      "severity": "WARNING",
-      "type": "STRUCTURAL",
-      "targetPath": "Organization.identifier"
-    },
-    {
-      "id": "organization-type-cardinality",
-      "description": "Cardinality changed: [1..*] in source (requires at least one type) to [0..*] in target (allows zero types). A resource valid against the target might be invalid against the source.",
-      "sourcePath": "Organization.type",
-      "severity": "ERROR",
-      "type": "CARDINALITY",
-      "targetPath": "Organization.type"
-    },
-    {
-      "id": "organization-type-terminology",
-      "description": "Value-set binding added in target profile: \u0027example\u0027 strength to \u0027http://hl7.org/fhir/ValueSet/organization-type\u0027. Source profile had no explicit binding.",
-      "sourcePath": "Organization.type",
-      "severity": "WARNING",
-      "type": "TERMINOLOGY",
-      "targetPath": "Organization.type"
-    },
-    {
-      "id": "organization-type-mustsupport",
-      "description": "MustSupport flag removed in target profile (true in source, false in target). Source profile mandates support for this element, target does not.",
-      "sourcePath": "Organization.type",
-      "severity": "WARNING",
-      "type": "STRUCTURAL",
-      "targetPath": "Organization.type"
-    },
-    {
-      "id": "organization-type-issummary",
-      "description": "IsSummary flag changed: false in source to true in target. Target profile marks this element as summary.",
-      "sourcePath": "Organization.type",
-      "severity": "INFO",
-      "type": "STRUCTURAL",
-      "targetPath": "Organization.type"
-    },
-    {
-      "id": "organization-type-explicit",
-      "description": "Type definition changed from implicit (empty array) in source to explicit \u0027CodeableConcept\u0027 in target.",
-      "sourcePath": "Organization.type",
-      "severity": "INFO",
-      "type": "STRUCTURAL",
-      "targetPath": "Organization.type"
-    },
-    {
-      "id": "organization-type-constraints-added",
-      "description": "Constraints added in target profile: [ele-1]. This is a base FHIR validation rule.",
-      "sourcePath": "Organization.type",
-      "severity": "WARNING",
-      "type": "STRUCTURAL",
-      "targetPath": "Organization.type"
-    },
-    {
-      "id": "organization-name-cardinality",
-      "description": "Cardinality changed: [1..*] in source (requires at least one name) to [0..1] in target (allows zero or one name). A resource valid against the target might be invalid against the source.",
-      "sourcePath": "Organization.name",
-      "severity": "ERROR",
-      "type": "CARDINALITY",
-      "targetPath": "Organization.name"
-    },
-    {
-      "id": "organization-name-mustsupport",
-      "description": "MustSupport flag removed in target profile (true in source, false in target). Source profile mandates support for this element, target does not.",
-      "sourcePath": "Organization.name",
-      "severity": "WARNING",
-      "type": "STRUCTURAL",
-      "targetPath": "Organization.name"
-    },
-    {
-      "id": "organization-name-issummary",
-      "description": "IsSummary flag changed: false in source to true in target. Target profile marks this element as summary.",
-      "sourcePath": "Organization.name",
-      "severity": "INFO",
-      "type": "STRUCTURAL",
-      "targetPath": "Organization.name"
-    },
-    {
-      "id": "organization-name-type-explicit",
-      "description": "Type definition changed from implicit (empty array) in source to explicit \u0027string\u0027 in target.",
-      "sourcePath": "Organization.name",
-      "severity": "INFO",
-      "type": "STRUCTURAL",
-      "targetPath": "Organization.name"
-    },
-    {
-      "id": "organization-name-constraints-added",
-      "description": "Constraints added in target profile: [ele-1]. This is a base FHIR validation rule.",
-      "sourcePath": "Organization.name",
-      "severity": "WARNING",
-      "type": "STRUCTURAL",
-      "targetPath": "Organization.name"
-    },
-    {
-      "id": "organization-telecom-mustsupport",
-      "description": "MustSupport flag removed in target profile (true in source, false in target). Source profile mandates support for this element, target does not.",
-      "sourcePath": "Organization.telecom",
-      "severity": "WARNING",
-      "type": "STRUCTURAL",
-      "targetPath": "Organization.telecom"
-    },
-    {
-      "id": "organization-telecom-type-explicit",
-      "description": "Type definition changed from implicit (empty array) in source to explicit \u0027ContactPoint\u0027 in target.",
-      "sourcePath": "Organization.telecom",
-      "severity": "INFO",
-      "type": "STRUCTURAL",
-      "targetPath": "Organization.telecom"
-    },
-    {
-      "id": "organization-telecom-constraints-added",
-      "description": "Constraints added in target profile: [ele-1, org-3]. These are base FHIR validation rules.",
-      "sourcePath": "Organization.telecom",
-      "severity": "WARNING",
-      "type": "STRUCTURAL",
-      "targetPath": "Organization.telecom"
-    },
-    {
-      "id": "organization-address-mustsupport",
-      "description": "MustSupport flag removed in target profile (true in source, false in target). Source profile mandates support for this element, target does not.",
-      "sourcePath": "Organization.address",
-      "severity": "WARNING",
-      "type": "STRUCTURAL",
-      "targetPath": "Organization.address"
-    },
-    {
-      "id": "organization-address-type-explicit",
-      "description": "Type definition changed from implicit (empty array) in source to explicit \u0027Address\u0027 in target.",
-      "sourcePath": "Organization.address",
-      "severity": "INFO",
-      "type": "STRUCTURAL",
-      "targetPath": "Organization.address"
-    },
-    {
-      "id": "organization-address-constraints-added",
-      "description": "Constraints added in target profile: [ele-1, org-2]. These are base FHIR validation rules.",
-      "sourcePath": "Organization.address",
-      "severity": "WARNING",
-      "type": "STRUCTURAL",
-      "targetPath": "Organization.address"
-    },
-    {
-      "id": "organization-partof-cardinality",
-      "description": "Cardinality changed: [0..*] in source (allows multiple parent organizations) to [0..1] in target (allows at most one parent organization). A resource valid against the source (with multiple parents) would be invalid against the target.",
-      "sourcePath": "Organization.partOf",
-      "severity": "ERROR",
-      "type": "CARDINALITY",
-      "targetPath": "Organization.partOf"
-    },
-    {
-      "id": "organization-partof-targetprofile",
-      "description": "Reference target profile constraint added in target: [http://hl7.org/fhir/StructureDefinition/Organization]. Source profile had no explicit target profile.",
-      "sourcePath": "Organization.partOf",
-      "severity": "WARNING",
-      "type": "STRUCTURAL",
-      "targetPath": "Organization.partOf"
-    },
-    {
-      "id": "organization-partof-mustsupport",
-      "description": "MustSupport flag removed in target profile (true in source, false in target). Source profile mandates support for this element, target does not.",
-      "sourcePath": "Organization.partOf",
-      "severity": "WARNING",
-      "type": "STRUCTURAL",
-      "targetPath": "Organization.partOf"
-    },
-    {
-      "id": "organization-partof-issummary",
-      "description": "IsSummary flag changed: false in source to true in target. Target profile marks this element as summary.",
-      "sourcePath": "Organization.partOf",
-      "severity": "INFO",
-      "type": "STRUCTURAL",
-      "targetPath": "Organization.partOf"
-    },
-    {
-      "id": "organization-partof-type-explicit",
-      "description": "Type definition changed from implicit (empty array) in source to explicit \u0027Reference\u0027 in target.",
-      "sourcePath": "Organization.partOf",
-      "severity": "INFO",
-      "type": "STRUCTURAL",
-      "targetPath": "Organization.partOf"
-    },
-    {
-      "id": "organization-partof-constraints-added",
-      "description": "Constraints added in target profile: [ele-1]. This is a base FHIR validation rule.",
-      "sourcePath": "Organization.partOf",
-      "severity": "WARNING",
-      "type": "STRUCTURAL",
-      "targetPath": "Organization.partOf"
-    },
-    {
-      "id": "organization-contact-cardinality",
-      "description": "Cardinality changed: [1..*] in source (requires at least one contact) to [0..*] in target (allows zero contacts). A resource valid against the target might be invalid against the source.",
-      "sourcePath": "Organization.contact",
-      "severity": "ERROR",
-      "type": "CARDINALITY",
-      "targetPath": "Organization.contact"
-    },
-    {
-      "id": "organization-contact-mustsupport",
-      "description": "MustSupport flag removed in target profile (true in source, false in target). Source profile mandates support for this element, target does not.",
-      "sourcePath": "Organization.contact",
-      "severity": "WARNING",
-      "type": "STRUCTURAL",
-      "targetPath": "Organization.contact"
-    },
-    {
-      "id": "organization-contact-type-explicit",
-      "description": "Type definition changed from implicit (empty array) in source to explicit \u0027BackboneElement\u0027 in target.",
-      "sourcePath": "Organization.contact",
-      "severity": "INFO",
-      "type": "STRUCTURAL",
-      "targetPath": "Organization.contact"
-    },
-    {
-      "id": "organization-contact-constraints-added",
-      "description": "Constraints added in target profile: [ele-1]. This is a base FHIR validation rule.",
-      "sourcePath": "Organization.contact",
-      "severity": "WARNING",
-      "type": "STRUCTURAL",
-      "targetPath": "Organization.contact"
-    },
-    {
-      "id": "organization-contact-purpose-cardinality",
-      "description": "Cardinality changed: [0..*] in source (allows multiple purposes) to [0..1] in target (allows at most one purpose). A resource valid against the source (with multiple purposes) would be invalid against the target.",
-      "sourcePath": "Organization.contact.purpose",
-      "severity": "ERROR",
-      "type": "CARDINALITY",
-      "targetPath": "Organization.contact.purpose"
-    },
-    {
-      "id": "organization-contact-purpose-terminology",
-      "description": "Value-set binding added in target profile: \u0027extensible\u0027 strength to \u0027http://hl7.org/fhir/ValueSet/contactentity-type\u0027. Source profile had no explicit binding.",
-      "sourcePath": "Organization.contact.purpose",
-      "severity": "WARNING",
-      "type": "TERMINOLOGY",
-      "targetPath": "Organization.contact.purpose"
-    },
-    {
-      "id": "organization-contact-purpose-mustsupport",
-      "description": "MustSupport flag removed in target profile (true in source, false in target). Source profile mandates support for this element, target does not.",
-      "sourcePath": "Organization.contact.purpose",
-      "severity": "WARNING",
-      "type": "STRUCTURAL",
-      "targetPath": "Organization.contact.purpose"
-    },
-    {
-      "id": "organization-contact-purpose-type-explicit",
-      "description": "Type definition changed from implicit (empty array) in source to explicit \u0027CodeableConcept\u0027 in target.",
-      "sourcePath": "Organization.contact.purpose",
-      "severity": "INFO",
-      "type": "STRUCTURAL",
-      "targetPath": "Organization.contact.purpose"
-    },
-    {
-      "id": "organization-contact-purpose-constraints-added",
-      "description": "Constraints added in target profile: [ele-1]. This is a base FHIR validation rule.",
-      "sourcePath": "Organization.contact.purpose",
-      "severity": "WARNING",
-      "type": "STRUCTURAL",
-      "targetPath": "Organization.contact.purpose"
-    },
-    {
-      "id": "organization-contact-name-cardinality",
-      "description": "Cardinality changed: [0..*] in source (allows multiple names) to [0..1] in target (allows at most one name). A resource valid against the source (with multiple names) would be invalid against the target.",
-      "sourcePath": "Organization.contact.name",
-      "severity": "ERROR",
-      "type": "CARDINALITY",
-      "targetPath": "Organization.contact.name"
-    },
-    {
-      "id": "organization-contact-name-mustsupport",
-      "description": "MustSupport flag removed in target profile (true in source, false in target). Source profile mandates support for this element, target does not.",
-      "sourcePath": "Organization.contact.name",
-      "severity": "WARNING",
-      "type": "STRUCTURAL",
-      "targetPath": "Organization.contact.name"
-    },
-    {
-      "id": "organization-contact-name-type-explicit",
-      "description": "Type definition changed from implicit (empty array) in source to explicit \u0027HumanName\u0027 in target.",
-      "sourcePath": "Organization.contact.name",
-      "severity": "INFO",
-      "type": "STRUCTURAL",
-      "targetPath": "Organization.contact.name"
-    },
-    {
-      "id": "organization-contact-name-constraints-added",
-      "description": "Constraints added in target profile: [ele-1]. This is a base FHIR validation rule.",
-      "sourcePath": "Organization.contact.name",
-      "severity": "WARNING",
-      "type": "STRUCTURAL",
-      "targetPath": "Organization.contact.name"
-    },
-    {
-      "id": "organization-contact-telecom-mustsupport",
-      "description": "MustSupport flag removed in target profile (true in source, false in target). Source profile mandates support for this element, target does not.",
-      "sourcePath": "Organization.contact.telecom",
-      "severity": "WARNING",
-      "type": "STRUCTURAL",
-      "targetPath": "Organization.contact.telecom"
-    },
-    {
-      "id": "organization-contact-telecom-type-explicit",
-      "description": "Type definition changed from implicit (empty array) in source to explicit \u0027ContactPoint\u0027 in target.",
-      "sourcePath": "Organization.contact.telecom",
-      "severity": "INFO",
-      "type": "STRUCTURAL",
-      "targetPath": "Organization.contact.telecom"
-    },
-    {
-      "id": "organization-contact-telecom-constraints-added",
-      "description": "Constraints added in target profile: [ele-1]. This is a base FHIR validation rule.",
-      "sourcePath": "Organization.contact.telecom",
-      "severity": "WARNING",
-      "type": "STRUCTURAL",
-      "targetPath": "Organization.contact.telecom"
-    },
-    {
-      "id": "element-added-organization-id",
-      "description": "Element \u0027Organization.id\u0027 (Logical id of this artifact) is present in the target profile but not explicitly defined in the source profile. This is a standard FHIR element.",
-      "sourcePath": "",
-      "severity": "INFO",
-      "type": "STRUCTURAL",
-      "targetPath": "Organization.id"
-    },
-    {
-      "id": "element-added-organization-meta",
-      "description": "Element \u0027Organization.meta\u0027 (Metadata about the resource) is present in the target profile but not explicitly defined in the source profile. This is a standard FHIR element.",
-      "sourcePath": "",
-      "severity": "INFO",
-      "type": "STRUCTURAL",
-      "targetPath": "Organization.meta"
-    },
-    {
-      "id": "element-added-organization-implicitrules",
-      "description": "Element \u0027Organization.implicitRules\u0027 (A set of rules under which this content was created) is present in the target profile but not explicitly defined in the source profile. This is a standard FHIR element.",
-      "sourcePath": "",
-      "severity": "INFO",
-      "type": "STRUCTURAL",
-      "targetPath": "Organization.implicitRules"
-    },
-    {
-      "id": "element-added-organization-language",
-      "description": "Element \u0027Organization.language\u0027 (Language of the resource content) is present in the target profile but not explicitly defined in the source profile. This is a standard FHIR element.",
-      "sourcePath": "",
-      "severity": "INFO",
-      "type": "STRUCTURAL",
-      "targetPath": "Organization.language"
-    },
-    {
-      "id": "element-added-organization-text",
-      "description": "Element \u0027Organization.text\u0027 (Text summary of the resource, for human interpretation) is present in the target profile but not explicitly defined in the source profile. This is a standard FHIR element.",
-      "sourcePath": "",
-      "severity": "INFO",
-      "type": "STRUCTURAL",
-      "targetPath": "Organization.text"
-    },
-    {
-      "id": "element-added-organization-contained",
-      "description": "Element \u0027Organization.contained\u0027 (Contained, inline Resources) is present in the target profile but not explicitly defined in the source profile. This is a standard FHIR element.",
-      "sourcePath": "",
-      "severity": "INFO",
-      "type": "STRUCTURAL",
-      "targetPath": "Organization.contained"
-    },
-    {
-      "id": "element-added-organization-modifierextension",
-      "description": "Element \u0027Organization.modifierExtension\u0027 (Extensions that cannot be ignored) is present in the target profile but not explicitly defined in the source profile. This is a standard FHIR element.",
-      "sourcePath": "",
-      "severity": "INFO",
-      "type": "STRUCTURAL",
-      "targetPath": "Organization.modifierExtension"
-    },
-    {
-      "id": "element-added-organization-active",
-      "description": "Element \u0027Organization.active\u0027 (Whether the organization\u0027s record is still in active use) is present in the target profile but not explicitly defined in the source profile. This is a standard FHIR element.",
-      "sourcePath": "",
-      "severity": "INFO",
-      "type": "STRUCTURAL",
-      "targetPath": "Organization.active"
-    },
-    {
-      "id": "element-added-organization-alias",
-      "description": "Element \u0027Organization.alias\u0027 (A list of alternate names that the organization is known as, or was known as in the past) is present in the target profile but not explicitly defined in the source profile. This is a standard FHIR element.",
-      "sourcePath": "",
-      "severity": "INFO",
-      "type": "STRUCTURAL",
-      "targetPath": "Organization.alias"
-    },
-    {
-      "id": "element-added-organization-contact-id",
-      "description": "Element \u0027Organization.contact.id\u0027 (Unique id for inter-element referencing) is present in the target profile but not explicitly defined in the source profile. This is a standard FHIR element.",
-      "sourcePath": "",
-      "severity": "INFO",
-      "type": "STRUCTURAL",
-      "targetPath": "Organization.contact.id"
-    },
-    {
-      "id": "element-added-organization-contact-extension",
-      "description": "Element \u0027Organization.contact.extension\u0027 (Additional content defined by implementations) is present in the target profile but not explicitly defined in the source profile. This is a standard FHIR element.",
-      "sourcePath": "",
-      "severity": "INFO",
-      "type": "STRUCTURAL",
-      "targetPath": "Organization.contact.extension"
-    },
-    {
-      "id": "element-added-organization-contact-modifierextension",
-      "description": "Element \u0027Organization.contact.modifierExtension\u0027 (Extensions that cannot be ignored even if unrecognized) is present in the target profile but not explicitly defined in the source profile. This is a standard FHIR element.",
-      "sourcePath": "",
-      "severity": "INFO",
-      "type": "STRUCTURAL",
-      "targetPath": "Organization.contact.modifierExtension"
-    },
-    {
-      "id": "element-added-organization-contact-address",
-      "description": "Element \u0027Organization.contact.address\u0027 (Visiting or postal addresses for the contact) is present in the target profile but not explicitly defined in the source profile. This is a standard FHIR element.",
-      "sourcePath": "",
-      "severity": "INFO",
-      "type": "STRUCTURAL",
-      "targetPath": "Organization.contact.address"
-    },
-    {
-      "id": "element-added-organization-endpoint",
-      "description": "Element \u0027Organization.endpoint\u0027 (Technical endpoints providing access to services operated for the organization) is present in the target profile but not explicitly defined in the source profile. This is a standard FHIR element.",
-      "sourcePath": "",
-      "severity": "INFO",
-      "type": "STRUCTURAL",
-      "targetPath": "Organization.endpoint"
-    },
-    {
-      "id": "rule-2",
-      "description": "Cardinality changed: [0..1] â [0..*]",
-      "sourcePath": "Organization.extension",
-      "severity": "WARNING",
-      "type": "CARDINALITY",
-      "targetPath": "Organization.extension"
-    }
-  ],
-  "sourceCanonical": "https://hemas.example.com/fhir/StructureDefinition/Organization",
-  "targetCanonical": "http://hl7.org/fhir/StructureDefinition/Organization"
+{
+  "pairId" : "hemas-organization-vs-r4-organization",
+  "sourceClasspath" : "custom-profiles/hemas/hemas-organization.json",
+  "targetClasspath" : "standard-profiles/r4/organization.profile.json",
+  "drifts" : [ {
+    "id" : "rule-1",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Organization.extension",
+    "targetPath" : "Organization.extension",
+    "description" : "Slicing changed: rules=open, discriminators=[value:url] -> none",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-2",
+    "type" : "CARDINALITY",
+    "sourcePath" : "Organization.identifier",
+    "targetPath" : "Organization.identifier",
+    "description" : "Cardinality changed: [1..*] -> [0..*]",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-3",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Organization.identifier",
+    "targetPath" : "Organization.identifier",
+    "description" : "MustSupport removed in target",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-4",
+    "type" : "CARDINALITY",
+    "sourcePath" : "Organization.type",
+    "targetPath" : "Organization.type",
+    "description" : "Cardinality changed: [1..*] -> [0..*]",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-5",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Organization.type",
+    "targetPath" : "Organization.type",
+    "description" : "MustSupport removed in target",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-6",
+    "type" : "CARDINALITY",
+    "sourcePath" : "Organization.name",
+    "targetPath" : "Organization.name",
+    "description" : "Cardinality changed: [1..1] -> [0..1]",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-7",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Organization.name",
+    "targetPath" : "Organization.name",
+    "description" : "MustSupport removed in target",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-8",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Organization.telecom",
+    "targetPath" : "Organization.telecom",
+    "description" : "MustSupport removed in target",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-9",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Organization.address",
+    "targetPath" : "Organization.address",
+    "description" : "MustSupport removed in target",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-10",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Organization.partOf",
+    "targetPath" : "Organization.partOf",
+    "description" : "MustSupport removed in target",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-11",
+    "type" : "CARDINALITY",
+    "sourcePath" : "Organization.contact",
+    "targetPath" : "Organization.contact",
+    "description" : "Cardinality changed: [1..*] -> [0..*]",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-12",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Organization.contact",
+    "targetPath" : "Organization.contact",
+    "description" : "MustSupport removed in target",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-13",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Organization.contact.purpose",
+    "targetPath" : "Organization.contact.purpose",
+    "description" : "MustSupport removed in target",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-14",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Organization.contact.name",
+    "targetPath" : "Organization.contact.name",
+    "description" : "MustSupport removed in target",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-15",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Organization.contact.telecom",
+    "targetPath" : "Organization.contact.telecom",
+    "description" : "MustSupport removed in target",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-16",
+    "type" : "EXTENSION",
+    "sourcePath" : "Organization.extension:licenseNumber",
+    "targetPath" : "",
+    "description" : "Extension removed in target profile: Organization.extension:licenseNumber (was required)",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-17",
+    "type" : "EXTENSION",
+    "sourcePath" : "Organization.extension:accreditationStatus",
+    "targetPath" : "",
+    "description" : "Extension removed in target profile: Organization.extension:accreditationStatus (was mustSupport)",
+    "severity" : "WARNING"
+  } ]
 }

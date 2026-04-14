@@ -2,7 +2,7 @@ package com.example.fdd.api.impl
 
 import com.example.fdd.api.IProfileValidationController
 import com.example.fdd.api.dto.ProfileValidationReport
-import com.example.fdd.service.impl.ProfileValidationService
+import com.example.fdd.service.IProfileValidationService
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
@@ -27,7 +27,7 @@ import org.springframework.web.bind.annotation.RestController
 @RequestMapping("/api/validate", produces = [MediaType.APPLICATION_JSON_VALUE])
 @Tag(name = "Profile Validation", description = "HAPI-FHIR validation of custom and standard FHIR profiles")
 class ProfileValidationController(
-    private val profileValidationService: ProfileValidationService
+    private val profileValidationService: IProfileValidationService
 ) : IProfileValidationController {
 
     private val log = LoggerFactory.getLogger(javaClass)

@@ -4,8 +4,8 @@ import com.example.fdd.api.dto.ProfileValidationReport
 import com.example.fdd.api.dto.ProfileValidationResult
 import com.example.fdd.api.dto.ProfileValidationSummary
 import com.example.fdd.api.impl.ProfileValidationController
-import com.example.fdd.output.impl.OutputStore
-import com.example.fdd.service.impl.ProfileValidationService
+import com.example.fdd.output.IOutputStore
+import com.example.fdd.service.IProfileValidationService
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.whenever
@@ -31,10 +31,10 @@ class ProfileValidationControllerTest {
     private lateinit var mockMvc: MockMvc
 
     @MockitoBean
-    private lateinit var profileValidationService: ProfileValidationService
+    private lateinit var profileValidationService: IProfileValidationService
 
     @MockitoBean
-    private lateinit var outputStore: OutputStore
+    private lateinit var outputStore: IOutputStore
 
     // ---- Fixture helpers ----
 

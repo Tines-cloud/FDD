@@ -44,18 +44,34 @@ class Experiment1DriftDetectionTest {
     @Test
     @DisplayName("Evaluate drift detection accuracy across all gold-standard pairs")
     fun evaluateDriftDetectionAccuracy() {
-        val goldPairs = GoldStandardLoader.loadAll()
-        if (goldPairs.isEmpty()) {
+        val allGoldPairs = GoldStandardLoader.loadAll()
+        if (allGoldPairs.isEmpty()) {
             log.warn("No gold-standard pairs found - skipping experiment")
             return
         }
 
+        // Support selective pair execution via system property
+        val selectedIds = System.getProperty("fdd.pairs")?.split(",")?.map { it.trim() }
+        val goldPairs = if (!selectedIds.isNullOrEmpty()) {
+            val filtered = allGoldPairs.filter { it.pairId in selectedIds }
+            log.info("Running selected pairs: {} (matched {}/{})", selectedIds, filtered.size, selectedIds.size)
+            filtered
+        } else {
+            log.info("Running all {} gold-standard pairs", allGoldPairs.size)
+            allGoldPairs
+        }
+
+        if (goldPairs.isEmpty()) {
+            log.warn("No matching gold-standard pairs found for: {}", selectedIds)
+            return
+        }
+
         val results = goldPairs.map { gold ->
-            log.info("Evaluating pair: {}", gold.pairId)
+            log.info("Evaluating pair: {} (source={}, target={})", gold.pairId, gold.sourceClasspath, gold.targetClasspath)
 
             val predicted = orchestrationService.analyzeDrift(
-                source = ProfileInput(canonical = gold.sourceCanonical),
-                target = ProfileInput(canonical = gold.targetCanonical)
+                source = ProfileInput(classpath = gold.sourceClasspath),
+                target = ProfileInput(classpath = gold.targetClasspath)
             )
 
             GoldStandardLoader.evaluate(predicted, gold)

@@ -1,111 +1,356 @@
 {
-  "pairId": "r4-encounter-vs-us-core-encounter",
-  "sourceCanonical": "http://hl7.org/fhir/StructureDefinition/Encounter",
-  "targetCanonical": "http://hl7.org/fhir/us/core/StructureDefinition/us-core-encounter",
-  "drifts": [
-    {
-      "id": "identifier-must-support",
-      "type": "STRUCTURAL",
-      "sourcePath": "Encounter.identifier",
-      "targetPath": "Encounter.identifier",
-      "description": "US Core marks identifier as mustSupport; base R4 does not",
-      "severity": "WARNING"
-    },
-    {
-      "id": "status-must-support",
-      "type": "STRUCTURAL",
-      "sourcePath": "Encounter.status",
-      "targetPath": "Encounter.status",
-      "description": "US Core marks status as mustSupport; base R4 does not",
-      "severity": "WARNING"
-    },
-    {
-      "id": "class-must-support",
-      "type": "STRUCTURAL",
-      "sourcePath": "Encounter.class",
-      "targetPath": "Encounter.class",
-      "description": "US Core marks class as mustSupport; base R4 does not",
-      "severity": "WARNING"
-    },
-    {
-      "id": "type-cardinality",
-      "type": "CARDINALITY",
-      "sourcePath": "Encounter.type",
-      "targetPath": "Encounter.type",
-      "description": "US Core requires at least one type (1..*) while base R4 allows none (0..*)",
-      "severity": "ERROR"
-    },
-    {
-      "id": "type-must-support",
-      "type": "STRUCTURAL",
-      "sourcePath": "Encounter.type",
-      "targetPath": "Encounter.type",
-      "description": "US Core marks type as mustSupport; base R4 does not",
-      "severity": "WARNING"
-    },
-    {
-      "id": "subject-cardinality",
-      "type": "CARDINALITY",
-      "sourcePath": "Encounter.subject",
-      "targetPath": "Encounter.subject",
-      "description": "US Core requires subject (1..1) while base R4 allows none (0..1)",
-      "severity": "ERROR"
-    },
-    {
-      "id": "subject-must-support",
-      "type": "STRUCTURAL",
-      "sourcePath": "Encounter.subject",
-      "targetPath": "Encounter.subject",
-      "description": "US Core marks subject as mustSupport and constrains reference to US Core Patient",
-      "severity": "WARNING"
-    },
-    {
-      "id": "participant-must-support",
-      "type": "STRUCTURAL",
-      "sourcePath": "Encounter.participant",
-      "targetPath": "Encounter.participant",
-      "description": "US Core marks participant as mustSupport; base R4 does not",
-      "severity": "WARNING"
-    },
-    {
-      "id": "period-must-support",
-      "type": "STRUCTURAL",
-      "sourcePath": "Encounter.period",
-      "targetPath": "Encounter.period",
-      "description": "US Core marks period as mustSupport; base R4 does not",
-      "severity": "WARNING"
-    },
-    {
-      "id": "reasoncode-must-support",
-      "type": "STRUCTURAL",
-      "sourcePath": "Encounter.reasonCode",
-      "targetPath": "Encounter.reasonCode",
-      "description": "US Core marks reasonCode as mustSupport; base R4 does not",
-      "severity": "WARNING"
-    },
-    {
-      "id": "hospitalization-must-support",
-      "type": "STRUCTURAL",
-      "sourcePath": "Encounter.hospitalization",
-      "targetPath": "Encounter.hospitalization",
-      "description": "US Core marks hospitalization as mustSupport; base R4 does not",
-      "severity": "WARNING"
-    },
-    {
-      "id": "location-must-support",
-      "type": "STRUCTURAL",
-      "sourcePath": "Encounter.location",
-      "targetPath": "Encounter.location",
-      "description": "US Core marks location as mustSupport; base R4 does not",
-      "severity": "WARNING"
-    },
-    {
-      "id": "hospitalization-discharge-binding",
-      "type": "TERMINOLOGY",
-      "sourcePath": "Encounter.hospitalization.dischargeDisposition",
-      "targetPath": "Encounter.hospitalization.dischargeDisposition",
-      "description": "US Core binds dischargeDisposition to us-core-discharge-disposition ValueSet with preferred binding",
-      "severity": "INFO"
-    }
-  ]
+  "pairId" : "r4-encounter-vs-us-core-encounter",
+  "sourceClasspath" : "standard-profiles/r4/encounter.profile.json",
+  "targetClasspath" : "standard-profiles/us-core/StructureDefinition-us-core-encounter.json",
+  "drifts" : [ {
+    "id" : "rule-1",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Encounter.identifier",
+    "targetPath" : "Encounter.identifier",
+    "description" : "MustSupport added in target",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-2",
+    "type" : "EXTENSION",
+    "sourcePath" : "Encounter.identifier",
+    "targetPath" : "Encounter.identifier.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+    "description" : "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-3",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Encounter.status",
+    "targetPath" : "Encounter.status",
+    "description" : "MustSupport added in target",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-4",
+    "type" : "EXTENSION",
+    "sourcePath" : "Encounter.status",
+    "targetPath" : "Encounter.status.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+    "description" : "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-5",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Encounter.class",
+    "targetPath" : "Encounter.class",
+    "description" : "MustSupport added in target",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-6",
+    "type" : "EXTENSION",
+    "sourcePath" : "Encounter.class",
+    "targetPath" : "Encounter.class.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+    "description" : "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-7",
+    "type" : "CARDINALITY",
+    "sourcePath" : "Encounter.type",
+    "targetPath" : "Encounter.type",
+    "description" : "Cardinality changed: [0..*] -> [1..*]",
+    "severity" : "ERROR"
+  }, {
+    "id" : "rule-8",
+    "type" : "TERMINOLOGY",
+    "sourcePath" : "Encounter.type",
+    "targetPath" : "Encounter.type",
+    "description" : "Binding changed: example(http://hl7.org/fhir/ValueSet/encounter-type) -> extensible(http://hl7.org/fhir/us/core/ValueSet/us-core-encounter-type)",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-9",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Encounter.type",
+    "targetPath" : "Encounter.type",
+    "description" : "MustSupport added in target",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-10",
+    "type" : "EXTENSION",
+    "sourcePath" : "Encounter.type",
+    "targetPath" : "Encounter.type.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+    "description" : "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-11",
+    "type" : "CARDINALITY",
+    "sourcePath" : "Encounter.subject",
+    "targetPath" : "Encounter.subject",
+    "description" : "Cardinality changed: [0..1] -> [1..1]",
+    "severity" : "ERROR"
+  }, {
+    "id" : "rule-12",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Encounter.subject",
+    "targetPath" : "Encounter.subject",
+    "description" : "Reference target profile changed: [http://hl7.org/fhir/StructureDefinition/Group, http://hl7.org/fhir/StructureDefinition/Patient] -> [http://hl7.org/fhir/us/core/StructureDefinition/us-core-patient]",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-13",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Encounter.subject",
+    "targetPath" : "Encounter.subject",
+    "description" : "MustSupport added in target",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-14",
+    "type" : "EXTENSION",
+    "sourcePath" : "Encounter.subject",
+    "targetPath" : "Encounter.subject.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+    "description" : "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-15",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Encounter.participant",
+    "targetPath" : "Encounter.participant",
+    "description" : "MustSupport added in target",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-16",
+    "type" : "EXTENSION",
+    "sourcePath" : "Encounter.participant",
+    "targetPath" : "Encounter.participant.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+    "description" : "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-17",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Encounter.participant.type",
+    "targetPath" : "Encounter.participant.type",
+    "description" : "MustSupport added in target",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-18",
+    "type" : "EXTENSION",
+    "sourcePath" : "Encounter.participant.type",
+    "targetPath" : "Encounter.participant.type.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+    "description" : "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-19",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Encounter.participant.period",
+    "targetPath" : "Encounter.participant.period",
+    "description" : "MustSupport added in target",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-20",
+    "type" : "EXTENSION",
+    "sourcePath" : "Encounter.participant.period",
+    "targetPath" : "Encounter.participant.period.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+    "description" : "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-21",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Encounter.participant.individual",
+    "targetPath" : "Encounter.participant.individual",
+    "description" : "Reference target profile changed: [http://hl7.org/fhir/StructureDefinition/Practitioner, http://hl7.org/fhir/StructureDefinition/PractitionerRole, http://hl7.org/fhir/StructureDefinition/RelatedPerson] -> [http://hl7.org/fhir/us/core/StructureDefinition/us-core-practitioner, http://hl7.org/fhir/us/core/StructureDefinition/us-core-practitionerrole, http://hl7.org/fhir/us/core/StructureDefinition/us-core-relatedperson]",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-22",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Encounter.participant.individual",
+    "targetPath" : "Encounter.participant.individual",
+    "description" : "MustSupport added in target",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-23",
+    "type" : "EXTENSION",
+    "sourcePath" : "Encounter.participant.individual",
+    "targetPath" : "Encounter.participant.individual.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+    "description" : "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-24",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Encounter.period",
+    "targetPath" : "Encounter.period",
+    "description" : "MustSupport added in target",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-25",
+    "type" : "EXTENSION",
+    "sourcePath" : "Encounter.period",
+    "targetPath" : "Encounter.period.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+    "description" : "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-26",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Encounter.reasonCode",
+    "targetPath" : "Encounter.reasonCode",
+    "description" : "MustSupport added in target",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-27",
+    "type" : "EXTENSION",
+    "sourcePath" : "Encounter.reasonCode",
+    "targetPath" : "Encounter.reasonCode.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+    "description" : "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-28",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Encounter.reasonReference",
+    "targetPath" : "Encounter.reasonReference",
+    "description" : "Reference target profile changed: [http://hl7.org/fhir/StructureDefinition/Condition, http://hl7.org/fhir/StructureDefinition/ImmunizationRecommendation, http://hl7.org/fhir/StructureDefinition/Observation, http://hl7.org/fhir/StructureDefinition/Procedure] -> [http://hl7.org/fhir/StructureDefinition/ImmunizationRecommendation, http://hl7.org/fhir/StructureDefinition/Observation, http://hl7.org/fhir/us/core/StructureDefinition/us-core-condition-encounter-diagnosis, http://hl7.org/fhir/us/core/StructureDefinition/us-core-condition-problems-health-concerns, http://hl7.org/fhir/us/core/StructureDefinition/us-core-procedure]",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-29",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Encounter.reasonReference",
+    "targetPath" : "Encounter.reasonReference",
+    "description" : "MustSupport added in target",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-30",
+    "type" : "EXTENSION",
+    "sourcePath" : "Encounter.reasonReference",
+    "targetPath" : "Encounter.reasonReference.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+    "description" : "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-31",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Encounter.hospitalization",
+    "targetPath" : "Encounter.hospitalization",
+    "description" : "MustSupport added in target",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-32",
+    "type" : "EXTENSION",
+    "sourcePath" : "Encounter.hospitalization",
+    "targetPath" : "Encounter.hospitalization.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+    "description" : "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-33",
+    "type" : "TERMINOLOGY",
+    "sourcePath" : "Encounter.hospitalization.dischargeDisposition",
+    "targetPath" : "Encounter.hospitalization.dischargeDisposition",
+    "description" : "Binding changed: example(http://hl7.org/fhir/ValueSet/encounter-discharge-disposition) -> preferred(http://hl7.org/fhir/us/core/ValueSet/us-core-discharge-disposition)",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-34",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Encounter.hospitalization.dischargeDisposition",
+    "targetPath" : "Encounter.hospitalization.dischargeDisposition",
+    "description" : "MustSupport added in target",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-35",
+    "type" : "EXTENSION",
+    "sourcePath" : "Encounter.hospitalization.dischargeDisposition",
+    "targetPath" : "Encounter.hospitalization.dischargeDisposition.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+    "description" : "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-36",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Encounter.location",
+    "targetPath" : "Encounter.location",
+    "description" : "MustSupport added in target",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-37",
+    "type" : "EXTENSION",
+    "sourcePath" : "Encounter.location",
+    "targetPath" : "Encounter.location.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+    "description" : "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-38",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Encounter.location.location",
+    "targetPath" : "Encounter.location.location",
+    "description" : "MustSupport added in target",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-39",
+    "type" : "EXTENSION",
+    "sourcePath" : "Encounter.location.location",
+    "targetPath" : "Encounter.location.location.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+    "description" : "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-40",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Encounter.serviceProvider",
+    "targetPath" : "Encounter.serviceProvider",
+    "description" : "Reference target profile changed: [http://hl7.org/fhir/StructureDefinition/Organization] -> [http://hl7.org/fhir/us/core/StructureDefinition/us-core-organization]",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-41",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Encounter.serviceProvider",
+    "targetPath" : "Encounter.serviceProvider",
+    "description" : "MustSupport added in target",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-42",
+    "type" : "EXTENSION",
+    "sourcePath" : "Encounter.serviceProvider",
+    "targetPath" : "Encounter.serviceProvider.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+    "description" : "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-43",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "",
+    "targetPath" : "Encounter.identifier.id",
+    "description" : "Element added in target profile: Encounter.identifier.id",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-44",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "",
+    "targetPath" : "Encounter.identifier.extension",
+    "description" : "Element added in target profile: Encounter.identifier.extension",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-45",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "",
+    "targetPath" : "Encounter.identifier.use",
+    "description" : "Element added in target profile: Encounter.identifier.use",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-46",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "",
+    "targetPath" : "Encounter.identifier.type",
+    "description" : "Element added in target profile: Encounter.identifier.type",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-47",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "",
+    "targetPath" : "Encounter.identifier.system",
+    "description" : "Element added in target profile: Encounter.identifier.system",
+    "severity" : "ERROR"
+  }, {
+    "id" : "rule-48",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "",
+    "targetPath" : "Encounter.identifier.value",
+    "description" : "Element added in target profile: Encounter.identifier.value",
+    "severity" : "ERROR"
+  }, {
+    "id" : "rule-49",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "",
+    "targetPath" : "Encounter.identifier.period",
+    "description" : "Element added in target profile: Encounter.identifier.period",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-50",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "",
+    "targetPath" : "Encounter.identifier.assigner",
+    "description" : "Element added in target profile: Encounter.identifier.assigner",
+    "severity" : "INFO"
+  } ]
 }

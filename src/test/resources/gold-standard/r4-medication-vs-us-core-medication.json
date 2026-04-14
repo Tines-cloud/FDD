@@ -1,79 +1,34 @@
 {
-  "pairId": "r4-medication-vs-us-core-medication",
-  "sourceCanonical": "http://hl7.org/fhir/StructureDefinition/Medication",
-  "targetCanonical": "http://hl7.org/fhir/us/core/StructureDefinition/us-core-medication",
-  "drifts": [
-    {
-      "id": "code-cardinality",
-      "type": "CARDINALITY",
-      "sourcePath": "Medication.code",
-      "targetPath": "Medication.code",
-      "description": "US Core requires code (1..1) while base R4 allows none (0..1)",
-      "severity": "ERROR"
-    },
-    {
-      "id": "code-must-support",
-      "type": "STRUCTURAL",
-      "sourcePath": "Medication.code",
-      "targetPath": "Medication.code",
-      "description": "US Core marks code as mustSupport; base R4 does not",
-      "severity": "WARNING"
-    },
-    {
-      "id": "code-binding",
-      "type": "TERMINOLOGY",
-      "sourcePath": "Medication.code",
-      "targetPath": "Medication.code",
-      "description": "US Core uses an extensible binding to US Core Medication Codes (RxNorm); base R4 uses an example binding to SNOMEDCTMedicationCodes",
-      "severity": "WARNING"
-    },
-    {
-      "id": "status-must-support",
-      "type": "STRUCTURAL",
-      "sourcePath": "Medication.status",
-      "targetPath": "Medication.status",
-      "description": "US Core marks status as mustSupport; base R4 does not",
-      "severity": "WARNING"
-    },
-    {
-      "id": "manufacturer-must-support",
-      "type": "STRUCTURAL",
-      "sourcePath": "Medication.manufacturer",
-      "targetPath": "Medication.manufacturer",
-      "description": "US Core marks manufacturer as mustSupport; base R4 does not",
-      "severity": "WARNING"
-    },
-    {
-      "id": "form-must-support",
-      "type": "STRUCTURAL",
-      "sourcePath": "Medication.form",
-      "targetPath": "Medication.form",
-      "description": "US Core marks form as mustSupport; base R4 does not",
-      "severity": "WARNING"
-    },
-    {
-      "id": "ingredient-must-support",
-      "type": "STRUCTURAL",
-      "sourcePath": "Medication.ingredient",
-      "targetPath": "Medication.ingredient",
-      "description": "US Core marks ingredient as mustSupport; base R4 does not",
-      "severity": "WARNING"
-    },
-    {
-      "id": "ingredient-item-must-support",
-      "type": "STRUCTURAL",
-      "sourcePath": "Medication.ingredient.item[x]",
-      "targetPath": "Medication.ingredient.item[x]",
-      "description": "US Core marks ingredient.item[x] as mustSupport; base R4 does not",
-      "severity": "WARNING"
-    },
-    {
-      "id": "ingredient-strength-must-support",
-      "type": "STRUCTURAL",
-      "sourcePath": "Medication.ingredient.strength",
-      "targetPath": "Medication.ingredient.strength",
-      "description": "US Core marks ingredient.strength as mustSupport; base R4 does not",
-      "severity": "WARNING"
-    }
-  ]
+  "pairId" : "r4-medication-vs-us-core-medication",
+  "sourceClasspath" : "standard-profiles/r4/medication.profile.json",
+  "targetClasspath" : "standard-profiles/us-core/StructureDefinition-us-core-medication.json",
+  "drifts" : [ {
+    "id" : "rule-1",
+    "type" : "CARDINALITY",
+    "sourcePath" : "Medication.code",
+    "targetPath" : "Medication.code",
+    "description" : "Cardinality changed: [0..1] -> [1..1]",
+    "severity" : "ERROR"
+  }, {
+    "id" : "rule-2",
+    "type" : "TERMINOLOGY",
+    "sourcePath" : "Medication.code",
+    "targetPath" : "Medication.code",
+    "description" : "Binding changed: example(http://hl7.org/fhir/ValueSet/medication-codes) -> extensible(http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1010.4)",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-3",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Medication.code",
+    "targetPath" : "Medication.code",
+    "description" : "MustSupport added in target",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-4",
+    "type" : "EXTENSION",
+    "sourcePath" : "Medication.code",
+    "targetPath" : "Medication.code.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+    "description" : "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+    "severity" : "WARNING"
+  } ]
 }

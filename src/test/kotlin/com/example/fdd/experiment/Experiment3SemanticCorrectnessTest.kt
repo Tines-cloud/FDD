@@ -86,16 +86,16 @@ class Experiment3SemanticCorrectnessTest {
 
     private data class SemanticTestCase(
         val id: String,
-        val sourceCanonical: String,
-        val targetCanonical: String,
+        val sourceClasspath: String,
+        val targetClasspath: String,
         val instanceFile: String,
         val resourceType: String
     )
 
     private data class SemanticTestResult(
         val caseId: String,
-        val sourceCanonical: String,
-        val targetCanonical: String,
+        val sourceClasspath: String,
+        val targetClasspath: String,
         val pipelineSuccess: Boolean,
         val syntacticallyValid: Boolean,
         val instancePosted: Boolean,
@@ -112,87 +112,181 @@ class Experiment3SemanticCorrectnessTest {
         // --- R4 Base -> US Core profile pairs ---
         SemanticTestCase(
             id = "r4-patient-to-us-core-patient",
-            sourceCanonical = "http://hl7.org/fhir/StructureDefinition/Patient",
-            targetCanonical = "http://hl7.org/fhir/us/core/StructureDefinition/us-core-patient",
+            sourceClasspath = "standard-profiles/r4/patient.profile.json",
+            targetClasspath = "standard-profiles/us-core/StructureDefinition-us-core-patient.json",
             instanceFile = "fhir/instances/patient-r4-base.json",
             resourceType = "Patient"
         ),
         SemanticTestCase(
             id = "r4-condition-to-us-core-condition",
-            sourceCanonical = "http://hl7.org/fhir/StructureDefinition/Condition",
-            targetCanonical = "http://hl7.org/fhir/us/core/StructureDefinition/us-core-condition-encounter-diagnosis",
+            sourceClasspath = "standard-profiles/r4/condition.profile.json",
+            targetClasspath = "standard-profiles/us-core/StructureDefinition-us-core-condition-encounter-diagnosis.json",
             instanceFile = "fhir/instances/condition-r4-base.json",
             resourceType = "Condition"
         ),
         SemanticTestCase(
             id = "r4-observation-to-us-core-observation-lab",
-            sourceCanonical = "http://hl7.org/fhir/StructureDefinition/Observation",
-            targetCanonical = "http://hl7.org/fhir/us/core/StructureDefinition/us-core-observation-lab",
+            sourceClasspath = "standard-profiles/r4/observation.profile.json",
+            targetClasspath = "standard-profiles/us-core/StructureDefinition-us-core-observation-lab.json",
             instanceFile = "fhir/instances/observation-r4-base.json",
             resourceType = "Observation"
         ),
         SemanticTestCase(
             id = "r4-encounter-to-us-core-encounter",
-            sourceCanonical = "http://hl7.org/fhir/StructureDefinition/Encounter",
-            targetCanonical = "http://hl7.org/fhir/us/core/StructureDefinition/us-core-encounter",
+            sourceClasspath = "standard-profiles/r4/encounter.profile.json",
+            targetClasspath = "standard-profiles/us-core/StructureDefinition-us-core-encounter.json",
             instanceFile = "fhir/instances/encounter-r4-base.json",
             resourceType = "Encounter"
         ),
         SemanticTestCase(
             id = "r4-allergyintolerance-to-us-core-allergyintolerance",
-            sourceCanonical = "http://hl7.org/fhir/StructureDefinition/AllergyIntolerance",
-            targetCanonical = "http://hl7.org/fhir/us/core/StructureDefinition/us-core-allergyintolerance",
+            sourceClasspath = "standard-profiles/r4/allergyintolerance.profile.json",
+            targetClasspath = "standard-profiles/us-core/StructureDefinition-us-core-allergyintolerance.json",
             instanceFile = "fhir/instances/allergyintolerance-r4-base.json",
             resourceType = "AllergyIntolerance"
         ),
         SemanticTestCase(
             id = "r4-immunization-to-us-core-immunization",
-            sourceCanonical = "http://hl7.org/fhir/StructureDefinition/Immunization",
-            targetCanonical = "http://hl7.org/fhir/us/core/StructureDefinition/us-core-immunization",
+            sourceClasspath = "standard-profiles/r4/immunization.profile.json",
+            targetClasspath = "standard-profiles/us-core/StructureDefinition-us-core-immunization.json",
             instanceFile = "fhir/instances/immunization-r4-base.json",
             resourceType = "Immunization"
         ),
         SemanticTestCase(
             id = "r4-medicationrequest-to-us-core-medicationrequest",
-            sourceCanonical = "http://hl7.org/fhir/StructureDefinition/MedicationRequest",
-            targetCanonical = "http://hl7.org/fhir/us/core/StructureDefinition/us-core-medicationrequest",
+            sourceClasspath = "standard-profiles/r4/medicationrequest.profile.json",
+            targetClasspath = "standard-profiles/us-core/StructureDefinition-us-core-medicationrequest.json",
             instanceFile = "fhir/instances/medicationrequest-r4-base.json",
             resourceType = "MedicationRequest"
         ),
         SemanticTestCase(
             id = "r4-procedure-to-us-core-procedure",
-            sourceCanonical = "http://hl7.org/fhir/StructureDefinition/Procedure",
-            targetCanonical = "http://hl7.org/fhir/us/core/StructureDefinition/us-core-procedure",
+            sourceClasspath = "standard-profiles/r4/procedure.profile.json",
+            targetClasspath = "standard-profiles/us-core/StructureDefinition-us-core-procedure.json",
             instanceFile = "fhir/instances/procedure-r4-base.json",
             resourceType = "Procedure"
         ),
         SemanticTestCase(
             id = "r4-diagnosticreport-to-us-core-diagnosticreport-lab",
-            sourceCanonical = "http://hl7.org/fhir/StructureDefinition/DiagnosticReport",
-            targetCanonical = "http://hl7.org/fhir/us/core/StructureDefinition/us-core-diagnosticreport-lab",
+            sourceClasspath = "standard-profiles/r4/diagnosticreport.profile.json",
+            targetClasspath = "standard-profiles/us-core/StructureDefinition-us-core-diagnosticreport-lab.json",
             instanceFile = "fhir/instances/diagnosticreport-r4-base.json",
             resourceType = "DiagnosticReport"
         ),
         SemanticTestCase(
             id = "r4-organization-to-us-core-organization",
-            sourceCanonical = "http://hl7.org/fhir/StructureDefinition/Organization",
-            targetCanonical = "http://hl7.org/fhir/us/core/StructureDefinition/us-core-organization",
+            sourceClasspath = "standard-profiles/r4/organization.profile.json",
+            targetClasspath = "standard-profiles/us-core/StructureDefinition-us-core-organization.json",
             instanceFile = "fhir/instances/organization-r4-base.json",
             resourceType = "Organization"
         ),
         SemanticTestCase(
             id = "r4-practitioner-to-us-core-practitioner",
-            sourceCanonical = "http://hl7.org/fhir/StructureDefinition/Practitioner",
-            targetCanonical = "http://hl7.org/fhir/us/core/StructureDefinition/us-core-practitioner",
+            sourceClasspath = "standard-profiles/r4/practitioner.profile.json",
+            targetClasspath = "standard-profiles/us-core/StructureDefinition-us-core-practitioner.json",
             instanceFile = "fhir/instances/practitioner-r4-base.json",
             resourceType = "Practitioner"
         ),
-        // --- Cross-national pair ---
+        // --- R4 Base -> US Core (remaining resource types) ---
+        SemanticTestCase(
+            id = "r4-location-to-us-core-location",
+            sourceClasspath = "standard-profiles/r4/location.profile.json",
+            targetClasspath = "standard-profiles/us-core/StructureDefinition-us-core-location.json",
+            instanceFile = "fhir/instances/location-r4-base.json",
+            resourceType = "Location"
+        ),
+        SemanticTestCase(
+            id = "r4-medication-to-us-core-medication",
+            sourceClasspath = "standard-profiles/r4/medication.profile.json",
+            targetClasspath = "standard-profiles/us-core/StructureDefinition-us-core-medication.json",
+            instanceFile = "fhir/instances/medication-r4-base.json",
+            resourceType = "Medication"
+        ),
+        SemanticTestCase(
+            id = "r4-careplan-to-us-core-careplan",
+            sourceClasspath = "standard-profiles/r4/careplan.profile.json",
+            targetClasspath = "standard-profiles/us-core/StructureDefinition-us-core-careplan.json",
+            instanceFile = "fhir/instances/careplan-r4-base.json",
+            resourceType = "CarePlan"
+        ),
+        // --- AU Core -> US Core (cross-national pairs) ---
         SemanticTestCase(
             id = "au-core-patient-to-us-core-patient",
-            sourceCanonical = "http://hl7.org.au/fhir/core/StructureDefinition/au-core-patient",
-            targetCanonical = "http://hl7.org/fhir/us/core/StructureDefinition/us-core-patient",
+            sourceClasspath = "standard-profiles/au-core/StructureDefinition-au-core-patient.json",
+            targetClasspath = "standard-profiles/us-core/StructureDefinition-us-core-patient.json",
             instanceFile = "fhir/instances/patient-au-core.json",
+            resourceType = "Patient"
+        ),
+        SemanticTestCase(
+            id = "au-core-condition-to-us-core-condition",
+            sourceClasspath = "standard-profiles/au-core/StructureDefinition-au-core-condition.json",
+            targetClasspath = "standard-profiles/us-core/StructureDefinition-us-core-condition-encounter-diagnosis.json",
+            instanceFile = "fhir/instances/condition-r4-base.json",
+            resourceType = "Condition"
+        ),
+        SemanticTestCase(
+            id = "au-core-encounter-to-us-core-encounter",
+            sourceClasspath = "standard-profiles/au-core/StructureDefinition-au-core-encounter.json",
+            targetClasspath = "standard-profiles/us-core/StructureDefinition-us-core-encounter.json",
+            instanceFile = "fhir/instances/encounter-r4-base.json",
+            resourceType = "Encounter"
+        ),
+        SemanticTestCase(
+            id = "au-core-allergyintolerance-to-us-core-allergyintolerance",
+            sourceClasspath = "standard-profiles/au-core/StructureDefinition-au-core-allergyintolerance.json",
+            targetClasspath = "standard-profiles/us-core/StructureDefinition-us-core-allergyintolerance.json",
+            instanceFile = "fhir/instances/allergyintolerance-r4-base.json",
+            resourceType = "AllergyIntolerance"
+        ),
+        SemanticTestCase(
+            id = "au-core-immunization-to-us-core-immunization",
+            sourceClasspath = "standard-profiles/au-core/StructureDefinition-au-core-immunization.json",
+            targetClasspath = "standard-profiles/us-core/StructureDefinition-us-core-immunization.json",
+            instanceFile = "fhir/instances/immunization-r4-base.json",
+            resourceType = "Immunization"
+        ),
+        SemanticTestCase(
+            id = "au-core-medicationrequest-to-us-core-medicationrequest",
+            sourceClasspath = "standard-profiles/au-core/StructureDefinition-au-core-medicationrequest.json",
+            targetClasspath = "standard-profiles/us-core/StructureDefinition-us-core-medicationrequest.json",
+            instanceFile = "fhir/instances/medicationrequest-r4-base.json",
+            resourceType = "MedicationRequest"
+        ),
+        // --- Custom -> Custom (Sri Lanka organisations) ---
+        SemanticTestCase(
+            id = "tk-soft-patient-to-iit-proj-patient",
+            sourceClasspath = "custom-profiles/tk-soft/tk-soft-patient.json",
+            targetClasspath = "custom-profiles/iit-proj/iit-proj-patient.json",
+            instanceFile = "fhir/instances/patient-r4-base.json",
+            resourceType = "Patient"
+        ),
+        SemanticTestCase(
+            id = "tk-soft-patient-to-hemas-patient",
+            sourceClasspath = "custom-profiles/tk-soft/tk-soft-patient.json",
+            targetClasspath = "custom-profiles/hemas/hemas-patient.json",
+            instanceFile = "fhir/instances/patient-r4-base.json",
+            resourceType = "Patient"
+        ),
+        SemanticTestCase(
+            id = "iit-proj-patient-to-hemas-patient",
+            sourceClasspath = "custom-profiles/iit-proj/iit-proj-patient.json",
+            targetClasspath = "custom-profiles/hemas/hemas-patient.json",
+            instanceFile = "fhir/instances/patient-r4-base.json",
+            resourceType = "Patient"
+        ),
+        SemanticTestCase(
+            id = "tk-soft-condition-to-hemas-condition",
+            sourceClasspath = "custom-profiles/tk-soft/tk-soft-condition.json",
+            targetClasspath = "custom-profiles/hemas/hemas-condition.json",
+            instanceFile = "fhir/instances/condition-r4-base.json",
+            resourceType = "Condition"
+        ),
+        // --- Custom -> Standard ---
+        SemanticTestCase(
+            id = "hemas-patient-to-us-core-patient",
+            sourceClasspath = "custom-profiles/hemas/hemas-patient.json",
+            targetClasspath = "standard-profiles/us-core/StructureDefinition-us-core-patient.json",
+            instanceFile = "fhir/instances/patient-r4-base.json",
             resourceType = "Patient"
         )
     )
@@ -205,7 +299,17 @@ class Experiment3SemanticCorrectnessTest {
 
         val results = mutableListOf<SemanticTestResult>()
 
-        for (testCase in testCases) {
+        // Support selective pair execution via -Dfdd.pairs=id1,id2
+        val selectedIds = System.getProperty("fdd.pairs")?.split(",")?.map { it.trim() }
+        val casesToRun = if (!selectedIds.isNullOrEmpty()) {
+            val filtered = testCases.filter { it.id in selectedIds }
+            log.info("Selective mode: running {}/{} cases matching -Dfdd.pairs", filtered.size, testCases.size)
+            filtered
+        } else {
+            testCases
+        }
+
+        for (testCase in casesToRun) {
             log.info("=== Semantic test case: {} ===", testCase.id)
             val result = runTestCase(testCase, fhirServerUrl)
             results.add(result)
@@ -273,11 +377,11 @@ class Experiment3SemanticCorrectnessTest {
             }
 
             // Step 2: Run full FDD pipeline
-            log.info("Running FDD pipeline: {} -> {}", testCase.sourceCanonical, testCase.targetCanonical)
+            log.info("Running FDD pipeline: {} -> {}", testCase.sourceClasspath, testCase.targetClasspath)
             val (driftReport, mapResult, coverageReport) = try {
                 orchestrationService.analyzeAndRepair(
-                    source = ProfileInput(canonical = testCase.sourceCanonical),
-                    target = ProfileInput(canonical = testCase.targetCanonical)
+                    source = ProfileInput(classpath = testCase.sourceClasspath),
+                    target = ProfileInput(classpath = testCase.targetClasspath)
                 )
             } catch (ex: Exception) {
                 errorMessage = "Pipeline failed: ${ex.message}"
@@ -379,8 +483,8 @@ class Experiment3SemanticCorrectnessTest {
         errorMessage: String?
     ) = SemanticTestResult(
         caseId = testCase.id,
-        sourceCanonical = testCase.sourceCanonical,
-        targetCanonical = testCase.targetCanonical,
+        sourceClasspath = testCase.sourceClasspath,
+        targetClasspath = testCase.targetClasspath,
         pipelineSuccess = pipelineSuccess,
         syntacticallyValid = syntacticallyValid,
         instancePosted = instancePosted,
@@ -436,7 +540,8 @@ class Experiment3SemanticCorrectnessTest {
     ): Pair<Boolean, String?> {
         return try {
             val tree = objectMapper.readTree(structureMapJson)
-            val smUrl = tree.get("url")?.asText() ?: return false to null
+            @Suppress("DEPRECATION")
+            val smUrl = tree.get("url")?.textValue() ?: return false to null
 
             val transformRequest = """
             {

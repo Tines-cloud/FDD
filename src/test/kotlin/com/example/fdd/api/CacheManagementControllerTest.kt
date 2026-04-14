@@ -3,7 +3,7 @@ package com.example.fdd.api
 import com.example.fdd.ai.LlmResponseCache
 import com.example.fdd.ai.PromptTemplateService
 import com.example.fdd.api.impl.CacheManagementController
-import com.example.fdd.output.impl.OutputStore
+import com.example.fdd.output.IOutputStore
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.verify
@@ -35,7 +35,7 @@ class CacheManagementControllerTest {
     private lateinit var promptTemplateService: PromptTemplateService
 
     @MockitoBean
-    private lateinit var outputStore: OutputStore
+    private lateinit var outputStore: IOutputStore
 
     @Test
     @DisplayName("GET /api/cache/llm/size returns cache size")

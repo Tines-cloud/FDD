@@ -8,7 +8,7 @@ import com.example.fdd.exception.LlmResponseException
 import com.example.fdd.exception.MapValidationException
 import com.example.fdd.exception.ProfileNotFoundException
 import com.example.fdd.exception.ProfileValidationException
-import com.example.fdd.output.impl.OutputStore
+import com.example.fdd.output.IOutputStore
 import jakarta.servlet.http.HttpServletRequest
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus
@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice
  */
 @RestControllerAdvice
 class GlobalExceptionHandler(
-    private val outputStore: OutputStore
+    private val outputStore: IOutputStore
 ) : IGlobalExceptionHandler {
 
     private val log = LoggerFactory.getLogger(javaClass)

@@ -43,9 +43,25 @@ class Experiment2SyntacticValidityTest {
     @Test
     @DisplayName("Evaluate syntactic validity rate of generated StructureMaps")
     fun evaluateSyntacticValidity() {
-        val goldPairs = GoldStandardLoader.loadAll()
-        if (goldPairs.isEmpty()) {
+        val allGoldPairs = GoldStandardLoader.loadAll()
+        if (allGoldPairs.isEmpty()) {
             log.warn("No gold-standard pairs found - skipping experiment")
+            return
+        }
+
+        // Support selective pair execution via system property
+        val selectedIds = System.getProperty("fdd.pairs")?.split(",")?.map { it.trim() }
+        val goldPairs = if (!selectedIds.isNullOrEmpty()) {
+            val filtered = allGoldPairs.filter { it.pairId in selectedIds }
+            log.info("Running selected pairs: {} (matched {}/{})", selectedIds, filtered.size, selectedIds.size)
+            filtered
+        } else {
+            log.info("Running all {} gold-standard pairs", allGoldPairs.size)
+            allGoldPairs
+        }
+
+        if (goldPairs.isEmpty()) {
+            log.warn("No matching gold-standard pairs found for: {}", selectedIds)
             return
         }
 
@@ -58,8 +74,8 @@ class Experiment2SyntacticValidityTest {
 
             try {
                 val (driftReport, mapResult, coverageReport) = orchestrationService.analyzeAndRepair(
-                    source = ProfileInput(canonical = gold.sourceCanonical),
-                    target = ProfileInput(canonical = gold.targetCanonical)
+                    source = ProfileInput(classpath = gold.sourceClasspath),
+                    target = ProfileInput(classpath = gold.targetClasspath)
                 )
 
                 totalGenerated++

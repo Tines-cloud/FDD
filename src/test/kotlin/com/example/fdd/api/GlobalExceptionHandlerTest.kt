@@ -7,7 +7,7 @@ import com.example.fdd.exception.LlmResponseException
 import com.example.fdd.exception.MapValidationException
 import com.example.fdd.exception.ProfileNotFoundException
 import com.example.fdd.exception.ProfileValidationException
-import com.example.fdd.output.impl.OutputStore
+import com.example.fdd.output.IOutputStore
 import jakarta.servlet.http.HttpServletRequest
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
@@ -25,7 +25,7 @@ import org.springframework.http.HttpStatus
  */
 class GlobalExceptionHandlerTest {
 
-    private val outputStore: OutputStore = mock()
+    private val outputStore: IOutputStore = mock()
     private val request: HttpServletRequest = mock()
     private val handler = GlobalExceptionHandler(outputStore)
 

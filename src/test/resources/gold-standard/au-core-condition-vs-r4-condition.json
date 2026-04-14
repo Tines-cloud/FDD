@@ -1,0 +1,202 @@
+{
+  "pairId" : "au-core-condition-vs-r4-condition",
+  "sourceClasspath" : "standard-profiles/au-core/StructureDefinition-au-core-condition.json",
+  "targetClasspath" : "standard-profiles/r4/condition.profile.json",
+  "drifts" : [ {
+    "id" : "rule-1",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Condition.clinicalStatus",
+    "targetPath" : "Condition.clinicalStatus",
+    "description" : "MustSupport removed in target",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-2",
+    "type" : "EXTENSION",
+    "sourcePath" : "Condition.clinicalStatus.extension(http://hl7.org/fhir/StructureDefinition/obligation)",
+    "targetPath" : "Condition.clinicalStatus",
+    "description" : "Extension removed in target element: http://hl7.org/fhir/StructureDefinition/obligation",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-3",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Condition.verificationStatus",
+    "targetPath" : "Condition.verificationStatus",
+    "description" : "MustSupport removed in target",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-4",
+    "type" : "EXTENSION",
+    "sourcePath" : "Condition.verificationStatus.extension(http://hl7.org/fhir/StructureDefinition/obligation)",
+    "targetPath" : "Condition.verificationStatus",
+    "description" : "Extension removed in target element: http://hl7.org/fhir/StructureDefinition/obligation",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-5",
+    "type" : "CARDINALITY",
+    "sourcePath" : "Condition.category",
+    "targetPath" : "Condition.category",
+    "description" : "Cardinality changed: [1..*] -> [0..*]",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-6",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Condition.category",
+    "targetPath" : "Condition.category",
+    "description" : "MustSupport removed in target",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-7",
+    "type" : "EXTENSION",
+    "sourcePath" : "Condition.category.extension(http://hl7.org/fhir/StructureDefinition/obligation)",
+    "targetPath" : "Condition.category",
+    "description" : "Extension removed in target element: http://hl7.org/fhir/StructureDefinition/obligation",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-8",
+    "type" : "TERMINOLOGY",
+    "sourcePath" : "Condition.severity",
+    "targetPath" : "Condition.severity",
+    "description" : "Binding changed: extensible(http://hl7.org/fhir/ValueSet/condition-severity) -> preferred(http://hl7.org/fhir/ValueSet/condition-severity)",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-9",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Condition.severity",
+    "targetPath" : "Condition.severity",
+    "description" : "MustSupport removed in target",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-10",
+    "type" : "EXTENSION",
+    "sourcePath" : "Condition.severity.extension(http://hl7.org/fhir/StructureDefinition/obligation)",
+    "targetPath" : "Condition.severity",
+    "description" : "Extension removed in target element: http://hl7.org/fhir/StructureDefinition/obligation",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-11",
+    "type" : "CARDINALITY",
+    "sourcePath" : "Condition.code",
+    "targetPath" : "Condition.code",
+    "description" : "Cardinality changed: [1..1] -> [0..1]",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-12",
+    "type" : "TERMINOLOGY",
+    "sourcePath" : "Condition.code",
+    "targetPath" : "Condition.code",
+    "description" : "Binding changed: extensible(https://healthterminologies.gov.au/fhir/ValueSet/clinical-condition-1) -> example(http://hl7.org/fhir/ValueSet/condition-code)",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-13",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Condition.code",
+    "targetPath" : "Condition.code",
+    "description" : "MustSupport removed in target",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-14",
+    "type" : "EXTENSION",
+    "sourcePath" : "Condition.code.extension(http://hl7.org/fhir/StructureDefinition/obligation)",
+    "targetPath" : "Condition.code",
+    "description" : "Extension removed in target element: http://hl7.org/fhir/StructureDefinition/obligation",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-15",
+    "type" : "TERMINOLOGY",
+    "sourcePath" : "Condition.bodySite",
+    "targetPath" : "Condition.bodySite",
+    "description" : "Binding changed: extensible(https://healthterminologies.gov.au/fhir/ValueSet/body-site-1) -> example(http://hl7.org/fhir/ValueSet/body-site)",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-16",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Condition.bodySite",
+    "targetPath" : "Condition.bodySite",
+    "description" : "Constraints removed in target: [au-core-cond-01]",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-17",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Condition.subject",
+    "targetPath" : "Condition.subject",
+    "description" : "Reference target profile changed: [http://hl7.org.au/fhir/core/StructureDefinition/au-core-patient] -> [http://hl7.org/fhir/StructureDefinition/Group, http://hl7.org/fhir/StructureDefinition/Patient]",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-18",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Condition.subject",
+    "targetPath" : "Condition.subject",
+    "description" : "MustSupport removed in target",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-19",
+    "type" : "EXTENSION",
+    "sourcePath" : "Condition.subject.extension(http://hl7.org/fhir/StructureDefinition/obligation)",
+    "targetPath" : "Condition.subject",
+    "description" : "Extension removed in target element: http://hl7.org/fhir/StructureDefinition/obligation",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-20",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Condition.onset[x]",
+    "targetPath" : "Condition.onset[x]",
+    "description" : "Type changed: [Age, Period, Range, dateTime] -> [Age, Period, Range, dateTime, string]",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-21",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Condition.onset[x]",
+    "targetPath" : "Condition.onset[x]",
+    "description" : "MustSupport removed in target",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-22",
+    "type" : "EXTENSION",
+    "sourcePath" : "Condition.onset[x].extension(http://hl7.org/fhir/StructureDefinition/obligation)",
+    "targetPath" : "Condition.onset[x]",
+    "description" : "Extension removed in target element: http://hl7.org/fhir/StructureDefinition/obligation",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-23",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Condition.abatement[x]",
+    "targetPath" : "Condition.abatement[x]",
+    "description" : "Type changed: [Age, Period, Range, dateTime] -> [Age, Period, Range, dateTime, string]",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-24",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Condition.abatement[x]",
+    "targetPath" : "Condition.abatement[x]",
+    "description" : "MustSupport removed in target",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-25",
+    "type" : "EXTENSION",
+    "sourcePath" : "Condition.abatement[x].extension(http://hl7.org/fhir/StructureDefinition/obligation)",
+    "targetPath" : "Condition.abatement[x]",
+    "description" : "Extension removed in target element: http://hl7.org/fhir/StructureDefinition/obligation",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-26",
+    "type" : "TERMINOLOGY",
+    "sourcePath" : "Condition.evidence.code",
+    "targetPath" : "Condition.evidence.code",
+    "description" : "Binding changed: preferred(https://healthterminologies.gov.au/fhir/ValueSet/clinical-finding-1) -> example(http://hl7.org/fhir/ValueSet/manifestation-or-symptom)",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-27",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Condition.note",
+    "targetPath" : "Condition.note",
+    "description" : "MustSupport removed in target",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-28",
+    "type" : "EXTENSION",
+    "sourcePath" : "Condition.note.extension(http://hl7.org/fhir/StructureDefinition/obligation)",
+    "targetPath" : "Condition.note",
+    "description" : "Extension removed in target element: http://hl7.org/fhir/StructureDefinition/obligation",
+    "severity" : "WARNING"
+  } ]
+}

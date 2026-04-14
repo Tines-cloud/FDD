@@ -5,7 +5,7 @@ import com.example.fdd.api.dto.AnalyzeResponse
 import com.example.fdd.api.dto.RepairResponse
 import com.example.fdd.api.dto.Request
 import com.example.fdd.api.dto.ValidationSummary
-import com.example.fdd.output.impl.OutputStore
+import com.example.fdd.output.IOutputStore
 import com.example.fdd.service.DriftOrchestrationService
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.responses.ApiResponse
@@ -33,7 +33,7 @@ import org.springframework.web.bind.annotation.RestController
 @Tag(name = "Drift Detection & Repair", description = "FHIR profile drift analysis and StructureMap generation")
 class DriftController(
     private val orchestrationService: DriftOrchestrationService,
-    private val outputStore: OutputStore
+    private val outputStore: IOutputStore
 ) : IDriftController {
 
     private val log = LoggerFactory.getLogger(javaClass)

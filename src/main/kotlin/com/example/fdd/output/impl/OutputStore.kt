@@ -8,6 +8,7 @@ import com.example.fdd.model.CoverageReport
 import com.example.fdd.model.CoverageStatus
 import com.example.fdd.model.DriftReport
 import com.example.fdd.output.IOutputStore
+import com.example.fdd.output.IOutputStore.OutputContext
 import jakarta.servlet.http.HttpServletRequest
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
@@ -30,11 +31,6 @@ class OutputStore(
     companion object {
         const val OUTPUT_CONTEXT_ATTRIBUTE = "fdd.output.context"
     }
-
-    data class OutputContext(
-        val directory: Path,
-        val requestType: String
-    )
 
     private val log = LoggerFactory.getLogger(javaClass)
     private val timestampFormat = DateTimeFormatter.ofPattern("yyyyMMdd-HHmmss-SSS")

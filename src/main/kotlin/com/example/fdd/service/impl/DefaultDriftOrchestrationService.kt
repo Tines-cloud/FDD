@@ -9,9 +9,10 @@ import com.example.fdd.model.DriftReport
 import com.example.fdd.model.MapGenerationResult
 import com.example.fdd.service.DriftAnalyzer
 import com.example.fdd.service.DriftOrchestrationService
+import com.example.fdd.service.ICoverageAnalyzer
 import com.example.fdd.service.MapGenerator
+import com.example.fdd.validation.IDriftProfileValidator
 import com.example.fdd.validation.MapValidator
-import com.example.fdd.validation.impl.DriftProfileValidator
 import io.micrometer.core.annotation.Timed
 import org.hl7.fhir.r4.model.StructureDefinition
 import org.slf4j.LoggerFactory
@@ -26,11 +27,11 @@ import org.springframework.stereotype.Service
 @Service
 class DefaultDriftOrchestrationService(
     private val profileLoader: ProfileLoader,
-    private val driftValidator: DriftProfileValidator,
+    private val driftValidator: IDriftProfileValidator,
     private val driftAnalyzer: DriftAnalyzer,
     private val mapGenerator: MapGenerator,
     private val mapValidator: MapValidator,
-    private val coverageAnalyzer: CoverageAnalyzer
+    private val coverageAnalyzer: ICoverageAnalyzer
 ) : DriftOrchestrationService {
 
     private val log = LoggerFactory.getLogger(javaClass)
