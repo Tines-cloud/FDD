@@ -1,0 +1,375 @@
+{
+  "pairId": "au-core-organization-vs-us-core-organization",
+  "sourceClasspath": "standard-profiles/au-core/StructureDefinition-au-core-organization.json",
+  "targetClasspath": "standard-profiles/us-core/StructureDefinition-us-core-organization.json",
+  "drifts": [
+    {
+      "id": "rule-1",
+      "type": "STRUCTURAL",
+      "sourcePath": "Organization.identifier",
+      "targetPath": "Organization.identifier",
+      "description": "Type profile constraint changed: [http://hl7.org.au/fhir/StructureDefinition/au-australianbusinessnumber, http://hl7.org.au/fhir/StructureDefinition/au-australiancompanynumber, http://hl7.org.au/fhir/StructureDefinition/au-australianregistredbodynumber, http://hl7.org.au/fhir/StructureDefinition/au-cspregistrationnumber, http://hl7.org.au/fhir/StructureDefinition/au-hpio, http://hl7.org.au/fhir/StructureDefinition/au-nataaccreditationnumber, http://hl7.org.au/fhir/StructureDefinition/au-paioidentifier, http://hl7.org.au/fhir/StructureDefinition/au-pharmacyapprovalnumber, http://hl7.org/fhir/StructureDefinition/Identifier] -> []",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-2",
+      "type": "STRUCTURAL",
+      "sourcePath": "Organization.identifier",
+      "targetPath": "Organization.identifier",
+      "description": "Slicing changed: rules=open, discriminators=[pattern:system] -> rules=open, discriminators=[pattern:$this]",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-3",
+      "type": "STRUCTURAL",
+      "sourcePath": "Organization.identifier",
+      "targetPath": "Organization.identifier",
+      "description": "Constraints removed in target: [au-core-org-01]",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-4",
+      "type": "EXTENSION",
+      "sourcePath": "Organization.identifier.extension(http://hl7.org/fhir/StructureDefinition/obligation)",
+      "targetPath": "Organization.identifier",
+      "description": "Extension removed in target element: http://hl7.org/fhir/StructureDefinition/obligation",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-5",
+      "type": "CARDINALITY",
+      "sourcePath": "Organization.active",
+      "targetPath": "Organization.active",
+      "description": "Cardinality changed: [0..1] -> [1..1]",
+      "severity": "ERROR"
+    },
+    {
+      "id": "rule-6",
+      "type": "STRUCTURAL",
+      "sourcePath": "Organization.active",
+      "targetPath": "Organization.active",
+      "description": "MustSupport added in target",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-7",
+      "type": "TERMINOLOGY",
+      "sourcePath": "Organization.type",
+      "targetPath": "Organization.type",
+      "description": "Binding changed: preferred(https://healthterminologies.gov.au/fhir/ValueSet/healthcare-organisation-role-type-1) -> example(http://hl7.org/fhir/ValueSet/organization-type)",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-8",
+      "type": "STRUCTURAL",
+      "sourcePath": "Organization.type",
+      "targetPath": "Organization.type",
+      "description": "MustSupport removed in target",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-9",
+      "type": "EXTENSION",
+      "sourcePath": "Organization.type.extension(http://hl7.org/fhir/StructureDefinition/obligation)",
+      "targetPath": "Organization.type",
+      "description": "Extension removed in target element: http://hl7.org/fhir/StructureDefinition/obligation",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-10",
+      "type": "EXTENSION",
+      "sourcePath": "Organization.name.extension(http://hl7.org/fhir/StructureDefinition/obligation)",
+      "targetPath": "Organization.name",
+      "description": "Extension removed in target element: http://hl7.org/fhir/StructureDefinition/obligation",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-11",
+      "type": "EXTENSION",
+      "sourcePath": "Organization.telecom.extension(http://hl7.org/fhir/StructureDefinition/obligation)",
+      "targetPath": "Organization.telecom",
+      "description": "Extension removed in target element: http://hl7.org/fhir/StructureDefinition/obligation",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-12",
+      "type": "STRUCTURAL",
+      "sourcePath": "Organization.address",
+      "targetPath": "Organization.address",
+      "description": "Type profile constraint changed: [http://hl7.org.au/fhir/StructureDefinition/au-address, http://hl7.org/fhir/StructureDefinition/Address] -> []",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-13",
+      "type": "EXTENSION",
+      "sourcePath": "Organization.address.extension(http://hl7.org/fhir/StructureDefinition/obligation)",
+      "targetPath": "Organization.address",
+      "description": "Extension removed in target element: http://hl7.org/fhir/StructureDefinition/obligation",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-14",
+      "type": "TERMINOLOGY",
+      "sourcePath": "Organization.contact.purpose",
+      "targetPath": "Organization.contact.purpose",
+      "description": "Binding changed: extensible(http://terminology.hl7.org.au/ValueSet/contact-purpose) -> extensible(http://hl7.org/fhir/ValueSet/contactentity-type)",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-15",
+      "type": "STRUCTURAL",
+      "sourcePath": "",
+      "targetPath": "Organization.identifier.id",
+      "description": "Element added in target profile: Organization.identifier.id",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-16",
+      "type": "STRUCTURAL",
+      "sourcePath": "",
+      "targetPath": "Organization.identifier.extension",
+      "description": "Element added in target profile: Organization.identifier.extension",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-17",
+      "type": "STRUCTURAL",
+      "sourcePath": "",
+      "targetPath": "Organization.identifier.use",
+      "description": "Element added in target profile: Organization.identifier.use",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-18",
+      "type": "STRUCTURAL",
+      "sourcePath": "",
+      "targetPath": "Organization.identifier.type",
+      "description": "Element added in target profile: Organization.identifier.type",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-19",
+      "type": "STRUCTURAL",
+      "sourcePath": "",
+      "targetPath": "Organization.identifier.system",
+      "description": "Element added in target profile: Organization.identifier.system",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-20",
+      "type": "STRUCTURAL",
+      "sourcePath": "",
+      "targetPath": "Organization.identifier.value",
+      "description": "Element added in target profile: Organization.identifier.value",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-21",
+      "type": "STRUCTURAL",
+      "sourcePath": "",
+      "targetPath": "Organization.identifier.period",
+      "description": "Element added in target profile: Organization.identifier.period",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-22",
+      "type": "STRUCTURAL",
+      "sourcePath": "",
+      "targetPath": "Organization.identifier.assigner",
+      "description": "Element added in target profile: Organization.identifier.assigner",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-23",
+      "type": "STRUCTURAL",
+      "sourcePath": "",
+      "targetPath": "Organization.identifier:NPI",
+      "description": "New slice 'NPI' added in target profile",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-24",
+      "type": "STRUCTURAL",
+      "sourcePath": "",
+      "targetPath": "Organization.identifier:CLIA",
+      "description": "New slice 'CLIA' added in target profile",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-25",
+      "type": "STRUCTURAL",
+      "sourcePath": "",
+      "targetPath": "Organization.identifier:NAIC",
+      "description": "New slice 'NAIC' added in target profile",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-26",
+      "type": "STRUCTURAL",
+      "sourcePath": "",
+      "targetPath": "Organization.telecom.id",
+      "description": "Element added in target profile: Organization.telecom.id",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-27",
+      "type": "STRUCTURAL",
+      "sourcePath": "",
+      "targetPath": "Organization.telecom.extension",
+      "description": "Element added in target profile: Organization.telecom.extension",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-28",
+      "type": "STRUCTURAL",
+      "sourcePath": "",
+      "targetPath": "Organization.telecom.system",
+      "description": "Element added in target profile: Organization.telecom.system",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-29",
+      "type": "STRUCTURAL",
+      "sourcePath": "",
+      "targetPath": "Organization.telecom.value",
+      "description": "Element added in target profile: Organization.telecom.value",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-30",
+      "type": "STRUCTURAL",
+      "sourcePath": "",
+      "targetPath": "Organization.telecom.use",
+      "description": "Element added in target profile: Organization.telecom.use",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-31",
+      "type": "STRUCTURAL",
+      "sourcePath": "",
+      "targetPath": "Organization.telecom.rank",
+      "description": "Element added in target profile: Organization.telecom.rank",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-32",
+      "type": "STRUCTURAL",
+      "sourcePath": "",
+      "targetPath": "Organization.telecom.period",
+      "description": "Element added in target profile: Organization.telecom.period",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-33",
+      "type": "STRUCTURAL",
+      "sourcePath": "",
+      "targetPath": "Organization.address.id",
+      "description": "Element added in target profile: Organization.address.id",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-34",
+      "type": "STRUCTURAL",
+      "sourcePath": "",
+      "targetPath": "Organization.address.extension",
+      "description": "Element added in target profile: Organization.address.extension",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-35",
+      "type": "STRUCTURAL",
+      "sourcePath": "",
+      "targetPath": "Organization.address.use",
+      "description": "Element added in target profile: Organization.address.use",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-36",
+      "type": "STRUCTURAL",
+      "sourcePath": "",
+      "targetPath": "Organization.address.type",
+      "description": "Element added in target profile: Organization.address.type",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-37",
+      "type": "STRUCTURAL",
+      "sourcePath": "",
+      "targetPath": "Organization.address.text",
+      "description": "Element added in target profile: Organization.address.text",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-38",
+      "type": "STRUCTURAL",
+      "sourcePath": "",
+      "targetPath": "Organization.address.line",
+      "description": "Element added in target profile: Organization.address.line",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-39",
+      "type": "STRUCTURAL",
+      "sourcePath": "",
+      "targetPath": "Organization.address.city",
+      "description": "Element added in target profile: Organization.address.city",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-40",
+      "type": "STRUCTURAL",
+      "sourcePath": "",
+      "targetPath": "Organization.address.district",
+      "description": "Element added in target profile: Organization.address.district",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-41",
+      "type": "STRUCTURAL",
+      "sourcePath": "",
+      "targetPath": "Organization.address.state",
+      "description": "Element added in target profile: Organization.address.state",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-42",
+      "type": "STRUCTURAL",
+      "sourcePath": "",
+      "targetPath": "Organization.address.postalCode",
+      "description": "Element added in target profile: Organization.address.postalCode",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-43",
+      "type": "STRUCTURAL",
+      "sourcePath": "",
+      "targetPath": "Organization.address.country",
+      "description": "Element added in target profile: Organization.address.country",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-44",
+      "type": "STRUCTURAL",
+      "sourcePath": "",
+      "targetPath": "Organization.address.period",
+      "description": "Element added in target profile: Organization.address.period",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-45",
+      "type": "STRUCTURAL",
+      "sourcePath": "Organization.identifier:hpio",
+      "targetPath": "",
+      "description": "Slice 'hpio' removed in target profile",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-46",
+      "type": "STRUCTURAL",
+      "sourcePath": "Organization.identifier:abn",
+      "targetPath": "",
+      "description": "Slice 'abn' removed in target profile",
+      "severity": "WARNING"
+    }
+  ]
+}

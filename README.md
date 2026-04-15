@@ -9,41 +9,42 @@ HAPI-FHIR's compiler in a **Trust-but-Verify** reflexion loop.
 ## Architecture
 
 ```
-┌────────────────┐     ┌──────────────┐     ┌──────────────────┐     ┌──────────────┐
-│  REST API       │────>│  Stage 1     │────>│  Stage 2         │────>│  Stage 3     │
+┌----------------┐     ┌--------------┐     ┌------------------┐     ┌--------------┐
+│  REST API       │---->│  Stage 1     │---->│  Stage 2         │---->│  Stage 3     │
 │  /api/drift/    │     │  Drift       │     │  StructureMap    │     │  Coverage    │
 │  analyze|repair │     │  Analysis    │     │  Generation +    │     │  Analysis    │
-└────────────────┘     │  (hybrid)    │     │  Trust-but-Verify│     │ (deterministic)│
-                       └──────────────┘     └──────────────────┘     └──────────────┘
+└----------------┘     │  (hybrid)    │     │  Trust-but-Verify│     │ (deterministic)│
+                       └--------------┘     └------------------┘     └--------------┘
                               │                    │                        │
-                     ┌────────┴────────┐    ┌──────┴──────────┐    ┌───────┴────────┐
+                     ┌--------┴--------┐    ┌------┴----------┐    ┌-------┴--------┐
                      │ Rule-based      │    │ autoFixRuleNames │    │ Cross-reference │
                      │ detector (20+)  │    │ (zero LLM cost)  │    │ drift vs FML   │
-                     └─────────────────┘    ├──────────────────┤    │ 5 categories   │
+                     └-----------------┘    ├------------------┤    │ 5 categories   │
                      │ LLM analysis   │    │ collectAllErrors │    │ + shareability │
-                     │ + merge        │    │ (batch scanning)  │    └────────────────┘
-                     └─────────────────┘    ├──────────────────┤
+                     │ + merge        │    │ (batch scanning)  │    └----------------┘
+                     └-----------------┘    ├------------------┤
                                             │ Anti-oscillation │
                                             │ + regression det │
                                             │ + temp boost     │
-                                            └──────────────────┘
+                                            └------------------┘
 ```
 
 **Four-stage pipeline:**
 
-1. **Profile Resolution** — Load `StructureDefinition` JSON from inline content,
+1. **Profile Resolution** - Load `StructureDefinition` JSON from inline content,
    HTTP URL, canonical URL, classpath resource, or local file path.
-2. **Drift Analysis** — Hybrid: deterministic rule-based detector (all 5 drift types)
+2. **Drift Analysis** - Hybrid: deterministic rule-based detector (all 5 drift types)
    seeds the LLM prompt, results are merged and de-duplicated.
-3. **Repair Generation + Trust-but-Verify** — LLM generates FML code from the `DriftReport`.
+3. **Repair Generation + Trust-but-Verify** - LLM generates FML code from the `DriftReport`.
    HAPI-FHIR compiles it; failures trigger multi-turn reflexion with conversation history.
    Includes `autoFixRuleNames()` (deterministic, zero LLM cost), `collectAllErrors()`
    (batch scanning), anti-oscillation detection, and line-level regression detection
    with temperature boost.
-4. **Coverage Analysis** — Cross-references every drift item against the generated FML.
-   Classifies into 5 categories (MAPPED, COVERED_BY_PARENT, NO_RULE_NEEDED,
-   SOURCE_DATA_LOSS, UNMAPPABLE_NO_SOURCE). Computes data shareability percentage.
-   Fully deterministic — zero LLM cost.
+4. **Coverage Analysis** - Cross-references every drift item against the generated FML.
+   Classifies into 6 categories (MAPPED, COVERED_BY_PARENT, NO_RULE_NEEDED,
+   SOURCE_DATA_LOSS, UNMAPPABLE_NO_SOURCE, UNMAPPABLE_REQUIRED). Computes data shareability
+   percentage. Detects mandatory unmappable target fields (min>=1) and generates
+   `// ACTION REQUIRED` stubs in the FML output. Fully deterministic - zero LLM cost.
 
 **Five drift categories:** `TERMINOLOGY` · `EXTENSION` · `STRUCTURAL` · `CARDINALITY` · `VERSION`
 
@@ -52,25 +53,26 @@ separate ValidationSupportChain, parser, and validator instances. R5 profiles ar
 automatically detected and validated using the R5 pipeline.
 
 **AI cost per repair request:** Drift analysis (1 LLM call) + Map generation (1 LLM call)
-+ Reflexion (0–2 LLM calls, only if compilation fails) + Coverage analysis (0 calls)
-+ autoFixRuleNames (0 calls) = **2–4 LLM calls total** (typically 2 if generation succeeds
-on first compile).
+
++ Reflexion (0-2 LLM calls, only if compilation fails) + Coverage analysis (0 calls)
++ autoFixRuleNames (0 calls) = **2-4 LLM calls total** (typically 2 if generation succeeds
+  on first compile).
 
 ---
 
 ## Tech Stack
 
-| Layer         | Technology                                                    |
-|---------------|---------------------------------------------------------------|
-| Runtime       | Java 21, Kotlin 2.x                                           |
-| Framework     | Spring Boot 4.x, Spring Framework 7.x                         |
-| AI            | Spring AI 2.0 (OpenAI, Anthropic, Gemini, Mistral)            |
-| FHIR          | HAPI FHIR 7.6.0 (R4 + R5 dual context, StructureMapUtilities) |
-| Serialisation | Jackson 3.x (tools.jackson namespace)                         |
-| Metrics       | Micrometer + Prometheus endpoint                              |
-| API Docs      | SpringDoc OpenAPI (Swagger UI)                                |
-| Build         | Gradle 9.x (Kotlin DSL)                                       |
-| Testing       | JUnit 5, Mockito-Kotlin, Testcontainers                       |
+| Layer         | Technology                                                           |
+|---------------|----------------------------------------------------------------------|
+| Runtime       | Java 21, Kotlin 2.x                                                  |
+| Framework     | Spring Boot 4.x, Spring Framework 7.x                                |
+| AI            | Spring AI 2.0 (OpenRouter, OpenAI, Anthropic, Gemini, Mistral, Groq) |
+| FHIR          | HAPI FHIR 7.6.0 (R4 + R5 dual context, StructureMapUtilities)        |
+| Serialisation | Jackson 3.x (tools.jackson namespace)                                |
+| Metrics       | Micrometer + Prometheus endpoint                                     |
+| API Docs      | SpringDoc OpenAPI (Swagger UI)                                       |
+| Build         | Gradle 9.x (Kotlin DSL)                                              |
+| Testing       | JUnit 5, Mockito-Kotlin, Testcontainers                              |
 
 ---
 
@@ -78,7 +80,8 @@ on first compile).
 
 - **JDK 21+** - required by Spring Boot 4.
 - **Gradle 9.x** - the included `gradlew` wrapper handles this automatically.
-- **LLM API key** - at least one of: OpenAI, Gemini, Anthropic, or Mistral.
+- **LLM API key** - at least one of: OpenRouter, OpenAI, Gemini, Anthropic, Mistral, or Groq.
+  OpenRouter is the recommended default — one API key gives access to all models.
 
 ---
 
@@ -97,17 +100,23 @@ gradlew.bat build      # Windows
 Export one of these environment variables (or edit `application.yaml`):
 
 ```bash
-# Option A - Google Gemini (default provider, generous free tier)
+# Option A - OpenRouter (default provider, one key for all models)
+export OPENROUTER_API_KEY=sk-or-...
+
+# Option B - Google Gemini (generous free tier)
 export GEMINI_API_KEY=AIza...
 
-# Option B - OpenAI
+# Option C - OpenAI
 export OPENAI_API_KEY=sk-...
 
-# Option C - Anthropic Claude
+# Option D - Anthropic Claude
 export ANTHROPIC_API_KEY=sk-ant-...
 
-# Option D - Mistral
+# Option E - Mistral
 export MISTRAL_API_KEY=...
+
+# Option F - Groq
+export GROQ_API_KEY=gsk_...
 ```
 
 Then set the active provider in `application.yaml`:
@@ -115,7 +124,7 @@ Then set the active provider in `application.yaml`:
 ```yaml
 fdd:
   ai:
-    provider: gemini   # openai | anthropic | gemini | mistral
+    provider: openrouter   # openai | anthropic | gemini | mistral | groq | openrouter
 ```
 
 ### 3. Run the application
@@ -161,6 +170,7 @@ You can **mix and match** - e.g. source from a local file, target from a URL.
 ---
 
 ## 1. Swagger UI (Browser)
+
 ~~~~
 1. Start the server:
    ```powershell
@@ -489,10 +499,10 @@ For profiles you want to ship with the application. Place `.json` files under
 
 ```
 src/main/resources/
-└── fhir/
-    └── profiles/
-        ├── au-patient.json
-        └── us-core-patient.json
+└-- fhir/
+    └-- profiles/
+        ├-- au-patient.json
+        └-- us-core-patient.json
 ```
 
 **REST (cURL):**
@@ -601,7 +611,7 @@ Invoke-RestMethod -Method Post -Uri "http://localhost:8080/api/drift/repair" `
 | `GET`    | `/api/cache/llm/size`  | Number of cached LLM responses |
 | `DELETE` | `/api/cache/llm`       | Clear LLM response cache       |
 | `DELETE` | `/api/cache/templates` | Clear prompt template cache    |
-| `DELETE` | `/api/cache`           | Clear all caches               |
+| `DELETE` | `/api/cache/allCaches`           | Clear all caches               |
 
 ### Monitoring & documentation
 
@@ -623,7 +633,7 @@ All configuration lives in `src/main/resources/application.yaml`:
 ```yaml
 fdd:
   ai:
-    provider: gemini                    # openai | anthropic | gemini | mistral
+    provider: openrouter                # openai | anthropic | gemini | mistral | groq | openrouter
     temperature: 0.2                    # LLM temperature (lower = more deterministic)
     openai:
       api-key: ${OPENAI_API_KEY:}
@@ -634,22 +644,32 @@ fdd:
       model: claude-sonnet-4-20250514
     gemini:
       api-key: ${GEMINI_API_KEY:}
-      model: gemini-2.5-pro
+      model: gemini-2.5-flash
       base-url: https://generativelanguage.googleapis.com/v1beta/openai
     mistral:
       api-key: ${MISTRAL_API_KEY:}
       model: mistral-large-latest
       base-url: https://api.mistral.ai/v1
+    groq:
+      api-key: ${GROQ_API_KEY:}
+      model: llama-3.3-70b-versatile
+      base-url: https://api.groq.com/openai/v1
+    openrouter:
+      api-key: ${OPENROUTER_API_KEY:}
+      model: google/gemini-2.5-flash
+      base-url: https://openrouter.ai/api/v1
   validation:
-    max-attempts: 3                     # Reflexion retries for Trust-but-Verify
+    max-attempts: 5                     # Reflexion retries for Trust-but-Verify
   cache:
     enabled: true                       # LLM response caching
     ttl-minutes: 0                      # 0 = no expiry
     directory: .fdd-cache               # Cache file location
 ```
 
-Gemini and Mistral use the **OpenAI-compatible** chat API, configured via
-custom `base-url` properties. No special SDK is needed.
+All providers except Anthropic use the **OpenAI-compatible** chat API, configured via
+custom `base-url` properties. No special SDK is needed. OpenRouter acts as a unified
+gateway — one API key gives access to Gemini, Claude, GPT-4o, Llama, Mistral, and
+hundreds of other models by changing only the `model` field.
 
 ---
 
@@ -681,39 +701,75 @@ This runs **all** unit tests including:
 
 ### Experiment tests (require API key + Docker)
 
-Three experiment test classes validate end-to-end behaviour:
+Three experiment test classes validate end-to-end behaviour and produce
+thesis-ready evidence files under `output/experiment-results/`:
 
-| Experiment | Class                                | What it tests                                 |
-|------------|--------------------------------------|-----------------------------------------------|
-| 1          | `Experiment1DriftDetectionTest`      | Drift detection accuracy across profile pairs |
-| 2          | `Experiment2SyntacticValidityTest`   | FML syntactic validity (HAPI compilation)     |
-| 3          | `Experiment3SemanticCorrectnessTest` | Semantic correctness via Testcontainers HAPI  |
+| Experiment | Class                                | What it tests                                 | Output Metric |
+|------------|--------------------------------------|-----------------------------------------------|---------------|
+| 1          | `Experiment1DriftDetectionTest`      | Drift detection accuracy across profile pairs | Precision, Recall, F1 per pair |
+| 2          | `Experiment2SyntacticValidityTest`   | FML syntactic validity (HAPI compilation)     | Syntactic Validity Rate (%) |
+| 3          | `Experiment3SemanticCorrectnessTest` | End-to-end semantic correctness via Testcontainers HAPI | Semantic Correctness Rate (%) |
+
+**Experiment 3 test cases** use real drift pairs across diverse FHIR resource types:
+- R4 Patient -> US Core Patient
+- R4 Condition -> US Core Condition (Encounter Diagnosis)
+- R4 Observation -> US Core Observation Lab
+- R4 Encounter -> US Core Encounter
+- R4 AllergyIntolerance -> US Core AllergyIntolerance
+- R4 Immunization -> US Core Immunization
+- R4 MedicationRequest -> US Core MedicationRequest
+- R4 Procedure -> US Core Procedure
+- R4 DiagnosticReport -> US Core DiagnosticReport Lab
+- R4 Organization -> US Core Organization
+- R4 Practitioner -> US Core Practitioner
+- AU Core Patient -> US Core Patient (cross-national)
+
+Each test case has a corresponding synthetic FHIR instance under `src/test/resources/fhir/instances/`.
+For each case, the test: runs the full FDD pipeline -> POSTs the synthetic source instance
+to a Dockerized HAPI FHIR server -> uploads the generated StructureMap -> attempts
+`$transform` -> validates the transformed output.
+
+**Results output:** Each experiment writes a timestamped JSON report to
+`output/experiment-results/` with per-pair/per-case metrics.
 
 Run experiments (requires a valid LLM API key and Docker):
 
 ```bash
-./gradlew test --tests "com.example.fdd.experiment.*"
+./gradlew integrationTest
 ```
 
 ---
 
 ## LLM Provider Selection & Free Tiers
 
-| Provider      | Free Tier / Pricing                                               | Context Window | Recommendation                                                                  |
-|---------------|-------------------------------------------------------------------|----------------|---------------------------------------------------------------------------------|
-| **Gemini**    | Free tier: 15 RPM, 1M tokens/min, 1500 req/day                    | 1M+ tokens     | **Best for experimentation** - generous limits handle full FHIR profiles easily |
-| **OpenAI**    | No free tier; pay-as-you-go (~$2.50/$10 per 1M in/out for gpt-4o) | 128K tokens    | Production quality, but costs add up with large profiles                        |
-| **Mistral**   | Free tier available for smaller models                            | 128K tokens    | Good mid-range option                                                           |
-| **Anthropic** | No free tier; pay-as-you-go                                       | 200K tokens    | Excellent quality, higher cost                                                  |
+| Provider        | Free Tier / Pricing                                               | Context Window | Recommendation                                                                  |
+|-----------------|-------------------------------------------------------------------|----------------|---------------------------------------------------------------------------------|
+| **OpenRouter**  | Pay-as-you-go (aggregates all providers, single bill)             | Varies by model| **Recommended default** - one API key, access all models, switch with config    |
+| **Gemini**      | Free tier: 15 RPM, 1M tokens/min, 1500 req/day                   | 1M+ tokens     | Best model for FML generation - highest code quality at lowest cost             |
+| **OpenAI**      | No free tier; pay-as-you-go (~$2.50/$10 per 1M in/out for gpt-4o) | 128K tokens    | Production quality, but costs add up with large profiles                        |
+| **Mistral**     | Free tier available for smaller models                            | 128K tokens    | Good mid-range option                                                           |
+| **Anthropic**   | No free tier; pay-as-you-go                                       | 200K tokens    | Excellent instruction-following, best for complex constraint adherence          |
+| **Groq**        | Free tier: 30 RPM, 14.4K tokens/min                              | 128K tokens    | Fastest inference, good for quick iteration, weaker on niche FML syntax         |
 
 A full FHIR profile like US Core Patient can produce **50K-150K tokens** of context
 (depending on element count and snapshot depth). Gemini's 1M token context window
 handles this comfortably. For OpenAI, gpt-4o's 128K window is sufficient for most
 profiles but very large IGs may need truncation.
 
-**Recommendation:** Start with **Gemini** (`provider: gemini`) for development
-and experimentation - it's free, has the largest context window, and handles
-full profiles without truncation.
+**Recommendation:** Use **OpenRouter** (`provider: openrouter`) with `google/gemini-2.5-flash`
+as the default model. This gives you:
+- **One API key** to access Gemini, Claude, GPT-4o, Llama, Mistral, and 200+ models
+- **One bill** instead of multiple provider accounts
+- **Easy model switching** — just change the `model` field in `application.yaml`
+- **No API difference** — OpenRouter proxies requests identically to direct API calls
+
+To try a different model via OpenRouter, simply change `fdd.ai.openrouter.model`:
+```yaml
+fdd:
+  ai:
+    openrouter:
+      model: anthropic/claude-sonnet-4    # or openai/gpt-4o, meta-llama/llama-3.3-70b, etc.
+```
 
 ---
 
@@ -790,11 +846,11 @@ The reflexion loop includes several cost-saving and quality enhancements:
 
 | Feature | Description | LLM Cost |
 |---|---|---|
-| **`autoFixRuleNames()`** | Deterministically adds `"rule_lineN"` names to unnamed complex rules — the #1 most common HAPI compilation error | Zero |
+| **`autoFixRuleNames()`** | Deterministically adds `"rule_lineN"` names to unnamed complex rules - the #1 most common HAPI compilation error | Zero |
 | **`collectAllErrors()`** | Scans FML for ALL compilation errors (not just the first) before sending to LLM in one batch call | Zero (scan) + 1 LLM call |
 | **Multi-turn conversation** | `chatWithHistory()` maintains full conversation context so LLM sees all prior attempts | Same cost, better quality |
 | **Full FML in follow-ups** | Follow-up messages include the full current FML with `>>>` markers on error lines | Same cost, better quality |
-| **Anti-oscillation** | Detects when LLM reverts to previously broken code; boosts temperature 0.1→0.4 and injects warning | Same cost, fewer wasted cycles |
+| **Anti-oscillation** | Detects when LLM reverts to previously broken code; boosts temperature 0.1->0.2 and injects warning | Same cost, fewer wasted cycles |
 | **Line-level regression detection** | Tracks FML before each fix; if a "fix" produces a different error on the same line, injects `REGRESSION DETECTED` with old/new line content and both errors | Same cost, fewer wasted cycles |
 
 ---
@@ -805,15 +861,15 @@ Every `/api/drift/repair` request writes a timestamped output folder under `outp
 
 ```
 output/20260307-013447-882-repair-19a64dfd/
-├── metadata.json          # Request metadata (timestamp, type, labels)
-├── request.json           # Original request body
-├── drift-report.json      # DriftReport (all detected drift items)
-├── response.json          # Full API response (RepairResponse)
-├── validation.json        # ValidationSummary (per-cycle error messages)
-├── coverage-report.json   # CoverageReport (structured, machine-readable)
-├── coverage-report.txt    # Human-readable coverage breakdown (5 categories)
-├── structure-map.fml      # Generated FML code
-└── error.txt / error.json # Error trace (only if validation failed)
+├-- metadata.json          # Request metadata (timestamp, type, labels)
+├-- request.json           # Original request body
+├-- drift-report.json      # DriftReport (all detected drift items)
+├-- response.json          # Full API response (RepairResponse)
+├-- validation.json        # ValidationSummary (per-cycle error messages)
+├-- coverage-report.json   # CoverageReport (structured, machine-readable)
+├-- coverage-report.txt    # Human-readable coverage breakdown (6 categories)
+├-- structure-map.fml      # Generated FML code (includes ACTION REQUIRED stubs if needed)
+└-- error.txt / error.json # Error trace (only if validation failed)
 ```
 
 ### Coverage Report Categories
@@ -822,11 +878,12 @@ The `coverage-report.txt` classifies every drift item:
 
 | Status | Meaning | Data Impact | Acceptable? |
 |---|---|---|---|
-| `MAPPED` | Actively transformed by an FML rule | ✅ Preserved | ✅ Yes |
-| `COVERED_BY_PARENT` | Parent element is mapped; sub-elements carry over | ✅ Preserved | ✅ Yes |
-| `NO_RULE_NEEDED` | Profile metadata (mustSupport, extensions, etc.) | ⚪ No data | ✅ Yes — no data to transfer |
-| `SOURCE_DATA_LOSS` | Source element does not exist in target | ⚠️ Lost | ✅ Inherently acceptable — the target does not define this field, so no StructureMap can populate it. **Document which fields are dropped for clinical governance review.** |
-| `UNMAPPABLE_NO_SOURCE` | Target element has no source equivalent | ⚠️ Empty | ⚠️ Review required — if `min >= 1` in the target profile, the transformed resource **will fail** target validation. Add a default-value rule or enrichment step. |
+| `MAPPED` | Actively transformed by an FML rule | Preserved | Yes |
+| `COVERED_BY_PARENT` | Parent element is mapped; sub-elements carry over | Preserved | Yes |
+| `NO_RULE_NEEDED` | Profile metadata (mustSupport, extensions, etc.) | No data | Yes - no data to transfer |
+| `SOURCE_DATA_LOSS` | Source element does not exist in target | Lost | Inherently acceptable - the target does not define this field, so no StructureMap can populate it. **Document which fields are dropped for clinical governance review.** |
+| `UNMAPPABLE_NO_SOURCE` | Target element has no source equivalent (optional, min=0) | Empty | Review - resource will still pass validation but field is absent |
+| `UNMAPPABLE_REQUIRED` | Target element has no source equivalent (mandatory, min>=1) | Empty | **Critical** - resource **will fail** target validation. See `// ACTION REQUIRED` stubs in FML output |
 
 **Data Shareability %** = (Mapped + Covered by Parent) / (Total - Metadata) × 100
 
@@ -835,13 +892,13 @@ The actual Data Shareability percentage varies per profile pair. FDD now prints 
 
 | Range | Verdict |
 |---|---|
-| ≥ 85% | ✅ EXCELLENT — meets USCDI/ONC certification requirements |
-| ≥ 70% | ✅ GOOD — meets HL7 IPS and most national IG standards |
-| ≥ 60% | ⚠️ ACCEPTABLE for cross-national or exploratory mapping |
-| < 60% | ❌ BELOW BASELINE — review profile compatibility |
+| ≥ 85% | EXCELLENT - meets USCDI/ONC certification requirements |
+| ≥ 70% | GOOD - meets HL7 IPS and most national IG standards |
+| ≥ 60% | ACCEPTABLE for cross-national or exploratory mapping |
+| < 60% | BELOW BASELINE - review profile compatibility |
 
-> **Cross-national mappings (e.g. AU Core ↔ US Core) typically land in the 55–70% range.**
-> This is structurally expected — jurisdiction-specific extensions on both sides cannot
+> **Cross-national mappings (e.g. AU Core ↔ US Core) typically land in the 55-70% range.**
+> This is structurally expected - jurisdiction-specific extensions on both sides cannot
 > be transferred and are correctly reported as source data loss, not as mapping failures.
 
 ---
@@ -850,121 +907,144 @@ The actual Data Shareability percentage varies per profile pair. FDD now prints 
 
 ```
 src/main/kotlin/com/example/fdd/
-├── FddApplication.kt              # @SpringBootApplication entry point
-├── api/                            # REST controllers and DTOs
-│   ├── DriftController.kt         # /api/drift/analyze + /api/drift/repair
-│   ├── CacheManagementController.kt # /api/cache/* admin endpoints
-│   ├── GlobalExceptionHandler.kt  # @ControllerAdvice (5 exception types → HTTP codes)
-│   ├── ProfileValidationController.kt  # /api/validate/* endpoints
-│   └── dto/                       # Request/Response data classes
-│       ├── AnalyzeRequest.kt      # ProfileInput, AnalyzeRequest, RepairRequest
-│       ├── AnalyzeResponse.kt
-│       ├── RepairResponse.kt
-│       └── ErrorResponse.kt
-├── ai/                             # LLM integration layer
-│   ├── LlmClient.kt               # Interface
-│   ├── SpringAiLlmClient.kt       # Spring AI ChatModel wrapper (@Retryable)
-│   ├── PromptTemplateService.kt   # Mustache-based template loading + caching
-│   └── LlmResponseCache.kt       # File-based SHA-256 keyed LLM response cache
-├── cli/                            # CLI mode (--spring.profiles.active=cli)
-│   └── CliRunner.kt               # ApplicationRunner with argument parsing
-├── config/                         # Spring configuration
-│   ├── AiConfig.kt                # ChatModel bean creation (4 LLM providers)
-│   ├── FddProperties.kt          # Type-safe @ConfigurationProperties binding
-│   ├── FhirConfig.kt             # HAPI FhirContext R4 (@Primary) + R5 (@Qualifier) beans
-│   ├── MetricsConfig.kt          # Micrometer TimedAspect bean
-│   └── OpenApiConfig.kt          # SpringDoc OpenAPI / Swagger configuration
-├── exception/                      # Custom exceptions
-│   └── Exceptions.kt             # FddException hierarchy (5 exception types)
-├── fhir/                           # FHIR-specific services
-│   ├── ProfileLoader.kt          # Interface (canonical/URL/classpath/JSON/file)
-│   ├── DefaultProfileLoader.kt   # HAPI-FHIR backed implementation + validation downgrading
-│   ├── ProfileContextBuilder.kt  # Interface - element extraction & normalisation
-│   └── DefaultProfileContextBuilder.kt
-├── startup/
-│   └── StartupTasks.kt           # Output folder cleanup on boot
-├── model/                          # Domain model
-│   ├── ProfileContext.kt          # ElementSummary (22 fields), TypeSummary, etc.
-│   ├── DriftReport.kt            # Drift analysis output aggregate
-│   ├── DriftItem.kt              # Single drift finding
-│   ├── DriftType.kt              # Enum: 5 drift categories
-│   ├── MapGenerationResult.kt    # FML + validity + messages
-│   ├── CoverageReport.kt         # CoverageReport, CoverageItem, CoverageStatus enum
-│   └── GoldStandardPair.kt       # Gold-standard annotations for experiments
-├── output/                         # File-based output persistence
-│   └── OutputStore.kt             # Timestamped output folders, coverage report builder
-├── service/                        # Business logic
-│   ├── DriftAnalyzer.kt          # Interface - hybrid drift analysis
-│   ├── DefaultDriftAnalyzer.kt   # Rules + LLM merge implementation
-│   ├── RuleBasedDriftDetector.kt  # Interface - deterministic rules
-│   ├── DefaultRuleBasedDriftDetector.kt  # 20+ rules across 5 drift types
-│   ├── MapGenerator.kt           # Interface - LLM-powered FML generation
-│   ├── DefaultMapGenerator.kt
-│   ├── CoverageAnalyzer.kt       # Cross-reference drift vs FML (deterministic, no LLM)
-│   ├── ProfileValidationService.kt # Validate all bundled profiles
-│   ├── DriftOrchestrationService.kt     # Interface - 4-stage pipeline orchestration
-│   └── DefaultDriftOrchestrationService.kt
-├── validation/                     # Trust-but-Verify
-│   ├── MapValidator.kt           # Interface - FML compilation + reflexion
-│   ├── DefaultMapValidator.kt    # HAPI StructureMapUtilities + autoFixRuleNames + reflexion
-│   └── DriftProfileValidator.kt  # Pre-flight profile compatibility check
-└── util/
-    ├── FmlUtils.kt               # Code-fence stripping utility
-    └── FhirValidationUtils.kt    # Validation downgrading patterns
+├-- FddApplication.kt              # @SpringBootApplication entry point
+├-- api/                            # REST controllers and DTOs
+│   ├-- DriftController.kt         # /api/drift/analyze + /api/drift/repair
+│   ├-- CacheManagementController.kt # /api/cache/* admin endpoints
+│   ├-- GlobalExceptionHandler.kt  # @ControllerAdvice (5 exception types -> HTTP codes)
+│   ├-- ProfileValidationController.kt  # /api/validate/* endpoints
+│   └-- dto/                       # Request/Response data classes
+│       ├-- AnalyzeRepairRequest.kt      # ProfileInput, Request,
+│       ├-- AnalyzeResponse.kt
+│       ├-- RepairResponse.kt
+│       └-- ErrorResponse.kt
+├-- ai/                             # LLM integration layer
+│   ├-- LlmClient.kt               # Interface
+│   ├-- SpringAiLlmClient.kt       # Spring AI ChatModel wrapper (@Retryable)
+│   ├-- PromptTemplateService.kt   # Mustache-based template loading + caching
+│   └-- LlmResponseCache.kt       # File-based SHA-256 keyed LLM response cache
+├-- cli/                            # CLI mode (--spring.profiles.active=cli)
+│   └-- CliRunner.kt               # ApplicationRunner with argument parsing
+├-- config/                         # Spring configuration
+│   ├-- AiConfig.kt                # ChatModel bean creation (6 LLM providers)
+│   ├-- FddProperties.kt          # Type-safe @ConfigurationProperties binding
+│   ├-- FhirConfig.kt             # HAPI FhirContext R4 (@Primary) + R5 (@Qualifier) beans
+│   ├-- MetricsConfig.kt          # Micrometer TimedAspect bean
+│   └-- OpenApiConfig.kt          # SpringDoc OpenAPI / Swagger configuration
+├-- exception/                      # Custom exceptions
+│   └-- Exceptions.kt             # FddException hierarchy (5 exception types)
+├-- fhir/                           # FHIR-specific services
+│   ├-- ProfileLoader.kt          # Interface (canonical/URL/classpath/JSON/file)
+│   ├-- DefaultProfileLoader.kt   # HAPI-FHIR backed implementation + validation downgrading
+│   ├-- ProfileContextBuilder.kt  # Interface - element extraction & normalisation
+│   └-- DefaultProfileContextBuilder.kt
+├-- startup/
+│   └-- StartupTasks.kt           # Output folder cleanup on boot
+├-- model/                          # Domain model
+│   ├-- ProfileContext.kt          # ElementSummary (22 fields), TypeSummary, etc.
+│   ├-- DriftReport.kt            # Drift analysis output aggregate
+│   ├-- DriftItem.kt              # Single drift finding
+│   ├-- DriftType.kt              # Enum: 5 drift categories
+│   ├-- MapGenerationResult.kt    # FML + validity + messages
+│   ├-- CoverageReport.kt         # CoverageReport, CoverageItem, CoverageStatus enum
+│   └-- GoldStandardPair.kt       # Gold-standard annotations for experiments
+├-- output/                         # File-based output persistence
+│   └-- OutputStore.kt             # Timestamped output folders, coverage report builder
+├-- service/                        # Business logic
+│   ├-- DriftAnalyzer.kt          # Interface - hybrid drift analysis
+│   ├-- DefaultDriftAnalyzer.kt   # Rules + LLM merge implementation
+│   ├-- RuleBasedDriftDetector.kt  # Interface - deterministic rules
+│   ├-- DefaultRuleBasedDriftDetector.kt  # 20+ rules across 5 drift types
+│   ├-- MapGenerator.kt           # Interface - LLM-powered FML generation
+│   ├-- DefaultMapGenerator.kt
+│   ├-- CoverageAnalyzer.kt       # Cross-reference drift vs FML (deterministic, no LLM)
+│   ├-- ProfileValidationService.kt # Validate all bundled profiles
+│   ├-- DriftOrchestrationService.kt     # Interface - 4-stage pipeline orchestration
+│   └-- DefaultDriftOrchestrationService.kt
+├-- validation/                     # Trust-but-Verify
+│   ├-- MapValidator.kt           # Interface - FML compilation + reflexion
+│   ├-- DefaultMapValidator.kt    # HAPI StructureMapUtilities + autoFixRuleNames + reflexion
+│   └-- DriftProfileValidator.kt  # Pre-flight profile compatibility check
+└-- util/
+    ├-- FmlUtils.kt               # Code-fence stripping utility
+    └-- FhirValidationUtils.kt    # Validation downgrading patterns
 
 src/main/resources/
-├── application.yaml               # Main config (4 LLM providers, cache, actuator)
-├── application-cli.yaml           # CLI profile (disables web server)
-├── application-experiment.yaml    # Experiment profile (temp=0.1, verbose logging)
-├── application-test.yaml          # Test profile (temp=0.0, dummy keys)
-├── ai/                            # LLM prompt templates
-│   ├── drift-analysis-system.txt
-│   ├── drift-analysis-user.txt
-│   ├── map-generation-system.txt
-│   ├── map-generation-user.txt
-│   ├── reflexion-system.txt
-│   └── reflexion-user.txt
-├── logback-spring.xml             # Console + rolling file appender config
-├── standard-profiles/             # Standard FHIR profiles
-│   ├── r4/                        # R4 base profiles (snapshot)
-│   ├── r5/                        # R5 base profiles (snapshot)
-│   ├── us-core/                   # US Core profiles
-│   └── au-core/                   # AU Core profiles
-├── custom-profiles/               # Custom FHIR profiles
-│   ├── tk-soft/                   # TK-Soft profiles (differential)
-│   ├── iit-proj/                  # IIT-Proj profiles (differential)
-│   └── hemas/                     # Hemas profiles (differential)
-└── fhir/profiles/                 # Optional: additional bundled profiles
+├-- application.yaml               # Main config (6 LLM providers, cache, actuator)
+├-- application-cli.yaml           # CLI profile (disables web server)
+├-- application-experiment.yaml    # Experiment profile (temp=0.1, verbose logging)
+├-- application-test.yaml          # Test profile (temp=0.0, dummy keys)
+├-- ai/                            # LLM prompt templates
+│   ├-- drift-analysis-system.txt
+│   ├-- drift-analysis-user.txt
+│   ├-- map-generation-system.txt
+│   ├-- map-generation-user.txt
+│   ├-- reflexion-system.txt
+│   └-- reflexion-user.txt
+├-- logback-spring.xml             # Console + rolling file appender config
+├-- standard-profiles/             # Standard FHIR profiles
+│   ├-- r4/                        # R4 base profiles (snapshot)
+│   ├-- r5/                        # R5 base profiles (snapshot)
+│   ├-- us-core/                   # US Core profiles
+│   └-- au-core/                   # AU Core profiles
+├-- custom-profiles/               # Custom FHIR profiles
+│   ├-- tk-soft/                   # TK-Soft profiles (differential)
+│   ├-- iit-proj/                  # IIT-Proj profiles (differential)
+│   └-- hemas/                     # Hemas profiles (differential)
+└-- fhir/profiles/                 # Optional: additional bundled profiles
+
+src/test/resources/
+├-- application-test.yaml           # Test profile config (dummy keys, no LLM)
+├-- gold-standard/                  # Gold-standard drift pair annotations
+│   ├-- r4-vs-us-core-patient.json
+│   ├-- ... (R4 vs US-Core, R4 vs R5, HEMAS, IIT-Proj, TK-Soft categories)
+│   └-- tk-soft-practitioner-vs-iit-proj-practitioner.json
+└-- fhir/instances/                 # synthetic source instances for Experiment 3
+    ├-- patient-r4-base.json        # R4 base Patient
+    ├-- patient-au-core.json        # AU Core Patient (IHI + Medicare identifiers)
+    ├-- condition-r4-base.json      # R4 base Condition (Type 2 diabetes)
+    ├-- observation-r4-base.json    # R4 base Observation (blood glucose lab)
+    ├-- encounter-r4-base.json      # R4 base Encounter (ambulatory consultation)
+    ├-- allergyintolerance-r4-base.json  # R4 base AllergyIntolerance (penicillin)
+    ├-- immunization-r4-base.json   # R4 base Immunization (COVID-19 mRNA)
+    ├-- medicationrequest-r4-base.json   # R4 base MedicationRequest (Metformin)
+    ├-- procedure-r4-base.json      # R4 base Procedure (appendectomy)
+    ├-- diagnosticreport-r4-base.json    # R4 base DiagnosticReport (CBC panel)
+    ├-- organization-r4-base.json   # R4 base Organization (hospital with NPI)
+    ├-- practitioner-r4-base.json   # R4 base Practitioner (physician with NPI)
+    ├-- location-r4-base.json       # R4 base Location (outpatient clinic)
+    ├-- careplan-r4-base.json       # R4 base CarePlan (diabetes management)
+    └-- medication-r4-base.json     # R4 base Medication (Metformin 500mg)
 
 src/test/kotlin/com/example/fdd/
-├── FddApplicationTests.kt         # Spring context smoke test
-├── ai/                             # AI layer tests
-│   ├── SpringAiLlmClientTest.kt  # Retry, caching, error handling
-│   ├── PromptTemplateServiceTest.kt  # Template loading, substitution, caching
-│   └── LlmResponseCacheTest.kt   # File cache, TTL, disabled mode
-├── api/                            # Controller tests
-│   ├── DriftControllerTest.kt    # WebMvcTest for /api/drift/*
-│   ├── CacheManagementControllerTest.kt  # WebMvcTest for /api/cache/*
-│   └── GlobalExceptionHandlerTest.kt    # Exception -> HTTP status mapping
-├── fhir/                           # FHIR layer tests
-│   ├── ProfileLoaderTest.kt      # Canonical, JSON, URL resolution
-│   └── ProfileContextBuilderTest.kt  # Element extraction, drift-focused filtering
-├── service/                        # Service layer tests
-│   ├── DriftAnalyzerTest.kt      # LLM response parsing, markdown stripping
-│   ├── RuleBasedDriftDetectorTest.kt  # 25+ tests across all 5 drift types
-│   ├── DriftOrchestrationServiceTest.kt  # Pipeline wiring, error propagation
-│   └── MapGeneratorTest.kt       # FML extraction, prompt composition
-├── cli/
-│   └── CliRunnerTest.kt          # CLI argument parsing, mode dispatch, file I/O
-├── util/
-│   └── FmlUtilsTest.kt           # Code-fence stripping (parameterised)
-├── validation/
-│   └── MapValidatorTest.kt       # Trust-but-Verify reflexion loop
-└── experiment/                     # Integration experiments (API key + Docker)
-    ├── GoldStandardLoader.kt      # Loader + P/R/F1 metrics
-    ├── Experiment1DriftDetectionTest.kt
-    ├── Experiment2SyntacticValidityTest.kt
-    └── Experiment3SemanticCorrectnessTest.kt
+├-- FddApplicationTests.kt         # Spring context smoke test
+├-- ai/                             # AI layer tests
+│   ├-- SpringAiLlmClientTest.kt  # Retry, caching, error handling
+│   ├-- PromptTemplateServiceTest.kt  # Template loading, substitution, caching
+│   └-- LlmResponseCacheTest.kt   # File cache, TTL, disabled mode
+├-- api/                            # Controller tests
+│   ├-- DriftControllerTest.kt    # WebMvcTest for /api/drift/*
+│   ├-- CacheManagementControllerTest.kt  # WebMvcTest for /api/cache/*
+│   └-- GlobalExceptionHandlerTest.kt    # Exception -> HTTP status mapping
+├-- fhir/                           # FHIR layer tests
+│   ├-- ProfileLoaderTest.kt      # Canonical, JSON, URL resolution
+│   └-- ProfileContextBuilderTest.kt  # Element extraction, drift-focused filtering
+├-- service/                        # Service layer tests
+│   ├-- DriftAnalyzerTest.kt      # LLM response parsing, markdown stripping
+│   ├-- RuleBasedDriftDetectorTest.kt  # 25+ tests across all 5 drift types
+│   ├-- DriftOrchestrationServiceTest.kt  # Pipeline wiring, error propagation
+│   └-- MapGeneratorTest.kt       # FML extraction, prompt composition
+├-- cli/
+│   └-- CliRunnerTest.kt          # CLI argument parsing, mode dispatch, file I/O
+├-- util/
+│   └-- FmlUtilsTest.kt           # Code-fence stripping (parameterised)
+├-- validation/
+│   └-- MapValidatorTest.kt       # Trust-but-Verify reflexion loop
+└-- experiment/                     # Integration experiments (API key + Docker)
+    ├-- GoldStandardLoader.kt      # Loader + P/R/F1 metrics
+    ├-- Experiment1DriftDetectionTest.kt
+    ├-- Experiment2SyntacticValidityTest.kt
+    └-- Experiment3SemanticCorrectnessTest.kt
 ```
 
 ---

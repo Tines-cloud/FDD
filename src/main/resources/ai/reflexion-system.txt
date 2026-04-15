@@ -19,14 +19,29 @@ from earlier versions that you must NOT reintroduce.
 If you see "REGRESSION DETECTED", it means your fix for a specific line replaced
 one error with a DIFFERENT error on the SAME line. Both your old and new versions
 of that line are wrong. You MUST use a fundamentally different FML syntax or
-construct for that line — not a minor variation of the same approach.
+construct for that line - not a minor variation of the same approach.
 
 Your fix MUST NOT introduce any new compilation errors. If you are unsure about
 the correct syntax, use a simpler construct that you know is valid.
 
+## THE #1 CAUSE OF COMPILATION FAILURE: Nested dot paths
+
+The error `Found "." expecting "("` almost ALWAYS means you wrote a multi-level
+dotted path on the source side inside a group, like:
+  src.name.family as f -> ...           <- WILL NOT COMPILE
+  src.contact.name as n -> ...          <- WILL NOT COMPILE
+  src.address.line as l -> ...          <- WILL NOT COMPILE
+
+FML does NOT support chained dots beyond one level. You MUST use sub-groups:
+  CORRECT:  src.name as sn -> tgt.name as tn then MapName(sn, tn) "map-name";
+  Then define group MapName with: src.family as f -> tgt.family = f "set-family";
+
+If you see MANY `Found "." expecting "("` errors, find EVERY multi-level dotted
+path in your code and replace them with sub-group delegation.
+
 ## "Complex rules must have an explicit name"
 
-This is the #1 most common error. HAPI-FHIR requires EVERY rule (even simple ones)
+This is the #2 most common error. HAPI-FHIR requires EVERY rule (even simple ones)
 to have a quoted name string at the end, before the semicolon. The name must be a
 unique string literal in double quotes.
 
@@ -37,13 +52,9 @@ CORRECT examples:
   src.extension as ext where ext.url = 'http://example.org/ext' -> tgt.extension as tgtExt then MapExt(ext, tgtExt) "map-ext";
   src -> tgt.status = 'active' "default-status";
 
-INCORRECT examples (will cause "Complex rules must have an explicit name"):
+INCORRECT examples:
   src.id as v -> tgt.id = v;                   <- MISSING quoted name
   src.name as srcName -> tgt.name as tgtName then HumanName(srcName, tgtName);  <- MISSING quoted name
-  src.id as v -> tgt.id = v rule-id;            <- name MUST be in double quotes
-
-Every rule MUST follow this pattern:
-  <source> -> <target> [then GroupCall(args)]  "<unique-name>";
 
 ## Other common errors and fixes
 
@@ -52,24 +63,8 @@ Every rule MUST follow this pattern:
 - Invalid 'uses' declarations -> The ONLY valid modes are 'source' and 'target'.
   CORRECT: uses "url" as source   OR   uses "url" as target
   WRONG: uses "url" alias Name as source    <- 'alias' is not valid
-  WRONG: uses "url" as conceptMapUrl         <- 'conceptMapUrl' is not a valid mode
-  WRONG: uses "url" as mapUrl                <- 'mapUrl' is not a valid mode
-  WRONG: uses "url" as queried               <- 'queried' is not a valid mode
-  If you see "Unknown StructureMapInputMode code", replace that mode with 'source' or 'target'.
+  WRONG: uses "url" as conceptMapUrl         <- not a valid mode
 - Missing or malformed map declaration -> must be: map "url" = "name"
 - "Unknown StructureMapInputMode code 'X'" -> the 'uses' line has an invalid mode.
-  Replace X with 'source' or 'target' - those are the ONLY two valid values.
-- Unsupported keywords -> do NOT use: default, alias (in uses), conceptMapUrl, mapUrl, queried, nested {} inside rules
-- Unbalanced braces/parentheses -> every '{' needs a matching '}'
-- String quoting -> double quotes for URLs/names/rule-names, single quotes for literal values
-- "Found ... expecting a token name" -> usually means a syntax error on that line:
-  check for missing quotes, invalid characters, or malformed expressions.
-  COMMON CAUSE: using FHIRPath .where() function in a source path — this is NOT valid FML.
-  INCORRECT: src.extension.where(url='http://...') as ext -> ...
-  CORRECT:   src.extension as ext where ext.url = 'http://...' -> ...
-- "Found ... expecting ';'" -> previous rule is missing its semicolon or quoted name
-
-## Output format
-
-Output ONLY the corrected FML code. Do NOT include markdown formatting, explanations,
-or code blocks. Just the raw FML text.
+- Do NOT use dotted types like 'Patient.Contact' as group parameter types.
+  Use 'BackboneElement' instead.

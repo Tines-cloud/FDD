@@ -18,18 +18,20 @@ data class FddProperties(
 /**
  * AI / LLM provider configuration.
  *
- * Set `provider` to `openai`, `anthropic`, `gemini`, or `mistral` and populate
- * the corresponding nested block with API key, model name, etc.
+ * Set `provider` to `openai`, `anthropic`, `gemini`, `mistral`, `groq`, or `openrouter`
+ * and populate the corresponding nested block with API key, model name, etc.
  */
 data class AiProperties(
-    /** Active provider identifier: openai | anthropic | gemini | mistral */
-    val provider: String = "gemini",
+    /** Active provider identifier: openai | anthropic | gemini | mistral | groq | openrouter */
+    val provider: String = "openrouter",
     /** Default sampling temperature for all providers. */
     val temperature: Double = 0.2,
     val openai: OpenAiProperties = OpenAiProperties(),
     val anthropic: AnthropicProperties = AnthropicProperties(),
     val gemini: GeminiProperties = GeminiProperties(),
-    val mistral: MistralProperties = MistralProperties()
+    val mistral: MistralProperties = MistralProperties(),
+    val groq: GroqProperties = GroqProperties(),
+    val openrouter: OpenRouterProperties = OpenRouterProperties()
 )
 
 data class OpenAiProperties(
@@ -45,7 +47,7 @@ data class AnthropicProperties(
 
 data class GeminiProperties(
     val apiKey: String = "",
-    val model: String = "gemini-pro",
+    val model: String = "gemini-2.5-flash",
     val baseUrl: String = "https://generativelanguage.googleapis.com/v1beta/openai"
 )
 
@@ -55,12 +57,24 @@ data class MistralProperties(
     val baseUrl: String = "https://api.mistral.ai/v1"
 )
 
+data class GroqProperties(
+    val apiKey: String = "",
+    val model: String = "llama-3.3-70b-versatile",
+    val baseUrl: String = "https://api.groq.com/openai/v1"
+)
+
+data class OpenRouterProperties(
+    val apiKey: String = "",
+    val model: String = "google/gemini-2.5-flash",
+    val baseUrl: String = "https://openrouter.ai/api/v1"
+)
+
 /**
  * Trust-but-Verify validation loop parameters.
  */
 data class ValidationProperties(
     /** Maximum reflexion (self-correction) attempts before giving up. */
-    val maxAttempts: Int = 3
+    val maxAttempts: Int = 5
 )
 
 /**
@@ -69,7 +83,7 @@ data class ValidationProperties(
 data class CacheProperties(
     /** Whether LLM response caching is enabled. */
     val enabled: Boolean = true,
-    /** Time-to-live in minutes; cached entries older than this are automatically evicted. 0 = no expiry. */
+    /** Time-to-live in minutes cached entries older than this are automatically evicted. 0 = no expiry. */
     val ttlMinutes: Long = 0,
     /** Directory for file-based cache storage. */
     val directory: String = ".fdd-cache"

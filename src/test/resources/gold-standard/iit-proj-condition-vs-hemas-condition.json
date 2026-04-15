@@ -1,167 +1,255 @@
-﻿{
+{
   "pairId": "iit-proj-condition-vs-hemas-condition",
+  "sourceClasspath": "custom-profiles/iit-proj/iit-proj-condition.json",
+  "targetClasspath": "custom-profiles/hemas/hemas-condition.json",
   "drifts": [
     {
-      "id": "root-profile-description-added",
-      "description": "Root profile \u0027short\u0027 and \u0027definition\u0027 elements added/modified in target.",
-      "sourcePath": "Condition",
-      "severity": "INFO",
-      "type": "STRUCTURAL",
-      "targetPath": "Condition"
-    },
-    {
-      "id": "extension-trial-reported-condition-removed",
-      "description": "Extension \u0027https://iit-proj.example.com/fhir/StructureDefinition/condition-trial-reported\u0027 removed from target profile.",
-      "sourcePath": "Condition.extension:trialReportedCondition",
-      "severity": "WARNING",
-      "type": "EXTENSION",
-      "targetPath": ""
-    },
-    {
-      "id": "extension-admission-diagnosis-added",
-      "description": "Extension \u0027https://hemas.example.com/fhir/StructureDefinition/condition-admission-diagnosis\u0027 added to target profile.",
-      "sourcePath": "",
-      "severity": "WARNING",
-      "type": "EXTENSION",
-      "targetPath": "Condition.extension:admissionDiagnosis"
-    },
-    {
-      "id": "extension-discharge-diagnosis-added",
-      "description": "Extension \u0027https://hemas.example.com/fhir/StructureDefinition/condition-discharge-diagnosis\u0027 added to target profile.",
-      "sourcePath": "",
-      "severity": "WARNING",
-      "type": "EXTENSION",
-      "targetPath": "Condition.extension:dischargeDiagnosis"
-    },
-    {
-      "id": "severity-definition-added",
-      "description": "Definition added for \u0027severity\u0027.",
-      "sourcePath": "Condition.severity",
-      "severity": "INFO",
-      "type": "STRUCTURAL",
-      "targetPath": "Condition.severity"
-    },
-    {
-      "id": "subject-target-profile-changed",
-      "description": "Reference target profile changed from \u0027https://iit-proj.example.com/fhir/StructureDefinition/Patient\u0027 to \u0027https://hemas.example.com/fhir/StructureDefinition/Patient\u0027.",
-      "sourcePath": "Condition.subject",
-      "severity": "WARNING",
-      "type": "STRUCTURAL",
-      "targetPath": "Condition.subject"
-    },
-    {
-      "id": "encounter-cardinality-min-increased",
-      "description": "Minimum cardinality changed from 0 to 1, making \u0027encounter\u0027 mandatory.",
-      "sourcePath": "Condition.encounter",
-      "severity": "ERROR",
-      "type": "CARDINALITY",
-      "targetPath": "Condition.encounter"
-    },
-    {
-      "id": "encounter-target-profile-added",
-      "description": "Reference target profile \u0027https://hemas.example.com/fhir/StructureDefinition/Encounter\u0027 added.",
-      "sourcePath": "Condition.encounter",
-      "severity": "WARNING",
-      "type": "STRUCTURAL",
-      "targetPath": "Condition.encounter"
-    },
-    {
-      "id": "encounter-definition-added",
-      "description": "Definition added for \u0027encounter\u0027.",
-      "sourcePath": "Condition.encounter",
-      "severity": "INFO",
-      "type": "STRUCTURAL",
-      "targetPath": "Condition.encounter"
-    },
-    {
-      "id": "abatement-removed",
-      "description": "Element \u0027Condition.abatement[x]\u0027 removed from target profile.",
-      "sourcePath": "Condition.abatement[x]",
-      "severity": "WARNING",
-      "type": "STRUCTURAL",
-      "targetPath": ""
-    },
-    {
-      "id": "recordeddate-cardinality-min-increased",
-      "description": "Minimum cardinality changed from 0 to 1, making \u0027recordedDate\u0027 mandatory.",
-      "sourcePath": "Condition.recordedDate",
-      "severity": "ERROR",
-      "type": "CARDINALITY",
-      "targetPath": "Condition.recordedDate"
-    },
-    {
-      "id": "recordeddate-definition-added",
-      "description": "Definition added for \u0027recordedDate\u0027.",
-      "sourcePath": "Condition.recordedDate",
-      "severity": "INFO",
-      "type": "STRUCTURAL",
-      "targetPath": "Condition.recordedDate"
-    },
-    {
-      "id": "recorder-cardinality-max-increased",
-      "description": "Maximum cardinality changed from 0 to *, allowing \u0027recorder\u0027 to be present.",
-      "sourcePath": "Condition.recorder",
-      "severity": "WARNING",
-      "type": "CARDINALITY",
-      "targetPath": "Condition.recorder"
-    },
-    {
-      "id": "recorder-mustsupport-added",
-      "description": "MustSupport flag changed from false to true for \u0027recorder\u0027.",
-      "sourcePath": "Condition.recorder",
-      "severity": "INFO",
-      "type": "STRUCTURAL",
-      "targetPath": "Condition.recorder"
-    },
-    {
-      "id": "recorder-target-profile-added",
-      "description": "Reference target profile \u0027https://hemas.example.com/fhir/StructureDefinition/Practitioner\u0027 added.",
-      "sourcePath": "Condition.recorder",
-      "severity": "WARNING",
-      "type": "STRUCTURAL",
-      "targetPath": "Condition.recorder"
-    },
-    {
-      "id": "recorder-short-changed",
-      "description": "Short description changed for \u0027recorder\u0027.",
-      "sourcePath": "Condition.recorder",
-      "severity": "INFO",
-      "type": "STRUCTURAL",
-      "targetPath": "Condition.recorder"
-    },
-    {
-      "id": "recorder-definition-added",
-      "description": "Definition added for \u0027recorder\u0027.",
-      "sourcePath": "Condition.recorder",
-      "severity": "INFO",
-      "type": "STRUCTURAL",
-      "targetPath": "Condition.recorder"
-    },
-    {
-      "id": "asserter-removed",
-      "description": "Element \u0027Condition.asserter\u0027 removed from target profile.",
-      "sourcePath": "Condition.asserter",
-      "severity": "INFO",
-      "type": "STRUCTURAL",
-      "targetPath": ""
-    },
-    {
       "id": "rule-1",
-      "description": "Type profile constraint changed: [https://iit-proj.example.com/fhir/StructureDefinition/condition-trial-reported] â [https://hemas.example.com/fhir/StructureDefinition/condition-discharge-diagnosis]",
-      "sourcePath": "Condition.extension",
-      "severity": "WARNING",
       "type": "STRUCTURAL",
-      "targetPath": "Condition.extension"
+      "sourcePath": "Condition",
+      "targetPath": "Condition",
+      "description": "Constraints added in target: [hemas-con-1, hemas-con-2]",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-2",
+      "type": "STRUCTURAL",
+      "sourcePath": "Condition",
+      "targetPath": "Condition",
+      "description": "Constraints removed in target: [iit-con-1, iit-con-2]",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-3",
+      "type": "CARDINALITY",
+      "sourcePath": "Condition.verificationStatus",
+      "targetPath": "Condition.verificationStatus",
+      "description": "Cardinality changed: [1..1] -> [0..1]",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-4",
+      "type": "TERMINOLOGY",
+      "sourcePath": "Condition.code",
+      "targetPath": "Condition.code",
+      "description": "Binding changed: example(http://hl7.org/fhir/ValueSet/condition-code) -> extensible(https://hemas.example.com/fhir/ValueSet/condition-code)",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-5",
+      "type": "CARDINALITY",
+      "sourcePath": "Condition.code.coding:icd10",
+      "targetPath": "Condition.code.coding:icd10",
+      "description": "Cardinality changed: [0..1] -> [1..1]",
+      "severity": "ERROR"
+    },
+    {
+      "id": "rule-6",
+      "type": "TERMINOLOGY",
+      "sourcePath": "Condition.code.coding:icd10",
+      "targetPath": "Condition.code.coding:icd10",
+      "description": "Pattern value changed: 'org.hl7.fhir.r4.model.Coding@4f5dcbef' -> 'org.hl7.fhir.r4.model.Coding@18e926bd'",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-7",
+      "type": "TERMINOLOGY",
+      "sourcePath": "Condition.code.coding:snomed",
+      "targetPath": "Condition.code.coding:snomed",
+      "description": "Pattern value changed: 'org.hl7.fhir.r4.model.Coding@1929a41f' -> 'org.hl7.fhir.r4.model.Coding@62d69bb9'",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-8",
+      "type": "STRUCTURAL",
+      "sourcePath": "Condition.code.text",
+      "targetPath": "Condition.code.text",
+      "description": "MustSupport added in target",
+      "severity": "INFO"
     },
     {
       "id": "rule-9",
-      "description": "Element added in target profile: Condition",
-      "sourcePath": "",
-      "severity": "INFO",
+      "type": "TERMINOLOGY",
+      "sourcePath": "Condition.bodySite",
+      "targetPath": "Condition.bodySite",
+      "description": "Binding changed: example(http://hl7.org/fhir/ValueSet/body-site) -> extensible(http://hl7.org/fhir/ValueSet/body-site)",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-10",
       "type": "STRUCTURAL",
-      "targetPath": "Condition"
+      "sourcePath": "Condition.subject",
+      "targetPath": "Condition.subject",
+      "description": "Reference target profile changed: [https://iit-proj.example.com/fhir/StructureDefinition/Patient] -> [https://hemas.example.com/fhir/StructureDefinition/Patient]",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-11",
+      "type": "CARDINALITY",
+      "sourcePath": "Condition.encounter",
+      "targetPath": "Condition.encounter",
+      "description": "Cardinality changed: [0..1] -> [1..1]",
+      "severity": "ERROR"
+    },
+    {
+      "id": "rule-12",
+      "type": "STRUCTURAL",
+      "sourcePath": "Condition.encounter",
+      "targetPath": "Condition.encounter",
+      "description": "Reference target profile changed: [https://iit-proj.example.com/fhir/StructureDefinition/Encounter] -> [https://hemas.example.com/fhir/StructureDefinition/Encounter]",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-13",
+      "type": "CARDINALITY",
+      "sourcePath": "Condition.onset[x]",
+      "targetPath": "Condition.onset[x]",
+      "description": "Cardinality changed: [1..1] -> [0..1]",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-14",
+      "type": "STRUCTURAL",
+      "sourcePath": "Condition.onset[x]",
+      "targetPath": "Condition.onset[x]",
+      "description": "Type changed: [Age, Period, dateTime] -> [Period, dateTime]",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-15",
+      "type": "STRUCTURAL",
+      "sourcePath": "Condition.abatement[x]",
+      "targetPath": "Condition.abatement[x]",
+      "description": "Type changed: [Age, Period, dateTime] -> [Period, dateTime]",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-16",
+      "type": "CARDINALITY",
+      "sourcePath": "Condition.recorder",
+      "targetPath": "Condition.recorder",
+      "description": "Cardinality changed: [0..0] -> [0..1]",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-17",
+      "type": "STRUCTURAL",
+      "sourcePath": "Condition.recorder",
+      "targetPath": "Condition.recorder",
+      "description": "MustSupport added in target",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-18",
+      "type": "STRUCTURAL",
+      "sourcePath": "Condition.stage",
+      "targetPath": "Condition.stage",
+      "description": "MustSupport added in target",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-19",
+      "type": "STRUCTURAL",
+      "sourcePath": "Condition.stage.summary",
+      "targetPath": "Condition.stage.summary",
+      "description": "MustSupport added in target",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-20",
+      "type": "EXTENSION",
+      "sourcePath": "",
+      "targetPath": "Condition.extension:hospitalDepartment",
+      "description": "Extension added in target profile: Condition.extension:hospitalDepartment",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-21",
+      "type": "EXTENSION",
+      "sourcePath": "",
+      "targetPath": "Condition.extension:icdBlock",
+      "description": "Extension added in target profile: Condition.extension:icdBlock",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-22",
+      "type": "EXTENSION",
+      "sourcePath": "",
+      "targetPath": "Condition.extension:chronicity",
+      "description": "Extension added in target profile: Condition.extension:chronicity",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-23",
+      "type": "STRUCTURAL",
+      "sourcePath": "",
+      "targetPath": "Condition.category:admissionDiagnosis",
+      "description": "New slice 'admissionDiagnosis' added in target profile",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-24",
+      "type": "STRUCTURAL",
+      "sourcePath": "",
+      "targetPath": "Condition.category:dischargeDiagnosis",
+      "description": "New slice 'dischargeDiagnosis' added in target profile",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-25",
+      "type": "EXTENSION",
+      "sourcePath": "Condition.extension:studyRelevance",
+      "targetPath": "",
+      "description": "Extension removed in target profile: Condition.extension:studyRelevance (was mustSupport)",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-26",
+      "type": "EXTENSION",
+      "sourcePath": "Condition.extension:protocolCriterion",
+      "targetPath": "",
+      "description": "Extension removed in target profile: Condition.extension:protocolCriterion (was mustSupport)",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-27",
+      "type": "EXTENSION",
+      "sourcePath": "Condition.extension:adverseEventLink",
+      "targetPath": "",
+      "description": "Extension removed in target profile: Condition.extension:adverseEventLink (was mustSupport)",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-28",
+      "type": "STRUCTURAL",
+      "sourcePath": "Condition.category:inclusionCriteria",
+      "targetPath": "",
+      "description": "Slice 'inclusionCriteria' removed in target profile",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-29",
+      "type": "STRUCTURAL",
+      "sourcePath": "Condition.category:adverseEvent",
+      "targetPath": "",
+      "description": "Slice 'adverseEvent' removed in target profile",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-30",
+      "type": "STRUCTURAL",
+      "sourcePath": "Condition.category:comorbidity",
+      "targetPath": "",
+      "description": "Slice 'comorbidity' removed in target profile",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-31",
+      "type": "STRUCTURAL",
+      "sourcePath": "Condition.code.coding:meddra",
+      "targetPath": "",
+      "description": "Slice 'meddra' removed in target profile",
+      "severity": "WARNING"
     }
-  ],
-  "sourceCanonical": "https://iit-proj.example.com/fhir/StructureDefinition/Condition",
-  "targetCanonical": "https://hemas.example.com/fhir/StructureDefinition/Condition"
+  ]
 }

@@ -1,79 +1,215 @@
 {
   "pairId": "r4-diagnosticreport-vs-us-core-diagnosticreport-lab",
-  "sourceCanonical": "http://hl7.org/fhir/StructureDefinition/DiagnosticReport",
-  "targetCanonical": "http://hl7.org/fhir/us/core/StructureDefinition/us-core-diagnosticreport-lab",
+  "sourceClasspath": "standard-profiles/r4/diagnosticreport.profile.json",
+  "targetClasspath": "standard-profiles/us-core/StructureDefinition-us-core-diagnosticreport-lab.json",
   "drifts": [
     {
-      "id": "status-must-support",
+      "id": "rule-1",
+      "type": "STRUCTURAL",
+      "sourcePath": "DiagnosticReport",
+      "targetPath": "DiagnosticReport",
+      "description": "Constraints added in target: [us-core-8, us-core-9]",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-2",
+      "type": "TERMINOLOGY",
+      "sourcePath": "DiagnosticReport.status",
+      "targetPath": "DiagnosticReport.status",
+      "description": "Binding changed: required(http://hl7.org/fhir/ValueSet/diagnostic-report-status|4.0.1) -> required(http://hl7.org/fhir/ValueSet/diagnostic-report-status)",
+      "severity": "ERROR"
+    },
+    {
+      "id": "rule-3",
       "type": "STRUCTURAL",
       "sourcePath": "DiagnosticReport.status",
       "targetPath": "DiagnosticReport.status",
-      "description": "US Core marks status as mustSupport; base R4 does not",
+      "description": "MustSupport added in target",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-4",
+      "type": "EXTENSION",
+      "sourcePath": "DiagnosticReport.status",
+      "targetPath": "DiagnosticReport.status.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+      "description": "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
       "severity": "WARNING"
     },
     {
-      "id": "category-cardinality",
+      "id": "rule-5",
       "type": "CARDINALITY",
       "sourcePath": "DiagnosticReport.category",
       "targetPath": "DiagnosticReport.category",
-      "description": "US Core requires at least one category (1..*) while base R4 allows none (0..*)",
+      "description": "Cardinality changed: [0..*] -> [1..*]",
       "severity": "ERROR"
     },
     {
-      "id": "category-laboratory-slice",
+      "id": "rule-6",
       "type": "STRUCTURAL",
       "sourcePath": "DiagnosticReport.category",
-      "targetPath": "DiagnosticReport.category:LaboratorySlice",
-      "description": "US Core defines a 'LaboratorySlice' requiring category code 'LAB'",
-      "severity": "ERROR"
+      "targetPath": "DiagnosticReport.category",
+      "description": "MustSupport added in target",
+      "severity": "INFO"
     },
     {
-      "id": "code-must-support",
+      "id": "rule-7",
+      "type": "STRUCTURAL",
+      "sourcePath": "DiagnosticReport.category",
+      "targetPath": "DiagnosticReport.category",
+      "description": "Slicing changed: none -> rules=open, discriminators=[pattern:$this]",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-8",
+      "type": "EXTENSION",
+      "sourcePath": "DiagnosticReport.category",
+      "targetPath": "DiagnosticReport.category.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+      "description": "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-9",
+      "type": "TERMINOLOGY",
+      "sourcePath": "DiagnosticReport.code",
+      "targetPath": "DiagnosticReport.code",
+      "description": "Binding changed: preferred(http://hl7.org/fhir/ValueSet/report-codes) -> extensible(http://hl7.org/fhir/us/core/ValueSet/us-core-laboratory-test-codes)",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-10",
       "type": "STRUCTURAL",
       "sourcePath": "DiagnosticReport.code",
       "targetPath": "DiagnosticReport.code",
-      "description": "US Core marks code as mustSupport; base R4 does not",
+      "description": "MustSupport added in target",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-11",
+      "type": "EXTENSION",
+      "sourcePath": "DiagnosticReport.code",
+      "targetPath": "DiagnosticReport.code.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+      "description": "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
       "severity": "WARNING"
     },
     {
-      "id": "subject-cardinality",
+      "id": "rule-12",
       "type": "CARDINALITY",
       "sourcePath": "DiagnosticReport.subject",
       "targetPath": "DiagnosticReport.subject",
-      "description": "US Core requires subject (1..1) while base R4 allows none (0..1)",
+      "description": "Cardinality changed: [0..1] -> [1..1]",
       "severity": "ERROR"
     },
     {
-      "id": "effective-must-support",
+      "id": "rule-13",
+      "type": "STRUCTURAL",
+      "sourcePath": "DiagnosticReport.subject",
+      "targetPath": "DiagnosticReport.subject",
+      "description": "Reference target profile changed: [http://hl7.org/fhir/StructureDefinition/Device, http://hl7.org/fhir/StructureDefinition/Group, http://hl7.org/fhir/StructureDefinition/Location, http://hl7.org/fhir/StructureDefinition/Patient] -> [http://hl7.org/fhir/us/core/StructureDefinition/us-core-patient]",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-14",
+      "type": "STRUCTURAL",
+      "sourcePath": "DiagnosticReport.subject",
+      "targetPath": "DiagnosticReport.subject",
+      "description": "MustSupport added in target",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-15",
+      "type": "EXTENSION",
+      "sourcePath": "DiagnosticReport.subject",
+      "targetPath": "DiagnosticReport.subject.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+      "description": "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-16",
       "type": "STRUCTURAL",
       "sourcePath": "DiagnosticReport.effective[x]",
       "targetPath": "DiagnosticReport.effective[x]",
-      "description": "US Core marks effective[x] as mustSupport; base R4 does not",
+      "description": "MustSupport added in target",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-17",
+      "type": "EXTENSION",
+      "sourcePath": "DiagnosticReport.effective[x]",
+      "targetPath": "DiagnosticReport.effective[x].extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+      "description": "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
       "severity": "WARNING"
     },
     {
-      "id": "issued-must-support",
+      "id": "rule-18",
       "type": "STRUCTURAL",
       "sourcePath": "DiagnosticReport.issued",
       "targetPath": "DiagnosticReport.issued",
-      "description": "US Core marks issued as mustSupport; base R4 does not",
+      "description": "MustSupport added in target",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-19",
+      "type": "EXTENSION",
+      "sourcePath": "DiagnosticReport.issued",
+      "targetPath": "DiagnosticReport.issued.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+      "description": "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
       "severity": "WARNING"
     },
     {
-      "id": "performer-must-support",
+      "id": "rule-20",
       "type": "STRUCTURAL",
       "sourcePath": "DiagnosticReport.performer",
       "targetPath": "DiagnosticReport.performer",
-      "description": "US Core marks performer as mustSupport; base R4 does not",
+      "description": "Reference target profile changed: [http://hl7.org/fhir/StructureDefinition/CareTeam, http://hl7.org/fhir/StructureDefinition/Organization, http://hl7.org/fhir/StructureDefinition/Practitioner, http://hl7.org/fhir/StructureDefinition/PractitionerRole] -> [http://hl7.org/fhir/us/core/StructureDefinition/us-core-careteam, http://hl7.org/fhir/us/core/StructureDefinition/us-core-organization, http://hl7.org/fhir/us/core/StructureDefinition/us-core-practitioner, http://hl7.org/fhir/us/core/StructureDefinition/us-core-practitionerrole]",
       "severity": "WARNING"
     },
     {
-      "id": "result-must-support",
+      "id": "rule-21",
+      "type": "STRUCTURAL",
+      "sourcePath": "DiagnosticReport.performer",
+      "targetPath": "DiagnosticReport.performer",
+      "description": "MustSupport added in target",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-22",
+      "type": "EXTENSION",
+      "sourcePath": "DiagnosticReport.performer",
+      "targetPath": "DiagnosticReport.performer.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+      "description": "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-23",
       "type": "STRUCTURAL",
       "sourcePath": "DiagnosticReport.result",
       "targetPath": "DiagnosticReport.result",
-      "description": "US Core marks result as mustSupport; base R4 does not",
+      "description": "Reference target profile changed: [http://hl7.org/fhir/StructureDefinition/Observation] -> [http://hl7.org/fhir/us/core/StructureDefinition/us-core-observation-lab]",
       "severity": "WARNING"
+    },
+    {
+      "id": "rule-24",
+      "type": "STRUCTURAL",
+      "sourcePath": "DiagnosticReport.result",
+      "targetPath": "DiagnosticReport.result",
+      "description": "MustSupport added in target",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-25",
+      "type": "EXTENSION",
+      "sourcePath": "DiagnosticReport.result",
+      "targetPath": "DiagnosticReport.result.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+      "description": "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-26",
+      "type": "STRUCTURAL",
+      "sourcePath": "",
+      "targetPath": "DiagnosticReport.category:LaboratorySlice",
+      "description": "New slice 'LaboratorySlice' added in target profile",
+      "severity": "ERROR"
     }
   ]
 }

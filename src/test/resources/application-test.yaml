@@ -10,11 +10,11 @@ spring:
 
 fdd:
   ai:
-    provider: gemini
+    provider: openrouter
     temperature: 0.0
-    gemini:
+    openrouter:
       api-key: test-key-not-real
-      model: gemini-2.5-pro
+      model: google/gemini-2.5-pro
   validation:
     max-attempts: 2
 

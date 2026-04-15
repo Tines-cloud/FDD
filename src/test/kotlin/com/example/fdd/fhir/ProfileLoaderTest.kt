@@ -3,6 +3,7 @@ package com.example.fdd.fhir
 import ca.uhn.fhir.context.FhirContext
 import ca.uhn.fhir.context.support.DefaultProfileValidationSupport
 import com.example.fdd.exception.ProfileNotFoundException
+import com.example.fdd.fhir.impl.DefaultProfileLoader
 import org.hl7.fhir.common.hapi.validation.support.CommonCodeSystemsTerminologyService
 import org.hl7.fhir.common.hapi.validation.support.InMemoryTerminologyServerValidationSupport
 import org.hl7.fhir.common.hapi.validation.support.ValidationSupportChain
@@ -14,7 +15,7 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 
 /**
- * Unit tests for [DefaultProfileLoader].
+ * Unit tests for [com.example.fdd.fhir.impl.DefaultProfileLoader].
  *
  * Tests canonical URL resolution using HAPI-FHIR's built-in R4 definitions.
  */

@@ -2,7 +2,6 @@ package com.example.fdd.config
 
 import org.springframework.ai.anthropic.AnthropicChatModel
 import org.springframework.ai.anthropic.AnthropicChatOptions
-import org.springframework.ai.anthropic.api.AnthropicApi
 import org.springframework.ai.chat.model.ChatModel
 import org.springframework.ai.openai.OpenAiChatModel
 import org.springframework.ai.openai.OpenAiChatOptions
@@ -18,13 +17,15 @@ import org.springframework.scheduling.annotation.EnableScheduling
  * One [ChatModel] bean is activated based on the `fdd.ai.provider` property.
  *
  * Supported providers:
- * - `gemini`    - Google Gemini (default, via OpenAI-compatible endpoint)
- * - `openai`    - GPT-4o
- * - `anthropic` - Claude Sonnet
- * - `mistral`   - Mistral Large (via OpenAI-compatible endpoint)
+ * - `openrouter` - OpenRouter gateway (default, any model via OpenAI-compatible endpoint)
+ * - `gemini`     - Google Gemini (via OpenAI-compatible endpoint)
+ * - `openai`     - GPT-4o
+ * - `anthropic`  - Claude Sonnet
+ * - `mistral`    - Mistral Large (via OpenAI-compatible endpoint)
+ * - `groq`       - Groq (Llama 3.3, via OpenAI-compatible endpoint)
  *
- * Gemini and Mistral use OpenAI-compatible REST APIs, so [OpenAiChatModel] is
- * reused with a custom `baseUrl` for those providers.
+ * OpenRouter, Gemini, Mistral, and Groq use OpenAI-compatible REST APIs,
+ * so [OpenAiChatModel] is reused with a custom `baseUrl` for those providers.
  */
 @Configuration
 @EnableScheduling
@@ -54,23 +55,21 @@ class AiConfig {
     @Bean
     @ConditionalOnProperty("fdd.ai.provider", havingValue = "anthropic")
     fun anthropicChatModel(props: FddProperties): ChatModel {
-        val api = AnthropicApi.builder()
-            .apiKey(requireApiKey("anthropic", props.ai.anthropic.apiKey))
-            .build()
         val options = AnthropicChatOptions.builder()
+            .apiKey(requireApiKey("anthropic", props.ai.anthropic.apiKey))
             .model(props.ai.anthropic.model)
             .temperature(props.ai.temperature)
             .build()
+
         return AnthropicChatModel.builder()
-            .anthropicApi(api)
-            .defaultOptions(options)
+            .options(options)
             .build()
     }
 
     /* ---------------- Google Gemini (OpenAI-compatible API) ---------------- */
 
     @Bean
-    @ConditionalOnProperty("fdd.ai.provider", havingValue = "gemini", matchIfMissing = true)
+    @ConditionalOnProperty("fdd.ai.provider", havingValue = "gemini")
     fun geminiChatModel(props: FddProperties): ChatModel {
         val api = OpenAiApi.builder()
             .apiKey(requireApiKey("gemini", props.ai.gemini.apiKey))
@@ -104,6 +103,44 @@ class AiConfig {
             .defaultOptions(options)
             .build()
     }
+
+    /* ---------------- Groq (OpenAI-compatible API) ---------------- */
+
+    @Bean
+    @ConditionalOnProperty("fdd.ai.provider", havingValue = "groq")
+    fun groqChatModel(props: FddProperties): ChatModel {
+        val api = OpenAiApi.builder()
+            .apiKey(requireApiKey("groq", props.ai.groq.apiKey))
+            .baseUrl(props.ai.groq.baseUrl)
+            .build()
+        val options = OpenAiChatOptions.builder()
+            .model(props.ai.groq.model)
+            .temperature(props.ai.temperature)
+            .build()
+        return OpenAiChatModel.builder()
+            .openAiApi(api)
+            .defaultOptions(options)
+            .build()
+    }
+
+    /* ---------------- OpenRouter (OpenAI-compatible API) ---------------- */
+
+    @Bean
+    @ConditionalOnProperty("fdd.ai.provider", havingValue = "openrouter", matchIfMissing = true)
+    fun openRouterChatModel(props: FddProperties): ChatModel {
+        val api = OpenAiApi.builder()
+            .apiKey(requireApiKey("openrouter", props.ai.openrouter.apiKey))
+            .baseUrl(props.ai.openrouter.baseUrl)
+            .build()
+        val options = OpenAiChatOptions.builder()
+            .model(props.ai.openrouter.model)
+            .temperature(props.ai.temperature)
+            .build()
+        return OpenAiChatModel.builder()
+            .openAiApi(api)
+            .defaultOptions(options)
+            .build()
+    }
 }
 
 
@@ -111,16 +148,16 @@ private fun requireApiKey(provider: String, key: String): String {
     require(key.isNotBlank()) {
         """
         |
-        |=====================================================
+        |------------------------------------------------------
         |  MISSING API KEY for provider '$provider'
-        |=====================================================
+        |------------------------------------------------------
         |  Set the environment variable before starting:
         |
         |    Windows:    ${'$'}env:${provider.uppercase()}_API_KEY = "API-key-here"
         |    Linux/Mac:  export ${provider.uppercase()}_API_KEY="API-key-here"
         |
         |  Or create a .env file (see .env.example)
-        |=====================================================
+        |--------------------------------------------------------
         """.trimMargin()
     }
     return key

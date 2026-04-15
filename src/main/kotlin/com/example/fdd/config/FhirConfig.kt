@@ -20,7 +20,7 @@ import org.springframework.context.annotation.Primary
  * validation support chains, and the [FhirValidator] used to
  * validate FHIR resource instances.
  *
- * R4 beans are `@Primary` so they are injected by default; R5 beans
+ * R4 beans are `@Primary` so they are injected by default. R5 beans
  * are qualified as `"r5"` and used only for version-drift profile pairs.
  */
 @Configuration

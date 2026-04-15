@@ -61,6 +61,8 @@ object GoldStandardLoader {
 
         return EvaluationMetrics(
             pairId = gold.pairId,
+            sourceClasspath = gold.sourceClasspath,
+            targetClasspath = gold.targetClasspath,
             truePositives = tp,
             falsePositives = fp,
             falseNegatives = fn,
@@ -76,6 +78,8 @@ object GoldStandardLoader {
  */
 data class EvaluationMetrics(
     val pairId: String,
+    val sourceClasspath: String,
+    val targetClasspath: String,
     val truePositives: Int,
     val falsePositives: Int,
     val falseNegatives: Int,

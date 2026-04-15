@@ -1,12 +1,13 @@
 package com.example.fdd.api
 
+import com.example.fdd.api.impl.GlobalExceptionHandler
 import com.example.fdd.exception.DriftAnalysisException
 import com.example.fdd.exception.FddException
 import com.example.fdd.exception.LlmResponseException
 import com.example.fdd.exception.MapValidationException
 import com.example.fdd.exception.ProfileNotFoundException
 import com.example.fdd.exception.ProfileValidationException
-import com.example.fdd.output.OutputStore
+import com.example.fdd.output.IOutputStore
 import jakarta.servlet.http.HttpServletRequest
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
@@ -17,14 +18,14 @@ import org.mockito.kotlin.mock
 import org.springframework.http.HttpStatus
 
 /**
- * Unit tests for [GlobalExceptionHandler].
+ * Unit tests for [com.example.fdd.api.impl.GlobalExceptionHandler].
  *
  * Verifies that each domain exception is mapped to the correct HTTP status
  * code and error response body, matching the contract declared in the handler.
  */
 class GlobalExceptionHandlerTest {
 
-    private val outputStore: OutputStore = mock()
+    private val outputStore: IOutputStore = mock()
     private val request: HttpServletRequest = mock()
     private val handler = GlobalExceptionHandler(outputStore)
 

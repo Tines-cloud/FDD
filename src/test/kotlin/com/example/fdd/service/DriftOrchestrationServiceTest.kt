@@ -10,9 +10,10 @@ import com.example.fdd.model.DriftItem
 import com.example.fdd.model.DriftReport
 import com.example.fdd.model.DriftType
 import com.example.fdd.model.MapGenerationResult
-import com.example.fdd.service.CoverageAnalyzer
-import com.example.fdd.validation.DriftProfileValidator
+import com.example.fdd.service.impl.CoverageAnalyzer
+import com.example.fdd.service.impl.DefaultDriftOrchestrationService
 import com.example.fdd.validation.MapValidator
+import com.example.fdd.validation.impl.DriftProfileValidator
 import org.hl7.fhir.r4.model.StructureDefinition
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
@@ -28,7 +29,7 @@ import org.mockito.kotlin.whenever
 import kotlin.test.Test
 
 /**
- * Unit tests for [DefaultDriftOrchestrationService].
+ * Unit tests for [com.example.fdd.service.impl.DefaultDriftOrchestrationService].
  *
  * Verifies correct wiring of the four-stage pipeline:
  *   1. Profile resolution (load & validate)
@@ -91,7 +92,14 @@ class DriftOrchestrationServiceTest {
         mapValidator = mock()
         coverageAnalyzer = CoverageAnalyzer()
         orchestrator =
-            DefaultDriftOrchestrationService(profileLoader, driftValidator, driftAnalyzer, mapGenerator, mapValidator, coverageAnalyzer)
+            DefaultDriftOrchestrationService(
+                profileLoader,
+                driftValidator,
+                driftAnalyzer,
+                mapGenerator,
+                mapValidator,
+                coverageAnalyzer
+            )
     }
 
     /* ---------------- analyzeDrift() ---------------- */

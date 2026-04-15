@@ -1,5 +1,6 @@
 package com.example.fdd.ai
 
+import com.example.fdd.ai.impl.SpringAiLlmClient
 import com.example.fdd.exception.LlmResponseException
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull

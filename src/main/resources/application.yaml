@@ -3,9 +3,8 @@ spring:
     name: fdd
 
   # ---- Disable ALL Spring AI auto-configurations ----
-  # We manage ChatModel bean creation manually in AiConfig.
-  # This prevents multiple ChatModel beans from being created simultaneously
-  # when multiple AI provider starters are on the classpath.
+  # Manage ChatModel bean creation manually in AiConfig. This prevents multiple ChatModel beans from being created
+  # simultaneously when multiple AI provider starters are on the classpath.
   autoconfigure:
     exclude:
       - org.springframework.ai.autoconfigure.openai.OpenAiAutoConfiguration
@@ -14,8 +13,8 @@ spring:
 # ---- FHIR Drift Doctor ----
 fdd:
   ai:
-    # Active LLM provider: openai | anthropic | gemini | mistral
-    provider: gemini
+    # Active LLM provider: openai | anthropic | gemini | mistral | groq | openrouter
+    provider: openrouter
     temperature: 0.2
 
     openai:
@@ -37,9 +36,19 @@ fdd:
       model: mistral-large-latest
       base-url: https://api.mistral.ai/v1
 
+    groq:
+      api-key: ${GROQ_API_KEY:}
+      model: llama-3.3-70b-versatile
+      base-url: https://api.groq.com/openai/v1
+
+    openrouter:
+      api-key: ${OPENROUTER_API_KEY:}
+      model: google/gemini-2.5-flash
+      base-url: https://openrouter.ai/api/v1
+
   validation:
     # Maximum reflexion (self-correction) iterations for Trust-but-Verify loop
-    max-attempts: 3
+    max-attempts: 5
 
   cache:
     # Enable or disable LLM response caching

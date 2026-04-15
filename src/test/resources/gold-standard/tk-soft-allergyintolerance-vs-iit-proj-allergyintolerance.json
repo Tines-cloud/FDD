@@ -1,0 +1,319 @@
+{
+  "pairId": "tk-soft-allergyintolerance-vs-iit-proj-allergyintolerance",
+  "sourceClasspath": "custom-profiles/tk-soft/tk-soft-allergyintolerance.json",
+  "targetClasspath": "custom-profiles/iit-proj/iit-proj-allergyintolerance.json",
+  "drifts": [
+    {
+      "id": "rule-1",
+      "type": "STRUCTURAL",
+      "sourcePath": "AllergyIntolerance",
+      "targetPath": "AllergyIntolerance",
+      "description": "Constraints added in target: [iit-ai-1, iit-ai-2, iit-ai-3]",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-2",
+      "type": "STRUCTURAL",
+      "sourcePath": "AllergyIntolerance",
+      "targetPath": "AllergyIntolerance",
+      "description": "Constraints removed in target: [tk-ai-1, tk-ai-2]",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-3",
+      "type": "CARDINALITY",
+      "sourcePath": "AllergyIntolerance.verificationStatus",
+      "targetPath": "AllergyIntolerance.verificationStatus",
+      "description": "Cardinality changed: [0..1] -> [1..1]",
+      "severity": "ERROR"
+    },
+    {
+      "id": "rule-4",
+      "type": "CARDINALITY",
+      "sourcePath": "AllergyIntolerance.type",
+      "targetPath": "AllergyIntolerance.type",
+      "description": "Cardinality changed: [0..1] -> [1..1]",
+      "severity": "ERROR"
+    },
+    {
+      "id": "rule-5",
+      "type": "TERMINOLOGY",
+      "sourcePath": "AllergyIntolerance.type",
+      "targetPath": "AllergyIntolerance.type",
+      "description": "Binding changed: required(http://hl7.org/fhir/ValueSet/allergy-intolerance-type) -> required(http://hl7.org/fhir/ValueSet/allergy-intolerance-type|4.0.1)",
+      "severity": "ERROR"
+    },
+    {
+      "id": "rule-6",
+      "type": "TERMINOLOGY",
+      "sourcePath": "AllergyIntolerance.category",
+      "targetPath": "AllergyIntolerance.category",
+      "description": "Binding changed: required(http://hl7.org/fhir/ValueSet/allergy-intolerance-category) -> required(http://hl7.org/fhir/ValueSet/allergy-intolerance-category|4.0.1)",
+      "severity": "ERROR"
+    },
+    {
+      "id": "rule-7",
+      "type": "CARDINALITY",
+      "sourcePath": "AllergyIntolerance.criticality",
+      "targetPath": "AllergyIntolerance.criticality",
+      "description": "Cardinality changed: [0..1] -> [1..1]",
+      "severity": "ERROR"
+    },
+    {
+      "id": "rule-8",
+      "type": "TERMINOLOGY",
+      "sourcePath": "AllergyIntolerance.criticality",
+      "targetPath": "AllergyIntolerance.criticality",
+      "description": "Binding changed: required(http://hl7.org/fhir/ValueSet/allergy-intolerance-criticality) -> required(http://hl7.org/fhir/ValueSet/allergy-intolerance-criticality|4.0.1)",
+      "severity": "ERROR"
+    },
+    {
+      "id": "rule-9",
+      "type": "TERMINOLOGY",
+      "sourcePath": "AllergyIntolerance.code",
+      "targetPath": "AllergyIntolerance.code",
+      "description": "Binding changed: extensible(https://tk-soft.example.com/fhir/ValueSet/allergy-code) -> extensible(https://iit-proj.example.com/fhir/ValueSet/study-allergy-substance)",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-10",
+      "type": "CARDINALITY",
+      "sourcePath": "AllergyIntolerance.code.coding.display",
+      "targetPath": "AllergyIntolerance.code.coding.display",
+      "description": "Cardinality changed: [0..1] -> [1..1]",
+      "severity": "ERROR"
+    },
+    {
+      "id": "rule-11",
+      "type": "STRUCTURAL",
+      "sourcePath": "AllergyIntolerance.code.coding.display",
+      "targetPath": "AllergyIntolerance.code.coding.display",
+      "description": "MustSupport added in target",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-12",
+      "type": "STRUCTURAL",
+      "sourcePath": "AllergyIntolerance.patient",
+      "targetPath": "AllergyIntolerance.patient",
+      "description": "Reference target profile changed: [https://tk-soft.example.com/fhir/StructureDefinition/Patient] -> [https://iit-proj.example.com/fhir/StructureDefinition/Patient]",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-13",
+      "type": "STRUCTURAL",
+      "sourcePath": "AllergyIntolerance.encounter",
+      "targetPath": "AllergyIntolerance.encounter",
+      "description": "Reference target profile changed: [https://tk-soft.example.com/fhir/StructureDefinition/Encounter] -> [https://iit-proj.example.com/fhir/StructureDefinition/Encounter]",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-14",
+      "type": "STRUCTURAL",
+      "sourcePath": "AllergyIntolerance.onset[x]",
+      "targetPath": "AllergyIntolerance.onset[x]",
+      "description": "Type changed: [Age, Period, dateTime] -> [dateTime]",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-15",
+      "type": "CARDINALITY",
+      "sourcePath": "AllergyIntolerance.recorder",
+      "targetPath": "AllergyIntolerance.recorder",
+      "description": "Cardinality changed: [0..1] -> [0..0]",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-16",
+      "type": "STRUCTURAL",
+      "sourcePath": "AllergyIntolerance.recorder",
+      "targetPath": "AllergyIntolerance.recorder",
+      "description": "Reference target profile changed: [https://tk-soft.example.com/fhir/StructureDefinition/Practitioner] -> [http://hl7.org/fhir/StructureDefinition/Patient, http://hl7.org/fhir/StructureDefinition/Practitioner, http://hl7.org/fhir/StructureDefinition/PractitionerRole, http://hl7.org/fhir/StructureDefinition/RelatedPerson]",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-17",
+      "type": "STRUCTURAL",
+      "sourcePath": "AllergyIntolerance.recorder",
+      "targetPath": "AllergyIntolerance.recorder",
+      "description": "MustSupport removed in target",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-18",
+      "type": "CARDINALITY",
+      "sourcePath": "AllergyIntolerance.asserter",
+      "targetPath": "AllergyIntolerance.asserter",
+      "description": "Cardinality changed: [0..1] -> [0..0]",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-19",
+      "type": "STRUCTURAL",
+      "sourcePath": "AllergyIntolerance.asserter",
+      "targetPath": "AllergyIntolerance.asserter",
+      "description": "Reference target profile changed: [https://tk-soft.example.com/fhir/StructureDefinition/Patient, https://tk-soft.example.com/fhir/StructureDefinition/Practitioner] -> [http://hl7.org/fhir/StructureDefinition/Patient, http://hl7.org/fhir/StructureDefinition/Practitioner, http://hl7.org/fhir/StructureDefinition/PractitionerRole, http://hl7.org/fhir/StructureDefinition/RelatedPerson]",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-20",
+      "type": "STRUCTURAL",
+      "sourcePath": "AllergyIntolerance.asserter",
+      "targetPath": "AllergyIntolerance.asserter",
+      "description": "MustSupport removed in target",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-21",
+      "type": "STRUCTURAL",
+      "sourcePath": "AllergyIntolerance.lastOccurrence",
+      "targetPath": "AllergyIntolerance.lastOccurrence",
+      "description": "MustSupport added in target",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-22",
+      "type": "CARDINALITY",
+      "sourcePath": "AllergyIntolerance.reaction",
+      "targetPath": "AllergyIntolerance.reaction",
+      "description": "Cardinality changed: [0..*] -> [1..*]",
+      "severity": "ERROR"
+    },
+    {
+      "id": "rule-23",
+      "type": "TERMINOLOGY",
+      "sourcePath": "AllergyIntolerance.reaction.substance",
+      "targetPath": "AllergyIntolerance.reaction.substance",
+      "description": "Binding changed: extensible(https://tk-soft.example.com/fhir/ValueSet/allergy-substance) -> example(http://hl7.org/fhir/ValueSet/substance-code)",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-24",
+      "type": "TERMINOLOGY",
+      "sourcePath": "AllergyIntolerance.reaction.manifestation",
+      "targetPath": "AllergyIntolerance.reaction.manifestation",
+      "description": "Binding changed: extensible(https://tk-soft.example.com/fhir/ValueSet/allergy-manifestation) -> example(http://hl7.org/fhir/ValueSet/clinical-findings)",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-25",
+      "type": "STRUCTURAL",
+      "sourcePath": "AllergyIntolerance.reaction.description",
+      "targetPath": "AllergyIntolerance.reaction.description",
+      "description": "MustSupport added in target",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-26",
+      "type": "CARDINALITY",
+      "sourcePath": "AllergyIntolerance.reaction.onset",
+      "targetPath": "AllergyIntolerance.reaction.onset",
+      "description": "Cardinality changed: [0..1] -> [1..1]",
+      "severity": "ERROR"
+    },
+    {
+      "id": "rule-27",
+      "type": "CARDINALITY",
+      "sourcePath": "AllergyIntolerance.reaction.severity",
+      "targetPath": "AllergyIntolerance.reaction.severity",
+      "description": "Cardinality changed: [0..1] -> [1..1]",
+      "severity": "ERROR"
+    },
+    {
+      "id": "rule-28",
+      "type": "STRUCTURAL",
+      "sourcePath": "AllergyIntolerance.reaction.exposureRoute",
+      "targetPath": "AllergyIntolerance.reaction.exposureRoute",
+      "description": "MustSupport added in target",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-29",
+      "type": "EXTENSION",
+      "sourcePath": "",
+      "targetPath": "AllergyIntolerance.extension:saeAssessment",
+      "description": "Extension added in target profile: AllergyIntolerance.extension:saeAssessment",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-30",
+      "type": "EXTENSION",
+      "sourcePath": "",
+      "targetPath": "AllergyIntolerance.extension:causalityAssessment",
+      "description": "Extension added in target profile: AllergyIntolerance.extension:causalityAssessment",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-31",
+      "type": "EXTENSION",
+      "sourcePath": "",
+      "targetPath": "AllergyIntolerance.extension:studyDrugRelation",
+      "description": "Extension added in target profile: AllergyIntolerance.extension:studyDrugRelation",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-32",
+      "type": "STRUCTURAL",
+      "sourcePath": "",
+      "targetPath": "AllergyIntolerance.reaction.manifestation.id",
+      "description": "Element added in target profile: AllergyIntolerance.reaction.manifestation.id",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-33",
+      "type": "STRUCTURAL",
+      "sourcePath": "",
+      "targetPath": "AllergyIntolerance.reaction.manifestation.extension",
+      "description": "Element added in target profile: AllergyIntolerance.reaction.manifestation.extension",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-34",
+      "type": "STRUCTURAL",
+      "sourcePath": "",
+      "targetPath": "AllergyIntolerance.reaction.manifestation.coding",
+      "description": "Element added in target profile: AllergyIntolerance.reaction.manifestation.coding",
+      "severity": "ERROR"
+    },
+    {
+      "id": "rule-35",
+      "type": "STRUCTURAL",
+      "sourcePath": "",
+      "targetPath": "AllergyIntolerance.reaction.manifestation.coding:meddra",
+      "description": "New slice 'meddra' added in target profile",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-36",
+      "type": "STRUCTURAL",
+      "sourcePath": "",
+      "targetPath": "AllergyIntolerance.reaction.manifestation.text",
+      "description": "Element added in target profile: AllergyIntolerance.reaction.manifestation.text",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-37",
+      "type": "EXTENSION",
+      "sourcePath": "AllergyIntolerance.extension:allergySource",
+      "targetPath": "",
+      "description": "Extension removed in target profile: AllergyIntolerance.extension:allergySource (was mustSupport)",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-38",
+      "type": "EXTENSION",
+      "sourcePath": "AllergyIntolerance.extension:confirmedBy",
+      "targetPath": "",
+      "description": "Extension removed in target profile: AllergyIntolerance.extension:confirmedBy (was mustSupport)",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-39",
+      "type": "EXTENSION",
+      "sourcePath": "AllergyIntolerance.extension:allergyEndReason",
+      "targetPath": "",
+      "description": "Extension removed in target profile: AllergyIntolerance.extension:allergyEndReason (was mustSupport)",
+      "severity": "WARNING"
+    }
+  ]
+}

@@ -1,62 +1,134 @@
 {
   "pairId": "r4-immunization-vs-us-core-immunization",
-  "sourceCanonical": "http://hl7.org/fhir/StructureDefinition/Immunization",
-  "targetCanonical": "http://hl7.org/fhir/us/core/StructureDefinition/us-core-immunization",
+  "sourceClasspath": "standard-profiles/r4/immunization.profile.json",
+  "targetClasspath": "standard-profiles/us-core/StructureDefinition-us-core-immunization.json",
   "drifts": [
     {
-      "id": "status-must-support",
+      "id": "rule-1",
+      "type": "STRUCTURAL",
+      "sourcePath": "Immunization",
+      "targetPath": "Immunization",
+      "description": "Constraints added in target: [us-core-5]",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-2",
+      "type": "TERMINOLOGY",
+      "sourcePath": "Immunization.status",
+      "targetPath": "Immunization.status",
+      "description": "Binding changed: required(http://hl7.org/fhir/ValueSet/immunization-status|4.0.1) -> required(http://hl7.org/fhir/ValueSet/immunization-status)",
+      "severity": "ERROR"
+    },
+    {
+      "id": "rule-3",
       "type": "STRUCTURAL",
       "sourcePath": "Immunization.status",
       "targetPath": "Immunization.status",
-      "description": "US Core marks status as mustSupport; base R4 does not",
+      "description": "MustSupport added in target",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-4",
+      "type": "EXTENSION",
+      "sourcePath": "Immunization.status",
+      "targetPath": "Immunization.status.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+      "description": "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
       "severity": "WARNING"
     },
     {
-      "id": "statusreason-must-support",
+      "id": "rule-5",
       "type": "STRUCTURAL",
       "sourcePath": "Immunization.statusReason",
       "targetPath": "Immunization.statusReason",
-      "description": "US Core marks statusReason as mustSupport; base R4 does not",
+      "description": "MustSupport added in target",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-6",
+      "type": "EXTENSION",
+      "sourcePath": "Immunization.statusReason",
+      "targetPath": "Immunization.statusReason.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+      "description": "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
       "severity": "WARNING"
     },
     {
-      "id": "vaccinecode-must-support",
-      "type": "STRUCTURAL",
-      "sourcePath": "Immunization.vaccineCode",
-      "targetPath": "Immunization.vaccineCode",
-      "description": "US Core marks vaccineCode as mustSupport; base R4 does not",
-      "severity": "WARNING"
-    },
-    {
-      "id": "vaccinecode-binding",
+      "id": "rule-7",
       "type": "TERMINOLOGY",
       "sourcePath": "Immunization.vaccineCode",
       "targetPath": "Immunization.vaccineCode",
-      "description": "US Core binds vaccineCode to us-core-vaccines-cvx ValueSet with extensible binding instead of example binding",
+      "description": "Binding changed: example(http://hl7.org/fhir/ValueSet/vaccine-code) -> extensible(http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1010.6)",
       "severity": "WARNING"
     },
     {
-      "id": "patient-must-support",
+      "id": "rule-8",
+      "type": "STRUCTURAL",
+      "sourcePath": "Immunization.vaccineCode",
+      "targetPath": "Immunization.vaccineCode",
+      "description": "MustSupport added in target",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-9",
+      "type": "EXTENSION",
+      "sourcePath": "Immunization.vaccineCode",
+      "targetPath": "Immunization.vaccineCode.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+      "description": "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-10",
       "type": "STRUCTURAL",
       "sourcePath": "Immunization.patient",
       "targetPath": "Immunization.patient",
-      "description": "US Core marks patient as mustSupport and constrains reference to US Core Patient",
+      "description": "Reference target profile changed: [http://hl7.org/fhir/StructureDefinition/Patient] -> [http://hl7.org/fhir/us/core/StructureDefinition/us-core-patient]",
       "severity": "WARNING"
     },
     {
-      "id": "occurrence-must-support",
+      "id": "rule-11",
+      "type": "STRUCTURAL",
+      "sourcePath": "Immunization.patient",
+      "targetPath": "Immunization.patient",
+      "description": "MustSupport added in target",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-12",
+      "type": "EXTENSION",
+      "sourcePath": "Immunization.patient",
+      "targetPath": "Immunization.patient.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+      "description": "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-13",
       "type": "STRUCTURAL",
       "sourcePath": "Immunization.occurrence[x]",
       "targetPath": "Immunization.occurrence[x]",
-      "description": "US Core marks occurrence[x] as mustSupport; base R4 does not",
+      "description": "MustSupport added in target",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-14",
+      "type": "EXTENSION",
+      "sourcePath": "Immunization.occurrence[x]",
+      "targetPath": "Immunization.occurrence[x].extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+      "description": "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
       "severity": "WARNING"
     },
     {
-      "id": "primarysource-must-support",
+      "id": "rule-15",
       "type": "STRUCTURAL",
       "sourcePath": "Immunization.primarySource",
       "targetPath": "Immunization.primarySource",
-      "description": "US Core marks primarySource as mustSupport; base R4 does not",
+      "description": "MustSupport added in target",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-16",
+      "type": "EXTENSION",
+      "sourcePath": "Immunization.primarySource",
+      "targetPath": "Immunization.primarySource.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+      "description": "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
       "severity": "WARNING"
     }
   ]

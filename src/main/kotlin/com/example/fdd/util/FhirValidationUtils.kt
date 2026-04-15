@@ -2,11 +2,12 @@ package com.example.fdd.util
 
 import com.example.fdd.util.FhirValidationUtils.downgradablePatterns
 import com.example.fdd.util.FhirValidationUtils.isDowngradableError
+
 /**
  * Shared FHIR validation utilities used across [DefaultProfileLoader] and [ProfileValidationService].
  *
  * The [downgradablePatterns] list and [isDowngradableError] function were previously duplicated
- * in both classes; keeping them here ensures both classes always apply the same set of rules.
+ * in both classes keeping them here ensures both classes always apply the same set of rules.
  */
 object FhirValidationUtils {
 

@@ -6,6 +6,7 @@ import com.example.fdd.fhir.ProfileContextBuilder
 import com.example.fdd.model.DriftType
 import com.example.fdd.model.ProfileContext
 import com.example.fdd.model.ProfileSummary
+import com.example.fdd.service.impl.DefaultDriftAnalyzer
 import org.hl7.fhir.r4.model.StructureDefinition
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
@@ -31,7 +32,7 @@ class DriftAnalyzerTest {
     private lateinit var profileContextBuilder: ProfileContextBuilder
     private lateinit var objectMapper: ObjectMapper
     private lateinit var ruleBasedDetector: RuleBasedDriftDetector
-    private lateinit var analyzer: DefaultDriftAnalyzer
+    private lateinit var analyzer: DriftAnalyzer
 
     @BeforeEach
     fun setUp() {

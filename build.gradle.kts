@@ -17,7 +17,7 @@ java {
 }
 
 val hapiVersion = "7.6.0"
-val springAiVersion = "2.0.0-SNAPSHOT"
+val springAiVersion = "2.0.0-M4"
 
 repositories {
     mavenCentral()
@@ -79,7 +79,7 @@ kotlin {
     }
 }
 
-tasks.withType<Test> {
+tasks.named<Test>("test") {
     useJUnitPlatform {
         excludeTags("integration")
     }
@@ -104,12 +104,40 @@ tasks.named<org.springframework.boot.gradle.tasks.run.BootRun>("bootRun") {
 }
 
 // Separate task for integration / experiment tests
+// Run explicitly:  ./gradlew integrationTest
+// NOT part of the normal 'build' lifecycle — only runs when you call it directly.
 tasks.register<Test>("integrationTest") {
     useJUnitPlatform {
         includeTags("integration")
     }
     description = "Runs experiment/integration tests (requires LLM API key and Docker)"
     group = "verification"
+
+    // Only run when explicitly requested — prevents Kover/check from pulling it into 'build'
+    enabled = gradle.startParameter.taskNames.any { it.contains("integrationTest") }
+
+    // Use the same test classes and classpath as the default test task
+    testClassesDirs = sourceSets["test"].output.classesDirs
+    classpath = sourceSets["test"].runtimeClasspath
+    jvmArgs("-Xmx2g", "-Xms512m")
+
+    // Forward fdd.pairs project property for selective pair execution
+    // Usage: ./gradlew integrationTest -Pfdd.pairs=id1,id2
+    systemProperty("fdd.pairs", project.findProperty("fdd.pairs")?.toString() ?: "")
+
+    // Load API keys from .env file so experiments can resolve LLM providers
+    val envFile = file(".env")
+    if (envFile.exists()) {
+        envFile.readLines()
+            .filter { it.isNotBlank() && !it.startsWith("#") && it.contains("=") }
+            .forEach { line ->
+                val (key, value) = line.split("=", limit = 2)
+                environment(key.trim(), value.trim())
+            }
+    }
+
+    // Also forward any system environment variables (CI, terminal exports, etc.)
+    environment(System.getenv())
 }
 
 // ---- Kover (code coverage) ----

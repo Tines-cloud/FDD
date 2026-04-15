@@ -7,6 +7,7 @@ import com.example.fdd.config.FddProperties
 import com.example.fdd.config.ValidationProperties
 import com.example.fdd.exception.MapValidationException
 import com.example.fdd.model.DriftReport
+import com.example.fdd.validation.impl.DefaultMapValidator
 import org.hl7.fhir.r4.model.StructureDefinition
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach

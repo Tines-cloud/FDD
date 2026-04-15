@@ -3,7 +3,8 @@ package com.example.fdd.cli
 import com.example.fdd.api.dto.ProfileInput
 import com.example.fdd.api.dto.RepairResponse
 import com.example.fdd.api.dto.ValidationSummary
-import com.example.fdd.output.OutputStore
+import com.example.fdd.output.IOutputStore
+import com.example.fdd.output.IOutputStore.OutputContext
 import com.example.fdd.service.DriftOrchestrationService
 import org.slf4j.LoggerFactory
 import org.springframework.boot.ApplicationArguments
@@ -16,7 +17,6 @@ import java.io.File
 /**
  * CLI runner activated with `--spring.profiles.active=cli`.
  *
- * Reuses the existing [DriftOrchestrationService] pipeline - no code duplication.
  * When this profile is active the embedded web server is disabled
  * (see `application-cli.yaml`), so the process runs the command and exits.
  *
@@ -49,7 +49,7 @@ import java.io.File
 class CliRunner(
     private val orchestrationService: DriftOrchestrationService,
     private val objectMapper: ObjectMapper,
-    private val outputStore: OutputStore
+    private val outputStore: IOutputStore
 ) : ApplicationRunner {
 
     private val log = LoggerFactory.getLogger(javaClass)
@@ -99,7 +99,7 @@ class CliRunner(
     private fun runAnalyze(
         source: ProfileInput,
         target: ProfileInput,
-        outputContext: OutputStore.OutputContext?
+        outputContext: OutputContext?
     ): String {
         val driftReport = orchestrationService.analyzeDrift(source, target)
         val responsePayload = mapOf("driftReport" to driftReport)
@@ -110,7 +110,7 @@ class CliRunner(
     private fun runRepair(
         source: ProfileInput,
         target: ProfileInput,
-        outputContext: OutputStore.OutputContext?
+        outputContext: OutputContext?
     ): String {
         val (driftReport, mapResult, coverageReport) = orchestrationService.analyzeAndRepair(source, target)
         val response = RepairResponse(

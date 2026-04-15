@@ -13,8 +13,8 @@ spring:
 
 fdd:
   ai:
-    provider: gemini
-    temperature: 0.1         # Lower temperature for reproducibility
+    provider: openrouter
+    temperature: 0.1
 
     openai:
       api-key: ${OPENAI_API_KEY:}
@@ -35,15 +35,25 @@ fdd:
       model: mistral-large-latest
       base-url: https://api.mistral.ai/v1
 
+    groq:
+      api-key: ${GROQ_API_KEY:}
+      model: llama-3.3-70b-versatile
+      base-url: https://api.groq.com/openai/v1
+
+    openrouter:
+      api-key: ${OPENROUTER_API_KEY:}
+      model: google/gemini-2.5-pro
+      base-url: https://openrouter.ai/api/v1
+
   validation:
-    max-attempts: 5          # More attempts for experiments
+    max-attempts: 5
 
   cache:
     enabled: true
     ttl-minutes: 60
     directory: .fdd-cache
 
-# ---- Logging (verbose for experiment analysis) ----
+# ---- Logging  ----
 logging:
   level:
     com.example.fdd: DEBUG

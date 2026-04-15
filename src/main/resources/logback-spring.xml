@@ -1,18 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
-  Logback configuration for FHIR Drift Doctor.
-
-  Two appenders:
-  1. CONSOLE - coloured output to stdout (same as Spring Boot defaults).
-  2. FILE    - rolling file under logs/fdd.log with daily rotation and 30-day retention.
-
-  Both appenders receive all log events at DEBUG level for com.example.fdd.
--->
 <configuration>
     <!-- Import Spring Boot default console colours -->
     <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
 
-    <!-- ==================== Console Appender ==================== -->
+    <!-- Console Appender -->
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
             <pattern>${CONSOLE_LOG_PATTERN}</pattern>
@@ -20,7 +11,7 @@
         </encoder>
     </appender>
 
-    <!-- ==================== Rolling File Appender ==================== -->
+    <!-- Rolling File Appender -->
     <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>logs/fdd.log</file>
         <encoder>
@@ -28,7 +19,7 @@
             <charset>UTF-8</charset>
         </encoder>
         <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
-            <!-- Daily rollover; each file capped at 50 MB -->
+            <!-- Daily rollover -->
             <fileNamePattern>logs/fdd-%d{yyyy-MM-dd}.%i.log.gz</fileNamePattern>
             <maxFileSize>50MB</maxFileSize>
             <!-- Keep 30 days of history, with a total cap of 1 GB -->
@@ -37,7 +28,7 @@
         </rollingPolicy>
     </appender>
 
-    <!-- ==================== Logger Levels ==================== -->
+    <!-- Logger Levels -->
 
     <!-- Application logs at DEBUG -->
     <logger name="com.example.fdd" level="DEBUG"/>

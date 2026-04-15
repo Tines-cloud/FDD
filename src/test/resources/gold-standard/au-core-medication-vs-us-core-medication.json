@@ -1,0 +1,103 @@
+{
+  "pairId": "au-core-medication-vs-us-core-medication",
+  "sourceClasspath": "standard-profiles/au-core/StructureDefinition-au-core-medication.json",
+  "targetClasspath": "standard-profiles/us-core/StructureDefinition-us-core-medication.json",
+  "drifts": [
+    {
+      "id": "rule-1",
+      "type": "STRUCTURAL",
+      "sourcePath": "Medication.extension",
+      "targetPath": "Medication.extension",
+      "description": "Slicing changed: rules=open, discriminators=[value:url] -> none",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-2",
+      "type": "TERMINOLOGY",
+      "sourcePath": "Medication.code",
+      "targetPath": "Medication.code",
+      "description": "Binding changed: example(http://hl7.org/fhir/ValueSet/medication-codes) -> extensible(http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1010.4)",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-3",
+      "type": "EXTENSION",
+      "sourcePath": "Medication.code",
+      "targetPath": "Medication.code.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+      "description": "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-4",
+      "type": "EXTENSION",
+      "sourcePath": "Medication.code.extension(http://hl7.org/fhir/StructureDefinition/obligation)",
+      "targetPath": "Medication.code",
+      "description": "Extension removed in target element: http://hl7.org/fhir/StructureDefinition/obligation",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-5",
+      "type": "TERMINOLOGY",
+      "sourcePath": "Medication.form",
+      "targetPath": "Medication.form",
+      "description": "Binding changed: preferred(https://healthterminologies.gov.au/fhir/ValueSet/medication-form-1) -> example(http://hl7.org/fhir/ValueSet/medication-form-codes)",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-6",
+      "type": "TERMINOLOGY",
+      "sourcePath": "Medication.ingredient.item[x]",
+      "targetPath": "Medication.ingredient.item[x]",
+      "description": "Binding changed: preferred(http://terminology.hl7.org.au/ValueSet/amt-mp-codes) -> none(none)",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-7",
+      "type": "STRUCTURAL",
+      "sourcePath": "Medication.code.id",
+      "targetPath": "",
+      "description": "Element removed in target profile: Medication.code.id",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-8",
+      "type": "STRUCTURAL",
+      "sourcePath": "Medication.code.extension",
+      "targetPath": "",
+      "description": "Element removed in target profile: Medication.code.extension",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-9",
+      "type": "STRUCTURAL",
+      "sourcePath": "Medication.code.coding",
+      "targetPath": "",
+      "description": "Element removed in target profile: Medication.code.coding",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-10",
+      "type": "STRUCTURAL",
+      "sourcePath": "Medication.code.coding:pbs",
+      "targetPath": "",
+      "description": "Slice 'pbs' removed in target profile",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-11",
+      "type": "STRUCTURAL",
+      "sourcePath": "Medication.code.coding:amt",
+      "targetPath": "",
+      "description": "Slice 'amt' removed in target profile",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-12",
+      "type": "STRUCTURAL",
+      "sourcePath": "Medication.code.text",
+      "targetPath": "",
+      "description": "Element removed in target profile: Medication.code.text",
+      "severity": "INFO"
+    }
+  ]
+}

@@ -1,62 +1,150 @@
 {
   "pairId": "r4-allergyintolerance-vs-us-core-allergyintolerance",
-  "sourceCanonical": "http://hl7.org/fhir/StructureDefinition/AllergyIntolerance",
-  "targetCanonical": "http://hl7.org/fhir/us/core/StructureDefinition/us-core-allergyintolerance",
+  "sourceClasspath": "standard-profiles/r4/allergyintolerance.profile.json",
+  "targetClasspath": "standard-profiles/us-core/StructureDefinition-us-core-allergyintolerance.json",
   "drifts": [
     {
-      "id": "clinicalstatus-must-support",
-      "type": "STRUCTURAL",
+      "id": "rule-1",
+      "type": "TERMINOLOGY",
       "sourcePath": "AllergyIntolerance.clinicalStatus",
       "targetPath": "AllergyIntolerance.clinicalStatus",
-      "description": "US Core marks clinicalStatus as mustSupport; base R4 does not",
-      "severity": "WARNING"
-    },
-    {
-      "id": "verificationstatus-must-support",
-      "type": "STRUCTURAL",
-      "sourcePath": "AllergyIntolerance.verificationStatus",
-      "targetPath": "AllergyIntolerance.verificationStatus",
-      "description": "US Core marks verificationStatus as mustSupport; base R4 does not",
-      "severity": "WARNING"
-    },
-    {
-      "id": "code-cardinality",
-      "type": "CARDINALITY",
-      "sourcePath": "AllergyIntolerance.code",
-      "targetPath": "AllergyIntolerance.code",
-      "description": "US Core requires code (1..1) while base R4 allows none (0..1)",
+      "description": "Binding changed: required(http://hl7.org/fhir/ValueSet/allergyintolerance-clinical|4.0.1) -> required(http://hl7.org/fhir/ValueSet/allergyintolerance-clinical)",
       "severity": "ERROR"
     },
     {
-      "id": "code-must-support",
+      "id": "rule-2",
+      "type": "STRUCTURAL",
+      "sourcePath": "AllergyIntolerance.clinicalStatus",
+      "targetPath": "AllergyIntolerance.clinicalStatus",
+      "description": "MustSupport added in target",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-3",
+      "type": "EXTENSION",
+      "sourcePath": "AllergyIntolerance.clinicalStatus",
+      "targetPath": "AllergyIntolerance.clinicalStatus.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+      "description": "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-4",
+      "type": "TERMINOLOGY",
+      "sourcePath": "AllergyIntolerance.verificationStatus",
+      "targetPath": "AllergyIntolerance.verificationStatus",
+      "description": "Binding changed: required(http://hl7.org/fhir/ValueSet/allergyintolerance-verification|4.0.1) -> required(http://hl7.org/fhir/ValueSet/allergyintolerance-verification)",
+      "severity": "ERROR"
+    },
+    {
+      "id": "rule-5",
+      "type": "STRUCTURAL",
+      "sourcePath": "AllergyIntolerance.verificationStatus",
+      "targetPath": "AllergyIntolerance.verificationStatus",
+      "description": "MustSupport added in target",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-6",
+      "type": "EXTENSION",
+      "sourcePath": "AllergyIntolerance.verificationStatus",
+      "targetPath": "AllergyIntolerance.verificationStatus.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+      "description": "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-7",
+      "type": "CARDINALITY",
+      "sourcePath": "AllergyIntolerance.code",
+      "targetPath": "AllergyIntolerance.code",
+      "description": "Cardinality changed: [0..1] -> [1..1]",
+      "severity": "ERROR"
+    },
+    {
+      "id": "rule-8",
+      "type": "TERMINOLOGY",
+      "sourcePath": "AllergyIntolerance.code",
+      "targetPath": "AllergyIntolerance.code",
+      "description": "Binding changed: example(http://hl7.org/fhir/ValueSet/allergyintolerance-code) -> extensible(http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1186.8)",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-9",
       "type": "STRUCTURAL",
       "sourcePath": "AllergyIntolerance.code",
       "targetPath": "AllergyIntolerance.code",
-      "description": "US Core marks code as mustSupport; base R4 does not",
+      "description": "MustSupport added in target",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-10",
+      "type": "EXTENSION",
+      "sourcePath": "AllergyIntolerance.code",
+      "targetPath": "AllergyIntolerance.code.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+      "description": "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
       "severity": "WARNING"
     },
     {
-      "id": "patient-must-support",
+      "id": "rule-11",
       "type": "STRUCTURAL",
       "sourcePath": "AllergyIntolerance.patient",
       "targetPath": "AllergyIntolerance.patient",
-      "description": "US Core marks patient as mustSupport and constrains reference to US Core Patient",
+      "description": "Reference target profile changed: [http://hl7.org/fhir/StructureDefinition/Patient] -> [http://hl7.org/fhir/us/core/StructureDefinition/us-core-patient]",
       "severity": "WARNING"
     },
     {
-      "id": "reaction-must-support",
+      "id": "rule-12",
+      "type": "STRUCTURAL",
+      "sourcePath": "AllergyIntolerance.patient",
+      "targetPath": "AllergyIntolerance.patient",
+      "description": "MustSupport added in target",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-13",
+      "type": "EXTENSION",
+      "sourcePath": "AllergyIntolerance.patient",
+      "targetPath": "AllergyIntolerance.patient.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+      "description": "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-14",
       "type": "STRUCTURAL",
       "sourcePath": "AllergyIntolerance.reaction",
       "targetPath": "AllergyIntolerance.reaction",
-      "description": "US Core marks reaction as mustSupport; base R4 does not",
+      "description": "MustSupport added in target",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-15",
+      "type": "EXTENSION",
+      "sourcePath": "AllergyIntolerance.reaction",
+      "targetPath": "AllergyIntolerance.reaction.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+      "description": "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
       "severity": "WARNING"
     },
     {
-      "id": "reaction-manifestation-must-support",
+      "id": "rule-16",
+      "type": "TERMINOLOGY",
+      "sourcePath": "AllergyIntolerance.reaction.manifestation",
+      "targetPath": "AllergyIntolerance.reaction.manifestation",
+      "description": "Binding changed: example(http://hl7.org/fhir/ValueSet/clinical-findings) -> extensible(http://hl7.org/fhir/ValueSet/clinical-findings)",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-17",
       "type": "STRUCTURAL",
       "sourcePath": "AllergyIntolerance.reaction.manifestation",
       "targetPath": "AllergyIntolerance.reaction.manifestation",
-      "description": "US Core marks reaction.manifestation as mustSupport; base R4 does not",
+      "description": "MustSupport added in target",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-18",
+      "type": "EXTENSION",
+      "sourcePath": "AllergyIntolerance.reaction.manifestation",
+      "targetPath": "AllergyIntolerance.reaction.manifestation.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+      "description": "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
       "severity": "WARNING"
     }
   ]

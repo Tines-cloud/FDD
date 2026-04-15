@@ -1,87 +1,223 @@
 {
   "pairId": "r4-observation-vs-us-core-observation",
-  "sourceCanonical": "http://hl7.org/fhir/StructureDefinition/Observation",
-  "targetCanonical": "http://hl7.org/fhir/us/core/StructureDefinition/us-core-observation-lab",
+  "sourceClasspath": "standard-profiles/r4/observation.profile.json",
+  "targetClasspath": "standard-profiles/us-core/StructureDefinition-us-core-observation-lab.json",
   "drifts": [
     {
-      "id": "status-must-support",
+      "id": "rule-1",
+      "type": "STRUCTURAL",
+      "sourcePath": "Observation",
+      "targetPath": "Observation",
+      "description": "Constraints added in target: [us-core-2]",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-2",
       "type": "STRUCTURAL",
       "sourcePath": "Observation.status",
       "targetPath": "Observation.status",
-      "description": "US Core Lab marks status as mustSupport; base R4 does not",
+      "description": "MustSupport added in target",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-3",
+      "type": "EXTENSION",
+      "sourcePath": "Observation.status",
+      "targetPath": "Observation.status.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+      "description": "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
       "severity": "WARNING"
     },
     {
-      "id": "category-cardinality",
+      "id": "rule-4",
       "type": "CARDINALITY",
       "sourcePath": "Observation.category",
       "targetPath": "Observation.category",
-      "description": "US Core Lab requires at least one category (1..*) while base R4 allows none (0..*)",
+      "description": "Cardinality changed: [0..*] -> [1..*]",
       "severity": "ERROR"
     },
     {
-      "id": "category-laboratory-slice",
+      "id": "rule-5",
       "type": "STRUCTURAL",
       "sourcePath": "Observation.category",
-      "targetPath": "Observation.category:Laboratory",
-      "description": "US Core Lab defines a 'Laboratory' slice requiring observation-category code 'laboratory'",
-      "severity": "ERROR"
+      "targetPath": "Observation.category",
+      "description": "MustSupport added in target",
+      "severity": "INFO"
     },
     {
-      "id": "code-must-support",
+      "id": "rule-6",
+      "type": "STRUCTURAL",
+      "sourcePath": "Observation.category",
+      "targetPath": "Observation.category",
+      "description": "Slicing changed: none -> rules=open, discriminators=[pattern:$this]",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-7",
+      "type": "EXTENSION",
+      "sourcePath": "Observation.category",
+      "targetPath": "Observation.category.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+      "description": "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-8",
+      "type": "TERMINOLOGY",
+      "sourcePath": "Observation.code",
+      "targetPath": "Observation.code",
+      "description": "Binding changed: example(http://hl7.org/fhir/ValueSet/observation-codes) -> extensible(http://hl7.org/fhir/us/core/ValueSet/us-core-laboratory-test-codes)",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-9",
       "type": "STRUCTURAL",
       "sourcePath": "Observation.code",
       "targetPath": "Observation.code",
-      "description": "US Core Lab marks code as mustSupport; base R4 does not",
+      "description": "MustSupport added in target",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-10",
+      "type": "EXTENSION",
+      "sourcePath": "Observation.code",
+      "targetPath": "Observation.code.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+      "description": "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
       "severity": "WARNING"
     },
     {
-      "id": "subject-cardinality",
+      "id": "rule-11",
       "type": "CARDINALITY",
       "sourcePath": "Observation.subject",
       "targetPath": "Observation.subject",
-      "description": "US Core Lab requires subject (1..1) while base R4 allows none (0..1)",
+      "description": "Cardinality changed: [0..1] -> [1..1]",
       "severity": "ERROR"
     },
     {
-      "id": "effective-must-support",
+      "id": "rule-12",
+      "type": "STRUCTURAL",
+      "sourcePath": "Observation.subject",
+      "targetPath": "Observation.subject",
+      "description": "Reference target profile changed: [http://hl7.org/fhir/StructureDefinition/Device, http://hl7.org/fhir/StructureDefinition/Group, http://hl7.org/fhir/StructureDefinition/Location, http://hl7.org/fhir/StructureDefinition/Patient] -> [http://hl7.org/fhir/us/core/StructureDefinition/us-core-patient]",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-13",
+      "type": "STRUCTURAL",
+      "sourcePath": "Observation.subject",
+      "targetPath": "Observation.subject",
+      "description": "MustSupport added in target",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-14",
+      "type": "EXTENSION",
+      "sourcePath": "Observation.subject",
+      "targetPath": "Observation.subject.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+      "description": "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-15",
       "type": "STRUCTURAL",
       "sourcePath": "Observation.effective[x]",
       "targetPath": "Observation.effective[x]",
-      "description": "US Core Lab marks effective[x] as mustSupport; base R4 does not",
+      "description": "MustSupport added in target",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-16",
+      "type": "STRUCTURAL",
+      "sourcePath": "Observation.effective[x]",
+      "targetPath": "Observation.effective[x]",
+      "description": "Constraints added in target: [us-core-1]",
       "severity": "WARNING"
     },
     {
-      "id": "value-must-support",
+      "id": "rule-17",
+      "type": "EXTENSION",
+      "sourcePath": "Observation.effective[x]",
+      "targetPath": "Observation.effective[x].extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+      "description": "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-18",
       "type": "STRUCTURAL",
       "sourcePath": "Observation.value[x]",
       "targetPath": "Observation.value[x]",
-      "description": "US Core Lab marks value[x] as mustSupport; base R4 does not",
+      "description": "MustSupport added in target",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-19",
+      "type": "STRUCTURAL",
+      "sourcePath": "Observation.value[x]",
+      "targetPath": "Observation.value[x]",
+      "description": "Constraints added in target: [us-core-3, us-core-4]",
       "severity": "WARNING"
     },
     {
-      "id": "category-terminology-binding",
-      "type": "TERMINOLOGY",
-      "sourcePath": "Observation.category",
-      "targetPath": "Observation.category",
-      "description": "US Core Lab uses a preferred binding to us-core-observation-category ValueSet instead of base observation-category",
+      "id": "rule-20",
+      "type": "EXTENSION",
+      "sourcePath": "Observation.value[x]",
+      "targetPath": "Observation.value[x].extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+      "description": "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
       "severity": "WARNING"
     },
     {
-      "id": "dataabsentreason-must-support",
+      "id": "rule-21",
       "type": "STRUCTURAL",
       "sourcePath": "Observation.dataAbsentReason",
       "targetPath": "Observation.dataAbsentReason",
-      "description": "US Core Lab marks dataAbsentReason as mustSupport; base R4 does not",
+      "description": "MustSupport added in target",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-22",
+      "type": "EXTENSION",
+      "sourcePath": "Observation.dataAbsentReason",
+      "targetPath": "Observation.dataAbsentReason.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+      "description": "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
       "severity": "WARNING"
     },
     {
-      "id": "encounter-must-support",
+      "id": "rule-23",
       "type": "STRUCTURAL",
-      "sourcePath": "Observation.encounter",
-      "targetPath": "Observation.encounter",
-      "description": "US Core Lab marks encounter as mustSupport; base R4 does not",
+      "sourcePath": "Observation.specimen",
+      "targetPath": "Observation.specimen",
+      "description": "Reference target profile changed: [http://hl7.org/fhir/StructureDefinition/Specimen] -> [http://hl7.org/fhir/us/core/StructureDefinition/us-core-specimen]",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-24",
+      "type": "STRUCTURAL",
+      "sourcePath": "Observation.specimen",
+      "targetPath": "Observation.specimen",
+      "description": "MustSupport added in target",
       "severity": "INFO"
+    },
+    {
+      "id": "rule-25",
+      "type": "EXTENSION",
+      "sourcePath": "Observation.specimen",
+      "targetPath": "Observation.specimen.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+      "description": "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-26",
+      "type": "STRUCTURAL",
+      "sourcePath": "Observation.component.referenceRange",
+      "targetPath": "Observation.component.referenceRange",
+      "description": "Content reference changed: '#Observation.referenceRange' -> 'http://hl7.org/fhir/StructureDefinition/Observation#Observation.referenceRange'",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-27",
+      "type": "STRUCTURAL",
+      "sourcePath": "",
+      "targetPath": "Observation.category:us-core",
+      "description": "New slice 'us-core' added in target profile",
+      "severity": "ERROR"
     }
   ]
 }

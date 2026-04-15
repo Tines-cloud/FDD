@@ -1,0 +1,223 @@
+{
+  "pairId": "iit-proj-medication-vs-hemas-medication",
+  "sourceClasspath": "custom-profiles/iit-proj/iit-proj-medication.json",
+  "targetClasspath": "custom-profiles/hemas/hemas-medication.json",
+  "drifts": [
+    {
+      "id": "rule-1",
+      "type": "STRUCTURAL",
+      "sourcePath": "Medication",
+      "targetPath": "Medication",
+      "description": "Constraints added in target: [hemas-med-1, hemas-med-2]",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-2",
+      "type": "STRUCTURAL",
+      "sourcePath": "Medication",
+      "targetPath": "Medication",
+      "description": "Constraints removed in target: [iit-med-1, iit-med-2]",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-3",
+      "type": "TERMINOLOGY",
+      "sourcePath": "Medication.code",
+      "targetPath": "Medication.code",
+      "description": "Binding changed: example(http://hl7.org/fhir/ValueSet/medication-codes) -> extensible(https://hemas.example.com/fhir/ValueSet/medication-code)",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-4",
+      "type": "STRUCTURAL",
+      "sourcePath": "Medication.code.coding",
+      "targetPath": "Medication.code.coding",
+      "description": "Slicing changed: rules=open, discriminators=[pattern:$this] -> none",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-5",
+      "type": "CARDINALITY",
+      "sourcePath": "Medication.manufacturer",
+      "targetPath": "Medication.manufacturer",
+      "description": "Cardinality changed: [0..0] -> [0..1]",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-6",
+      "type": "STRUCTURAL",
+      "sourcePath": "Medication.manufacturer",
+      "targetPath": "Medication.manufacturer",
+      "description": "MustSupport added in target",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-7",
+      "type": "TERMINOLOGY",
+      "sourcePath": "Medication.form",
+      "targetPath": "Medication.form",
+      "description": "Binding changed: extensible(https://iit-proj.example.com/fhir/ValueSet/medication-form) -> extensible(https://hemas.example.com/fhir/ValueSet/medication-form)",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-8",
+      "type": "STRUCTURAL",
+      "sourcePath": "Medication.ingredient.item[x]",
+      "targetPath": "Medication.ingredient.item[x]",
+      "description": "Type changed: [CodeableConcept] -> [CodeableConcept, Reference]",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-9",
+      "type": "STRUCTURAL",
+      "sourcePath": "Medication.ingredient.item[x]",
+      "targetPath": "Medication.ingredient.item[x]",
+      "description": "Reference target profile changed: [] -> [http://hl7.org/fhir/StructureDefinition/Substance]",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-10",
+      "type": "CARDINALITY",
+      "sourcePath": "Medication.batch",
+      "targetPath": "Medication.batch",
+      "description": "Cardinality changed: [1..1] -> [0..1]",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-11",
+      "type": "CARDINALITY",
+      "sourcePath": "Medication.batch.lotNumber",
+      "targetPath": "Medication.batch.lotNumber",
+      "description": "Cardinality changed: [1..1] -> [0..1]",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-12",
+      "type": "CARDINALITY",
+      "sourcePath": "Medication.batch.expirationDate",
+      "targetPath": "Medication.batch.expirationDate",
+      "description": "Cardinality changed: [1..1] -> [0..1]",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-13",
+      "type": "EXTENSION",
+      "sourcePath": "",
+      "targetPath": "Medication.extension:pharmacyCategory",
+      "description": "Extension added in target profile: Medication.extension:pharmacyCategory",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-14",
+      "type": "EXTENSION",
+      "sourcePath": "",
+      "targetPath": "Medication.extension:storageCondition",
+      "description": "Extension added in target profile: Medication.extension:storageCondition",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-15",
+      "type": "EXTENSION",
+      "sourcePath": "",
+      "targetPath": "Medication.extension:localDrugCode",
+      "description": "Extension added in target profile: Medication.extension:localDrugCode",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-16",
+      "type": "STRUCTURAL",
+      "sourcePath": "",
+      "targetPath": "Medication.code.coding.id",
+      "description": "Element added in target profile: Medication.code.coding.id",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-17",
+      "type": "STRUCTURAL",
+      "sourcePath": "",
+      "targetPath": "Medication.code.coding.extension",
+      "description": "Element added in target profile: Medication.code.coding.extension",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-18",
+      "type": "STRUCTURAL",
+      "sourcePath": "",
+      "targetPath": "Medication.code.coding.system",
+      "description": "Element added in target profile: Medication.code.coding.system",
+      "severity": "ERROR"
+    },
+    {
+      "id": "rule-19",
+      "type": "STRUCTURAL",
+      "sourcePath": "",
+      "targetPath": "Medication.code.coding.version",
+      "description": "Element added in target profile: Medication.code.coding.version",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-20",
+      "type": "STRUCTURAL",
+      "sourcePath": "",
+      "targetPath": "Medication.code.coding.code",
+      "description": "Element added in target profile: Medication.code.coding.code",
+      "severity": "ERROR"
+    },
+    {
+      "id": "rule-21",
+      "type": "STRUCTURAL",
+      "sourcePath": "",
+      "targetPath": "Medication.code.coding.display",
+      "description": "Element added in target profile: Medication.code.coding.display",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-22",
+      "type": "STRUCTURAL",
+      "sourcePath": "",
+      "targetPath": "Medication.code.coding.userSelected",
+      "description": "Element added in target profile: Medication.code.coding.userSelected",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-23",
+      "type": "EXTENSION",
+      "sourcePath": "Medication.extension:investigationalStatus",
+      "targetPath": "",
+      "description": "Extension removed in target profile: Medication.extension:investigationalStatus (was required)",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-24",
+      "type": "EXTENSION",
+      "sourcePath": "Medication.extension:blindingCode",
+      "targetPath": "",
+      "description": "Extension removed in target profile: Medication.extension:blindingCode (was mustSupport)",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-25",
+      "type": "EXTENSION",
+      "sourcePath": "Medication.extension:protocolReference",
+      "targetPath": "",
+      "description": "Extension removed in target profile: Medication.extension:protocolReference (was mustSupport)",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-26",
+      "type": "STRUCTURAL",
+      "sourcePath": "Medication.code.coding:studyDrug",
+      "targetPath": "",
+      "description": "Slice 'studyDrug' removed in target profile",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-27",
+      "type": "STRUCTURAL",
+      "sourcePath": "Medication.code.coding:blindedDrug",
+      "targetPath": "",
+      "description": "Slice 'blindedDrug' removed in target profile",
+      "severity": "WARNING"
+    }
+  ]
+}
