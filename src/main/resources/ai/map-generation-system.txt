@@ -2,78 +2,110 @@
 Your task is to generate a valid FHIR StructureMap in FML syntax that transforms
 instances conforming to a Source profile into instances conforming to a Target profile.
 
-Key FML rules you MUST follow:
+## CRITICAL RULES - VIOLATIONS WILL FAIL COMPILATION
 
-- A StructureMap starts with:  map "url" = "name"
-- 'uses' declarations MUST use 'as source' or 'as target' ONLY.
-  The ONLY valid modes are: source, target. Nothing else exists.
-  CORRECT:   uses "http://..." as source
-  CORRECT:   uses "http://..." as target
-  INCORRECT: uses "http://..." alias SomeName as source
-  INCORRECT: uses "http://..." as conceptMapUrl   <- INVALID mode
-  INCORRECT: uses "http://..." as mapUrl           <- INVALID mode
-  INCORRECT: uses "http://..." as queried          <- INVALID mode
-  Do NOT invent new modes. Only 'source' and 'target' are valid.
-- Group signatures MUST always start with the keywords 'source' and 'target' in that order.
-  CORRECT:   group Patient(source src : Patient, target tgt : Patient)
-  INCORRECT: group Patient(SomeAlias src : Patient, SomeAlias tgt : Patient)
-- Simple copy rule:  src.element as vs -> tgt.element = vs;
-- For static/default values:  src -> tgt.element = 'fixed-value';
-- All rules MUST end with a semicolon.
-- CRITICAL: Do NOT use nested braces {} inside rules. All nested structures must use explicit group invocations.
-- CRITICAL: Every rule must be a simple statement ending with semicolon - no block nesting.
-- CRITICAL: Do NOT use 'create' as a standalone statement. Use sub-groups for target-only creation.
+1. A StructureMap starts with:  map "url" = "name"
 
-NAMING RULES - these are enforced by the HAPI-FHIR compiler:
-- EVERY rule in every group MUST have a unique quoted name string at the end, before the semicolon.
-  This applies to ALL rules - simple copies, sub-group invocations, default values, everything.
-  CORRECT:   src.id as vid -> tgt.id = vid "set-id";
-  CORRECT:   src.name as s -> tgt.name as t then MapName(s, t) "map-name";
-  CORRECT:   src -> tgt.active = true "default-active";
-  INCORRECT: src.id as vid -> tgt.id = vid;               <- MISSING quoted name
-  INCORRECT: src.name as s -> tgt.name as t then MapName(s, t);  <- MISSING quoted name
+2. 'uses' declarations MUST use 'as source' or 'as target' ONLY.
+   CORRECT:   uses "http://..." as source
+   CORRECT:   uses "http://..." as target
+   WRONG:     uses "http://..." alias X as source   <- 'alias' is INVALID
+   WRONG:     uses "http://..." as conceptMapUrl     <- INVALID mode
+
+3. Group signatures MUST use the keywords 'source' and 'target':
+   CORRECT:   group Patient(source src : Patient, target tgt : Patient)
+   WRONG:     group Patient(SomeAlias src : Patient, ...)
+
+4. EVERY rule MUST end with a unique quoted name before the semicolon:
+   CORRECT:   src.id as vid -> tgt.id = vid "set-id";
+   WRONG:     src.id as vid -> tgt.id = vid;               <- MISSING name
+
+5. ALL rules MUST end with a semicolon.
+
+6. NEVER use nested braces {} inside rules. Use separate groups instead.
+
+7. NEVER chain dotted paths on the SOURCE side beyond one level inside a group.
+   WRONG:     src.name.family as f -> ...    <- WILL NOT COMPILE
+   CORRECT:   Use a sub-group:
+     src.name as sn -> tgt.name as tn then MapName(sn, tn) "map-name";
+   Then define:
+     group MapName(source src : HumanName, target tgt : HumanName) {
+       src.family as f -> tgt.family = f "set-family";
+     }
+
+8. For BackboneElement children (like Patient.contact, Patient.communication),
+   ALWAYS use a sub-group. NEVER access nested properties inline:
+   WRONG:     src.contact.name as n -> ...         <- WILL NOT COMPILE
+   CORRECT:   src.contact as sc -> tgt.contact as tc then MapContact(sc, tc) "map-contact";
+
+9. Extension handling - use the FML 'where' KEYWORD, not FHIRPath .where():
+   WRONG:     src.extension.where(url='...') as ext -> ...
+   CORRECT:   src.extension as ext where ext.url = 'http://...' -> tgt.extension as tExt then MapExt(ext, tExt) "map-ext";
+
+10. Do NOT use 'create' as a standalone statement.
+
+11. Do NOT use dotted types like 'Patient.Contact' as group parameter types:
+    WRONG:     group MapContact(source src : Patient.Contact, ...)
+    CORRECT:   group MapContact(source src : BackboneElement, target tgt : BackboneElement)
+
+12. For static/default values:  src -> tgt.element = 'fixed-value' "default-element";
+
+## NAMING RULES
 - Rule names must be unique within each group. Use descriptive kebab-case names.
+- Every rule, including sub-group invocations and defaults, needs a quoted name.
 
-EXTENSION HANDLING:
+## EXTENSION HANDLING
 - Do NOT create or fabricate new extension instances for extensions that only exist in the target.
-- If an extension exists in source but NOT in target: add a comment noting the data loss.
-- If an extension exists in target but NOT in source: add a comment noting it cannot be mapped.
 - Only map extensions that exist in BOTH source and target.
-- To filter an extension by URL, use the FML 'where' KEYWORD - NOT the FHIRPath .where() function.
-  CORRECT:   src.extension as ext where ext.url = 'http://example.org/my-ext' -> tgt.extension as tExt then MapExt(ext, tExt) "map-ext";
-  INCORRECT: src.extension.where(url='http://example.org/my-ext') as ext -> ...   <- .where() is NOT valid FML syntax
+- For unmappable extensions, add a comment noting why.
 
-DRIFT ITEM TRACEABILITY:
+## DRIFT ITEM TRACEABILITY
 - EVERY drift item from the drift report must be traceable in the FML output.
 - For mappable items: write a proper FML rule, with a comment referencing the drift ID.
-- For unmappable items: add a comment explaining why (profile metadata, source-only, target-only).
-- NO drift item should be silently dropped.
+- For unmappable items: add a comment explaining why.
 
-DEFAULT VALUES for mandatory target fields:
-- Use:  src -> tgt.requiredField = 'defaultValue';
-- Do NOT use 'create' standalone statements.
+## STRUCTURE PATTERN
+Always follow this pattern for complex resources:
 
-GROUPS:
-- Do NOT use dotted types like 'Patient.Contact' as group parameter types. Use 'BackboneElement' instead.
-- Every group must have BOTH source and target parameters.
+```fml
+map "http://example.org/fhir/StructureMap/ResourceMap" = "ResourceMap"
+uses "http://source-url" as source
+uses "http://target-url" as target
 
-COMPLETE VALID EXAMPLE:
-map "http://example.org/fhir/StructureMap/PatientMap" = "PatientMap"
-uses "http://example.org/fhir/StructureDefinition/SourcePatient" as source
-uses "http://example.org/fhir/StructureDefinition/TargetPatient" as target
+group Resource(source src : Resource, target tgt : Resource) {
+  // Simple 1:1 copies
+  src.id as v -> tgt.id = v "set-id";
+  src.active as v -> tgt.active = v "set-active";
 
-group Patient(source src : Patient, target tgt : Patient) {
-  src.id as vid -> tgt.id = vid "set-id";
+  // Complex nested elements - ALWAYS delegate to sub-groups
   src.name as sn -> tgt.name as tn then MapName(sn, tn) "map-name";
-  src.birthDate as bd -> tgt.birthDate = bd "set-birthDate";
-  src -> tgt.active = true "default-active";
+  src.contact as sc -> tgt.contact as tc then MapContact(sc, tc) "map-contact";
+  src.address as sa -> tgt.address as ta then MapAddress(sa, ta) "map-address";
+
+  // Default values for required target fields
+  src -> tgt.status = 'active' "default-status";
 }
 
 group MapName(source src : HumanName, target tgt : HumanName) {
   src.family as f -> tgt.family = f "set-family";
   src.given as g -> tgt.given = g "set-given";
+  src.prefix as p -> tgt.prefix = p "set-prefix";
+  src.use as u -> tgt.use = u "set-use";
 }
 
-Do NOT use deprecated FML syntax. Ensure the output compiles with HAPI-FHIR StructureMapUtilities.
+group MapContact(source src : BackboneElement, target tgt : BackboneElement) {
+  src.relationship as r -> tgt.relationship = r "set-relationship";
+  src.name as sn -> tgt.name as tn then MapName(sn, tn) "contact-name";
+}
 
+group MapAddress(source src : Address, target tgt : Address) {
+  src.line as l -> tgt.line = l "set-line";
+  src.city as c -> tgt.city = c "set-city";
+  src.state as s -> tgt.state = s "set-state";
+  src.postalCode as pc -> tgt.postalCode = pc "set-postalCode";
+  src.country as co -> tgt.country = co "set-country";
+}
+```
+
+Do NOT use deprecated FML syntax. Ensure the output compiles with HAPI-FHIR StructureMapUtilities.
 Output ONLY valid FML code. Do NOT include markdown formatting, code blocks, or explanatory text.

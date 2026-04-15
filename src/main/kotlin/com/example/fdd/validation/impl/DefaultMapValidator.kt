@@ -303,8 +303,7 @@ class DefaultMapValidator(
         // Anti-pattern 4: remove 'alias' from uses declarations
         // INVALID:  uses "url" alias SomeName as source
         // VALID:    uses "url" as source
-        val aliasPattern =
-            Regex("""^(\s*uses\s+"[^"]+")(\s+alias\s+\w+)(\s+as\s+(?:source|target)\s*)$""", RegexOption.MULTILINE)
+        val aliasPattern = Regex("""^(\s*uses\s+"[^"]+")(\s+alias\s+\w+)(\s+as\s+(?:source|target)\s*)$""", RegexOption.MULTILINE)
         var aliasFixes = 0
         result = aliasPattern.replace(result) { m ->
             aliasFixes++
