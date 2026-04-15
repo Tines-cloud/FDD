@@ -123,6 +123,9 @@ tasks.register<Test>("integrationTest") {
 
     systemProperty("fdd.pairs", project.findProperty("fdd.pairs")?.toString() ?: "")
 
+    // Pass the project root directory so tests can write output to a reliable absolute path
+    systemProperty("project.root", project.projectDir.absolutePath)
+
     // Load API keys from .env file so experiments can resolve LLM providers
     val envFile = file(".env")
     if (envFile.exists()) {

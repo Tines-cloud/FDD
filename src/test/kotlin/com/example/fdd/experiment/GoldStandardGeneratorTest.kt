@@ -155,7 +155,8 @@ class GoldStandardGeneratorTest {
     @Test
     @DisplayName("Generate gold-standard JSONs from rule-based detection for all 60 profile pairs")
     fun generateAllGoldStandards() {
-        val outputDir = Paths.get("output", "generated-gold-standards")
+        val projectRoot = System.getProperty("project.root") ?: System.getProperty("user.dir")
+        val outputDir = Paths.get(projectRoot, "output", "generated-gold-standards")
         Files.createDirectories(outputDir)
 
         var successCount = 0

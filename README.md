@@ -649,15 +649,15 @@ fdd:
     mistral:
       api-key: ${MISTRAL_API_KEY:}
       model: mistral-large-latest
-      base-url: https://api.mistral.ai/v1
+      base-url: https://api.mistral.ai
     groq:
       api-key: ${GROQ_API_KEY:}
       model: llama-3.3-70b-versatile
-      base-url: https://api.groq.com/openai/v1
+      base-url: https://api.groq.com/openai
     openrouter:
       api-key: ${OPENROUTER_API_KEY:}
       model: google/gemini-2.5-flash
-      base-url: https://openrouter.ai/api/v1
+      base-url: https://openrouter.ai/api
   validation:
     max-attempts: 5                     # Reflexion retries for Trust-but-Verify
   cache:

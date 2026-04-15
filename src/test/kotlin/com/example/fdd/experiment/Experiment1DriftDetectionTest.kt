@@ -2,10 +2,8 @@ package com.example.fdd.experiment
 
 import com.example.fdd.api.dto.ProfileInput
 import com.example.fdd.service.DriftOrchestrationService
-import org.junit.jupiter.api.Assertions.assertTrue
-import org.junit.jupiter.api.DisplayName
-import org.junit.jupiter.api.Tag
-import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.*
+import org.junit.jupiter.api.DynamicTest.dynamicTest
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
@@ -25,12 +23,16 @@ import java.time.format.DateTimeFormatter
  * 3. Compute Precision, Recall, and F1.
  * 4. Write per-pair and aggregate results to a JSON file.
  *
+ * Each profile pair runs as a **separate test** in the Gradle report so
+ * individual pair results, stdout, and pass/fail status are visible.
+ *
  * This test requires a running LLM (set `fdd.ai.provider` and API key).
  * It is designed to run in CI/CD or manual evaluation, not on every build.
  */
 @SpringBootTest
 @ActiveProfiles("experiment")
 @Tag("integration")
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class Experiment1DriftDetectionTest {
 
     private val log = LoggerFactory.getLogger(javaClass)
@@ -41,17 +43,20 @@ class Experiment1DriftDetectionTest {
     @Autowired
     private lateinit var objectMapper: ObjectMapper
 
-    @Test
-    @DisplayName("Evaluate drift detection accuracy across all gold-standard pairs")
-    fun evaluateDriftDetectionAccuracy() {
+    /** Collects results across all dynamic tests for the aggregate JSON file. */
+    private val collectedResults = mutableListOf<EvaluationMetrics>()
+
+    @TestFactory
+    @DisplayName("Drift Detection Accuracy")
+    fun evaluateDriftDetectionAccuracy(): List<DynamicTest> {
         val allGoldPairs = GoldStandardLoader.loadAll()
         if (allGoldPairs.isEmpty()) {
             log.warn("No gold-standard pairs found - skipping experiment")
-            return
+            return emptyList()
         }
 
         // Support selective pair execution via system property
-        val selectedIds = System.getProperty("fdd.pairs")?.split(",")?.map { it.trim() }
+        val selectedIds = System.getProperty("fdd.pairs")?.split(",")?.map { it.trim() }?.filter { it.isNotEmpty() }
         val goldPairs = if (!selectedIds.isNullOrEmpty()) {
             val filtered = allGoldPairs.filter { it.pairId in selectedIds }
             log.info("Running selected pairs: {} (matched {}/{})", selectedIds, filtered.size, selectedIds.size)
@@ -61,31 +66,47 @@ class Experiment1DriftDetectionTest {
             allGoldPairs
         }
 
-        if (goldPairs.isEmpty()) {
-            log.warn("No matching gold-standard pairs found for: {}", selectedIds)
-            return
+        return goldPairs.map { gold ->
+            dynamicTest(gold.pairId) {
+                log.info(
+                    "Evaluating pair: {} (source={}, target={})",
+                    gold.pairId, gold.sourceClasspath, gold.targetClasspath
+                )
+
+                val predicted = orchestrationService.analyzeDrift(
+                    source = ProfileInput(classpath = gold.sourceClasspath),
+                    target = ProfileInput(classpath = gold.targetClasspath)
+                )
+
+                val metrics = GoldStandardLoader.evaluate(predicted, gold)
+                synchronized(collectedResults) { collectedResults.add(metrics) }
+
+                log.info(
+                    "Result: {} -> P={}  R={}  F1={}  (TP={} FP={} FN={})",
+                    metrics.pairId,
+                    "%.3f".format(metrics.precision),
+                    "%.3f".format(metrics.recall),
+                    "%.3f".format(metrics.f1),
+                    metrics.truePositives, metrics.falsePositives, metrics.falseNegatives
+                )
+
+                Assertions.assertTrue(metrics.f1 >= 0.0, "F1 must be non-negative for ${gold.pairId}")
+            }
         }
+    }
 
-        val results = goldPairs.map { gold ->
-            log.info("Evaluating pair: {} (source={}, target={})", gold.pairId, gold.sourceClasspath, gold.targetClasspath)
+    @AfterAll
+    fun writeAggregateResults() {
+        if (collectedResults.isEmpty()) return
 
-            val predicted = orchestrationService.analyzeDrift(
-                source = ProfileInput(classpath = gold.sourceClasspath),
-                target = ProfileInput(classpath = gold.targetClasspath)
-            )
-
-            GoldStandardLoader.evaluate(predicted, gold)
-        }
-
-        // Report aggregate metrics
-        val avgPrecision = results.map { it.precision }.average()
-        val avgRecall = results.map { it.recall }.average()
-        val avgF1 = results.map { it.f1 }.average()
+        val avgPrecision = collectedResults.map { it.precision }.average()
+        val avgRecall = collectedResults.map { it.recall }.average()
+        val avgF1 = collectedResults.map { it.f1 }.average()
 
         log.info("---------------------------------------------------")
         log.info("  EXPERIMENT 1 - Drift Detection Accuracy")
         log.info("---------------------------------------------------")
-        results.forEach { m ->
+        collectedResults.forEach { m ->
             log.info(
                 "  {} -> P={}  R={}  F1={}  (TP={} FP={} FN={})",
                 m.pairId,
@@ -104,11 +125,7 @@ class Experiment1DriftDetectionTest {
         )
         log.info("===================================================================")
 
-        // Write results to JSON file
-        writeResultsFile(results, avgPrecision, avgRecall, avgF1)
-
-        // Soft assertion - experiments should achieve at least 0.3 F1 to be meaningful
-        assertTrue(avgF1 >= 0.0, "F1 must be non-negative")
+        writeResultsFile(collectedResults, avgPrecision, avgRecall, avgF1)
     }
 
     private fun writeResultsFile(
@@ -116,7 +133,8 @@ class Experiment1DriftDetectionTest {
         avgPrecision: Double, avgRecall: Double, avgF1: Double
     ) {
         try {
-            val outputDir = Paths.get("output", "experiment-results")
+            val projectRoot = System.getProperty("project.root") ?: System.getProperty("user.dir")
+            val outputDir = Paths.get(projectRoot, "output", "experiment-results")
             Files.createDirectories(outputDir)
 
             val timestamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd-HHmmss"))

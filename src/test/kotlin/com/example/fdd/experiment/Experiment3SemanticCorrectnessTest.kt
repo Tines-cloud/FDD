@@ -2,10 +2,8 @@ package com.example.fdd.experiment
 
 import com.example.fdd.api.dto.ProfileInput
 import com.example.fdd.service.DriftOrchestrationService
-import org.junit.jupiter.api.Assertions.assertTrue
-import org.junit.jupiter.api.DisplayName
-import org.junit.jupiter.api.Tag
-import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.*
+import org.junit.jupiter.api.DynamicTest.dynamicTest
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
@@ -32,28 +30,8 @@ import java.time.format.DateTimeFormatter
  * Evaluates whether FDD-generated StructureMaps produce valid FHIR resources
  * when applied to synthetic source instances in a controlled HAPI FHIR server.
  *
- * For each test case:
- * 1. Run the full FDD pipeline (drift -> FML -> validate -> coverage) to get a StructureMap.
- * 2. Start a HAPI FHIR JPA server in Docker (via Testcontainers).
- * 3. POST the synthetic source instance to the HAPI server.
- * 4. Upload the generated StructureMap to the HAPI server.
- * 5. Invoke `$transform` to transform the source instance.
- * 6. Validate the transformed output against the target profile.
- * 7. Record success/failure per case; compute **Semantic Correctness Rate (SCR)**.
- *
- * Test cases use real drift pairs across profile combinations:
- * - R4 Patient -> US Core Patient
- * - R4 Condition -> US Core Condition (Encounter Diagnosis)
- * - R4 Observation -> US Core Observation Lab
- * - R4 Encounter -> US Core Encounter
- * - R4 AllergyIntolerance -> US Core AllergyIntolerance
- * - R4 Immunization -> US Core Immunization
- * - R4 MedicationRequest -> US Core MedicationRequest
- * - R4 Procedure -> US Core Procedure
- * - R4 DiagnosticReport -> US Core DiagnosticReport Lab
- * - R4 Organization -> US Core Organization
- * - R4 Practitioner -> US Core Practitioner
- * - AU Core Patient -> US Core Patient (cross-national)
+ * Each test case runs as a **separate test** in the Gradle report so
+ * individual case results, stdout, and pass/fail status are visible.
  *
  * Requires Docker and a valid LLM API key.
  */
@@ -61,6 +39,7 @@ import java.time.format.DateTimeFormatter
 @Tag("integration")
 @Testcontainers
 @ActiveProfiles("experiment")
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class Experiment3SemanticCorrectnessTest {
 
     private val log = LoggerFactory.getLogger(javaClass)
@@ -107,6 +86,9 @@ class Experiment3SemanticCorrectnessTest {
         val dataShareabilityPercent: Double,
         val errorMessage: String?
     )
+
+    /** Collects results across all dynamic tests for the aggregate JSON file. */
+    private val collectedResults = mutableListOf<SemanticTestResult>()
 
     private val testCases = listOf(
         // --- R4 Base -> US Core profile pairs ---
@@ -291,16 +273,14 @@ class Experiment3SemanticCorrectnessTest {
         )
     )
 
-    @Test
-    @DisplayName("Experiment 3: End-to-end semantic correctness across real drift pairs")
-    fun evaluateSemanticCorrectness() {
+    @TestFactory
+    @DisplayName("Semantic Correctness")
+    fun evaluateSemanticCorrectness(): List<DynamicTest> {
         val fhirServerUrl = "http://${hapiFhirServer.host}:${hapiFhirServer.firstMappedPort}/fhir"
         log.info("HAPI FHIR server running at: {}", fhirServerUrl)
 
-        val results = mutableListOf<SemanticTestResult>()
-
         // Support selective pair execution via -Dfdd.pairs=id1,id2
-        val selectedIds = System.getProperty("fdd.pairs")?.split(",")?.map { it.trim() }
+        val selectedIds = System.getProperty("fdd.pairs")?.split(",")?.map { it.trim() }?.filter { it.isNotEmpty() }
         val casesToRun = if (!selectedIds.isNullOrEmpty()) {
             val filtered = testCases.filter { it.id in selectedIds }
             log.info("Selective mode: running {}/{} cases matching -Dfdd.pairs", filtered.size, testCases.size)
@@ -309,22 +289,42 @@ class Experiment3SemanticCorrectnessTest {
             testCases
         }
 
-        for (testCase in casesToRun) {
-            log.info("=== Semantic test case: {} ===", testCase.id)
-            val result = runTestCase(testCase, fhirServerUrl)
-            results.add(result)
-            log.info("Case {} -> overall success: {}", testCase.id, result.overallSuccess)
-        }
+        return casesToRun.map { testCase ->
+            dynamicTest(testCase.id) {
+                log.info("=== Semantic test case: {} ===", testCase.id)
+                val result = runTestCase(testCase, fhirServerUrl)
+                synchronized(collectedResults) { collectedResults.add(result) }
 
-        // Compute Semantic Correctness Rate
-        val totalCases = results.size
-        val successfulCases = results.count { it.overallSuccess }
+                log.info(
+                    "Result: {} -> pipeline={} map={} posted={} uploaded={} transform={} valid={} SUCCESS={}",
+                    result.caseId,
+                    if (result.pipelineSuccess) "OK" else "FAIL",
+                    if (result.syntacticallyValid) "OK" else "FAIL",
+                    if (result.instancePosted) "OK" else "FAIL",
+                    if (result.structureMapUploaded) "OK" else "FAIL",
+                    if (result.transformExecuted) "OK" else "FAIL",
+                    if (result.transformedResourceValid) "OK" else "FAIL",
+                    if (result.overallSuccess) "YES" else "NO"
+                )
+                if (result.errorMessage != null) {
+                    log.info("    error: {}", result.errorMessage)
+                }
+            }
+        }
+    }
+
+    @AfterAll
+    fun writeAggregateResults() {
+        if (collectedResults.isEmpty()) return
+
+        val totalCases = collectedResults.size
+        val successfulCases = collectedResults.count { it.overallSuccess }
         val scr = if (totalCases > 0) successfulCases.toDouble() / totalCases * 100.0 else 0.0
 
         log.info("---------------------------------------------------------------------")
         log.info("  EXPERIMENT 3 - End-to-End Semantic Correctness")
         log.info("---------------------------------------------------------------------")
-        results.forEach { r ->
+        collectedResults.forEach { r ->
             log.info(
                 "  {} -> pipeline={} map={} posted={} uploaded={} transform={} valid={} SUCCESS={}",
                 r.caseId,
@@ -347,9 +347,7 @@ class Experiment3SemanticCorrectnessTest {
         )
         log.info("---------------------------------------------------------------------")
 
-        writeResultsFile(results, scr)
-
-        assertTrue(scr >= 0.0, "SCR must be non-negative")
+        writeResultsFile(collectedResults, scr)
     }
 
     private fun runTestCase(testCase: SemanticTestCase, fhirServerUrl: String): SemanticTestResult {
@@ -617,7 +615,8 @@ class Experiment3SemanticCorrectnessTest {
 
     private fun writeResultsFile(results: List<SemanticTestResult>, scr: Double) {
         try {
-            val outputDir = Paths.get("output", "experiment-results")
+            val projectRoot = System.getProperty("project.root") ?: System.getProperty("user.dir")
+            val outputDir = Paths.get(projectRoot, "output", "experiment-results")
             Files.createDirectories(outputDir)
 
             val timestamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd-HHmmss"))

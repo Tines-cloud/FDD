@@ -2,10 +2,8 @@ package com.example.fdd.experiment
 
 import com.example.fdd.api.dto.ProfileInput
 import com.example.fdd.service.DriftOrchestrationService
-import org.junit.jupiter.api.Assertions.assertTrue
-import org.junit.jupiter.api.DisplayName
-import org.junit.jupiter.api.Tag
-import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.*
+import org.junit.jupiter.api.DynamicTest.dynamicTest
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
@@ -25,11 +23,15 @@ import java.time.format.DateTimeFormatter
  * 3. Compute Syntactic Validity Rate = (# compiled) / (# generated).
  * 4. Write per-pair and aggregate results to a JSON file.
  *
+ * Each profile pair runs as a **separate test** in the Gradle report so
+ * individual pair results, stdout, and pass/fail status are visible.
+ *
  * This test requires a running LLM. Designed for evaluation, not routine CI.
  */
 @SpringBootTest
 @ActiveProfiles("experiment")
 @Tag("integration")
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class Experiment2SyntacticValidityTest {
 
     private val log = LoggerFactory.getLogger(javaClass)
@@ -40,17 +42,20 @@ class Experiment2SyntacticValidityTest {
     @Autowired
     private lateinit var objectMapper: ObjectMapper
 
-    @Test
-    @DisplayName("Evaluate syntactic validity rate of generated StructureMaps")
-    fun evaluateSyntacticValidity() {
+    /** Collects results across all dynamic tests for the aggregate JSON file. */
+    private val collectedResults = mutableListOf<PairResult>()
+
+    @TestFactory
+    @DisplayName("Syntactic Validity Rate")
+    fun evaluateSyntacticValidity(): List<DynamicTest> {
         val allGoldPairs = GoldStandardLoader.loadAll()
         if (allGoldPairs.isEmpty()) {
             log.warn("No gold-standard pairs found - skipping experiment")
-            return
+            return emptyList()
         }
 
         // Support selective pair execution via system property
-        val selectedIds = System.getProperty("fdd.pairs")?.split(",")?.map { it.trim() }
+        val selectedIds = System.getProperty("fdd.pairs")?.split(",")?.map { it.trim() }?.filter { it.isNotEmpty() }
         val goldPairs = if (!selectedIds.isNullOrEmpty()) {
             val filtered = allGoldPairs.filter { it.pairId in selectedIds }
             log.info("Running selected pairs: {} (matched {}/{})", selectedIds, filtered.size, selectedIds.size)
@@ -60,28 +65,16 @@ class Experiment2SyntacticValidityTest {
             allGoldPairs
         }
 
-        if (goldPairs.isEmpty()) {
-            log.warn("No matching gold-standard pairs found for: {}", selectedIds)
-            return
-        }
+        return goldPairs.map { gold ->
+            dynamicTest(gold.pairId) {
+                log.info("Generating repair map for: {}", gold.pairId)
 
-        var totalGenerated = 0
-        var totalValid = 0
-        val results = mutableListOf<PairResult>()
+                val result = try {
+                    val (driftReport, mapResult, coverageReport) = orchestrationService.analyzeAndRepair(
+                        source = ProfileInput(classpath = gold.sourceClasspath),
+                        target = ProfileInput(classpath = gold.targetClasspath)
+                    )
 
-        for (gold in goldPairs) {
-            log.info("Generating repair map for: {}", gold.pairId)
-
-            try {
-                val (driftReport, mapResult, coverageReport) = orchestrationService.analyzeAndRepair(
-                    source = ProfileInput(classpath = gold.sourceClasspath),
-                    target = ProfileInput(classpath = gold.targetClasspath)
-                )
-
-                totalGenerated++
-                if (mapResult.syntacticallyValid) totalValid++
-
-                results.add(
                     PairResult(
                         pairId = gold.pairId,
                         valid = mapResult.syntacticallyValid,
@@ -90,11 +83,8 @@ class Experiment2SyntacticValidityTest {
                         dataShareabilityPercent = coverageReport.dataShareabilityPercent,
                         repairCycles = mapResult.validationMessages.size
                     )
-                )
-            } catch (ex: Exception) {
-                log.error("Failed for pair {}: {}", gold.pairId, ex.message)
-                totalGenerated++
-                results.add(
+                } catch (ex: Exception) {
+                    log.error("Failed for pair {}: {}", gold.pairId, ex.message)
                     PairResult(
                         pairId = gold.pairId,
                         valid = false,
@@ -103,16 +93,33 @@ class Experiment2SyntacticValidityTest {
                         dataShareabilityPercent = 0.0,
                         repairCycles = 0
                     )
+                }
+
+                synchronized(collectedResults) { collectedResults.add(result) }
+
+                log.info(
+                    "Result: {} -> valid: {}  drifts: {}  shareability: {}%  messages: {}",
+                    result.pairId, result.valid, result.driftItemCount,
+                    "%.1f".format(result.dataShareabilityPercent), result.messages.size
                 )
+
+                // No hard assertion — we record all outcomes for the aggregate report
             }
         }
+    }
 
+    @AfterAll
+    fun writeAggregateResults() {
+        if (collectedResults.isEmpty()) return
+
+        val totalGenerated = collectedResults.size
+        val totalValid = collectedResults.count { it.valid }
         val validityRate = if (totalGenerated > 0) totalValid.toDouble() / totalGenerated else 0.0
 
         log.info("---------------------------------------------------")
         log.info("  EXPERIMENT 2 - Syntactic Validity Rate")
         log.info("---------------------------------------------------")
-        results.forEach { r ->
+        collectedResults.forEach { r ->
             log.info(
                 "  {} -> valid: {}  drifts: {}  shareability: {}%  messages: {}",
                 r.pairId, r.valid, r.driftItemCount,
@@ -123,10 +130,7 @@ class Experiment2SyntacticValidityTest {
         log.info("  Validity Rate: {}% ({}/{})", "%.1f".format(validityRate * 100), totalValid, totalGenerated)
         log.info("---------------------------------------------------")
 
-        // Write results to JSON file
-        writeResultsFile(results, validityRate, totalValid, totalGenerated)
-
-        assertTrue(validityRate >= 0.0, "Validity rate must be non-negative")
+        writeResultsFile(collectedResults, validityRate, totalValid, totalGenerated)
     }
 
     private data class PairResult(
@@ -145,7 +149,8 @@ class Experiment2SyntacticValidityTest {
         totalGenerated: Int
     ) {
         try {
-            val outputDir = Paths.get("output", "experiment-results")
+            val projectRoot = System.getProperty("project.root") ?: System.getProperty("user.dir")
+            val outputDir = Paths.get(projectRoot, "output", "experiment-results")
             Files.createDirectories(outputDir)
 
             val timestamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd-HHmmss"))

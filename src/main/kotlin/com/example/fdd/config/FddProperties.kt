@@ -54,19 +54,19 @@ data class GeminiProperties(
 data class MistralProperties(
     val apiKey: String = "",
     val model: String = "mistral-large-latest",
-    val baseUrl: String = "https://api.mistral.ai/v1"
+    val baseUrl: String = "https://api.mistral.ai"
 )
 
 data class GroqProperties(
     val apiKey: String = "",
     val model: String = "llama-3.3-70b-versatile",
-    val baseUrl: String = "https://api.groq.com/openai/v1"
+    val baseUrl: String = "https://api.groq.com/openai"
 )
 
 data class OpenRouterProperties(
     val apiKey: String = "",
     val model: String = "google/gemini-2.5-flash",
-    val baseUrl: String = "https://openrouter.ai/api/v1"
+    val baseUrl: String = "https://openrouter.ai/api"
 )
 
 /**
