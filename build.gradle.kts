@@ -121,8 +121,6 @@ tasks.register<Test>("integrationTest") {
     classpath = sourceSets["test"].runtimeClasspath
     jvmArgs("-Xmx2g", "-Xms512m")
 
-    // Forward fdd.pairs project property for selective pair execution
-    // Usage: ./gradlew integrationTest -Pfdd.pairs=id1,id2
     systemProperty("fdd.pairs", project.findProperty("fdd.pairs")?.toString() ?: "")
 
     // Load API keys from .env file so experiments can resolve LLM providers

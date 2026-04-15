@@ -62,17 +62,17 @@ automatically detected and validated using the R5 pipeline.
 
 ## Tech Stack
 
-| Layer         | Technology                                                           |
-|---------------|----------------------------------------------------------------------|
-| Runtime       | Java 21, Kotlin 2.x                                                  |
-| Framework     | Spring Boot 4.x, Spring Framework 7.x                                |
-| AI            | Spring AI 2.0 (OpenRouter, OpenAI, Anthropic, Gemini, Mistral, Groq) |
-| FHIR          | HAPI FHIR 7.6.0 (R4 + R5 dual context, StructureMapUtilities)        |
-| Serialisation | Jackson 3.x (tools.jackson namespace)                                |
-| Metrics       | Micrometer + Prometheus endpoint                                     |
-| API Docs      | SpringDoc OpenAPI (Swagger UI)                                       |
-| Build         | Gradle 9.x (Kotlin DSL)                                              |
-| Testing       | JUnit 5, Mockito-Kotlin, Testcontainers                              |
+| Layer         | Technology                                                    |
+|---------------|---------------------------------------------------------------|
+| Runtime       | Java 21, Kotlin 2.x                                           |
+| Framework     | Spring Boot 4.x, Spring Framework 7.x                         |
+| AI            | Spring AI 2.0 (OpenAI, Anthropic, Gemini, Mistral)            |
+| FHIR          | HAPI FHIR 7.6.0 (R4 + R5 dual context, StructureMapUtilities) |
+| Serialisation | Jackson 3.x (tools.jackson namespace)                         |
+| Metrics       | Micrometer + Prometheus endpoint                              |
+| API Docs      | SpringDoc OpenAPI (Swagger UI)                                |
+| Build         | Gradle 9.x (Kotlin DSL)                                       |
+| Testing       | JUnit 5, Mockito-Kotlin, Testcontainers                       |
 
 ---
 
@@ -80,8 +80,7 @@ automatically detected and validated using the R5 pipeline.
 
 - **JDK 21+** - required by Spring Boot 4.
 - **Gradle 9.x** - the included `gradlew` wrapper handles this automatically.
-- **LLM API key** - at least one of: OpenRouter, OpenAI, Gemini, Anthropic, Mistral, or Groq.
-  OpenRouter is the recommended default — one API key gives access to all models.
+- **LLM API key** - at least one of: OpenAI, Gemini, Anthropic, or Mistral.
 
 ---
 
@@ -100,23 +99,17 @@ gradlew.bat build      # Windows
 Export one of these environment variables (or edit `application.yaml`):
 
 ```bash
-# Option A - OpenRouter (default provider, one key for all models)
-export OPENROUTER_API_KEY=sk-or-...
-
-# Option B - Google Gemini (generous free tier)
+# Option A - Google Gemini (default provider, generous free tier)
 export GEMINI_API_KEY=AIza...
 
-# Option C - OpenAI
+# Option B - OpenAI
 export OPENAI_API_KEY=sk-...
 
-# Option D - Anthropic Claude
+# Option C - Anthropic Claude
 export ANTHROPIC_API_KEY=sk-ant-...
 
-# Option E - Mistral
+# Option D - Mistral
 export MISTRAL_API_KEY=...
-
-# Option F - Groq
-export GROQ_API_KEY=gsk_...
 ```
 
 Then set the active provider in `application.yaml`:
@@ -124,7 +117,7 @@ Then set the active provider in `application.yaml`:
 ```yaml
 fdd:
   ai:
-    provider: openrouter   # openai | anthropic | gemini | mistral | groq | openrouter
+    provider: gemini   # openai | anthropic | gemini | mistral
 ```
 
 ### 3. Run the application
@@ -633,7 +626,7 @@ All configuration lives in `src/main/resources/application.yaml`:
 ```yaml
 fdd:
   ai:
-    provider: openrouter                # openai | anthropic | gemini | mistral | groq | openrouter
+    provider: gemini                    # openai | anthropic | gemini | mistral
     temperature: 0.2                    # LLM temperature (lower = more deterministic)
     openai:
       api-key: ${OPENAI_API_KEY:}
@@ -644,32 +637,22 @@ fdd:
       model: claude-sonnet-4-20250514
     gemini:
       api-key: ${GEMINI_API_KEY:}
-      model: gemini-2.5-flash
+      model: gemini-2.5-pro
       base-url: https://generativelanguage.googleapis.com/v1beta/openai
     mistral:
       api-key: ${MISTRAL_API_KEY:}
       model: mistral-large-latest
       base-url: https://api.mistral.ai/v1
-    groq:
-      api-key: ${GROQ_API_KEY:}
-      model: llama-3.3-70b-versatile
-      base-url: https://api.groq.com/openai/v1
-    openrouter:
-      api-key: ${OPENROUTER_API_KEY:}
-      model: google/gemini-2.5-flash
-      base-url: https://openrouter.ai/api/v1
   validation:
-    max-attempts: 5                     # Reflexion retries for Trust-but-Verify
+    max-attempts: 3                     # Reflexion retries for Trust-but-Verify
   cache:
     enabled: true                       # LLM response caching
     ttl-minutes: 0                      # 0 = no expiry
     directory: .fdd-cache               # Cache file location
 ```
 
-All providers except Anthropic use the **OpenAI-compatible** chat API, configured via
-custom `base-url` properties. No special SDK is needed. OpenRouter acts as a unified
-gateway — one API key gives access to Gemini, Claude, GPT-4o, Llama, Mistral, and
-hundreds of other models by changing only the `model` field.
+Gemini and Mistral use the **OpenAI-compatible** chat API, configured via
+custom `base-url` properties. No special SDK is needed.
 
 ---
 
@@ -742,34 +725,21 @@ Run experiments (requires a valid LLM API key and Docker):
 
 ## LLM Provider Selection & Free Tiers
 
-| Provider        | Free Tier / Pricing                                               | Context Window | Recommendation                                                                  |
-|-----------------|-------------------------------------------------------------------|----------------|---------------------------------------------------------------------------------|
-| **OpenRouter**  | Pay-as-you-go (aggregates all providers, single bill)             | Varies by model| **Recommended default** - one API key, access all models, switch with config    |
-| **Gemini**      | Free tier: 15 RPM, 1M tokens/min, 1500 req/day                   | 1M+ tokens     | Best model for FML generation - highest code quality at lowest cost             |
-| **OpenAI**      | No free tier; pay-as-you-go (~$2.50/$10 per 1M in/out for gpt-4o) | 128K tokens    | Production quality, but costs add up with large profiles                        |
-| **Mistral**     | Free tier available for smaller models                            | 128K tokens    | Good mid-range option                                                           |
-| **Anthropic**   | No free tier; pay-as-you-go                                       | 200K tokens    | Excellent instruction-following, best for complex constraint adherence          |
-| **Groq**        | Free tier: 30 RPM, 14.4K tokens/min                              | 128K tokens    | Fastest inference, good for quick iteration, weaker on niche FML syntax         |
+| Provider      | Free Tier / Pricing                                               | Context Window | Recommendation                                                                  |
+|---------------|-------------------------------------------------------------------|----------------|---------------------------------------------------------------------------------|
+| **Gemini**    | Free tier: 15 RPM, 1M tokens/min, 1500 req/day                    | 1M+ tokens     | **Best for experimentation** - generous limits handle full FHIR profiles easily |
+| **OpenAI**    | No free tier; pay-as-you-go (~$2.50/$10 per 1M in/out for gpt-4o) | 128K tokens    | Production quality, but costs add up with large profiles                        |
+| **Mistral**   | Free tier available for smaller models                            | 128K tokens    | Good mid-range option                                                           |
+| **Anthropic** | No free tier; pay-as-you-go                                       | 200K tokens    | Excellent quality, higher cost                                                  |
 
 A full FHIR profile like US Core Patient can produce **50K-150K tokens** of context
 (depending on element count and snapshot depth). Gemini's 1M token context window
 handles this comfortably. For OpenAI, gpt-4o's 128K window is sufficient for most
 profiles but very large IGs may need truncation.
 
-**Recommendation:** Use **OpenRouter** (`provider: openrouter`) with `google/gemini-2.5-flash`
-as the default model. This gives you:
-- **One API key** to access Gemini, Claude, GPT-4o, Llama, Mistral, and 200+ models
-- **One bill** instead of multiple provider accounts
-- **Easy model switching** — just change the `model` field in `application.yaml`
-- **No API difference** — OpenRouter proxies requests identically to direct API calls
-
-To try a different model via OpenRouter, simply change `fdd.ai.openrouter.model`:
-```yaml
-fdd:
-  ai:
-    openrouter:
-      model: anthropic/claude-sonnet-4    # or openai/gpt-4o, meta-llama/llama-3.3-70b, etc.
-```
+**Recommendation:** Start with **Gemini** (`provider: gemini`) for development
+and experimentation - it's free, has the largest context window, and handles
+full profiles without truncation.
 
 ---
 
@@ -850,7 +820,7 @@ The reflexion loop includes several cost-saving and quality enhancements:
 | **`collectAllErrors()`** | Scans FML for ALL compilation errors (not just the first) before sending to LLM in one batch call | Zero (scan) + 1 LLM call |
 | **Multi-turn conversation** | `chatWithHistory()` maintains full conversation context so LLM sees all prior attempts | Same cost, better quality |
 | **Full FML in follow-ups** | Follow-up messages include the full current FML with `>>>` markers on error lines | Same cost, better quality |
-| **Anti-oscillation** | Detects when LLM reverts to previously broken code; boosts temperature 0.1->0.2 and injects warning | Same cost, fewer wasted cycles |
+| **Anti-oscillation** | Detects when LLM reverts to previously broken code; boosts temperature 0.1->0.4 and injects warning | Same cost, fewer wasted cycles |
 | **Line-level regression detection** | Tracks FML before each fix; if a "fix" produces a different error on the same line, injects `REGRESSION DETECTED` with old/new line content and both errors | Same cost, fewer wasted cycles |
 
 ---
@@ -926,7 +896,7 @@ src/main/kotlin/com/example/fdd/
 ├-- cli/                            # CLI mode (--spring.profiles.active=cli)
 │   └-- CliRunner.kt               # ApplicationRunner with argument parsing
 ├-- config/                         # Spring configuration
-│   ├-- AiConfig.kt                # ChatModel bean creation (6 LLM providers)
+│   ├-- AiConfig.kt                # ChatModel bean creation (4 LLM providers)
 │   ├-- FddProperties.kt          # Type-safe @ConfigurationProperties binding
 │   ├-- FhirConfig.kt             # HAPI FhirContext R4 (@Primary) + R5 (@Qualifier) beans
 │   ├-- MetricsConfig.kt          # Micrometer TimedAspect bean
@@ -970,7 +940,7 @@ src/main/kotlin/com/example/fdd/
     └-- FhirValidationUtils.kt    # Validation downgrading patterns
 
 src/main/resources/
-├-- application.yaml               # Main config (6 LLM providers, cache, actuator)
+├-- application.yaml               # Main config (4 LLM providers, cache, actuator)
 ├-- application-cli.yaml           # CLI profile (disables web server)
 ├-- application-experiment.yaml    # Experiment profile (temp=0.1, verbose logging)
 ├-- application-test.yaml          # Test profile (temp=0.0, dummy keys)

@@ -1,215 +1,188 @@
 {
-  "pairId": "au-core-procedure-vs-us-core-procedure",
-  "sourceClasspath": "standard-profiles/au-core/StructureDefinition-au-core-procedure.json",
-  "targetClasspath": "standard-profiles/us-core/StructureDefinition-us-core-procedure.json",
-  "drifts": [
-    {
-      "id": "rule-1",
-      "type": "STRUCTURAL",
-      "sourcePath": "Procedure",
-      "targetPath": "Procedure",
-      "description": "Constraints added in target: [us-core-7]",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-2",
-      "type": "STRUCTURAL",
-      "sourcePath": "Procedure.extension",
-      "targetPath": "Procedure.extension",
-      "description": "Slicing changed: rules=open, discriminators=[value:url] -> none",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-3",
-      "type": "STRUCTURAL",
-      "sourcePath": "Procedure.basedOn",
-      "targetPath": "Procedure.basedOn",
-      "description": "Reference target profile changed: [http://hl7.org/fhir/StructureDefinition/CarePlan, http://hl7.org/fhir/StructureDefinition/ServiceRequest] -> [http://hl7.org/fhir/us/core/StructureDefinition/us-core-careplan, http://hl7.org/fhir/us/core/StructureDefinition/us-core-servicerequest]",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-4",
-      "type": "EXTENSION",
-      "sourcePath": "Procedure.basedOn",
-      "targetPath": "Procedure.basedOn.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-5",
-      "type": "TERMINOLOGY",
-      "sourcePath": "Procedure.status",
-      "targetPath": "Procedure.status",
-      "description": "Binding changed: required(http://hl7.org/fhir/ValueSet/event-status|4.0.1) -> required(http://hl7.org/fhir/ValueSet/event-status)",
-      "severity": "ERROR"
-    },
-    {
-      "id": "rule-6",
-      "type": "EXTENSION",
-      "sourcePath": "Procedure.status",
-      "targetPath": "Procedure.status.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-7",
-      "type": "EXTENSION",
-      "sourcePath": "Procedure.status.extension(http://hl7.org/fhir/StructureDefinition/obligation)",
-      "targetPath": "Procedure.status",
-      "description": "Extension removed in target element: http://hl7.org/fhir/StructureDefinition/obligation",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-8",
-      "type": "TERMINOLOGY",
-      "sourcePath": "Procedure.code",
-      "targetPath": "Procedure.code",
-      "description": "Binding changed: extensible(https://healthterminologies.gov.au/fhir/ValueSet/procedure-1) -> extensible(http://hl7.org/fhir/us/core/ValueSet/us-core-procedure-code)",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-9",
-      "type": "EXTENSION",
-      "sourcePath": "Procedure.code",
-      "targetPath": "Procedure.code.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-10",
-      "type": "EXTENSION",
-      "sourcePath": "Procedure.code.extension(http://hl7.org/fhir/StructureDefinition/obligation)",
-      "targetPath": "Procedure.code",
-      "description": "Extension removed in target element: http://hl7.org/fhir/StructureDefinition/obligation",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-11",
-      "type": "STRUCTURAL",
-      "sourcePath": "Procedure.subject",
-      "targetPath": "Procedure.subject",
-      "description": "Reference target profile changed: [http://hl7.org.au/fhir/core/StructureDefinition/au-core-patient] -> [http://hl7.org/fhir/us/core/StructureDefinition/us-core-patient]",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-12",
-      "type": "EXTENSION",
-      "sourcePath": "Procedure.subject",
-      "targetPath": "Procedure.subject.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-13",
-      "type": "EXTENSION",
-      "sourcePath": "Procedure.subject.extension(http://hl7.org/fhir/StructureDefinition/obligation)",
-      "targetPath": "Procedure.subject",
-      "description": "Extension removed in target element: http://hl7.org/fhir/StructureDefinition/obligation",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-14",
-      "type": "STRUCTURAL",
-      "sourcePath": "Procedure.encounter",
-      "targetPath": "Procedure.encounter",
-      "description": "Reference target profile changed: [http://hl7.org.au/fhir/core/StructureDefinition/au-core-encounter] -> [http://hl7.org/fhir/StructureDefinition/Encounter]",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-15",
-      "type": "STRUCTURAL",
-      "sourcePath": "Procedure.encounter",
-      "targetPath": "Procedure.encounter",
-      "description": "MustSupport removed in target",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-16",
-      "type": "EXTENSION",
-      "sourcePath": "Procedure.encounter.extension(http://hl7.org/fhir/StructureDefinition/obligation)",
-      "targetPath": "Procedure.encounter",
-      "description": "Extension removed in target element: http://hl7.org/fhir/StructureDefinition/obligation",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-17",
-      "type": "EXTENSION",
-      "sourcePath": "Procedure.performed[x]",
-      "targetPath": "Procedure.performed[x].extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-18",
-      "type": "EXTENSION",
-      "sourcePath": "Procedure.performed[x].extension(http://hl7.org/fhir/StructureDefinition/obligation)",
-      "targetPath": "Procedure.performed[x]",
-      "description": "Extension removed in target element: http://hl7.org/fhir/StructureDefinition/obligation",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-19",
-      "type": "STRUCTURAL",
-      "sourcePath": "Procedure.reasonCode",
-      "targetPath": "Procedure.reasonCode",
-      "description": "MustSupport removed in target",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-20",
-      "type": "EXTENSION",
-      "sourcePath": "Procedure.reasonCode.extension(http://hl7.org/fhir/StructureDefinition/obligation)",
-      "targetPath": "Procedure.reasonCode",
-      "description": "Extension removed in target element: http://hl7.org/fhir/StructureDefinition/obligation",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-21",
-      "type": "STRUCTURAL",
-      "sourcePath": "Procedure.reasonReference",
-      "targetPath": "Procedure.reasonReference",
-      "description": "Reference target profile changed: [http://hl7.org.au/fhir/core/StructureDefinition/au-core-condition, http://hl7.org.au/fhir/core/StructureDefinition/au-core-procedure, http://hl7.org/fhir/StructureDefinition/DocumentReference, http://hl7.org/fhir/StructureDefinition/Observation] -> [http://hl7.org/fhir/StructureDefinition/Condition, http://hl7.org/fhir/StructureDefinition/DiagnosticReport, http://hl7.org/fhir/StructureDefinition/DocumentReference, http://hl7.org/fhir/StructureDefinition/Observation, http://hl7.org/fhir/StructureDefinition/Procedure]",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-22",
-      "type": "STRUCTURAL",
-      "sourcePath": "Procedure.reasonReference",
-      "targetPath": "Procedure.reasonReference",
-      "description": "MustSupport removed in target",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-23",
-      "type": "EXTENSION",
-      "sourcePath": "Procedure.reasonReference.extension(http://hl7.org/fhir/StructureDefinition/obligation)",
-      "targetPath": "Procedure.reasonReference",
-      "description": "Extension removed in target element: http://hl7.org/fhir/StructureDefinition/obligation",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-24",
-      "type": "TERMINOLOGY",
-      "sourcePath": "Procedure.bodySite",
-      "targetPath": "Procedure.bodySite",
-      "description": "Binding changed: extensible(https://healthterminologies.gov.au/fhir/ValueSet/body-site-1) -> example(http://hl7.org/fhir/ValueSet/body-site)",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-25",
-      "type": "STRUCTURAL",
-      "sourcePath": "Procedure.bodySite",
-      "targetPath": "Procedure.bodySite",
-      "description": "Constraints removed in target: [au-core-pro-01]",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-26",
-      "type": "EXTENSION",
-      "sourcePath": "Procedure.extension:targetBodyStructure",
-      "targetPath": "",
-      "description": "Extension removed in target profile: Procedure.extension:targetBodyStructure",
-      "severity": "INFO"
-    }
-  ]
+  "pairId" : "au-core-procedure-vs-us-core-procedure",
+  "sourceClasspath" : "standard-profiles/au-core/StructureDefinition-au-core-procedure.json",
+  "targetClasspath" : "standard-profiles/us-core/StructureDefinition-us-core-procedure.json",
+  "drifts" : [ {
+    "id" : "rule-1",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Procedure",
+    "targetPath" : "Procedure",
+    "description" : "Constraints added in target: [us-core-7]",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-2",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Procedure.extension",
+    "targetPath" : "Procedure.extension",
+    "description" : "Slicing changed: rules=open, discriminators=[value:url] -> none",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-3",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Procedure.basedOn",
+    "targetPath" : "Procedure.basedOn",
+    "description" : "Reference target profile changed: [http://hl7.org/fhir/StructureDefinition/CarePlan, http://hl7.org/fhir/StructureDefinition/ServiceRequest] -> [http://hl7.org/fhir/us/core/StructureDefinition/us-core-careplan, http://hl7.org/fhir/us/core/StructureDefinition/us-core-servicerequest]",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-4",
+    "type" : "EXTENSION",
+    "sourcePath" : "Procedure.basedOn",
+    "targetPath" : "Procedure.basedOn.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+    "description" : "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-5",
+    "type" : "TERMINOLOGY",
+    "sourcePath" : "Procedure.status",
+    "targetPath" : "Procedure.status",
+    "description" : "Binding changed: required(http://hl7.org/fhir/ValueSet/event-status|4.0.1) -> required(http://hl7.org/fhir/ValueSet/event-status)",
+    "severity" : "ERROR"
+  }, {
+    "id" : "rule-6",
+    "type" : "EXTENSION",
+    "sourcePath" : "Procedure.status",
+    "targetPath" : "Procedure.status.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+    "description" : "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-7",
+    "type" : "EXTENSION",
+    "sourcePath" : "Procedure.status.extension(http://hl7.org/fhir/StructureDefinition/obligation)",
+    "targetPath" : "Procedure.status",
+    "description" : "Extension removed in target element: http://hl7.org/fhir/StructureDefinition/obligation",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-8",
+    "type" : "TERMINOLOGY",
+    "sourcePath" : "Procedure.code",
+    "targetPath" : "Procedure.code",
+    "description" : "Binding changed: extensible(https://healthterminologies.gov.au/fhir/ValueSet/procedure-1) -> extensible(http://hl7.org/fhir/us/core/ValueSet/us-core-procedure-code)",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-9",
+    "type" : "EXTENSION",
+    "sourcePath" : "Procedure.code",
+    "targetPath" : "Procedure.code.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+    "description" : "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-10",
+    "type" : "EXTENSION",
+    "sourcePath" : "Procedure.code.extension(http://hl7.org/fhir/StructureDefinition/obligation)",
+    "targetPath" : "Procedure.code",
+    "description" : "Extension removed in target element: http://hl7.org/fhir/StructureDefinition/obligation",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-11",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Procedure.subject",
+    "targetPath" : "Procedure.subject",
+    "description" : "Reference target profile changed: [http://hl7.org.au/fhir/core/StructureDefinition/au-core-patient] -> [http://hl7.org/fhir/us/core/StructureDefinition/us-core-patient]",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-12",
+    "type" : "EXTENSION",
+    "sourcePath" : "Procedure.subject",
+    "targetPath" : "Procedure.subject.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+    "description" : "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-13",
+    "type" : "EXTENSION",
+    "sourcePath" : "Procedure.subject.extension(http://hl7.org/fhir/StructureDefinition/obligation)",
+    "targetPath" : "Procedure.subject",
+    "description" : "Extension removed in target element: http://hl7.org/fhir/StructureDefinition/obligation",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-14",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Procedure.encounter",
+    "targetPath" : "Procedure.encounter",
+    "description" : "Reference target profile changed: [http://hl7.org.au/fhir/core/StructureDefinition/au-core-encounter] -> [http://hl7.org/fhir/StructureDefinition/Encounter]",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-15",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Procedure.encounter",
+    "targetPath" : "Procedure.encounter",
+    "description" : "MustSupport removed in target",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-16",
+    "type" : "EXTENSION",
+    "sourcePath" : "Procedure.encounter.extension(http://hl7.org/fhir/StructureDefinition/obligation)",
+    "targetPath" : "Procedure.encounter",
+    "description" : "Extension removed in target element: http://hl7.org/fhir/StructureDefinition/obligation",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-17",
+    "type" : "EXTENSION",
+    "sourcePath" : "Procedure.performed[x]",
+    "targetPath" : "Procedure.performed[x].extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+    "description" : "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-18",
+    "type" : "EXTENSION",
+    "sourcePath" : "Procedure.performed[x].extension(http://hl7.org/fhir/StructureDefinition/obligation)",
+    "targetPath" : "Procedure.performed[x]",
+    "description" : "Extension removed in target element: http://hl7.org/fhir/StructureDefinition/obligation",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-19",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Procedure.reasonCode",
+    "targetPath" : "Procedure.reasonCode",
+    "description" : "MustSupport removed in target",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-20",
+    "type" : "EXTENSION",
+    "sourcePath" : "Procedure.reasonCode.extension(http://hl7.org/fhir/StructureDefinition/obligation)",
+    "targetPath" : "Procedure.reasonCode",
+    "description" : "Extension removed in target element: http://hl7.org/fhir/StructureDefinition/obligation",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-21",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Procedure.reasonReference",
+    "targetPath" : "Procedure.reasonReference",
+    "description" : "Reference target profile changed: [http://hl7.org.au/fhir/core/StructureDefinition/au-core-condition, http://hl7.org.au/fhir/core/StructureDefinition/au-core-procedure, http://hl7.org/fhir/StructureDefinition/DocumentReference, http://hl7.org/fhir/StructureDefinition/Observation] -> [http://hl7.org/fhir/StructureDefinition/Condition, http://hl7.org/fhir/StructureDefinition/DiagnosticReport, http://hl7.org/fhir/StructureDefinition/DocumentReference, http://hl7.org/fhir/StructureDefinition/Observation, http://hl7.org/fhir/StructureDefinition/Procedure]",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-22",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Procedure.reasonReference",
+    "targetPath" : "Procedure.reasonReference",
+    "description" : "MustSupport removed in target",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-23",
+    "type" : "EXTENSION",
+    "sourcePath" : "Procedure.reasonReference.extension(http://hl7.org/fhir/StructureDefinition/obligation)",
+    "targetPath" : "Procedure.reasonReference",
+    "description" : "Extension removed in target element: http://hl7.org/fhir/StructureDefinition/obligation",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-24",
+    "type" : "TERMINOLOGY",
+    "sourcePath" : "Procedure.bodySite",
+    "targetPath" : "Procedure.bodySite",
+    "description" : "Binding changed: extensible(https://healthterminologies.gov.au/fhir/ValueSet/body-site-1) -> example(http://hl7.org/fhir/ValueSet/body-site)",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-25",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Procedure.bodySite",
+    "targetPath" : "Procedure.bodySite",
+    "description" : "Constraints removed in target: [au-core-pro-01]",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-26",
+    "type" : "EXTENSION",
+    "sourcePath" : "Procedure.extension:targetBodyStructure",
+    "targetPath" : "",
+    "description" : "Extension removed in target profile: Procedure.extension:targetBodyStructure",
+    "severity" : "INFO"
+  } ]
 }

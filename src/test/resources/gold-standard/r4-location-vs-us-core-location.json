@@ -1,159 +1,139 @@
 {
-  "pairId": "r4-location-vs-us-core-location",
-  "sourceClasspath": "standard-profiles/r4/location.profile.json",
-  "targetClasspath": "standard-profiles/us-core/StructureDefinition-us-core-location.json",
-  "drifts": [
-    {
-      "id": "rule-1",
-      "type": "STRUCTURAL",
-      "sourcePath": "Location.status",
-      "targetPath": "Location.status",
-      "description": "MustSupport added in target",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-2",
-      "type": "CARDINALITY",
-      "sourcePath": "Location.name",
-      "targetPath": "Location.name",
-      "description": "Cardinality changed: [0..1] -> [1..1]",
-      "severity": "ERROR"
-    },
-    {
-      "id": "rule-3",
-      "type": "STRUCTURAL",
-      "sourcePath": "Location.name",
-      "targetPath": "Location.name",
-      "description": "MustSupport added in target",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-4",
-      "type": "STRUCTURAL",
-      "sourcePath": "Location.telecom",
-      "targetPath": "Location.telecom",
-      "description": "MustSupport added in target",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-5",
-      "type": "STRUCTURAL",
-      "sourcePath": "Location.address",
-      "targetPath": "Location.address",
-      "description": "MustSupport added in target",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-6",
-      "type": "STRUCTURAL",
-      "sourcePath": "Location.managingOrganization",
-      "targetPath": "Location.managingOrganization",
-      "description": "Reference target profile changed: [http://hl7.org/fhir/StructureDefinition/Organization] -> [http://hl7.org/fhir/us/core/StructureDefinition/us-core-organization]",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-7",
-      "type": "STRUCTURAL",
-      "sourcePath": "Location.managingOrganization",
-      "targetPath": "Location.managingOrganization",
-      "description": "MustSupport added in target",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-8",
-      "type": "STRUCTURAL",
-      "sourcePath": "",
-      "targetPath": "Location.address.id",
-      "description": "Element added in target profile: Location.address.id",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-9",
-      "type": "STRUCTURAL",
-      "sourcePath": "",
-      "targetPath": "Location.address.extension",
-      "description": "Element added in target profile: Location.address.extension",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-10",
-      "type": "STRUCTURAL",
-      "sourcePath": "",
-      "targetPath": "Location.address.use",
-      "description": "Element added in target profile: Location.address.use",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-11",
-      "type": "STRUCTURAL",
-      "sourcePath": "",
-      "targetPath": "Location.address.type",
-      "description": "Element added in target profile: Location.address.type",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-12",
-      "type": "STRUCTURAL",
-      "sourcePath": "",
-      "targetPath": "Location.address.text",
-      "description": "Element added in target profile: Location.address.text",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-13",
-      "type": "STRUCTURAL",
-      "sourcePath": "",
-      "targetPath": "Location.address.line",
-      "description": "Element added in target profile: Location.address.line",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-14",
-      "type": "STRUCTURAL",
-      "sourcePath": "",
-      "targetPath": "Location.address.city",
-      "description": "Element added in target profile: Location.address.city",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-15",
-      "type": "STRUCTURAL",
-      "sourcePath": "",
-      "targetPath": "Location.address.district",
-      "description": "Element added in target profile: Location.address.district",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-16",
-      "type": "STRUCTURAL",
-      "sourcePath": "",
-      "targetPath": "Location.address.state",
-      "description": "Element added in target profile: Location.address.state",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-17",
-      "type": "STRUCTURAL",
-      "sourcePath": "",
-      "targetPath": "Location.address.postalCode",
-      "description": "Element added in target profile: Location.address.postalCode",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-18",
-      "type": "STRUCTURAL",
-      "sourcePath": "",
-      "targetPath": "Location.address.country",
-      "description": "Element added in target profile: Location.address.country",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-19",
-      "type": "STRUCTURAL",
-      "sourcePath": "",
-      "targetPath": "Location.address.period",
-      "description": "Element added in target profile: Location.address.period",
-      "severity": "INFO"
-    }
-  ]
+  "pairId" : "r4-location-vs-us-core-location",
+  "sourceClasspath" : "standard-profiles/r4/location.profile.json",
+  "targetClasspath" : "standard-profiles/us-core/StructureDefinition-us-core-location.json",
+  "drifts" : [ {
+    "id" : "rule-1",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Location.status",
+    "targetPath" : "Location.status",
+    "description" : "MustSupport added in target",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-2",
+    "type" : "CARDINALITY",
+    "sourcePath" : "Location.name",
+    "targetPath" : "Location.name",
+    "description" : "Cardinality changed: [0..1] -> [1..1]",
+    "severity" : "ERROR"
+  }, {
+    "id" : "rule-3",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Location.name",
+    "targetPath" : "Location.name",
+    "description" : "MustSupport added in target",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-4",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Location.telecom",
+    "targetPath" : "Location.telecom",
+    "description" : "MustSupport added in target",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-5",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Location.address",
+    "targetPath" : "Location.address",
+    "description" : "MustSupport added in target",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-6",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Location.managingOrganization",
+    "targetPath" : "Location.managingOrganization",
+    "description" : "Reference target profile changed: [http://hl7.org/fhir/StructureDefinition/Organization] -> [http://hl7.org/fhir/us/core/StructureDefinition/us-core-organization]",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-7",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Location.managingOrganization",
+    "targetPath" : "Location.managingOrganization",
+    "description" : "MustSupport added in target",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-8",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "",
+    "targetPath" : "Location.address.id",
+    "description" : "Element added in target profile: Location.address.id",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-9",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "",
+    "targetPath" : "Location.address.extension",
+    "description" : "Element added in target profile: Location.address.extension",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-10",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "",
+    "targetPath" : "Location.address.use",
+    "description" : "Element added in target profile: Location.address.use",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-11",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "",
+    "targetPath" : "Location.address.type",
+    "description" : "Element added in target profile: Location.address.type",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-12",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "",
+    "targetPath" : "Location.address.text",
+    "description" : "Element added in target profile: Location.address.text",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-13",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "",
+    "targetPath" : "Location.address.line",
+    "description" : "Element added in target profile: Location.address.line",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-14",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "",
+    "targetPath" : "Location.address.city",
+    "description" : "Element added in target profile: Location.address.city",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-15",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "",
+    "targetPath" : "Location.address.district",
+    "description" : "Element added in target profile: Location.address.district",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-16",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "",
+    "targetPath" : "Location.address.state",
+    "description" : "Element added in target profile: Location.address.state",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-17",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "",
+    "targetPath" : "Location.address.postalCode",
+    "description" : "Element added in target profile: Location.address.postalCode",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-18",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "",
+    "targetPath" : "Location.address.country",
+    "description" : "Element added in target profile: Location.address.country",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-19",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "",
+    "targetPath" : "Location.address.period",
+    "description" : "Element added in target profile: Location.address.period",
+    "severity" : "INFO"
+  } ]
 }

@@ -540,7 +540,6 @@ class Experiment3SemanticCorrectnessTest {
     ): Pair<Boolean, String?> {
         return try {
             val tree = objectMapper.readTree(structureMapJson)
-
             @Suppress("DEPRECATION")
             val smUrl = tree.get("url")?.textValue() ?: return false to null
 

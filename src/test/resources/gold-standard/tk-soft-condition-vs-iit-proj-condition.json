@@ -1,271 +1,237 @@
 {
-  "pairId": "tk-soft-condition-vs-iit-proj-condition",
-  "sourceClasspath": "custom-profiles/tk-soft/tk-soft-condition.json",
-  "targetClasspath": "custom-profiles/iit-proj/iit-proj-condition.json",
-  "drifts": [
-    {
-      "id": "rule-1",
-      "type": "STRUCTURAL",
-      "sourcePath": "Condition",
-      "targetPath": "Condition",
-      "description": "Constraints added in target: [iit-con-1, iit-con-2]",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-2",
-      "type": "STRUCTURAL",
-      "sourcePath": "Condition",
-      "targetPath": "Condition",
-      "description": "Constraints removed in target: [tk-con-1, tk-con-2]",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-3",
-      "type": "CARDINALITY",
-      "sourcePath": "Condition.verificationStatus",
-      "targetPath": "Condition.verificationStatus",
-      "description": "Cardinality changed: [0..1] -> [1..1]",
-      "severity": "ERROR"
-    },
-    {
-      "id": "rule-4",
-      "type": "TERMINOLOGY",
-      "sourcePath": "Condition.code",
-      "targetPath": "Condition.code",
-      "description": "Binding changed: extensible(https://tk-soft.example.com/fhir/ValueSet/condition-code) -> example(http://hl7.org/fhir/ValueSet/condition-code)",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-5",
-      "type": "STRUCTURAL",
-      "sourcePath": "Condition.code.coding",
-      "targetPath": "Condition.code.coding",
-      "description": "Slicing changed: none -> rules=open, discriminators=[pattern:$this]",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-6",
-      "type": "TERMINOLOGY",
-      "sourcePath": "Condition.bodySite",
-      "targetPath": "Condition.bodySite",
-      "description": "Binding changed: extensible(http://hl7.org/fhir/ValueSet/body-site) -> example(http://hl7.org/fhir/ValueSet/body-site)",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-7",
-      "type": "STRUCTURAL",
-      "sourcePath": "Condition.subject",
-      "targetPath": "Condition.subject",
-      "description": "Reference target profile changed: [https://tk-soft.example.com/fhir/StructureDefinition/Patient] -> [https://iit-proj.example.com/fhir/StructureDefinition/Patient]",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-8",
-      "type": "STRUCTURAL",
-      "sourcePath": "Condition.encounter",
-      "targetPath": "Condition.encounter",
-      "description": "Reference target profile changed: [https://tk-soft.example.com/fhir/StructureDefinition/Encounter] -> [https://iit-proj.example.com/fhir/StructureDefinition/Encounter]",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-9",
-      "type": "CARDINALITY",
-      "sourcePath": "Condition.onset[x]",
-      "targetPath": "Condition.onset[x]",
-      "description": "Cardinality changed: [0..1] -> [1..1]",
-      "severity": "ERROR"
-    },
-    {
-      "id": "rule-10",
-      "type": "CARDINALITY",
-      "sourcePath": "Condition.recorder",
-      "targetPath": "Condition.recorder",
-      "description": "Cardinality changed: [0..1] -> [0..0]",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-11",
-      "type": "STRUCTURAL",
-      "sourcePath": "Condition.recorder",
-      "targetPath": "Condition.recorder",
-      "description": "Reference target profile changed: [https://tk-soft.example.com/fhir/StructureDefinition/Practitioner] -> [http://hl7.org/fhir/StructureDefinition/Patient, http://hl7.org/fhir/StructureDefinition/Practitioner, http://hl7.org/fhir/StructureDefinition/PractitionerRole, http://hl7.org/fhir/StructureDefinition/RelatedPerson]",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-12",
-      "type": "STRUCTURAL",
-      "sourcePath": "Condition.recorder",
-      "targetPath": "Condition.recorder",
-      "description": "MustSupport removed in target",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-13",
-      "type": "EXTENSION",
-      "sourcePath": "",
-      "targetPath": "Condition.extension:studyRelevance",
-      "description": "Extension added in target profile: Condition.extension:studyRelevance",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-14",
-      "type": "EXTENSION",
-      "sourcePath": "",
-      "targetPath": "Condition.extension:protocolCriterion",
-      "description": "Extension added in target profile: Condition.extension:protocolCriterion",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-15",
-      "type": "EXTENSION",
-      "sourcePath": "",
-      "targetPath": "Condition.extension:adverseEventLink",
-      "description": "Extension added in target profile: Condition.extension:adverseEventLink",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-16",
-      "type": "STRUCTURAL",
-      "sourcePath": "",
-      "targetPath": "Condition.category:inclusionCriteria",
-      "description": "New slice 'inclusionCriteria' added in target profile",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-17",
-      "type": "STRUCTURAL",
-      "sourcePath": "",
-      "targetPath": "Condition.category:adverseEvent",
-      "description": "New slice 'adverseEvent' added in target profile",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-18",
-      "type": "STRUCTURAL",
-      "sourcePath": "",
-      "targetPath": "Condition.category:comorbidity",
-      "description": "New slice 'comorbidity' added in target profile",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-19",
-      "type": "STRUCTURAL",
-      "sourcePath": "",
-      "targetPath": "Condition.code.coding:icd10",
-      "description": "New slice 'icd10' added in target profile",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-20",
-      "type": "STRUCTURAL",
-      "sourcePath": "",
-      "targetPath": "Condition.code.coding:snomed",
-      "description": "New slice 'snomed' added in target profile",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-21",
-      "type": "STRUCTURAL",
-      "sourcePath": "",
-      "targetPath": "Condition.code.coding:meddra",
-      "description": "New slice 'meddra' added in target profile",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-22",
-      "type": "EXTENSION",
-      "sourcePath": "Condition.extension:conditionDuration",
-      "targetPath": "",
-      "description": "Extension removed in target profile: Condition.extension:conditionDuration (was mustSupport)",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-23",
-      "type": "EXTENSION",
-      "sourcePath": "Condition.extension:conditionSeverityScore",
-      "targetPath": "",
-      "description": "Extension removed in target profile: Condition.extension:conditionSeverityScore (was mustSupport)",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-24",
-      "type": "EXTENSION",
-      "sourcePath": "Condition.extension:diagnosisGroup",
-      "targetPath": "",
-      "description": "Extension removed in target profile: Condition.extension:diagnosisGroup (was mustSupport)",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-25",
-      "type": "STRUCTURAL",
-      "sourcePath": "Condition.category:problemList",
-      "targetPath": "",
-      "description": "Slice 'problemList' removed in target profile",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-26",
-      "type": "STRUCTURAL",
-      "sourcePath": "Condition.category:encounterDiagnosis",
-      "targetPath": "",
-      "description": "Slice 'encounterDiagnosis' removed in target profile",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-27",
-      "type": "STRUCTURAL",
-      "sourcePath": "Condition.code.coding.id",
-      "targetPath": "",
-      "description": "Element removed in target profile: Condition.code.coding.id",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-28",
-      "type": "STRUCTURAL",
-      "sourcePath": "Condition.code.coding.extension",
-      "targetPath": "",
-      "description": "Element removed in target profile: Condition.code.coding.extension",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-29",
-      "type": "STRUCTURAL",
-      "sourcePath": "Condition.code.coding.system",
-      "targetPath": "",
-      "description": "Element removed in target profile: Condition.code.coding.system (was required)",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-30",
-      "type": "STRUCTURAL",
-      "sourcePath": "Condition.code.coding.version",
-      "targetPath": "",
-      "description": "Element removed in target profile: Condition.code.coding.version",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-31",
-      "type": "STRUCTURAL",
-      "sourcePath": "Condition.code.coding.code",
-      "targetPath": "",
-      "description": "Element removed in target profile: Condition.code.coding.code (was required)",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-32",
-      "type": "STRUCTURAL",
-      "sourcePath": "Condition.code.coding.display",
-      "targetPath": "",
-      "description": "Element removed in target profile: Condition.code.coding.display",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-33",
-      "type": "STRUCTURAL",
-      "sourcePath": "Condition.code.coding.userSelected",
-      "targetPath": "",
-      "description": "Element removed in target profile: Condition.code.coding.userSelected",
-      "severity": "INFO"
-    }
-  ]
+  "pairId" : "tk-soft-condition-vs-iit-proj-condition",
+  "sourceClasspath" : "custom-profiles/tk-soft/tk-soft-condition.json",
+  "targetClasspath" : "custom-profiles/iit-proj/iit-proj-condition.json",
+  "drifts" : [ {
+    "id" : "rule-1",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Condition",
+    "targetPath" : "Condition",
+    "description" : "Constraints added in target: [iit-con-1, iit-con-2]",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-2",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Condition",
+    "targetPath" : "Condition",
+    "description" : "Constraints removed in target: [tk-con-1, tk-con-2]",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-3",
+    "type" : "CARDINALITY",
+    "sourcePath" : "Condition.verificationStatus",
+    "targetPath" : "Condition.verificationStatus",
+    "description" : "Cardinality changed: [0..1] -> [1..1]",
+    "severity" : "ERROR"
+  }, {
+    "id" : "rule-4",
+    "type" : "TERMINOLOGY",
+    "sourcePath" : "Condition.code",
+    "targetPath" : "Condition.code",
+    "description" : "Binding changed: extensible(https://tk-soft.example.com/fhir/ValueSet/condition-code) -> example(http://hl7.org/fhir/ValueSet/condition-code)",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-5",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Condition.code.coding",
+    "targetPath" : "Condition.code.coding",
+    "description" : "Slicing changed: none -> rules=open, discriminators=[pattern:$this]",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-6",
+    "type" : "TERMINOLOGY",
+    "sourcePath" : "Condition.bodySite",
+    "targetPath" : "Condition.bodySite",
+    "description" : "Binding changed: extensible(http://hl7.org/fhir/ValueSet/body-site) -> example(http://hl7.org/fhir/ValueSet/body-site)",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-7",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Condition.subject",
+    "targetPath" : "Condition.subject",
+    "description" : "Reference target profile changed: [https://tk-soft.example.com/fhir/StructureDefinition/Patient] -> [https://iit-proj.example.com/fhir/StructureDefinition/Patient]",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-8",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Condition.encounter",
+    "targetPath" : "Condition.encounter",
+    "description" : "Reference target profile changed: [https://tk-soft.example.com/fhir/StructureDefinition/Encounter] -> [https://iit-proj.example.com/fhir/StructureDefinition/Encounter]",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-9",
+    "type" : "CARDINALITY",
+    "sourcePath" : "Condition.onset[x]",
+    "targetPath" : "Condition.onset[x]",
+    "description" : "Cardinality changed: [0..1] -> [1..1]",
+    "severity" : "ERROR"
+  }, {
+    "id" : "rule-10",
+    "type" : "CARDINALITY",
+    "sourcePath" : "Condition.recorder",
+    "targetPath" : "Condition.recorder",
+    "description" : "Cardinality changed: [0..1] -> [0..0]",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-11",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Condition.recorder",
+    "targetPath" : "Condition.recorder",
+    "description" : "Reference target profile changed: [https://tk-soft.example.com/fhir/StructureDefinition/Practitioner] -> [http://hl7.org/fhir/StructureDefinition/Patient, http://hl7.org/fhir/StructureDefinition/Practitioner, http://hl7.org/fhir/StructureDefinition/PractitionerRole, http://hl7.org/fhir/StructureDefinition/RelatedPerson]",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-12",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Condition.recorder",
+    "targetPath" : "Condition.recorder",
+    "description" : "MustSupport removed in target",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-13",
+    "type" : "EXTENSION",
+    "sourcePath" : "",
+    "targetPath" : "Condition.extension:studyRelevance",
+    "description" : "Extension added in target profile: Condition.extension:studyRelevance",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-14",
+    "type" : "EXTENSION",
+    "sourcePath" : "",
+    "targetPath" : "Condition.extension:protocolCriterion",
+    "description" : "Extension added in target profile: Condition.extension:protocolCriterion",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-15",
+    "type" : "EXTENSION",
+    "sourcePath" : "",
+    "targetPath" : "Condition.extension:adverseEventLink",
+    "description" : "Extension added in target profile: Condition.extension:adverseEventLink",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-16",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "",
+    "targetPath" : "Condition.category:inclusionCriteria",
+    "description" : "New slice 'inclusionCriteria' added in target profile",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-17",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "",
+    "targetPath" : "Condition.category:adverseEvent",
+    "description" : "New slice 'adverseEvent' added in target profile",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-18",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "",
+    "targetPath" : "Condition.category:comorbidity",
+    "description" : "New slice 'comorbidity' added in target profile",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-19",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "",
+    "targetPath" : "Condition.code.coding:icd10",
+    "description" : "New slice 'icd10' added in target profile",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-20",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "",
+    "targetPath" : "Condition.code.coding:snomed",
+    "description" : "New slice 'snomed' added in target profile",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-21",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "",
+    "targetPath" : "Condition.code.coding:meddra",
+    "description" : "New slice 'meddra' added in target profile",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-22",
+    "type" : "EXTENSION",
+    "sourcePath" : "Condition.extension:conditionDuration",
+    "targetPath" : "",
+    "description" : "Extension removed in target profile: Condition.extension:conditionDuration (was mustSupport)",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-23",
+    "type" : "EXTENSION",
+    "sourcePath" : "Condition.extension:conditionSeverityScore",
+    "targetPath" : "",
+    "description" : "Extension removed in target profile: Condition.extension:conditionSeverityScore (was mustSupport)",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-24",
+    "type" : "EXTENSION",
+    "sourcePath" : "Condition.extension:diagnosisGroup",
+    "targetPath" : "",
+    "description" : "Extension removed in target profile: Condition.extension:diagnosisGroup (was mustSupport)",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-25",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Condition.category:problemList",
+    "targetPath" : "",
+    "description" : "Slice 'problemList' removed in target profile",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-26",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Condition.category:encounterDiagnosis",
+    "targetPath" : "",
+    "description" : "Slice 'encounterDiagnosis' removed in target profile",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-27",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Condition.code.coding.id",
+    "targetPath" : "",
+    "description" : "Element removed in target profile: Condition.code.coding.id",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-28",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Condition.code.coding.extension",
+    "targetPath" : "",
+    "description" : "Element removed in target profile: Condition.code.coding.extension",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-29",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Condition.code.coding.system",
+    "targetPath" : "",
+    "description" : "Element removed in target profile: Condition.code.coding.system (was required)",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-30",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Condition.code.coding.version",
+    "targetPath" : "",
+    "description" : "Element removed in target profile: Condition.code.coding.version",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-31",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Condition.code.coding.code",
+    "targetPath" : "",
+    "description" : "Element removed in target profile: Condition.code.coding.code (was required)",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-32",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Condition.code.coding.display",
+    "targetPath" : "",
+    "description" : "Element removed in target profile: Condition.code.coding.display",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-33",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Condition.code.coding.userSelected",
+    "targetPath" : "",
+    "description" : "Element removed in target profile: Condition.code.coding.userSelected",
+    "severity" : "INFO"
+  } ]
 }

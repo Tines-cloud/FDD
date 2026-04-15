@@ -1,383 +1,335 @@
 {
-  "pairId": "tk-soft-patient-vs-hemas-patient",
-  "sourceClasspath": "custom-profiles/tk-soft/tk-soft-patient.json",
-  "targetClasspath": "custom-profiles/hemas/hemas-patient.json",
-  "drifts": [
-    {
-      "id": "rule-1",
-      "type": "STRUCTURAL",
-      "sourcePath": "Patient",
-      "targetPath": "Patient",
-      "description": "Constraints added in target: [hemas-pat-1, hemas-pat-2]",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-2",
-      "type": "STRUCTURAL",
-      "sourcePath": "Patient",
-      "targetPath": "Patient",
-      "description": "Constraints removed in target: [tk-pat-1, tk-pat-2]",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-3",
-      "type": "CARDINALITY",
-      "sourcePath": "Patient.identifier.type",
-      "targetPath": "Patient.identifier.type",
-      "description": "Cardinality changed: [0..1] -> [1..1]",
-      "severity": "ERROR"
-    },
-    {
-      "id": "rule-4",
-      "type": "TERMINOLOGY",
-      "sourcePath": "Patient.identifier.type",
-      "targetPath": "Patient.identifier.type",
-      "description": "Pattern value changed: 'none' -> 'org.hl7.fhir.r4.model.CodeableConcept@5e15c9ab'",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-5",
-      "type": "STRUCTURAL",
-      "sourcePath": "Patient.identifier.type",
-      "targetPath": "Patient.identifier.type",
-      "description": "MustSupport added in target",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-6",
-      "type": "TERMINOLOGY",
-      "sourcePath": "Patient.identifier.system",
-      "targetPath": "Patient.identifier.system",
-      "description": "Fixed value changed: 'none' -> 'https://hemas.example.com/fhir/sid/nic'",
-      "severity": "ERROR"
-    },
-    {
-      "id": "rule-7",
-      "type": "STRUCTURAL",
-      "sourcePath": "Patient.identifier.system",
-      "targetPath": "Patient.identifier.system",
-      "description": "MustSupport added in target",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-8",
-      "type": "STRUCTURAL",
-      "sourcePath": "Patient.identifier.value",
-      "targetPath": "Patient.identifier.value",
-      "description": "MustSupport added in target",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-9",
-      "type": "CARDINALITY",
-      "sourcePath": "Patient.active",
-      "targetPath": "Patient.active",
-      "description": "Cardinality changed: [0..1] -> [1..1]",
-      "severity": "ERROR"
-    },
-    {
-      "id": "rule-10",
-      "type": "CARDINALITY",
-      "sourcePath": "Patient.name.family",
-      "targetPath": "Patient.name.family",
-      "description": "Cardinality changed: [0..1] -> [1..1]",
-      "severity": "ERROR"
-    },
-    {
-      "id": "rule-11",
-      "type": "CARDINALITY",
-      "sourcePath": "Patient.name.given",
-      "targetPath": "Patient.name.given",
-      "description": "Cardinality changed: [0..*] -> [1..*]",
-      "severity": "ERROR"
-    },
-    {
-      "id": "rule-12",
-      "type": "STRUCTURAL",
-      "sourcePath": "Patient.name.prefix",
-      "targetPath": "Patient.name.prefix",
-      "description": "MustSupport removed in target",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-13",
-      "type": "CARDINALITY",
-      "sourcePath": "Patient.telecom",
-      "targetPath": "Patient.telecom",
-      "description": "Cardinality changed: [1..5] -> [1..*]",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-14",
-      "type": "TERMINOLOGY",
-      "sourcePath": "Patient.telecom.use",
-      "targetPath": "Patient.telecom.use",
-      "description": "Binding changed: required(http://hl7.org/fhir/ValueSet/contact-point-use) -> required(http://hl7.org/fhir/ValueSet/contact-point-use|4.0.1)",
-      "severity": "ERROR"
-    },
-    {
-      "id": "rule-15",
-      "type": "STRUCTURAL",
-      "sourcePath": "Patient.telecom.use",
-      "targetPath": "Patient.telecom.use",
-      "description": "MustSupport removed in target",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-16",
-      "type": "STRUCTURAL",
-      "sourcePath": "Patient.deceased[x]",
-      "targetPath": "Patient.deceased[x]",
-      "description": "MustSupport removed in target",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-17",
-      "type": "CARDINALITY",
-      "sourcePath": "Patient.address",
-      "targetPath": "Patient.address",
-      "description": "Cardinality changed: [0..*] -> [1..*]",
-      "severity": "ERROR"
-    },
-    {
-      "id": "rule-18",
-      "type": "CARDINALITY",
-      "sourcePath": "Patient.address.line",
-      "targetPath": "Patient.address.line",
-      "description": "Cardinality changed: [0..*] -> [1..*]",
-      "severity": "ERROR"
-    },
-    {
-      "id": "rule-19",
-      "type": "CARDINALITY",
-      "sourcePath": "Patient.address.city",
-      "targetPath": "Patient.address.city",
-      "description": "Cardinality changed: [0..1] -> [1..1]",
-      "severity": "ERROR"
-    },
-    {
-      "id": "rule-20",
-      "type": "STRUCTURAL",
-      "sourcePath": "Patient.address.district",
-      "targetPath": "Patient.address.district",
-      "description": "MustSupport added in target",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-21",
-      "type": "STRUCTURAL",
-      "sourcePath": "Patient.address.state",
-      "targetPath": "Patient.address.state",
-      "description": "MustSupport removed in target",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-22",
-      "type": "STRUCTURAL",
-      "sourcePath": "Patient.address.postalCode",
-      "targetPath": "Patient.address.postalCode",
-      "description": "MustSupport removed in target",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-23",
-      "type": "CARDINALITY",
-      "sourcePath": "Patient.address.country",
-      "targetPath": "Patient.address.country",
-      "description": "Cardinality changed: [0..1] -> [1..1]",
-      "severity": "ERROR"
-    },
-    {
-      "id": "rule-24",
-      "type": "TERMINOLOGY",
-      "sourcePath": "Patient.address.country",
-      "targetPath": "Patient.address.country",
-      "description": "Fixed value changed: 'none' -> 'LK'",
-      "severity": "ERROR"
-    },
-    {
-      "id": "rule-25",
-      "type": "TERMINOLOGY",
-      "sourcePath": "Patient.maritalStatus",
-      "targetPath": "Patient.maritalStatus",
-      "description": "Binding changed: extensible(https://tk-soft.example.com/fhir/ValueSet/marital-status) -> extensible(http://hl7.org/fhir/ValueSet/marital-status)",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-26",
-      "type": "STRUCTURAL",
-      "sourcePath": "Patient.maritalStatus",
-      "targetPath": "Patient.maritalStatus",
-      "description": "MustSupport added in target",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-27",
-      "type": "CARDINALITY",
-      "sourcePath": "Patient.photo",
-      "targetPath": "Patient.photo",
-      "description": "Cardinality changed: [0..0] -> [0..*]",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-28",
-      "type": "STRUCTURAL",
-      "sourcePath": "Patient.contact",
-      "targetPath": "Patient.contact",
-      "description": "MustSupport added in target",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-29",
-      "type": "CARDINALITY",
-      "sourcePath": "Patient.contact.relationship",
-      "targetPath": "Patient.contact.relationship",
-      "description": "Cardinality changed: [0..*] -> [1..*]",
-      "severity": "ERROR"
-    },
-    {
-      "id": "rule-30",
-      "type": "TERMINOLOGY",
-      "sourcePath": "Patient.contact.relationship",
-      "targetPath": "Patient.contact.relationship",
-      "description": "Binding changed: extensible(https://tk-soft.example.com/fhir/ValueSet/contact-relationship) -> extensible(http://hl7.org/fhir/ValueSet/patient-contactrelationship)",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-31",
-      "type": "CARDINALITY",
-      "sourcePath": "Patient.contact.name",
-      "targetPath": "Patient.contact.name",
-      "description": "Cardinality changed: [0..1] -> [1..1]",
-      "severity": "ERROR"
-    },
-    {
-      "id": "rule-32",
-      "type": "CARDINALITY",
-      "sourcePath": "Patient.contact.telecom",
-      "targetPath": "Patient.contact.telecom",
-      "description": "Cardinality changed: [0..*] -> [1..*]",
-      "severity": "ERROR"
-    },
-    {
-      "id": "rule-33",
-      "type": "STRUCTURAL",
-      "sourcePath": "Patient.communication",
-      "targetPath": "Patient.communication",
-      "description": "MustSupport added in target",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-34",
-      "type": "TERMINOLOGY",
-      "sourcePath": "Patient.communication.language",
-      "targetPath": "Patient.communication.language",
-      "description": "Binding changed: extensible(https://tk-soft.example.com/fhir/ValueSet/languages) -> extensible(http://hl7.org/fhir/ValueSet/languages)",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-35",
-      "type": "STRUCTURAL",
-      "sourcePath": "Patient.generalPractitioner",
-      "targetPath": "Patient.generalPractitioner",
-      "description": "Reference target profile changed: [https://tk-soft.example.com/fhir/StructureDefinition/Practitioner] -> [https://hemas.example.com/fhir/StructureDefinition/Practitioner]",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-36",
-      "type": "CARDINALITY",
-      "sourcePath": "Patient.managingOrganization",
-      "targetPath": "Patient.managingOrganization",
-      "description": "Cardinality changed: [0..1] -> [1..1]",
-      "severity": "ERROR"
-    },
-    {
-      "id": "rule-37",
-      "type": "STRUCTURAL",
-      "sourcePath": "Patient.managingOrganization",
-      "targetPath": "Patient.managingOrganization",
-      "description": "Reference target profile changed: [https://tk-soft.example.com/fhir/StructureDefinition/Organization] -> [https://hemas.example.com/fhir/StructureDefinition/Organization]",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-38",
-      "type": "EXTENSION",
-      "sourcePath": "",
-      "targetPath": "Patient.extension:registrationDate",
-      "description": "Extension added in target profile: Patient.extension:registrationDate",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-39",
-      "type": "EXTENSION",
-      "sourcePath": "",
-      "targetPath": "Patient.extension:vipStatus",
-      "description": "Extension added in target profile: Patient.extension:vipStatus",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-40",
-      "type": "EXTENSION",
-      "sourcePath": "",
-      "targetPath": "Patient.extension:insuranceProvider",
-      "description": "Extension added in target profile: Patient.extension:insuranceProvider",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-41",
-      "type": "STRUCTURAL",
-      "sourcePath": "",
-      "targetPath": "Patient.identifier:hospitalId",
-      "description": "New slice 'hospitalId' added in target profile",
-      "severity": "ERROR"
-    },
-    {
-      "id": "rule-42",
-      "type": "STRUCTURAL",
-      "sourcePath": "",
-      "targetPath": "Patient.identifier:nic",
-      "description": "New slice 'nic' added in target profile",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-43",
-      "type": "EXTENSION",
-      "sourcePath": "Patient.extension:employeeId",
-      "targetPath": "",
-      "description": "Extension removed in target profile: Patient.extension:employeeId (was mustSupport)",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-44",
-      "type": "EXTENSION",
-      "sourcePath": "Patient.extension:preferredLanguage",
-      "targetPath": "",
-      "description": "Extension removed in target profile: Patient.extension:preferredLanguage (was mustSupport)",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-45",
-      "type": "EXTENSION",
-      "sourcePath": "Patient.extension:ethnicGroup",
-      "targetPath": "",
-      "description": "Extension removed in target profile: Patient.extension:ethnicGroup",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-46",
-      "type": "STRUCTURAL",
-      "sourcePath": "Patient.identifier:mrn",
-      "targetPath": "",
-      "description": "Slice 'mrn' removed in target profile",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-47",
-      "type": "STRUCTURAL",
-      "sourcePath": "Patient.identifier:national",
-      "targetPath": "",
-      "description": "Slice 'national' removed in target profile",
-      "severity": "WARNING"
-    }
-  ]
+  "pairId" : "tk-soft-patient-vs-hemas-patient",
+  "sourceClasspath" : "custom-profiles/tk-soft/tk-soft-patient.json",
+  "targetClasspath" : "custom-profiles/hemas/hemas-patient.json",
+  "drifts" : [ {
+    "id" : "rule-1",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Patient",
+    "targetPath" : "Patient",
+    "description" : "Constraints added in target: [hemas-pat-1, hemas-pat-2]",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-2",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Patient",
+    "targetPath" : "Patient",
+    "description" : "Constraints removed in target: [tk-pat-1, tk-pat-2]",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-3",
+    "type" : "CARDINALITY",
+    "sourcePath" : "Patient.identifier.type",
+    "targetPath" : "Patient.identifier.type",
+    "description" : "Cardinality changed: [0..1] -> [1..1]",
+    "severity" : "ERROR"
+  }, {
+    "id" : "rule-4",
+    "type" : "TERMINOLOGY",
+    "sourcePath" : "Patient.identifier.type",
+    "targetPath" : "Patient.identifier.type",
+    "description" : "Pattern value changed: 'none' -> 'org.hl7.fhir.r4.model.CodeableConcept@5e15c9ab'",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-5",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Patient.identifier.type",
+    "targetPath" : "Patient.identifier.type",
+    "description" : "MustSupport added in target",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-6",
+    "type" : "TERMINOLOGY",
+    "sourcePath" : "Patient.identifier.system",
+    "targetPath" : "Patient.identifier.system",
+    "description" : "Fixed value changed: 'none' -> 'https://hemas.example.com/fhir/sid/nic'",
+    "severity" : "ERROR"
+  }, {
+    "id" : "rule-7",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Patient.identifier.system",
+    "targetPath" : "Patient.identifier.system",
+    "description" : "MustSupport added in target",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-8",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Patient.identifier.value",
+    "targetPath" : "Patient.identifier.value",
+    "description" : "MustSupport added in target",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-9",
+    "type" : "CARDINALITY",
+    "sourcePath" : "Patient.active",
+    "targetPath" : "Patient.active",
+    "description" : "Cardinality changed: [0..1] -> [1..1]",
+    "severity" : "ERROR"
+  }, {
+    "id" : "rule-10",
+    "type" : "CARDINALITY",
+    "sourcePath" : "Patient.name.family",
+    "targetPath" : "Patient.name.family",
+    "description" : "Cardinality changed: [0..1] -> [1..1]",
+    "severity" : "ERROR"
+  }, {
+    "id" : "rule-11",
+    "type" : "CARDINALITY",
+    "sourcePath" : "Patient.name.given",
+    "targetPath" : "Patient.name.given",
+    "description" : "Cardinality changed: [0..*] -> [1..*]",
+    "severity" : "ERROR"
+  }, {
+    "id" : "rule-12",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Patient.name.prefix",
+    "targetPath" : "Patient.name.prefix",
+    "description" : "MustSupport removed in target",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-13",
+    "type" : "CARDINALITY",
+    "sourcePath" : "Patient.telecom",
+    "targetPath" : "Patient.telecom",
+    "description" : "Cardinality changed: [1..5] -> [1..*]",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-14",
+    "type" : "TERMINOLOGY",
+    "sourcePath" : "Patient.telecom.use",
+    "targetPath" : "Patient.telecom.use",
+    "description" : "Binding changed: required(http://hl7.org/fhir/ValueSet/contact-point-use) -> required(http://hl7.org/fhir/ValueSet/contact-point-use|4.0.1)",
+    "severity" : "ERROR"
+  }, {
+    "id" : "rule-15",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Patient.telecom.use",
+    "targetPath" : "Patient.telecom.use",
+    "description" : "MustSupport removed in target",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-16",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Patient.deceased[x]",
+    "targetPath" : "Patient.deceased[x]",
+    "description" : "MustSupport removed in target",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-17",
+    "type" : "CARDINALITY",
+    "sourcePath" : "Patient.address",
+    "targetPath" : "Patient.address",
+    "description" : "Cardinality changed: [0..*] -> [1..*]",
+    "severity" : "ERROR"
+  }, {
+    "id" : "rule-18",
+    "type" : "CARDINALITY",
+    "sourcePath" : "Patient.address.line",
+    "targetPath" : "Patient.address.line",
+    "description" : "Cardinality changed: [0..*] -> [1..*]",
+    "severity" : "ERROR"
+  }, {
+    "id" : "rule-19",
+    "type" : "CARDINALITY",
+    "sourcePath" : "Patient.address.city",
+    "targetPath" : "Patient.address.city",
+    "description" : "Cardinality changed: [0..1] -> [1..1]",
+    "severity" : "ERROR"
+  }, {
+    "id" : "rule-20",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Patient.address.district",
+    "targetPath" : "Patient.address.district",
+    "description" : "MustSupport added in target",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-21",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Patient.address.state",
+    "targetPath" : "Patient.address.state",
+    "description" : "MustSupport removed in target",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-22",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Patient.address.postalCode",
+    "targetPath" : "Patient.address.postalCode",
+    "description" : "MustSupport removed in target",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-23",
+    "type" : "CARDINALITY",
+    "sourcePath" : "Patient.address.country",
+    "targetPath" : "Patient.address.country",
+    "description" : "Cardinality changed: [0..1] -> [1..1]",
+    "severity" : "ERROR"
+  }, {
+    "id" : "rule-24",
+    "type" : "TERMINOLOGY",
+    "sourcePath" : "Patient.address.country",
+    "targetPath" : "Patient.address.country",
+    "description" : "Fixed value changed: 'none' -> 'LK'",
+    "severity" : "ERROR"
+  }, {
+    "id" : "rule-25",
+    "type" : "TERMINOLOGY",
+    "sourcePath" : "Patient.maritalStatus",
+    "targetPath" : "Patient.maritalStatus",
+    "description" : "Binding changed: extensible(https://tk-soft.example.com/fhir/ValueSet/marital-status) -> extensible(http://hl7.org/fhir/ValueSet/marital-status)",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-26",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Patient.maritalStatus",
+    "targetPath" : "Patient.maritalStatus",
+    "description" : "MustSupport added in target",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-27",
+    "type" : "CARDINALITY",
+    "sourcePath" : "Patient.photo",
+    "targetPath" : "Patient.photo",
+    "description" : "Cardinality changed: [0..0] -> [0..*]",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-28",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Patient.contact",
+    "targetPath" : "Patient.contact",
+    "description" : "MustSupport added in target",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-29",
+    "type" : "CARDINALITY",
+    "sourcePath" : "Patient.contact.relationship",
+    "targetPath" : "Patient.contact.relationship",
+    "description" : "Cardinality changed: [0..*] -> [1..*]",
+    "severity" : "ERROR"
+  }, {
+    "id" : "rule-30",
+    "type" : "TERMINOLOGY",
+    "sourcePath" : "Patient.contact.relationship",
+    "targetPath" : "Patient.contact.relationship",
+    "description" : "Binding changed: extensible(https://tk-soft.example.com/fhir/ValueSet/contact-relationship) -> extensible(http://hl7.org/fhir/ValueSet/patient-contactrelationship)",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-31",
+    "type" : "CARDINALITY",
+    "sourcePath" : "Patient.contact.name",
+    "targetPath" : "Patient.contact.name",
+    "description" : "Cardinality changed: [0..1] -> [1..1]",
+    "severity" : "ERROR"
+  }, {
+    "id" : "rule-32",
+    "type" : "CARDINALITY",
+    "sourcePath" : "Patient.contact.telecom",
+    "targetPath" : "Patient.contact.telecom",
+    "description" : "Cardinality changed: [0..*] -> [1..*]",
+    "severity" : "ERROR"
+  }, {
+    "id" : "rule-33",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Patient.communication",
+    "targetPath" : "Patient.communication",
+    "description" : "MustSupport added in target",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-34",
+    "type" : "TERMINOLOGY",
+    "sourcePath" : "Patient.communication.language",
+    "targetPath" : "Patient.communication.language",
+    "description" : "Binding changed: extensible(https://tk-soft.example.com/fhir/ValueSet/languages) -> extensible(http://hl7.org/fhir/ValueSet/languages)",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-35",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Patient.generalPractitioner",
+    "targetPath" : "Patient.generalPractitioner",
+    "description" : "Reference target profile changed: [https://tk-soft.example.com/fhir/StructureDefinition/Practitioner] -> [https://hemas.example.com/fhir/StructureDefinition/Practitioner]",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-36",
+    "type" : "CARDINALITY",
+    "sourcePath" : "Patient.managingOrganization",
+    "targetPath" : "Patient.managingOrganization",
+    "description" : "Cardinality changed: [0..1] -> [1..1]",
+    "severity" : "ERROR"
+  }, {
+    "id" : "rule-37",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Patient.managingOrganization",
+    "targetPath" : "Patient.managingOrganization",
+    "description" : "Reference target profile changed: [https://tk-soft.example.com/fhir/StructureDefinition/Organization] -> [https://hemas.example.com/fhir/StructureDefinition/Organization]",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-38",
+    "type" : "EXTENSION",
+    "sourcePath" : "",
+    "targetPath" : "Patient.extension:registrationDate",
+    "description" : "Extension added in target profile: Patient.extension:registrationDate",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-39",
+    "type" : "EXTENSION",
+    "sourcePath" : "",
+    "targetPath" : "Patient.extension:vipStatus",
+    "description" : "Extension added in target profile: Patient.extension:vipStatus",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-40",
+    "type" : "EXTENSION",
+    "sourcePath" : "",
+    "targetPath" : "Patient.extension:insuranceProvider",
+    "description" : "Extension added in target profile: Patient.extension:insuranceProvider",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-41",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "",
+    "targetPath" : "Patient.identifier:hospitalId",
+    "description" : "New slice 'hospitalId' added in target profile",
+    "severity" : "ERROR"
+  }, {
+    "id" : "rule-42",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "",
+    "targetPath" : "Patient.identifier:nic",
+    "description" : "New slice 'nic' added in target profile",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-43",
+    "type" : "EXTENSION",
+    "sourcePath" : "Patient.extension:employeeId",
+    "targetPath" : "",
+    "description" : "Extension removed in target profile: Patient.extension:employeeId (was mustSupport)",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-44",
+    "type" : "EXTENSION",
+    "sourcePath" : "Patient.extension:preferredLanguage",
+    "targetPath" : "",
+    "description" : "Extension removed in target profile: Patient.extension:preferredLanguage (was mustSupport)",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-45",
+    "type" : "EXTENSION",
+    "sourcePath" : "Patient.extension:ethnicGroup",
+    "targetPath" : "",
+    "description" : "Extension removed in target profile: Patient.extension:ethnicGroup",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-46",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Patient.identifier:mrn",
+    "targetPath" : "",
+    "description" : "Slice 'mrn' removed in target profile",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-47",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Patient.identifier:national",
+    "targetPath" : "",
+    "description" : "Slice 'national' removed in target profile",
+    "severity" : "WARNING"
+  } ]
 }

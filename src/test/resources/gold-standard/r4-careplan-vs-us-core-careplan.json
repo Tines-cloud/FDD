@@ -1,167 +1,146 @@
 {
-  "pairId": "r4-careplan-vs-us-core-careplan",
-  "sourceClasspath": "standard-profiles/r4/careplan.profile.json",
-  "targetClasspath": "standard-profiles/us-core/StructureDefinition-us-core-careplan.json",
-  "drifts": [
-    {
-      "id": "rule-1",
-      "type": "STRUCTURAL",
-      "sourcePath": "CarePlan.text",
-      "targetPath": "CarePlan.text",
-      "description": "MustSupport added in target",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-2",
-      "type": "EXTENSION",
-      "sourcePath": "CarePlan.text",
-      "targetPath": "CarePlan.text.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-3",
-      "type": "TERMINOLOGY",
-      "sourcePath": "CarePlan.status",
-      "targetPath": "CarePlan.status",
-      "description": "Binding changed: required(http://hl7.org/fhir/ValueSet/request-status|4.0.1) -> required(http://hl7.org/fhir/ValueSet/request-status)",
-      "severity": "ERROR"
-    },
-    {
-      "id": "rule-4",
-      "type": "STRUCTURAL",
-      "sourcePath": "CarePlan.status",
-      "targetPath": "CarePlan.status",
-      "description": "MustSupport added in target",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-5",
-      "type": "EXTENSION",
-      "sourcePath": "CarePlan.status",
-      "targetPath": "CarePlan.status.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-6",
-      "type": "TERMINOLOGY",
-      "sourcePath": "CarePlan.intent",
-      "targetPath": "CarePlan.intent",
-      "description": "Binding changed: required(http://hl7.org/fhir/ValueSet/care-plan-intent|4.0.1) -> required(http://hl7.org/fhir/ValueSet/care-plan-intent)",
-      "severity": "ERROR"
-    },
-    {
-      "id": "rule-7",
-      "type": "STRUCTURAL",
-      "sourcePath": "CarePlan.intent",
-      "targetPath": "CarePlan.intent",
-      "description": "MustSupport added in target",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-8",
-      "type": "EXTENSION",
-      "sourcePath": "CarePlan.intent",
-      "targetPath": "CarePlan.intent.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-9",
-      "type": "CARDINALITY",
-      "sourcePath": "CarePlan.category",
-      "targetPath": "CarePlan.category",
-      "description": "Cardinality changed: [0..*] -> [1..*]",
-      "severity": "ERROR"
-    },
-    {
-      "id": "rule-10",
-      "type": "STRUCTURAL",
-      "sourcePath": "CarePlan.category",
-      "targetPath": "CarePlan.category",
-      "description": "MustSupport added in target",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-11",
-      "type": "STRUCTURAL",
-      "sourcePath": "CarePlan.category",
-      "targetPath": "CarePlan.category",
-      "description": "Slicing changed: none -> rules=open, discriminators=[pattern:$this]",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-12",
-      "type": "EXTENSION",
-      "sourcePath": "CarePlan.category",
-      "targetPath": "CarePlan.category.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-13",
-      "type": "STRUCTURAL",
-      "sourcePath": "CarePlan.subject",
-      "targetPath": "CarePlan.subject",
-      "description": "Reference target profile changed: [http://hl7.org/fhir/StructureDefinition/Group, http://hl7.org/fhir/StructureDefinition/Patient] -> [http://hl7.org/fhir/us/core/StructureDefinition/us-core-patient]",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-14",
-      "type": "STRUCTURAL",
-      "sourcePath": "CarePlan.subject",
-      "targetPath": "CarePlan.subject",
-      "description": "MustSupport added in target",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-15",
-      "type": "EXTENSION",
-      "sourcePath": "CarePlan.subject",
-      "targetPath": "CarePlan.subject.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-16",
-      "type": "STRUCTURAL",
-      "sourcePath": "",
-      "targetPath": "CarePlan.text.id",
-      "description": "Element added in target profile: CarePlan.text.id",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-17",
-      "type": "STRUCTURAL",
-      "sourcePath": "",
-      "targetPath": "CarePlan.text.extension",
-      "description": "Element added in target profile: CarePlan.text.extension",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-18",
-      "type": "STRUCTURAL",
-      "sourcePath": "",
-      "targetPath": "CarePlan.text.status",
-      "description": "Element added in target profile: CarePlan.text.status",
-      "severity": "ERROR"
-    },
-    {
-      "id": "rule-19",
-      "type": "STRUCTURAL",
-      "sourcePath": "",
-      "targetPath": "CarePlan.text.div",
-      "description": "Element added in target profile: CarePlan.text.div",
-      "severity": "ERROR"
-    },
-    {
-      "id": "rule-20",
-      "type": "STRUCTURAL",
-      "sourcePath": "",
-      "targetPath": "CarePlan.category:AssessPlan",
-      "description": "New slice 'AssessPlan' added in target profile",
-      "severity": "ERROR"
-    }
-  ]
+  "pairId" : "r4-careplan-vs-us-core-careplan",
+  "sourceClasspath" : "standard-profiles/r4/careplan.profile.json",
+  "targetClasspath" : "standard-profiles/us-core/StructureDefinition-us-core-careplan.json",
+  "drifts" : [ {
+    "id" : "rule-1",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "CarePlan.text",
+    "targetPath" : "CarePlan.text",
+    "description" : "MustSupport added in target",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-2",
+    "type" : "EXTENSION",
+    "sourcePath" : "CarePlan.text",
+    "targetPath" : "CarePlan.text.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+    "description" : "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-3",
+    "type" : "TERMINOLOGY",
+    "sourcePath" : "CarePlan.status",
+    "targetPath" : "CarePlan.status",
+    "description" : "Binding changed: required(http://hl7.org/fhir/ValueSet/request-status|4.0.1) -> required(http://hl7.org/fhir/ValueSet/request-status)",
+    "severity" : "ERROR"
+  }, {
+    "id" : "rule-4",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "CarePlan.status",
+    "targetPath" : "CarePlan.status",
+    "description" : "MustSupport added in target",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-5",
+    "type" : "EXTENSION",
+    "sourcePath" : "CarePlan.status",
+    "targetPath" : "CarePlan.status.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+    "description" : "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-6",
+    "type" : "TERMINOLOGY",
+    "sourcePath" : "CarePlan.intent",
+    "targetPath" : "CarePlan.intent",
+    "description" : "Binding changed: required(http://hl7.org/fhir/ValueSet/care-plan-intent|4.0.1) -> required(http://hl7.org/fhir/ValueSet/care-plan-intent)",
+    "severity" : "ERROR"
+  }, {
+    "id" : "rule-7",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "CarePlan.intent",
+    "targetPath" : "CarePlan.intent",
+    "description" : "MustSupport added in target",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-8",
+    "type" : "EXTENSION",
+    "sourcePath" : "CarePlan.intent",
+    "targetPath" : "CarePlan.intent.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+    "description" : "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-9",
+    "type" : "CARDINALITY",
+    "sourcePath" : "CarePlan.category",
+    "targetPath" : "CarePlan.category",
+    "description" : "Cardinality changed: [0..*] -> [1..*]",
+    "severity" : "ERROR"
+  }, {
+    "id" : "rule-10",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "CarePlan.category",
+    "targetPath" : "CarePlan.category",
+    "description" : "MustSupport added in target",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-11",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "CarePlan.category",
+    "targetPath" : "CarePlan.category",
+    "description" : "Slicing changed: none -> rules=open, discriminators=[pattern:$this]",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-12",
+    "type" : "EXTENSION",
+    "sourcePath" : "CarePlan.category",
+    "targetPath" : "CarePlan.category.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+    "description" : "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-13",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "CarePlan.subject",
+    "targetPath" : "CarePlan.subject",
+    "description" : "Reference target profile changed: [http://hl7.org/fhir/StructureDefinition/Group, http://hl7.org/fhir/StructureDefinition/Patient] -> [http://hl7.org/fhir/us/core/StructureDefinition/us-core-patient]",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-14",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "CarePlan.subject",
+    "targetPath" : "CarePlan.subject",
+    "description" : "MustSupport added in target",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-15",
+    "type" : "EXTENSION",
+    "sourcePath" : "CarePlan.subject",
+    "targetPath" : "CarePlan.subject.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+    "description" : "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-16",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "",
+    "targetPath" : "CarePlan.text.id",
+    "description" : "Element added in target profile: CarePlan.text.id",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-17",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "",
+    "targetPath" : "CarePlan.text.extension",
+    "description" : "Element added in target profile: CarePlan.text.extension",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-18",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "",
+    "targetPath" : "CarePlan.text.status",
+    "description" : "Element added in target profile: CarePlan.text.status",
+    "severity" : "ERROR"
+  }, {
+    "id" : "rule-19",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "",
+    "targetPath" : "CarePlan.text.div",
+    "description" : "Element added in target profile: CarePlan.text.div",
+    "severity" : "ERROR"
+  }, {
+    "id" : "rule-20",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "",
+    "targetPath" : "CarePlan.category:AssessPlan",
+    "description" : "New slice 'AssessPlan' added in target profile",
+    "severity" : "ERROR"
+  } ]
 }

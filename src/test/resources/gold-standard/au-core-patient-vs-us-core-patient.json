@@ -1,839 +1,734 @@
 {
-  "pairId": "au-core-patient-vs-us-core-patient",
-  "sourceClasspath": "standard-profiles/au-core/StructureDefinition-au-core-patient.json",
-  "targetClasspath": "standard-profiles/us-core/StructureDefinition-us-core-patient.json",
-  "drifts": [
-    {
-      "id": "rule-1",
-      "type": "STRUCTURAL",
-      "sourcePath": "Patient",
-      "targetPath": "Patient",
-      "description": "Constraints removed in target: [inv-pat-0, inv-pat-1, inv-pat-2, inv-pat-3, inv-pat-4, inv-pat-5, au-core-pat-01, au-core-pat-02]",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-2",
-      "type": "STRUCTURAL",
-      "sourcePath": "Patient.extension:genderIdentity",
-      "targetPath": "Patient.extension:genderIdentity",
-      "description": "Type profile constraint changed: [http://hl7.org/fhir/StructureDefinition/individual-genderIdentity] -> [http://hl7.org/fhir/us/core/StructureDefinition/us-core-genderIdentity]",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-3",
-      "type": "STRUCTURAL",
-      "sourcePath": "Patient.extension:genderIdentity",
-      "targetPath": "Patient.extension:genderIdentity",
-      "description": "MustSupport removed in target",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-4",
-      "type": "EXTENSION",
-      "sourcePath": "Patient.extension:genderIdentity",
-      "targetPath": "Patient.extension:genderIdentity.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-5",
-      "type": "EXTENSION",
-      "sourcePath": "Patient.extension:genderIdentity.extension(http://hl7.org/fhir/StructureDefinition/obligation)",
-      "targetPath": "Patient.extension:genderIdentity",
-      "description": "Extension removed in target element: http://hl7.org/fhir/StructureDefinition/obligation",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-6",
-      "type": "STRUCTURAL",
-      "sourcePath": "Patient.identifier",
-      "targetPath": "Patient.identifier",
-      "description": "Type profile constraint changed: [http://hl7.org.au/fhir/StructureDefinition/au-cwlthseniorshealthcardnumber, http://hl7.org.au/fhir/StructureDefinition/au-dvanumber, http://hl7.org.au/fhir/StructureDefinition/au-healthcarecardnumber, http://hl7.org.au/fhir/StructureDefinition/au-ihi, http://hl7.org.au/fhir/StructureDefinition/au-insurancemembernumber, http://hl7.org.au/fhir/StructureDefinition/au-medicalrecordnumber, http://hl7.org.au/fhir/StructureDefinition/au-medicarecardnumber, http://hl7.org.au/fhir/StructureDefinition/au-pensionerconcessioncardnumber, http://hl7.org/fhir/StructureDefinition/Identifier] -> []",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-7",
-      "type": "STRUCTURAL",
-      "sourcePath": "Patient.identifier",
-      "targetPath": "Patient.identifier",
-      "description": "Slicing changed: rules=open, discriminators=[pattern:type] -> none",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-8",
-      "type": "EXTENSION",
-      "sourcePath": "Patient.identifier",
-      "targetPath": "Patient.identifier.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-9",
-      "type": "EXTENSION",
-      "sourcePath": "Patient.identifier.extension(http://hl7.org/fhir/StructureDefinition/obligation)",
-      "targetPath": "Patient.identifier",
-      "description": "Extension removed in target element: http://hl7.org/fhir/StructureDefinition/obligation",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-10",
-      "type": "STRUCTURAL",
-      "sourcePath": "Patient.name",
-      "targetPath": "Patient.name",
-      "description": "Constraints added in target: [us-core-6]",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-11",
-      "type": "STRUCTURAL",
-      "sourcePath": "Patient.name",
-      "targetPath": "Patient.name",
-      "description": "Constraints removed in target: [au-core-pat-03]",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-12",
-      "type": "EXTENSION",
-      "sourcePath": "Patient.name",
-      "targetPath": "Patient.name.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-13",
-      "type": "EXTENSION",
-      "sourcePath": "Patient.name.extension(http://hl7.org/fhir/StructureDefinition/obligation)",
-      "targetPath": "Patient.name",
-      "description": "Extension removed in target element: http://hl7.org/fhir/StructureDefinition/obligation",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-14",
-      "type": "STRUCTURAL",
-      "sourcePath": "Patient.name.use",
-      "targetPath": "Patient.name.use",
-      "description": "MustSupport removed in target",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-15",
-      "type": "EXTENSION",
-      "sourcePath": "Patient.name.use",
-      "targetPath": "Patient.name.use.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-16",
-      "type": "EXTENSION",
-      "sourcePath": "Patient.name.use.extension(http://hl7.org/fhir/StructureDefinition/obligation)",
-      "targetPath": "Patient.name.use",
-      "description": "Extension removed in target element: http://hl7.org/fhir/StructureDefinition/obligation",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-17",
-      "type": "STRUCTURAL",
-      "sourcePath": "Patient.name.text",
-      "targetPath": "Patient.name.text",
-      "description": "MustSupport removed in target",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-18",
-      "type": "EXTENSION",
-      "sourcePath": "Patient.name.text.extension(http://hl7.org/fhir/StructureDefinition/obligation)",
-      "targetPath": "Patient.name.text",
-      "description": "Extension removed in target element: http://hl7.org/fhir/StructureDefinition/obligation",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-19",
-      "type": "EXTENSION",
-      "sourcePath": "Patient.name.family",
-      "targetPath": "Patient.name.family.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-20",
-      "type": "EXTENSION",
-      "sourcePath": "Patient.name.family.extension(http://hl7.org/fhir/StructureDefinition/obligation)",
-      "targetPath": "Patient.name.family",
-      "description": "Extension removed in target element: http://hl7.org/fhir/StructureDefinition/obligation",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-21",
-      "type": "EXTENSION",
-      "sourcePath": "Patient.name.given",
-      "targetPath": "Patient.name.given.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-22",
-      "type": "EXTENSION",
-      "sourcePath": "Patient.name.given.extension(http://hl7.org/fhir/StructureDefinition/obligation)",
-      "targetPath": "Patient.name.given",
-      "description": "Extension removed in target element: http://hl7.org/fhir/StructureDefinition/obligation",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-23",
-      "type": "EXTENSION",
-      "sourcePath": "Patient.name.suffix",
-      "targetPath": "Patient.name.suffix.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-24",
-      "type": "EXTENSION",
-      "sourcePath": "Patient.name.period",
-      "targetPath": "Patient.name.period.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-25",
-      "type": "STRUCTURAL",
-      "sourcePath": "Patient.telecom",
-      "targetPath": "Patient.telecom",
-      "description": "MustSupport removed in target",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-26",
-      "type": "EXTENSION",
-      "sourcePath": "Patient.telecom",
-      "targetPath": "Patient.telecom.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-27",
-      "type": "EXTENSION",
-      "sourcePath": "Patient.telecom.extension(http://hl7.org/fhir/StructureDefinition/obligation)",
-      "targetPath": "Patient.telecom",
-      "description": "Extension removed in target element: http://hl7.org/fhir/StructureDefinition/obligation",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-28",
-      "type": "TERMINOLOGY",
-      "sourcePath": "Patient.gender",
-      "targetPath": "Patient.gender",
-      "description": "Binding changed: required(http://hl7.org/fhir/ValueSet/administrative-gender|4.0.1) -> required(http://hl7.org/fhir/ValueSet/administrative-gender)",
-      "severity": "ERROR"
-    },
-    {
-      "id": "rule-29",
-      "type": "EXTENSION",
-      "sourcePath": "Patient.gender",
-      "targetPath": "Patient.gender.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-30",
-      "type": "EXTENSION",
-      "sourcePath": "Patient.gender.extension(http://hl7.org/fhir/StructureDefinition/obligation)",
-      "targetPath": "Patient.gender",
-      "description": "Extension removed in target element: http://hl7.org/fhir/StructureDefinition/obligation",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-31",
-      "type": "CARDINALITY",
-      "sourcePath": "Patient.birthDate",
-      "targetPath": "Patient.birthDate",
-      "description": "Cardinality changed: [1..1] -> [0..1]",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-32",
-      "type": "EXTENSION",
-      "sourcePath": "Patient.birthDate",
-      "targetPath": "Patient.birthDate.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-33",
-      "type": "EXTENSION",
-      "sourcePath": "Patient.birthDate.extension(http://hl7.org/fhir/StructureDefinition/obligation)",
-      "targetPath": "Patient.birthDate",
-      "description": "Extension removed in target element: http://hl7.org/fhir/StructureDefinition/obligation",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-34",
-      "type": "STRUCTURAL",
-      "sourcePath": "Patient.deceased[x]",
-      "targetPath": "Patient.deceased[x]",
-      "description": "Slicing changed: rules=closed, discriminators=[type:$this] -> none",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-35",
-      "type": "EXTENSION",
-      "sourcePath": "Patient.deceased[x]",
-      "targetPath": "Patient.deceased[x].extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-36",
-      "type": "STRUCTURAL",
-      "sourcePath": "Patient.address",
-      "targetPath": "Patient.address",
-      "description": "Type profile constraint changed: [http://hl7.org.au/fhir/StructureDefinition/au-address, http://hl7.org/fhir/StructureDefinition/Address] -> []",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-37",
-      "type": "EXTENSION",
-      "sourcePath": "Patient.address",
-      "targetPath": "Patient.address.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-38",
-      "type": "EXTENSION",
-      "sourcePath": "Patient.address.extension(http://hl7.org/fhir/StructureDefinition/obligation)",
-      "targetPath": "Patient.address",
-      "description": "Extension removed in target element: http://hl7.org/fhir/StructureDefinition/obligation",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-39",
-      "type": "EXTENSION",
-      "sourcePath": "Patient.contact",
-      "targetPath": "Patient.contact.extension(http://hl7.org/fhir/StructureDefinition/structuredefinition-explicit-type-name)",
-      "description": "Extension added in target element: http://hl7.org/fhir/StructureDefinition/structuredefinition-explicit-type-name",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-40",
-      "type": "TERMINOLOGY",
-      "sourcePath": "Patient.contact.relationship",
-      "targetPath": "Patient.contact.relationship",
-      "description": "Binding changed: extensible(https://healthterminologies.gov.au/fhir/ValueSet/contact-relationship-type-3) -> extensible(http://hl7.org/fhir/ValueSet/patient-contactrelationship)",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-41",
-      "type": "STRUCTURAL",
-      "sourcePath": "Patient.contact.address",
-      "targetPath": "Patient.contact.address",
-      "description": "Type profile constraint changed: [http://hl7.org.au/fhir/StructureDefinition/au-address, http://hl7.org/fhir/StructureDefinition/Address] -> []",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-42",
-      "type": "STRUCTURAL",
-      "sourcePath": "Patient.communication",
-      "targetPath": "Patient.communication",
-      "description": "MustSupport removed in target",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-43",
-      "type": "EXTENSION",
-      "sourcePath": "Patient.communication",
-      "targetPath": "Patient.communication.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-44",
-      "type": "EXTENSION",
-      "sourcePath": "Patient.communication.extension(http://hl7.org/fhir/StructureDefinition/obligation)",
-      "targetPath": "Patient.communication",
-      "description": "Extension removed in target element: http://hl7.org/fhir/StructureDefinition/obligation",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-45",
-      "type": "TERMINOLOGY",
-      "sourcePath": "Patient.communication.language",
-      "targetPath": "Patient.communication.language",
-      "description": "Binding changed: extensible(https://healthterminologies.gov.au/fhir/ValueSet/common-languages-australia-2) -> extensible(http://hl7.org/fhir/us/core/ValueSet/simple-language)",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-46",
-      "type": "EXTENSION",
-      "sourcePath": "Patient.communication.language",
-      "targetPath": "Patient.communication.language.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-47",
-      "type": "EXTENSION",
-      "sourcePath": "Patient.communication.language.extension(http://hl7.org/fhir/StructureDefinition/obligation)",
-      "targetPath": "Patient.communication.language",
-      "description": "Extension removed in target element: http://hl7.org/fhir/StructureDefinition/obligation",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-48",
-      "type": "STRUCTURAL",
-      "sourcePath": "Patient.communication.preferred",
-      "targetPath": "Patient.communication.preferred",
-      "description": "MustSupport removed in target",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-49",
-      "type": "EXTENSION",
-      "sourcePath": "Patient.communication.preferred.extension(http://hl7.org/fhir/StructureDefinition/obligation)",
-      "targetPath": "Patient.communication.preferred",
-      "description": "Extension removed in target element: http://hl7.org/fhir/StructureDefinition/obligation",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-50",
-      "type": "EXTENSION",
-      "sourcePath": "",
-      "targetPath": "Patient.extension:race",
-      "description": "Extension added in target profile: Patient.extension:race",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-51",
-      "type": "EXTENSION",
-      "sourcePath": "",
-      "targetPath": "Patient.extension:ethnicity",
-      "description": "Extension added in target profile: Patient.extension:ethnicity",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-52",
-      "type": "EXTENSION",
-      "sourcePath": "",
-      "targetPath": "Patient.extension:tribalAffiliation",
-      "description": "Extension added in target profile: Patient.extension:tribalAffiliation",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-53",
-      "type": "EXTENSION",
-      "sourcePath": "",
-      "targetPath": "Patient.extension:birthsex",
-      "description": "Extension added in target profile: Patient.extension:birthsex",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-54",
-      "type": "EXTENSION",
-      "sourcePath": "",
-      "targetPath": "Patient.extension:sex",
-      "description": "Extension added in target profile: Patient.extension:sex",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-55",
-      "type": "STRUCTURAL",
-      "sourcePath": "",
-      "targetPath": "Patient.identifier.id",
-      "description": "Element added in target profile: Patient.identifier.id",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-56",
-      "type": "STRUCTURAL",
-      "sourcePath": "",
-      "targetPath": "Patient.identifier.extension",
-      "description": "Element added in target profile: Patient.identifier.extension",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-57",
-      "type": "STRUCTURAL",
-      "sourcePath": "",
-      "targetPath": "Patient.identifier.use",
-      "description": "Element added in target profile: Patient.identifier.use",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-58",
-      "type": "STRUCTURAL",
-      "sourcePath": "",
-      "targetPath": "Patient.identifier.type",
-      "description": "Element added in target profile: Patient.identifier.type",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-59",
-      "type": "STRUCTURAL",
-      "sourcePath": "",
-      "targetPath": "Patient.identifier.system",
-      "description": "Element added in target profile: Patient.identifier.system",
-      "severity": "ERROR"
-    },
-    {
-      "id": "rule-60",
-      "type": "STRUCTURAL",
-      "sourcePath": "",
-      "targetPath": "Patient.identifier.value",
-      "description": "Element added in target profile: Patient.identifier.value",
-      "severity": "ERROR"
-    },
-    {
-      "id": "rule-61",
-      "type": "STRUCTURAL",
-      "sourcePath": "",
-      "targetPath": "Patient.identifier.period",
-      "description": "Element added in target profile: Patient.identifier.period",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-62",
-      "type": "STRUCTURAL",
-      "sourcePath": "",
-      "targetPath": "Patient.identifier.assigner",
-      "description": "Element added in target profile: Patient.identifier.assigner",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-63",
-      "type": "STRUCTURAL",
-      "sourcePath": "",
-      "targetPath": "Patient.telecom.id",
-      "description": "Element added in target profile: Patient.telecom.id",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-64",
-      "type": "STRUCTURAL",
-      "sourcePath": "",
-      "targetPath": "Patient.telecom.extension",
-      "description": "Element added in target profile: Patient.telecom.extension",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-65",
-      "type": "STRUCTURAL",
-      "sourcePath": "",
-      "targetPath": "Patient.telecom.system",
-      "description": "Element added in target profile: Patient.telecom.system",
-      "severity": "ERROR"
-    },
-    {
-      "id": "rule-66",
-      "type": "STRUCTURAL",
-      "sourcePath": "",
-      "targetPath": "Patient.telecom.value",
-      "description": "Element added in target profile: Patient.telecom.value",
-      "severity": "ERROR"
-    },
-    {
-      "id": "rule-67",
-      "type": "STRUCTURAL",
-      "sourcePath": "",
-      "targetPath": "Patient.telecom.use",
-      "description": "Element added in target profile: Patient.telecom.use",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-68",
-      "type": "STRUCTURAL",
-      "sourcePath": "",
-      "targetPath": "Patient.telecom.rank",
-      "description": "Element added in target profile: Patient.telecom.rank",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-69",
-      "type": "STRUCTURAL",
-      "sourcePath": "",
-      "targetPath": "Patient.telecom.period",
-      "description": "Element added in target profile: Patient.telecom.period",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-70",
-      "type": "STRUCTURAL",
-      "sourcePath": "",
-      "targetPath": "Patient.address.id",
-      "description": "Element added in target profile: Patient.address.id",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-71",
-      "type": "STRUCTURAL",
-      "sourcePath": "",
-      "targetPath": "Patient.address.extension",
-      "description": "Element added in target profile: Patient.address.extension",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-72",
-      "type": "STRUCTURAL",
-      "sourcePath": "",
-      "targetPath": "Patient.address.use",
-      "description": "Element added in target profile: Patient.address.use",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-73",
-      "type": "STRUCTURAL",
-      "sourcePath": "",
-      "targetPath": "Patient.address.type",
-      "description": "Element added in target profile: Patient.address.type",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-74",
-      "type": "STRUCTURAL",
-      "sourcePath": "",
-      "targetPath": "Patient.address.text",
-      "description": "Element added in target profile: Patient.address.text",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-75",
-      "type": "STRUCTURAL",
-      "sourcePath": "",
-      "targetPath": "Patient.address.line",
-      "description": "Element added in target profile: Patient.address.line",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-76",
-      "type": "STRUCTURAL",
-      "sourcePath": "",
-      "targetPath": "Patient.address.city",
-      "description": "Element added in target profile: Patient.address.city",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-77",
-      "type": "STRUCTURAL",
-      "sourcePath": "",
-      "targetPath": "Patient.address.district",
-      "description": "Element added in target profile: Patient.address.district",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-78",
-      "type": "STRUCTURAL",
-      "sourcePath": "",
-      "targetPath": "Patient.address.state",
-      "description": "Element added in target profile: Patient.address.state",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-79",
-      "type": "STRUCTURAL",
-      "sourcePath": "",
-      "targetPath": "Patient.address.postalCode",
-      "description": "Element added in target profile: Patient.address.postalCode",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-80",
-      "type": "STRUCTURAL",
-      "sourcePath": "",
-      "targetPath": "Patient.address.country",
-      "description": "Element added in target profile: Patient.address.country",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-81",
-      "type": "STRUCTURAL",
-      "sourcePath": "",
-      "targetPath": "Patient.address.period",
-      "description": "Element added in target profile: Patient.address.period",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-82",
-      "type": "EXTENSION",
-      "sourcePath": "Patient.extension:birthPlace",
-      "targetPath": "",
-      "description": "Extension removed in target profile: Patient.extension:birthPlace",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-83",
-      "type": "EXTENSION",
-      "sourcePath": "Patient.extension:indigenousStatus",
-      "targetPath": "",
-      "description": "Extension removed in target profile: Patient.extension:indigenousStatus (was mustSupport)",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-84",
-      "type": "EXTENSION",
-      "sourcePath": "Patient.extension:veteranStatus",
-      "targetPath": "",
-      "description": "Extension removed in target profile: Patient.extension:veteranStatus",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-85",
-      "type": "EXTENSION",
-      "sourcePath": "Patient.extension:closingTheGapRegistration",
-      "targetPath": "",
-      "description": "Extension removed in target profile: Patient.extension:closingTheGapRegistration",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-86",
-      "type": "EXTENSION",
-      "sourcePath": "Patient.extension:mothersMaidenName",
-      "targetPath": "",
-      "description": "Extension removed in target profile: Patient.extension:mothersMaidenName",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-87",
-      "type": "EXTENSION",
-      "sourcePath": "Patient.extension:interpreterRequired",
-      "targetPath": "",
-      "description": "Extension removed in target profile: Patient.extension:interpreterRequired",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-88",
-      "type": "EXTENSION",
-      "sourcePath": "Patient.extension:dateOfArrival",
-      "targetPath": "",
-      "description": "Extension removed in target profile: Patient.extension:dateOfArrival",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-89",
-      "type": "EXTENSION",
-      "sourcePath": "Patient.extension:individualPronouns",
-      "targetPath": "",
-      "description": "Extension removed in target profile: Patient.extension:individualPronouns (was mustSupport)",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-90",
-      "type": "EXTENSION",
-      "sourcePath": "Patient.extension:recordedSexOrGender",
-      "targetPath": "",
-      "description": "Extension removed in target profile: Patient.extension:recordedSexOrGender",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-91",
-      "type": "STRUCTURAL",
-      "sourcePath": "Patient.identifier:ihi",
-      "targetPath": "",
-      "description": "Slice 'ihi' removed in target profile",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-92",
-      "type": "STRUCTURAL",
-      "sourcePath": "Patient.identifier:medicare",
-      "targetPath": "",
-      "description": "Slice 'medicare' removed in target profile",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-93",
-      "type": "STRUCTURAL",
-      "sourcePath": "Patient.identifier:dva",
-      "targetPath": "",
-      "description": "Slice 'dva' removed in target profile",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-94",
-      "type": "STRUCTURAL",
-      "sourcePath": "Patient.birthDate.id",
-      "targetPath": "",
-      "description": "Element removed in target profile: Patient.birthDate.id",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-95",
-      "type": "STRUCTURAL",
-      "sourcePath": "Patient.birthDate.extension",
-      "targetPath": "",
-      "description": "Element removed in target profile: Patient.birthDate.extension",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-96",
-      "type": "EXTENSION",
-      "sourcePath": "Patient.birthDate.extension:accuracyIndicator",
-      "targetPath": "",
-      "description": "Extension removed in target profile: Patient.birthDate.extension:accuracyIndicator",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-97",
-      "type": "EXTENSION",
-      "sourcePath": "Patient.birthDate.extension:birthTime",
-      "targetPath": "",
-      "description": "Extension removed in target profile: Patient.birthDate.extension:birthTime",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-98",
-      "type": "STRUCTURAL",
-      "sourcePath": "Patient.birthDate.value",
-      "targetPath": "",
-      "description": "Element removed in target profile: Patient.birthDate.value",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-99",
-      "type": "STRUCTURAL",
-      "sourcePath": "Patient.deceased[x]:deceasedBoolean",
-      "targetPath": "",
-      "description": "Slice 'deceasedBoolean' removed in target profile",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-100",
-      "type": "STRUCTURAL",
-      "sourcePath": "Patient.deceased[x]:deceasedDateTime",
-      "targetPath": "",
-      "description": "Slice 'deceasedDateTime' removed in target profile",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-101",
-      "type": "STRUCTURAL",
-      "sourcePath": "Patient.deceased[x].id",
-      "targetPath": "",
-      "description": "Element removed in target profile: Patient.deceased[x].id",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-102",
-      "type": "STRUCTURAL",
-      "sourcePath": "Patient.deceased[x].extension",
-      "targetPath": "",
-      "description": "Element removed in target profile: Patient.deceased[x].extension",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-103",
-      "type": "EXTENSION",
-      "sourcePath": "Patient.deceased[x].extension:accuracyIndicator",
-      "targetPath": "",
-      "description": "Extension removed in target profile: Patient.deceased[x].extension:accuracyIndicator",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-104",
-      "type": "STRUCTURAL",
-      "sourcePath": "Patient.deceased[x].value",
-      "targetPath": "",
-      "description": "Element removed in target profile: Patient.deceased[x].value",
-      "severity": "INFO"
-    }
-  ]
+  "pairId" : "au-core-patient-vs-us-core-patient",
+  "sourceClasspath" : "standard-profiles/au-core/StructureDefinition-au-core-patient.json",
+  "targetClasspath" : "standard-profiles/us-core/StructureDefinition-us-core-patient.json",
+  "drifts" : [ {
+    "id" : "rule-1",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Patient",
+    "targetPath" : "Patient",
+    "description" : "Constraints removed in target: [inv-pat-0, inv-pat-1, inv-pat-2, inv-pat-3, inv-pat-4, inv-pat-5, au-core-pat-01, au-core-pat-02]",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-2",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Patient.extension:genderIdentity",
+    "targetPath" : "Patient.extension:genderIdentity",
+    "description" : "Type profile constraint changed: [http://hl7.org/fhir/StructureDefinition/individual-genderIdentity] -> [http://hl7.org/fhir/us/core/StructureDefinition/us-core-genderIdentity]",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-3",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Patient.extension:genderIdentity",
+    "targetPath" : "Patient.extension:genderIdentity",
+    "description" : "MustSupport removed in target",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-4",
+    "type" : "EXTENSION",
+    "sourcePath" : "Patient.extension:genderIdentity",
+    "targetPath" : "Patient.extension:genderIdentity.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+    "description" : "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-5",
+    "type" : "EXTENSION",
+    "sourcePath" : "Patient.extension:genderIdentity.extension(http://hl7.org/fhir/StructureDefinition/obligation)",
+    "targetPath" : "Patient.extension:genderIdentity",
+    "description" : "Extension removed in target element: http://hl7.org/fhir/StructureDefinition/obligation",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-6",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Patient.identifier",
+    "targetPath" : "Patient.identifier",
+    "description" : "Type profile constraint changed: [http://hl7.org.au/fhir/StructureDefinition/au-cwlthseniorshealthcardnumber, http://hl7.org.au/fhir/StructureDefinition/au-dvanumber, http://hl7.org.au/fhir/StructureDefinition/au-healthcarecardnumber, http://hl7.org.au/fhir/StructureDefinition/au-ihi, http://hl7.org.au/fhir/StructureDefinition/au-insurancemembernumber, http://hl7.org.au/fhir/StructureDefinition/au-medicalrecordnumber, http://hl7.org.au/fhir/StructureDefinition/au-medicarecardnumber, http://hl7.org.au/fhir/StructureDefinition/au-pensionerconcessioncardnumber, http://hl7.org/fhir/StructureDefinition/Identifier] -> []",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-7",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Patient.identifier",
+    "targetPath" : "Patient.identifier",
+    "description" : "Slicing changed: rules=open, discriminators=[pattern:type] -> none",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-8",
+    "type" : "EXTENSION",
+    "sourcePath" : "Patient.identifier",
+    "targetPath" : "Patient.identifier.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+    "description" : "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-9",
+    "type" : "EXTENSION",
+    "sourcePath" : "Patient.identifier.extension(http://hl7.org/fhir/StructureDefinition/obligation)",
+    "targetPath" : "Patient.identifier",
+    "description" : "Extension removed in target element: http://hl7.org/fhir/StructureDefinition/obligation",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-10",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Patient.name",
+    "targetPath" : "Patient.name",
+    "description" : "Constraints added in target: [us-core-6]",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-11",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Patient.name",
+    "targetPath" : "Patient.name",
+    "description" : "Constraints removed in target: [au-core-pat-03]",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-12",
+    "type" : "EXTENSION",
+    "sourcePath" : "Patient.name",
+    "targetPath" : "Patient.name.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+    "description" : "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-13",
+    "type" : "EXTENSION",
+    "sourcePath" : "Patient.name.extension(http://hl7.org/fhir/StructureDefinition/obligation)",
+    "targetPath" : "Patient.name",
+    "description" : "Extension removed in target element: http://hl7.org/fhir/StructureDefinition/obligation",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-14",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Patient.name.use",
+    "targetPath" : "Patient.name.use",
+    "description" : "MustSupport removed in target",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-15",
+    "type" : "EXTENSION",
+    "sourcePath" : "Patient.name.use",
+    "targetPath" : "Patient.name.use.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+    "description" : "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-16",
+    "type" : "EXTENSION",
+    "sourcePath" : "Patient.name.use.extension(http://hl7.org/fhir/StructureDefinition/obligation)",
+    "targetPath" : "Patient.name.use",
+    "description" : "Extension removed in target element: http://hl7.org/fhir/StructureDefinition/obligation",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-17",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Patient.name.text",
+    "targetPath" : "Patient.name.text",
+    "description" : "MustSupport removed in target",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-18",
+    "type" : "EXTENSION",
+    "sourcePath" : "Patient.name.text.extension(http://hl7.org/fhir/StructureDefinition/obligation)",
+    "targetPath" : "Patient.name.text",
+    "description" : "Extension removed in target element: http://hl7.org/fhir/StructureDefinition/obligation",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-19",
+    "type" : "EXTENSION",
+    "sourcePath" : "Patient.name.family",
+    "targetPath" : "Patient.name.family.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+    "description" : "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-20",
+    "type" : "EXTENSION",
+    "sourcePath" : "Patient.name.family.extension(http://hl7.org/fhir/StructureDefinition/obligation)",
+    "targetPath" : "Patient.name.family",
+    "description" : "Extension removed in target element: http://hl7.org/fhir/StructureDefinition/obligation",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-21",
+    "type" : "EXTENSION",
+    "sourcePath" : "Patient.name.given",
+    "targetPath" : "Patient.name.given.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+    "description" : "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-22",
+    "type" : "EXTENSION",
+    "sourcePath" : "Patient.name.given.extension(http://hl7.org/fhir/StructureDefinition/obligation)",
+    "targetPath" : "Patient.name.given",
+    "description" : "Extension removed in target element: http://hl7.org/fhir/StructureDefinition/obligation",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-23",
+    "type" : "EXTENSION",
+    "sourcePath" : "Patient.name.suffix",
+    "targetPath" : "Patient.name.suffix.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+    "description" : "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-24",
+    "type" : "EXTENSION",
+    "sourcePath" : "Patient.name.period",
+    "targetPath" : "Patient.name.period.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+    "description" : "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-25",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Patient.telecom",
+    "targetPath" : "Patient.telecom",
+    "description" : "MustSupport removed in target",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-26",
+    "type" : "EXTENSION",
+    "sourcePath" : "Patient.telecom",
+    "targetPath" : "Patient.telecom.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+    "description" : "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-27",
+    "type" : "EXTENSION",
+    "sourcePath" : "Patient.telecom.extension(http://hl7.org/fhir/StructureDefinition/obligation)",
+    "targetPath" : "Patient.telecom",
+    "description" : "Extension removed in target element: http://hl7.org/fhir/StructureDefinition/obligation",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-28",
+    "type" : "TERMINOLOGY",
+    "sourcePath" : "Patient.gender",
+    "targetPath" : "Patient.gender",
+    "description" : "Binding changed: required(http://hl7.org/fhir/ValueSet/administrative-gender|4.0.1) -> required(http://hl7.org/fhir/ValueSet/administrative-gender)",
+    "severity" : "ERROR"
+  }, {
+    "id" : "rule-29",
+    "type" : "EXTENSION",
+    "sourcePath" : "Patient.gender",
+    "targetPath" : "Patient.gender.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+    "description" : "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-30",
+    "type" : "EXTENSION",
+    "sourcePath" : "Patient.gender.extension(http://hl7.org/fhir/StructureDefinition/obligation)",
+    "targetPath" : "Patient.gender",
+    "description" : "Extension removed in target element: http://hl7.org/fhir/StructureDefinition/obligation",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-31",
+    "type" : "CARDINALITY",
+    "sourcePath" : "Patient.birthDate",
+    "targetPath" : "Patient.birthDate",
+    "description" : "Cardinality changed: [1..1] -> [0..1]",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-32",
+    "type" : "EXTENSION",
+    "sourcePath" : "Patient.birthDate",
+    "targetPath" : "Patient.birthDate.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+    "description" : "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-33",
+    "type" : "EXTENSION",
+    "sourcePath" : "Patient.birthDate.extension(http://hl7.org/fhir/StructureDefinition/obligation)",
+    "targetPath" : "Patient.birthDate",
+    "description" : "Extension removed in target element: http://hl7.org/fhir/StructureDefinition/obligation",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-34",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Patient.deceased[x]",
+    "targetPath" : "Patient.deceased[x]",
+    "description" : "Slicing changed: rules=closed, discriminators=[type:$this] -> none",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-35",
+    "type" : "EXTENSION",
+    "sourcePath" : "Patient.deceased[x]",
+    "targetPath" : "Patient.deceased[x].extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+    "description" : "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-36",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Patient.address",
+    "targetPath" : "Patient.address",
+    "description" : "Type profile constraint changed: [http://hl7.org.au/fhir/StructureDefinition/au-address, http://hl7.org/fhir/StructureDefinition/Address] -> []",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-37",
+    "type" : "EXTENSION",
+    "sourcePath" : "Patient.address",
+    "targetPath" : "Patient.address.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+    "description" : "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-38",
+    "type" : "EXTENSION",
+    "sourcePath" : "Patient.address.extension(http://hl7.org/fhir/StructureDefinition/obligation)",
+    "targetPath" : "Patient.address",
+    "description" : "Extension removed in target element: http://hl7.org/fhir/StructureDefinition/obligation",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-39",
+    "type" : "EXTENSION",
+    "sourcePath" : "Patient.contact",
+    "targetPath" : "Patient.contact.extension(http://hl7.org/fhir/StructureDefinition/structuredefinition-explicit-type-name)",
+    "description" : "Extension added in target element: http://hl7.org/fhir/StructureDefinition/structuredefinition-explicit-type-name",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-40",
+    "type" : "TERMINOLOGY",
+    "sourcePath" : "Patient.contact.relationship",
+    "targetPath" : "Patient.contact.relationship",
+    "description" : "Binding changed: extensible(https://healthterminologies.gov.au/fhir/ValueSet/contact-relationship-type-3) -> extensible(http://hl7.org/fhir/ValueSet/patient-contactrelationship)",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-41",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Patient.contact.address",
+    "targetPath" : "Patient.contact.address",
+    "description" : "Type profile constraint changed: [http://hl7.org.au/fhir/StructureDefinition/au-address, http://hl7.org/fhir/StructureDefinition/Address] -> []",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-42",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Patient.communication",
+    "targetPath" : "Patient.communication",
+    "description" : "MustSupport removed in target",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-43",
+    "type" : "EXTENSION",
+    "sourcePath" : "Patient.communication",
+    "targetPath" : "Patient.communication.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+    "description" : "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-44",
+    "type" : "EXTENSION",
+    "sourcePath" : "Patient.communication.extension(http://hl7.org/fhir/StructureDefinition/obligation)",
+    "targetPath" : "Patient.communication",
+    "description" : "Extension removed in target element: http://hl7.org/fhir/StructureDefinition/obligation",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-45",
+    "type" : "TERMINOLOGY",
+    "sourcePath" : "Patient.communication.language",
+    "targetPath" : "Patient.communication.language",
+    "description" : "Binding changed: extensible(https://healthterminologies.gov.au/fhir/ValueSet/common-languages-australia-2) -> extensible(http://hl7.org/fhir/us/core/ValueSet/simple-language)",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-46",
+    "type" : "EXTENSION",
+    "sourcePath" : "Patient.communication.language",
+    "targetPath" : "Patient.communication.language.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+    "description" : "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-47",
+    "type" : "EXTENSION",
+    "sourcePath" : "Patient.communication.language.extension(http://hl7.org/fhir/StructureDefinition/obligation)",
+    "targetPath" : "Patient.communication.language",
+    "description" : "Extension removed in target element: http://hl7.org/fhir/StructureDefinition/obligation",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-48",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Patient.communication.preferred",
+    "targetPath" : "Patient.communication.preferred",
+    "description" : "MustSupport removed in target",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-49",
+    "type" : "EXTENSION",
+    "sourcePath" : "Patient.communication.preferred.extension(http://hl7.org/fhir/StructureDefinition/obligation)",
+    "targetPath" : "Patient.communication.preferred",
+    "description" : "Extension removed in target element: http://hl7.org/fhir/StructureDefinition/obligation",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-50",
+    "type" : "EXTENSION",
+    "sourcePath" : "",
+    "targetPath" : "Patient.extension:race",
+    "description" : "Extension added in target profile: Patient.extension:race",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-51",
+    "type" : "EXTENSION",
+    "sourcePath" : "",
+    "targetPath" : "Patient.extension:ethnicity",
+    "description" : "Extension added in target profile: Patient.extension:ethnicity",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-52",
+    "type" : "EXTENSION",
+    "sourcePath" : "",
+    "targetPath" : "Patient.extension:tribalAffiliation",
+    "description" : "Extension added in target profile: Patient.extension:tribalAffiliation",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-53",
+    "type" : "EXTENSION",
+    "sourcePath" : "",
+    "targetPath" : "Patient.extension:birthsex",
+    "description" : "Extension added in target profile: Patient.extension:birthsex",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-54",
+    "type" : "EXTENSION",
+    "sourcePath" : "",
+    "targetPath" : "Patient.extension:sex",
+    "description" : "Extension added in target profile: Patient.extension:sex",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-55",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "",
+    "targetPath" : "Patient.identifier.id",
+    "description" : "Element added in target profile: Patient.identifier.id",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-56",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "",
+    "targetPath" : "Patient.identifier.extension",
+    "description" : "Element added in target profile: Patient.identifier.extension",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-57",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "",
+    "targetPath" : "Patient.identifier.use",
+    "description" : "Element added in target profile: Patient.identifier.use",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-58",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "",
+    "targetPath" : "Patient.identifier.type",
+    "description" : "Element added in target profile: Patient.identifier.type",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-59",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "",
+    "targetPath" : "Patient.identifier.system",
+    "description" : "Element added in target profile: Patient.identifier.system",
+    "severity" : "ERROR"
+  }, {
+    "id" : "rule-60",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "",
+    "targetPath" : "Patient.identifier.value",
+    "description" : "Element added in target profile: Patient.identifier.value",
+    "severity" : "ERROR"
+  }, {
+    "id" : "rule-61",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "",
+    "targetPath" : "Patient.identifier.period",
+    "description" : "Element added in target profile: Patient.identifier.period",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-62",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "",
+    "targetPath" : "Patient.identifier.assigner",
+    "description" : "Element added in target profile: Patient.identifier.assigner",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-63",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "",
+    "targetPath" : "Patient.telecom.id",
+    "description" : "Element added in target profile: Patient.telecom.id",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-64",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "",
+    "targetPath" : "Patient.telecom.extension",
+    "description" : "Element added in target profile: Patient.telecom.extension",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-65",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "",
+    "targetPath" : "Patient.telecom.system",
+    "description" : "Element added in target profile: Patient.telecom.system",
+    "severity" : "ERROR"
+  }, {
+    "id" : "rule-66",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "",
+    "targetPath" : "Patient.telecom.value",
+    "description" : "Element added in target profile: Patient.telecom.value",
+    "severity" : "ERROR"
+  }, {
+    "id" : "rule-67",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "",
+    "targetPath" : "Patient.telecom.use",
+    "description" : "Element added in target profile: Patient.telecom.use",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-68",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "",
+    "targetPath" : "Patient.telecom.rank",
+    "description" : "Element added in target profile: Patient.telecom.rank",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-69",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "",
+    "targetPath" : "Patient.telecom.period",
+    "description" : "Element added in target profile: Patient.telecom.period",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-70",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "",
+    "targetPath" : "Patient.address.id",
+    "description" : "Element added in target profile: Patient.address.id",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-71",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "",
+    "targetPath" : "Patient.address.extension",
+    "description" : "Element added in target profile: Patient.address.extension",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-72",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "",
+    "targetPath" : "Patient.address.use",
+    "description" : "Element added in target profile: Patient.address.use",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-73",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "",
+    "targetPath" : "Patient.address.type",
+    "description" : "Element added in target profile: Patient.address.type",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-74",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "",
+    "targetPath" : "Patient.address.text",
+    "description" : "Element added in target profile: Patient.address.text",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-75",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "",
+    "targetPath" : "Patient.address.line",
+    "description" : "Element added in target profile: Patient.address.line",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-76",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "",
+    "targetPath" : "Patient.address.city",
+    "description" : "Element added in target profile: Patient.address.city",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-77",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "",
+    "targetPath" : "Patient.address.district",
+    "description" : "Element added in target profile: Patient.address.district",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-78",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "",
+    "targetPath" : "Patient.address.state",
+    "description" : "Element added in target profile: Patient.address.state",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-79",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "",
+    "targetPath" : "Patient.address.postalCode",
+    "description" : "Element added in target profile: Patient.address.postalCode",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-80",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "",
+    "targetPath" : "Patient.address.country",
+    "description" : "Element added in target profile: Patient.address.country",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-81",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "",
+    "targetPath" : "Patient.address.period",
+    "description" : "Element added in target profile: Patient.address.period",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-82",
+    "type" : "EXTENSION",
+    "sourcePath" : "Patient.extension:birthPlace",
+    "targetPath" : "",
+    "description" : "Extension removed in target profile: Patient.extension:birthPlace",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-83",
+    "type" : "EXTENSION",
+    "sourcePath" : "Patient.extension:indigenousStatus",
+    "targetPath" : "",
+    "description" : "Extension removed in target profile: Patient.extension:indigenousStatus (was mustSupport)",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-84",
+    "type" : "EXTENSION",
+    "sourcePath" : "Patient.extension:veteranStatus",
+    "targetPath" : "",
+    "description" : "Extension removed in target profile: Patient.extension:veteranStatus",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-85",
+    "type" : "EXTENSION",
+    "sourcePath" : "Patient.extension:closingTheGapRegistration",
+    "targetPath" : "",
+    "description" : "Extension removed in target profile: Patient.extension:closingTheGapRegistration",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-86",
+    "type" : "EXTENSION",
+    "sourcePath" : "Patient.extension:mothersMaidenName",
+    "targetPath" : "",
+    "description" : "Extension removed in target profile: Patient.extension:mothersMaidenName",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-87",
+    "type" : "EXTENSION",
+    "sourcePath" : "Patient.extension:interpreterRequired",
+    "targetPath" : "",
+    "description" : "Extension removed in target profile: Patient.extension:interpreterRequired",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-88",
+    "type" : "EXTENSION",
+    "sourcePath" : "Patient.extension:dateOfArrival",
+    "targetPath" : "",
+    "description" : "Extension removed in target profile: Patient.extension:dateOfArrival",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-89",
+    "type" : "EXTENSION",
+    "sourcePath" : "Patient.extension:individualPronouns",
+    "targetPath" : "",
+    "description" : "Extension removed in target profile: Patient.extension:individualPronouns (was mustSupport)",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-90",
+    "type" : "EXTENSION",
+    "sourcePath" : "Patient.extension:recordedSexOrGender",
+    "targetPath" : "",
+    "description" : "Extension removed in target profile: Patient.extension:recordedSexOrGender",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-91",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Patient.identifier:ihi",
+    "targetPath" : "",
+    "description" : "Slice 'ihi' removed in target profile",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-92",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Patient.identifier:medicare",
+    "targetPath" : "",
+    "description" : "Slice 'medicare' removed in target profile",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-93",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Patient.identifier:dva",
+    "targetPath" : "",
+    "description" : "Slice 'dva' removed in target profile",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-94",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Patient.birthDate.id",
+    "targetPath" : "",
+    "description" : "Element removed in target profile: Patient.birthDate.id",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-95",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Patient.birthDate.extension",
+    "targetPath" : "",
+    "description" : "Element removed in target profile: Patient.birthDate.extension",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-96",
+    "type" : "EXTENSION",
+    "sourcePath" : "Patient.birthDate.extension:accuracyIndicator",
+    "targetPath" : "",
+    "description" : "Extension removed in target profile: Patient.birthDate.extension:accuracyIndicator",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-97",
+    "type" : "EXTENSION",
+    "sourcePath" : "Patient.birthDate.extension:birthTime",
+    "targetPath" : "",
+    "description" : "Extension removed in target profile: Patient.birthDate.extension:birthTime",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-98",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Patient.birthDate.value",
+    "targetPath" : "",
+    "description" : "Element removed in target profile: Patient.birthDate.value",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-99",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Patient.deceased[x]:deceasedBoolean",
+    "targetPath" : "",
+    "description" : "Slice 'deceasedBoolean' removed in target profile",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-100",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Patient.deceased[x]:deceasedDateTime",
+    "targetPath" : "",
+    "description" : "Slice 'deceasedDateTime' removed in target profile",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-101",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Patient.deceased[x].id",
+    "targetPath" : "",
+    "description" : "Element removed in target profile: Patient.deceased[x].id",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-102",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Patient.deceased[x].extension",
+    "targetPath" : "",
+    "description" : "Element removed in target profile: Patient.deceased[x].extension",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-103",
+    "type" : "EXTENSION",
+    "sourcePath" : "Patient.deceased[x].extension:accuracyIndicator",
+    "targetPath" : "",
+    "description" : "Extension removed in target profile: Patient.deceased[x].extension:accuracyIndicator",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-104",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Patient.deceased[x].value",
+    "targetPath" : "",
+    "description" : "Element removed in target profile: Patient.deceased[x].value",
+    "severity" : "INFO"
+  } ]
 }

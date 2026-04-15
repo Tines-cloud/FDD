@@ -1,655 +1,573 @@
 {
-  "pairId": "au-core-medicationrequest-vs-us-core-medicationrequest",
-  "sourceClasspath": "standard-profiles/au-core/StructureDefinition-au-core-medicationrequest.json",
-  "targetClasspath": "standard-profiles/us-core/StructureDefinition-us-core-medicationrequest.json",
-  "drifts": [
-    {
-      "id": "rule-1",
-      "type": "STRUCTURAL",
-      "sourcePath": "MedicationRequest",
-      "targetPath": "MedicationRequest",
-      "description": "Constraints added in target: [us-core-21]",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-2",
-      "type": "STRUCTURAL",
-      "sourcePath": "MedicationRequest.extension",
-      "targetPath": "MedicationRequest.extension",
-      "description": "Slicing changed: rules=open, discriminators=[value:url] -> none",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-3",
-      "type": "STRUCTURAL",
-      "sourcePath": "MedicationRequest.identifier",
-      "targetPath": "MedicationRequest.identifier",
-      "description": "Type profile constraint changed: [http://hl7.org.au/fhir/StructureDefinition/au-etpprescriptionidentifier, http://hl7.org.au/fhir/StructureDefinition/au-localprescriptionidentifier, http://hl7.org/fhir/StructureDefinition/Identifier] -> []",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-4",
-      "type": "TERMINOLOGY",
-      "sourcePath": "MedicationRequest.status",
-      "targetPath": "MedicationRequest.status",
-      "description": "Binding changed: required(http://hl7.org/fhir/ValueSet/medicationrequest-status|4.0.1) -> required(http://hl7.org/fhir/ValueSet/medicationrequest-status)",
-      "severity": "ERROR"
-    },
-    {
-      "id": "rule-5",
-      "type": "EXTENSION",
-      "sourcePath": "MedicationRequest.status",
-      "targetPath": "MedicationRequest.status.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-6",
-      "type": "EXTENSION",
-      "sourcePath": "MedicationRequest.status.extension(http://hl7.org/fhir/StructureDefinition/obligation)",
-      "targetPath": "MedicationRequest.status",
-      "description": "Extension removed in target element: http://hl7.org/fhir/StructureDefinition/obligation",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-7",
-      "type": "TERMINOLOGY",
-      "sourcePath": "MedicationRequest.intent",
-      "targetPath": "MedicationRequest.intent",
-      "description": "Binding changed: required(http://hl7.org/fhir/ValueSet/medicationrequest-intent|4.0.1) -> required(http://hl7.org/fhir/ValueSet/medicationrequest-intent)",
-      "severity": "ERROR"
-    },
-    {
-      "id": "rule-8",
-      "type": "EXTENSION",
-      "sourcePath": "MedicationRequest.intent",
-      "targetPath": "MedicationRequest.intent.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-9",
-      "type": "EXTENSION",
-      "sourcePath": "MedicationRequest.intent.extension(http://hl7.org/fhir/StructureDefinition/obligation)",
-      "targetPath": "MedicationRequest.intent",
-      "description": "Extension removed in target element: http://hl7.org/fhir/StructureDefinition/obligation",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-10",
-      "type": "STRUCTURAL",
-      "sourcePath": "MedicationRequest.category",
-      "targetPath": "MedicationRequest.category",
-      "description": "MustSupport added in target",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-11",
-      "type": "STRUCTURAL",
-      "sourcePath": "MedicationRequest.category",
-      "targetPath": "MedicationRequest.category",
-      "description": "Slicing changed: none -> rules=open, discriminators=[pattern:$this]",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-12",
-      "type": "EXTENSION",
-      "sourcePath": "MedicationRequest.category",
-      "targetPath": "MedicationRequest.category.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-13",
-      "type": "STRUCTURAL",
-      "sourcePath": "MedicationRequest.reported[x]",
-      "targetPath": "MedicationRequest.reported[x]",
-      "description": "Reference target profile changed: [http://hl7.org/fhir/StructureDefinition/Organization, http://hl7.org/fhir/StructureDefinition/Patient, http://hl7.org/fhir/StructureDefinition/Practitioner, http://hl7.org/fhir/StructureDefinition/PractitionerRole, http://hl7.org/fhir/StructureDefinition/RelatedPerson] -> [http://hl7.org/fhir/us/core/StructureDefinition/us-core-organization, http://hl7.org/fhir/us/core/StructureDefinition/us-core-patient, http://hl7.org/fhir/us/core/StructureDefinition/us-core-practitioner, http://hl7.org/fhir/us/core/StructureDefinition/us-core-practitionerrole, http://hl7.org/fhir/us/core/StructureDefinition/us-core-relatedperson]",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-14",
-      "type": "STRUCTURAL",
-      "sourcePath": "MedicationRequest.reported[x]",
-      "targetPath": "MedicationRequest.reported[x]",
-      "description": "MustSupport added in target",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-15",
-      "type": "EXTENSION",
-      "sourcePath": "MedicationRequest.reported[x]",
-      "targetPath": "MedicationRequest.reported[x].extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-16",
-      "type": "TERMINOLOGY",
-      "sourcePath": "MedicationRequest.medication[x]",
-      "targetPath": "MedicationRequest.medication[x]",
-      "description": "Binding changed: example(http://hl7.org/fhir/ValueSet/medication-codes) -> extensible(http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1010.4)",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-17",
-      "type": "STRUCTURAL",
-      "sourcePath": "MedicationRequest.medication[x]",
-      "targetPath": "MedicationRequest.medication[x]",
-      "description": "Reference target profile changed: [http://hl7.org/fhir/StructureDefinition/Medication] -> [http://hl7.org/fhir/us/core/StructureDefinition/us-core-medication]",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-18",
-      "type": "STRUCTURAL",
-      "sourcePath": "MedicationRequest.medication[x]",
-      "targetPath": "MedicationRequest.medication[x]",
-      "description": "Slicing changed: rules=closed, discriminators=[type:$this] -> none",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-19",
-      "type": "EXTENSION",
-      "sourcePath": "MedicationRequest.medication[x]",
-      "targetPath": "MedicationRequest.medication[x].extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-20",
-      "type": "EXTENSION",
-      "sourcePath": "MedicationRequest.medication[x].extension(http://hl7.org/fhir/StructureDefinition/obligation)",
-      "targetPath": "MedicationRequest.medication[x]",
-      "description": "Extension removed in target element: http://hl7.org/fhir/StructureDefinition/obligation",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-21",
-      "type": "STRUCTURAL",
-      "sourcePath": "MedicationRequest.subject",
-      "targetPath": "MedicationRequest.subject",
-      "description": "Reference target profile changed: [http://hl7.org.au/fhir/core/StructureDefinition/au-core-patient] -> [http://hl7.org/fhir/us/core/StructureDefinition/us-core-patient]",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-22",
-      "type": "EXTENSION",
-      "sourcePath": "MedicationRequest.subject",
-      "targetPath": "MedicationRequest.subject.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-23",
-      "type": "EXTENSION",
-      "sourcePath": "MedicationRequest.subject.extension(http://hl7.org/fhir/StructureDefinition/obligation)",
-      "targetPath": "MedicationRequest.subject",
-      "description": "Extension removed in target element: http://hl7.org/fhir/StructureDefinition/obligation",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-24",
-      "type": "STRUCTURAL",
-      "sourcePath": "MedicationRequest.encounter",
-      "targetPath": "MedicationRequest.encounter",
-      "description": "Reference target profile changed: [http://hl7.org.au/fhir/core/StructureDefinition/au-core-encounter] -> [http://hl7.org/fhir/us/core/StructureDefinition/us-core-encounter]",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-25",
-      "type": "EXTENSION",
-      "sourcePath": "MedicationRequest.encounter",
-      "targetPath": "MedicationRequest.encounter.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-26",
-      "type": "EXTENSION",
-      "sourcePath": "MedicationRequest.encounter.extension(http://hl7.org/fhir/StructureDefinition/obligation)",
-      "targetPath": "MedicationRequest.encounter",
-      "description": "Extension removed in target element: http://hl7.org/fhir/StructureDefinition/obligation",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-27",
-      "type": "STRUCTURAL",
-      "sourcePath": "MedicationRequest.supportingInformation",
-      "targetPath": "MedicationRequest.supportingInformation",
-      "description": "Slicing changed: rules=open, discriminators=[profile:resolve()] -> none",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-28",
-      "type": "CARDINALITY",
-      "sourcePath": "MedicationRequest.authoredOn",
-      "targetPath": "MedicationRequest.authoredOn",
-      "description": "Cardinality changed: [1..1] -> [0..1]",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-29",
-      "type": "STRUCTURAL",
-      "sourcePath": "MedicationRequest.authoredOn",
-      "targetPath": "MedicationRequest.authoredOn",
-      "description": "Constraints removed in target: [au-core-medreq-01]",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-30",
-      "type": "EXTENSION",
-      "sourcePath": "MedicationRequest.authoredOn",
-      "targetPath": "MedicationRequest.authoredOn.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-31",
-      "type": "EXTENSION",
-      "sourcePath": "MedicationRequest.authoredOn.extension(http://hl7.org/fhir/StructureDefinition/obligation)",
-      "targetPath": "MedicationRequest.authoredOn",
-      "description": "Extension removed in target element: http://hl7.org/fhir/StructureDefinition/obligation",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-32",
-      "type": "CARDINALITY",
-      "sourcePath": "MedicationRequest.requester",
-      "targetPath": "MedicationRequest.requester",
-      "description": "Cardinality changed: [1..1] -> [0..1]",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-33",
-      "type": "STRUCTURAL",
-      "sourcePath": "MedicationRequest.requester",
-      "targetPath": "MedicationRequest.requester",
-      "description": "Reference target profile changed: [http://hl7.org.au/fhir/StructureDefinition/au-relatedperson, http://hl7.org.au/fhir/core/StructureDefinition/au-core-organization, http://hl7.org.au/fhir/core/StructureDefinition/au-core-patient, http://hl7.org.au/fhir/core/StructureDefinition/au-core-practitioner, http://hl7.org.au/fhir/core/StructureDefinition/au-core-practitionerrole] -> [http://hl7.org/fhir/StructureDefinition/Device, http://hl7.org/fhir/us/core/StructureDefinition/us-core-organization, http://hl7.org/fhir/us/core/StructureDefinition/us-core-patient, http://hl7.org/fhir/us/core/StructureDefinition/us-core-practitioner, http://hl7.org/fhir/us/core/StructureDefinition/us-core-practitionerrole, http://hl7.org/fhir/us/core/StructureDefinition/us-core-relatedperson]",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-34",
-      "type": "EXTENSION",
-      "sourcePath": "MedicationRequest.requester",
-      "targetPath": "MedicationRequest.requester.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-35",
-      "type": "EXTENSION",
-      "sourcePath": "MedicationRequest.requester.extension(http://hl7.org/fhir/StructureDefinition/obligation)",
-      "targetPath": "MedicationRequest.requester",
-      "description": "Extension removed in target element: http://hl7.org/fhir/StructureDefinition/obligation",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-36",
-      "type": "TERMINOLOGY",
-      "sourcePath": "MedicationRequest.reasonCode",
-      "targetPath": "MedicationRequest.reasonCode",
-      "description": "Binding changed: preferred(https://healthterminologies.gov.au/fhir/ValueSet/reason-for-request-1) -> extensible(http://hl7.org/fhir/us/core/ValueSet/us-core-condition-code)",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-37",
-      "type": "STRUCTURAL",
-      "sourcePath": "MedicationRequest.reasonCode",
-      "targetPath": "MedicationRequest.reasonCode",
-      "description": "MustSupport removed in target",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-38",
-      "type": "EXTENSION",
-      "sourcePath": "MedicationRequest.reasonCode",
-      "targetPath": "MedicationRequest.reasonCode.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-39",
-      "type": "EXTENSION",
-      "sourcePath": "MedicationRequest.reasonCode.extension(http://hl7.org/fhir/StructureDefinition/obligation)",
-      "targetPath": "MedicationRequest.reasonCode",
-      "description": "Extension removed in target element: http://hl7.org/fhir/StructureDefinition/obligation",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-40",
-      "type": "STRUCTURAL",
-      "sourcePath": "MedicationRequest.reasonReference",
-      "targetPath": "MedicationRequest.reasonReference",
-      "description": "Reference target profile changed: [http://hl7.org.au/fhir/core/StructureDefinition/au-core-condition, http://hl7.org/fhir/StructureDefinition/Observation] -> [http://hl7.org/fhir/StructureDefinition/Condition, http://hl7.org/fhir/StructureDefinition/Observation]",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-41",
-      "type": "STRUCTURAL",
-      "sourcePath": "MedicationRequest.reasonReference",
-      "targetPath": "MedicationRequest.reasonReference",
-      "description": "MustSupport removed in target",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-42",
-      "type": "EXTENSION",
-      "sourcePath": "MedicationRequest.reasonReference",
-      "targetPath": "MedicationRequest.reasonReference.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-43",
-      "type": "EXTENSION",
-      "sourcePath": "MedicationRequest.reasonReference.extension(http://hl7.org/fhir/StructureDefinition/obligation)",
-      "targetPath": "MedicationRequest.reasonReference",
-      "description": "Extension removed in target element: http://hl7.org/fhir/StructureDefinition/obligation",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-44",
-      "type": "STRUCTURAL",
-      "sourcePath": "MedicationRequest.dosageInstruction",
-      "targetPath": "MedicationRequest.dosageInstruction",
-      "description": "Type profile constraint changed: [http://hl7.org.au/fhir/StructureDefinition/au-dosage] -> []",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-45",
-      "type": "EXTENSION",
-      "sourcePath": "MedicationRequest.dosageInstruction",
-      "targetPath": "MedicationRequest.dosageInstruction.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-46",
-      "type": "EXTENSION",
-      "sourcePath": "MedicationRequest.dosageInstruction.extension(http://hl7.org/fhir/StructureDefinition/obligation)",
-      "targetPath": "MedicationRequest.dosageInstruction",
-      "description": "Extension removed in target element: http://hl7.org/fhir/StructureDefinition/obligation",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-47",
-      "type": "STRUCTURAL",
-      "sourcePath": "MedicationRequest.dispenseRequest",
-      "targetPath": "MedicationRequest.dispenseRequest",
-      "description": "MustSupport added in target",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-48",
-      "type": "EXTENSION",
-      "sourcePath": "MedicationRequest.dispenseRequest",
-      "targetPath": "MedicationRequest.dispenseRequest.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-49",
-      "type": "STRUCTURAL",
-      "sourcePath": "MedicationRequest.dispenseRequest.numberOfRepeatsAllowed",
-      "targetPath": "MedicationRequest.dispenseRequest.numberOfRepeatsAllowed",
-      "description": "MustSupport added in target",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-50",
-      "type": "EXTENSION",
-      "sourcePath": "MedicationRequest.dispenseRequest.numberOfRepeatsAllowed",
-      "targetPath": "MedicationRequest.dispenseRequest.numberOfRepeatsAllowed.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-51",
-      "type": "STRUCTURAL",
-      "sourcePath": "MedicationRequest.dispenseRequest.quantity",
-      "targetPath": "MedicationRequest.dispenseRequest.quantity",
-      "description": "MustSupport added in target",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-52",
-      "type": "EXTENSION",
-      "sourcePath": "MedicationRequest.dispenseRequest.quantity",
-      "targetPath": "MedicationRequest.dispenseRequest.quantity.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-53",
-      "type": "TERMINOLOGY",
-      "sourcePath": "MedicationRequest.substitution.reason",
-      "targetPath": "MedicationRequest.substitution.reason",
-      "description": "Binding changed: preferred(https://healthterminologies.gov.au/fhir/ValueSet/medicine-substitution-reason-1) -> example(http://terminology.hl7.org/ValueSet/v3-SubstanceAdminSubstitutionReason)",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-54",
-      "type": "STRUCTURAL",
-      "sourcePath": "",
-      "targetPath": "MedicationRequest.category:us-core",
-      "description": "New slice 'us-core' added in target profile",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-55",
-      "type": "STRUCTURAL",
-      "sourcePath": "",
-      "targetPath": "MedicationRequest.dosageInstruction.id",
-      "description": "Element added in target profile: MedicationRequest.dosageInstruction.id",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-56",
-      "type": "STRUCTURAL",
-      "sourcePath": "",
-      "targetPath": "MedicationRequest.dosageInstruction.extension",
-      "description": "Element added in target profile: MedicationRequest.dosageInstruction.extension",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-57",
-      "type": "STRUCTURAL",
-      "sourcePath": "",
-      "targetPath": "MedicationRequest.dosageInstruction.modifierExtension",
-      "description": "Element added in target profile: MedicationRequest.dosageInstruction.modifierExtension",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-58",
-      "type": "STRUCTURAL",
-      "sourcePath": "",
-      "targetPath": "MedicationRequest.dosageInstruction.sequence",
-      "description": "Element added in target profile: MedicationRequest.dosageInstruction.sequence",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-59",
-      "type": "STRUCTURAL",
-      "sourcePath": "",
-      "targetPath": "MedicationRequest.dosageInstruction.text",
-      "description": "Element added in target profile: MedicationRequest.dosageInstruction.text",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-60",
-      "type": "STRUCTURAL",
-      "sourcePath": "",
-      "targetPath": "MedicationRequest.dosageInstruction.additionalInstruction",
-      "description": "Element added in target profile: MedicationRequest.dosageInstruction.additionalInstruction",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-61",
-      "type": "STRUCTURAL",
-      "sourcePath": "",
-      "targetPath": "MedicationRequest.dosageInstruction.patientInstruction",
-      "description": "Element added in target profile: MedicationRequest.dosageInstruction.patientInstruction",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-62",
-      "type": "STRUCTURAL",
-      "sourcePath": "",
-      "targetPath": "MedicationRequest.dosageInstruction.timing",
-      "description": "Element added in target profile: MedicationRequest.dosageInstruction.timing",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-63",
-      "type": "STRUCTURAL",
-      "sourcePath": "",
-      "targetPath": "MedicationRequest.dosageInstruction.asNeeded[x]",
-      "description": "Element added in target profile: MedicationRequest.dosageInstruction.asNeeded[x]",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-64",
-      "type": "STRUCTURAL",
-      "sourcePath": "",
-      "targetPath": "MedicationRequest.dosageInstruction.site",
-      "description": "Element added in target profile: MedicationRequest.dosageInstruction.site",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-65",
-      "type": "STRUCTURAL",
-      "sourcePath": "",
-      "targetPath": "MedicationRequest.dosageInstruction.route",
-      "description": "Element added in target profile: MedicationRequest.dosageInstruction.route",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-66",
-      "type": "STRUCTURAL",
-      "sourcePath": "",
-      "targetPath": "MedicationRequest.dosageInstruction.method",
-      "description": "Element added in target profile: MedicationRequest.dosageInstruction.method",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-67",
-      "type": "STRUCTURAL",
-      "sourcePath": "",
-      "targetPath": "MedicationRequest.dosageInstruction.doseAndRate",
-      "description": "Element added in target profile: MedicationRequest.dosageInstruction.doseAndRate",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-68",
-      "type": "STRUCTURAL",
-      "sourcePath": "",
-      "targetPath": "MedicationRequest.dosageInstruction.maxDosePerPeriod",
-      "description": "Element added in target profile: MedicationRequest.dosageInstruction.maxDosePerPeriod",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-69",
-      "type": "STRUCTURAL",
-      "sourcePath": "",
-      "targetPath": "MedicationRequest.dosageInstruction.maxDosePerAdministration",
-      "description": "Element added in target profile: MedicationRequest.dosageInstruction.maxDosePerAdministration",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-70",
-      "type": "STRUCTURAL",
-      "sourcePath": "",
-      "targetPath": "MedicationRequest.dosageInstruction.maxDosePerLifetime",
-      "description": "Element added in target profile: MedicationRequest.dosageInstruction.maxDosePerLifetime",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-71",
-      "type": "EXTENSION",
-      "sourcePath": "MedicationRequest.extension:subsidisedConcurrentSupply",
-      "targetPath": "",
-      "description": "Extension removed in target profile: MedicationRequest.extension:subsidisedConcurrentSupply",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-72",
-      "type": "STRUCTURAL",
-      "sourcePath": "MedicationRequest.medication[x]:medicationCodeableConcept",
-      "targetPath": "",
-      "description": "Slice 'medicationCodeableConcept' removed in target profile",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-73",
-      "type": "STRUCTURAL",
-      "sourcePath": "MedicationRequest.medication[x].id",
-      "targetPath": "",
-      "description": "Element removed in target profile: MedicationRequest.medication[x].id",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-74",
-      "type": "STRUCTURAL",
-      "sourcePath": "MedicationRequest.medication[x].extension",
-      "targetPath": "",
-      "description": "Element removed in target profile: MedicationRequest.medication[x].extension",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-75",
-      "type": "STRUCTURAL",
-      "sourcePath": "MedicationRequest.medication[x].coding",
-      "targetPath": "",
-      "description": "Element removed in target profile: MedicationRequest.medication[x].coding",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-76",
-      "type": "STRUCTURAL",
-      "sourcePath": "MedicationRequest.medication[x].coding:pbs",
-      "targetPath": "",
-      "description": "Slice 'pbs' removed in target profile",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-77",
-      "type": "STRUCTURAL",
-      "sourcePath": "MedicationRequest.medication[x].coding:amt",
-      "targetPath": "",
-      "description": "Slice 'amt' removed in target profile",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-78",
-      "type": "STRUCTURAL",
-      "sourcePath": "MedicationRequest.medication[x].text",
-      "targetPath": "",
-      "description": "Element removed in target profile: MedicationRequest.medication[x].text",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-79",
-      "type": "STRUCTURAL",
-      "sourcePath": "MedicationRequest.medication[x]:medicationReference",
-      "targetPath": "",
-      "description": "Slice 'medicationReference' removed in target profile",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-80",
-      "type": "STRUCTURAL",
-      "sourcePath": "MedicationRequest.supportingInformation:bodyHeight",
-      "targetPath": "",
-      "description": "Slice 'bodyHeight' removed in target profile",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-81",
-      "type": "STRUCTURAL",
-      "sourcePath": "MedicationRequest.supportingInformation:bodyWeight",
-      "targetPath": "",
-      "description": "Slice 'bodyWeight' removed in target profile",
-      "severity": "INFO"
-    }
-  ]
+  "pairId" : "au-core-medicationrequest-vs-us-core-medicationrequest",
+  "sourceClasspath" : "standard-profiles/au-core/StructureDefinition-au-core-medicationrequest.json",
+  "targetClasspath" : "standard-profiles/us-core/StructureDefinition-us-core-medicationrequest.json",
+  "drifts" : [ {
+    "id" : "rule-1",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "MedicationRequest",
+    "targetPath" : "MedicationRequest",
+    "description" : "Constraints added in target: [us-core-21]",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-2",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "MedicationRequest.extension",
+    "targetPath" : "MedicationRequest.extension",
+    "description" : "Slicing changed: rules=open, discriminators=[value:url] -> none",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-3",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "MedicationRequest.identifier",
+    "targetPath" : "MedicationRequest.identifier",
+    "description" : "Type profile constraint changed: [http://hl7.org.au/fhir/StructureDefinition/au-etpprescriptionidentifier, http://hl7.org.au/fhir/StructureDefinition/au-localprescriptionidentifier, http://hl7.org/fhir/StructureDefinition/Identifier] -> []",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-4",
+    "type" : "TERMINOLOGY",
+    "sourcePath" : "MedicationRequest.status",
+    "targetPath" : "MedicationRequest.status",
+    "description" : "Binding changed: required(http://hl7.org/fhir/ValueSet/medicationrequest-status|4.0.1) -> required(http://hl7.org/fhir/ValueSet/medicationrequest-status)",
+    "severity" : "ERROR"
+  }, {
+    "id" : "rule-5",
+    "type" : "EXTENSION",
+    "sourcePath" : "MedicationRequest.status",
+    "targetPath" : "MedicationRequest.status.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+    "description" : "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-6",
+    "type" : "EXTENSION",
+    "sourcePath" : "MedicationRequest.status.extension(http://hl7.org/fhir/StructureDefinition/obligation)",
+    "targetPath" : "MedicationRequest.status",
+    "description" : "Extension removed in target element: http://hl7.org/fhir/StructureDefinition/obligation",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-7",
+    "type" : "TERMINOLOGY",
+    "sourcePath" : "MedicationRequest.intent",
+    "targetPath" : "MedicationRequest.intent",
+    "description" : "Binding changed: required(http://hl7.org/fhir/ValueSet/medicationrequest-intent|4.0.1) -> required(http://hl7.org/fhir/ValueSet/medicationrequest-intent)",
+    "severity" : "ERROR"
+  }, {
+    "id" : "rule-8",
+    "type" : "EXTENSION",
+    "sourcePath" : "MedicationRequest.intent",
+    "targetPath" : "MedicationRequest.intent.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+    "description" : "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-9",
+    "type" : "EXTENSION",
+    "sourcePath" : "MedicationRequest.intent.extension(http://hl7.org/fhir/StructureDefinition/obligation)",
+    "targetPath" : "MedicationRequest.intent",
+    "description" : "Extension removed in target element: http://hl7.org/fhir/StructureDefinition/obligation",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-10",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "MedicationRequest.category",
+    "targetPath" : "MedicationRequest.category",
+    "description" : "MustSupport added in target",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-11",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "MedicationRequest.category",
+    "targetPath" : "MedicationRequest.category",
+    "description" : "Slicing changed: none -> rules=open, discriminators=[pattern:$this]",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-12",
+    "type" : "EXTENSION",
+    "sourcePath" : "MedicationRequest.category",
+    "targetPath" : "MedicationRequest.category.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+    "description" : "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-13",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "MedicationRequest.reported[x]",
+    "targetPath" : "MedicationRequest.reported[x]",
+    "description" : "Reference target profile changed: [http://hl7.org/fhir/StructureDefinition/Organization, http://hl7.org/fhir/StructureDefinition/Patient, http://hl7.org/fhir/StructureDefinition/Practitioner, http://hl7.org/fhir/StructureDefinition/PractitionerRole, http://hl7.org/fhir/StructureDefinition/RelatedPerson] -> [http://hl7.org/fhir/us/core/StructureDefinition/us-core-organization, http://hl7.org/fhir/us/core/StructureDefinition/us-core-patient, http://hl7.org/fhir/us/core/StructureDefinition/us-core-practitioner, http://hl7.org/fhir/us/core/StructureDefinition/us-core-practitionerrole, http://hl7.org/fhir/us/core/StructureDefinition/us-core-relatedperson]",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-14",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "MedicationRequest.reported[x]",
+    "targetPath" : "MedicationRequest.reported[x]",
+    "description" : "MustSupport added in target",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-15",
+    "type" : "EXTENSION",
+    "sourcePath" : "MedicationRequest.reported[x]",
+    "targetPath" : "MedicationRequest.reported[x].extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+    "description" : "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-16",
+    "type" : "TERMINOLOGY",
+    "sourcePath" : "MedicationRequest.medication[x]",
+    "targetPath" : "MedicationRequest.medication[x]",
+    "description" : "Binding changed: example(http://hl7.org/fhir/ValueSet/medication-codes) -> extensible(http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1010.4)",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-17",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "MedicationRequest.medication[x]",
+    "targetPath" : "MedicationRequest.medication[x]",
+    "description" : "Reference target profile changed: [http://hl7.org/fhir/StructureDefinition/Medication] -> [http://hl7.org/fhir/us/core/StructureDefinition/us-core-medication]",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-18",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "MedicationRequest.medication[x]",
+    "targetPath" : "MedicationRequest.medication[x]",
+    "description" : "Slicing changed: rules=closed, discriminators=[type:$this] -> none",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-19",
+    "type" : "EXTENSION",
+    "sourcePath" : "MedicationRequest.medication[x]",
+    "targetPath" : "MedicationRequest.medication[x].extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+    "description" : "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-20",
+    "type" : "EXTENSION",
+    "sourcePath" : "MedicationRequest.medication[x].extension(http://hl7.org/fhir/StructureDefinition/obligation)",
+    "targetPath" : "MedicationRequest.medication[x]",
+    "description" : "Extension removed in target element: http://hl7.org/fhir/StructureDefinition/obligation",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-21",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "MedicationRequest.subject",
+    "targetPath" : "MedicationRequest.subject",
+    "description" : "Reference target profile changed: [http://hl7.org.au/fhir/core/StructureDefinition/au-core-patient] -> [http://hl7.org/fhir/us/core/StructureDefinition/us-core-patient]",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-22",
+    "type" : "EXTENSION",
+    "sourcePath" : "MedicationRequest.subject",
+    "targetPath" : "MedicationRequest.subject.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+    "description" : "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-23",
+    "type" : "EXTENSION",
+    "sourcePath" : "MedicationRequest.subject.extension(http://hl7.org/fhir/StructureDefinition/obligation)",
+    "targetPath" : "MedicationRequest.subject",
+    "description" : "Extension removed in target element: http://hl7.org/fhir/StructureDefinition/obligation",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-24",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "MedicationRequest.encounter",
+    "targetPath" : "MedicationRequest.encounter",
+    "description" : "Reference target profile changed: [http://hl7.org.au/fhir/core/StructureDefinition/au-core-encounter] -> [http://hl7.org/fhir/us/core/StructureDefinition/us-core-encounter]",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-25",
+    "type" : "EXTENSION",
+    "sourcePath" : "MedicationRequest.encounter",
+    "targetPath" : "MedicationRequest.encounter.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+    "description" : "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-26",
+    "type" : "EXTENSION",
+    "sourcePath" : "MedicationRequest.encounter.extension(http://hl7.org/fhir/StructureDefinition/obligation)",
+    "targetPath" : "MedicationRequest.encounter",
+    "description" : "Extension removed in target element: http://hl7.org/fhir/StructureDefinition/obligation",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-27",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "MedicationRequest.supportingInformation",
+    "targetPath" : "MedicationRequest.supportingInformation",
+    "description" : "Slicing changed: rules=open, discriminators=[profile:resolve()] -> none",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-28",
+    "type" : "CARDINALITY",
+    "sourcePath" : "MedicationRequest.authoredOn",
+    "targetPath" : "MedicationRequest.authoredOn",
+    "description" : "Cardinality changed: [1..1] -> [0..1]",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-29",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "MedicationRequest.authoredOn",
+    "targetPath" : "MedicationRequest.authoredOn",
+    "description" : "Constraints removed in target: [au-core-medreq-01]",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-30",
+    "type" : "EXTENSION",
+    "sourcePath" : "MedicationRequest.authoredOn",
+    "targetPath" : "MedicationRequest.authoredOn.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+    "description" : "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-31",
+    "type" : "EXTENSION",
+    "sourcePath" : "MedicationRequest.authoredOn.extension(http://hl7.org/fhir/StructureDefinition/obligation)",
+    "targetPath" : "MedicationRequest.authoredOn",
+    "description" : "Extension removed in target element: http://hl7.org/fhir/StructureDefinition/obligation",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-32",
+    "type" : "CARDINALITY",
+    "sourcePath" : "MedicationRequest.requester",
+    "targetPath" : "MedicationRequest.requester",
+    "description" : "Cardinality changed: [1..1] -> [0..1]",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-33",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "MedicationRequest.requester",
+    "targetPath" : "MedicationRequest.requester",
+    "description" : "Reference target profile changed: [http://hl7.org.au/fhir/StructureDefinition/au-relatedperson, http://hl7.org.au/fhir/core/StructureDefinition/au-core-organization, http://hl7.org.au/fhir/core/StructureDefinition/au-core-patient, http://hl7.org.au/fhir/core/StructureDefinition/au-core-practitioner, http://hl7.org.au/fhir/core/StructureDefinition/au-core-practitionerrole] -> [http://hl7.org/fhir/StructureDefinition/Device, http://hl7.org/fhir/us/core/StructureDefinition/us-core-organization, http://hl7.org/fhir/us/core/StructureDefinition/us-core-patient, http://hl7.org/fhir/us/core/StructureDefinition/us-core-practitioner, http://hl7.org/fhir/us/core/StructureDefinition/us-core-practitionerrole, http://hl7.org/fhir/us/core/StructureDefinition/us-core-relatedperson]",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-34",
+    "type" : "EXTENSION",
+    "sourcePath" : "MedicationRequest.requester",
+    "targetPath" : "MedicationRequest.requester.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+    "description" : "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-35",
+    "type" : "EXTENSION",
+    "sourcePath" : "MedicationRequest.requester.extension(http://hl7.org/fhir/StructureDefinition/obligation)",
+    "targetPath" : "MedicationRequest.requester",
+    "description" : "Extension removed in target element: http://hl7.org/fhir/StructureDefinition/obligation",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-36",
+    "type" : "TERMINOLOGY",
+    "sourcePath" : "MedicationRequest.reasonCode",
+    "targetPath" : "MedicationRequest.reasonCode",
+    "description" : "Binding changed: preferred(https://healthterminologies.gov.au/fhir/ValueSet/reason-for-request-1) -> extensible(http://hl7.org/fhir/us/core/ValueSet/us-core-condition-code)",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-37",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "MedicationRequest.reasonCode",
+    "targetPath" : "MedicationRequest.reasonCode",
+    "description" : "MustSupport removed in target",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-38",
+    "type" : "EXTENSION",
+    "sourcePath" : "MedicationRequest.reasonCode",
+    "targetPath" : "MedicationRequest.reasonCode.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+    "description" : "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-39",
+    "type" : "EXTENSION",
+    "sourcePath" : "MedicationRequest.reasonCode.extension(http://hl7.org/fhir/StructureDefinition/obligation)",
+    "targetPath" : "MedicationRequest.reasonCode",
+    "description" : "Extension removed in target element: http://hl7.org/fhir/StructureDefinition/obligation",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-40",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "MedicationRequest.reasonReference",
+    "targetPath" : "MedicationRequest.reasonReference",
+    "description" : "Reference target profile changed: [http://hl7.org.au/fhir/core/StructureDefinition/au-core-condition, http://hl7.org/fhir/StructureDefinition/Observation] -> [http://hl7.org/fhir/StructureDefinition/Condition, http://hl7.org/fhir/StructureDefinition/Observation]",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-41",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "MedicationRequest.reasonReference",
+    "targetPath" : "MedicationRequest.reasonReference",
+    "description" : "MustSupport removed in target",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-42",
+    "type" : "EXTENSION",
+    "sourcePath" : "MedicationRequest.reasonReference",
+    "targetPath" : "MedicationRequest.reasonReference.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+    "description" : "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-43",
+    "type" : "EXTENSION",
+    "sourcePath" : "MedicationRequest.reasonReference.extension(http://hl7.org/fhir/StructureDefinition/obligation)",
+    "targetPath" : "MedicationRequest.reasonReference",
+    "description" : "Extension removed in target element: http://hl7.org/fhir/StructureDefinition/obligation",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-44",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "MedicationRequest.dosageInstruction",
+    "targetPath" : "MedicationRequest.dosageInstruction",
+    "description" : "Type profile constraint changed: [http://hl7.org.au/fhir/StructureDefinition/au-dosage] -> []",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-45",
+    "type" : "EXTENSION",
+    "sourcePath" : "MedicationRequest.dosageInstruction",
+    "targetPath" : "MedicationRequest.dosageInstruction.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+    "description" : "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-46",
+    "type" : "EXTENSION",
+    "sourcePath" : "MedicationRequest.dosageInstruction.extension(http://hl7.org/fhir/StructureDefinition/obligation)",
+    "targetPath" : "MedicationRequest.dosageInstruction",
+    "description" : "Extension removed in target element: http://hl7.org/fhir/StructureDefinition/obligation",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-47",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "MedicationRequest.dispenseRequest",
+    "targetPath" : "MedicationRequest.dispenseRequest",
+    "description" : "MustSupport added in target",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-48",
+    "type" : "EXTENSION",
+    "sourcePath" : "MedicationRequest.dispenseRequest",
+    "targetPath" : "MedicationRequest.dispenseRequest.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+    "description" : "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-49",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "MedicationRequest.dispenseRequest.numberOfRepeatsAllowed",
+    "targetPath" : "MedicationRequest.dispenseRequest.numberOfRepeatsAllowed",
+    "description" : "MustSupport added in target",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-50",
+    "type" : "EXTENSION",
+    "sourcePath" : "MedicationRequest.dispenseRequest.numberOfRepeatsAllowed",
+    "targetPath" : "MedicationRequest.dispenseRequest.numberOfRepeatsAllowed.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+    "description" : "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-51",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "MedicationRequest.dispenseRequest.quantity",
+    "targetPath" : "MedicationRequest.dispenseRequest.quantity",
+    "description" : "MustSupport added in target",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-52",
+    "type" : "EXTENSION",
+    "sourcePath" : "MedicationRequest.dispenseRequest.quantity",
+    "targetPath" : "MedicationRequest.dispenseRequest.quantity.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+    "description" : "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-53",
+    "type" : "TERMINOLOGY",
+    "sourcePath" : "MedicationRequest.substitution.reason",
+    "targetPath" : "MedicationRequest.substitution.reason",
+    "description" : "Binding changed: preferred(https://healthterminologies.gov.au/fhir/ValueSet/medicine-substitution-reason-1) -> example(http://terminology.hl7.org/ValueSet/v3-SubstanceAdminSubstitutionReason)",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-54",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "",
+    "targetPath" : "MedicationRequest.category:us-core",
+    "description" : "New slice 'us-core' added in target profile",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-55",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "",
+    "targetPath" : "MedicationRequest.dosageInstruction.id",
+    "description" : "Element added in target profile: MedicationRequest.dosageInstruction.id",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-56",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "",
+    "targetPath" : "MedicationRequest.dosageInstruction.extension",
+    "description" : "Element added in target profile: MedicationRequest.dosageInstruction.extension",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-57",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "",
+    "targetPath" : "MedicationRequest.dosageInstruction.modifierExtension",
+    "description" : "Element added in target profile: MedicationRequest.dosageInstruction.modifierExtension",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-58",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "",
+    "targetPath" : "MedicationRequest.dosageInstruction.sequence",
+    "description" : "Element added in target profile: MedicationRequest.dosageInstruction.sequence",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-59",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "",
+    "targetPath" : "MedicationRequest.dosageInstruction.text",
+    "description" : "Element added in target profile: MedicationRequest.dosageInstruction.text",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-60",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "",
+    "targetPath" : "MedicationRequest.dosageInstruction.additionalInstruction",
+    "description" : "Element added in target profile: MedicationRequest.dosageInstruction.additionalInstruction",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-61",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "",
+    "targetPath" : "MedicationRequest.dosageInstruction.patientInstruction",
+    "description" : "Element added in target profile: MedicationRequest.dosageInstruction.patientInstruction",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-62",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "",
+    "targetPath" : "MedicationRequest.dosageInstruction.timing",
+    "description" : "Element added in target profile: MedicationRequest.dosageInstruction.timing",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-63",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "",
+    "targetPath" : "MedicationRequest.dosageInstruction.asNeeded[x]",
+    "description" : "Element added in target profile: MedicationRequest.dosageInstruction.asNeeded[x]",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-64",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "",
+    "targetPath" : "MedicationRequest.dosageInstruction.site",
+    "description" : "Element added in target profile: MedicationRequest.dosageInstruction.site",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-65",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "",
+    "targetPath" : "MedicationRequest.dosageInstruction.route",
+    "description" : "Element added in target profile: MedicationRequest.dosageInstruction.route",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-66",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "",
+    "targetPath" : "MedicationRequest.dosageInstruction.method",
+    "description" : "Element added in target profile: MedicationRequest.dosageInstruction.method",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-67",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "",
+    "targetPath" : "MedicationRequest.dosageInstruction.doseAndRate",
+    "description" : "Element added in target profile: MedicationRequest.dosageInstruction.doseAndRate",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-68",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "",
+    "targetPath" : "MedicationRequest.dosageInstruction.maxDosePerPeriod",
+    "description" : "Element added in target profile: MedicationRequest.dosageInstruction.maxDosePerPeriod",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-69",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "",
+    "targetPath" : "MedicationRequest.dosageInstruction.maxDosePerAdministration",
+    "description" : "Element added in target profile: MedicationRequest.dosageInstruction.maxDosePerAdministration",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-70",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "",
+    "targetPath" : "MedicationRequest.dosageInstruction.maxDosePerLifetime",
+    "description" : "Element added in target profile: MedicationRequest.dosageInstruction.maxDosePerLifetime",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-71",
+    "type" : "EXTENSION",
+    "sourcePath" : "MedicationRequest.extension:subsidisedConcurrentSupply",
+    "targetPath" : "",
+    "description" : "Extension removed in target profile: MedicationRequest.extension:subsidisedConcurrentSupply",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-72",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "MedicationRequest.medication[x]:medicationCodeableConcept",
+    "targetPath" : "",
+    "description" : "Slice 'medicationCodeableConcept' removed in target profile",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-73",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "MedicationRequest.medication[x].id",
+    "targetPath" : "",
+    "description" : "Element removed in target profile: MedicationRequest.medication[x].id",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-74",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "MedicationRequest.medication[x].extension",
+    "targetPath" : "",
+    "description" : "Element removed in target profile: MedicationRequest.medication[x].extension",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-75",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "MedicationRequest.medication[x].coding",
+    "targetPath" : "",
+    "description" : "Element removed in target profile: MedicationRequest.medication[x].coding",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-76",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "MedicationRequest.medication[x].coding:pbs",
+    "targetPath" : "",
+    "description" : "Slice 'pbs' removed in target profile",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-77",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "MedicationRequest.medication[x].coding:amt",
+    "targetPath" : "",
+    "description" : "Slice 'amt' removed in target profile",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-78",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "MedicationRequest.medication[x].text",
+    "targetPath" : "",
+    "description" : "Element removed in target profile: MedicationRequest.medication[x].text",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-79",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "MedicationRequest.medication[x]:medicationReference",
+    "targetPath" : "",
+    "description" : "Slice 'medicationReference' removed in target profile",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-80",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "MedicationRequest.supportingInformation:bodyHeight",
+    "targetPath" : "",
+    "description" : "Slice 'bodyHeight' removed in target profile",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-81",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "MedicationRequest.supportingInformation:bodyWeight",
+    "targetPath" : "",
+    "description" : "Slice 'bodyWeight' removed in target profile",
+    "severity" : "INFO"
+  } ]
 }

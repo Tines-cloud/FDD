@@ -1,239 +1,209 @@
 {
-  "pairId": "r4-condition-vs-us-core-condition",
-  "sourceClasspath": "standard-profiles/r4/condition.profile.json",
-  "targetClasspath": "standard-profiles/us-core/StructureDefinition-us-core-condition-encounter-diagnosis.json",
-  "drifts": [
-    {
-      "id": "rule-1",
-      "type": "STRUCTURAL",
-      "sourcePath": "Condition.extension",
-      "targetPath": "Condition.extension",
-      "description": "Slicing changed: none -> rules=open, discriminators=[value:url]",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-2",
-      "type": "TERMINOLOGY",
-      "sourcePath": "Condition.clinicalStatus",
-      "targetPath": "Condition.clinicalStatus",
-      "description": "Binding changed: required(http://hl7.org/fhir/ValueSet/condition-clinical|4.0.1) -> required(http://hl7.org/fhir/ValueSet/condition-clinical)",
-      "severity": "ERROR"
-    },
-    {
-      "id": "rule-3",
-      "type": "STRUCTURAL",
-      "sourcePath": "Condition.clinicalStatus",
-      "targetPath": "Condition.clinicalStatus",
-      "description": "MustSupport added in target",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-4",
-      "type": "EXTENSION",
-      "sourcePath": "Condition.clinicalStatus",
-      "targetPath": "Condition.clinicalStatus.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-5",
-      "type": "TERMINOLOGY",
-      "sourcePath": "Condition.verificationStatus",
-      "targetPath": "Condition.verificationStatus",
-      "description": "Binding changed: required(http://hl7.org/fhir/ValueSet/condition-ver-status|4.0.1) -> required(http://hl7.org/fhir/ValueSet/condition-ver-status)",
-      "severity": "ERROR"
-    },
-    {
-      "id": "rule-6",
-      "type": "STRUCTURAL",
-      "sourcePath": "Condition.verificationStatus",
-      "targetPath": "Condition.verificationStatus",
-      "description": "MustSupport added in target",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-7",
-      "type": "EXTENSION",
-      "sourcePath": "Condition.verificationStatus",
-      "targetPath": "Condition.verificationStatus.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-8",
-      "type": "CARDINALITY",
-      "sourcePath": "Condition.category",
-      "targetPath": "Condition.category",
-      "description": "Cardinality changed: [0..*] -> [1..*]",
-      "severity": "ERROR"
-    },
-    {
-      "id": "rule-9",
-      "type": "STRUCTURAL",
-      "sourcePath": "Condition.category",
-      "targetPath": "Condition.category",
-      "description": "MustSupport added in target",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-10",
-      "type": "STRUCTURAL",
-      "sourcePath": "Condition.category",
-      "targetPath": "Condition.category",
-      "description": "Slicing changed: none -> rules=open, discriminators=[pattern:$this]",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-11",
-      "type": "EXTENSION",
-      "sourcePath": "Condition.category",
-      "targetPath": "Condition.category.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-12",
-      "type": "CARDINALITY",
-      "sourcePath": "Condition.code",
-      "targetPath": "Condition.code",
-      "description": "Cardinality changed: [0..1] -> [1..1]",
-      "severity": "ERROR"
-    },
-    {
-      "id": "rule-13",
-      "type": "TERMINOLOGY",
-      "sourcePath": "Condition.code",
-      "targetPath": "Condition.code",
-      "description": "Binding changed: example(http://hl7.org/fhir/ValueSet/condition-code) -> extensible(http://hl7.org/fhir/us/core/ValueSet/us-core-condition-code)",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-14",
-      "type": "STRUCTURAL",
-      "sourcePath": "Condition.code",
-      "targetPath": "Condition.code",
-      "description": "MustSupport added in target",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-15",
-      "type": "EXTENSION",
-      "sourcePath": "Condition.code",
-      "targetPath": "Condition.code.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-16",
-      "type": "STRUCTURAL",
-      "sourcePath": "Condition.subject",
-      "targetPath": "Condition.subject",
-      "description": "Reference target profile changed: [http://hl7.org/fhir/StructureDefinition/Group, http://hl7.org/fhir/StructureDefinition/Patient] -> [http://hl7.org/fhir/us/core/StructureDefinition/us-core-patient]",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-17",
-      "type": "STRUCTURAL",
-      "sourcePath": "Condition.subject",
-      "targetPath": "Condition.subject",
-      "description": "MustSupport added in target",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-18",
-      "type": "EXTENSION",
-      "sourcePath": "Condition.subject",
-      "targetPath": "Condition.subject.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-19",
-      "type": "STRUCTURAL",
-      "sourcePath": "Condition.encounter",
-      "targetPath": "Condition.encounter",
-      "description": "Reference target profile changed: [http://hl7.org/fhir/StructureDefinition/Encounter] -> [http://hl7.org/fhir/us/core/StructureDefinition/us-core-encounter]",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-20",
-      "type": "STRUCTURAL",
-      "sourcePath": "Condition.encounter",
-      "targetPath": "Condition.encounter",
-      "description": "MustSupport added in target",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-21",
-      "type": "EXTENSION",
-      "sourcePath": "Condition.encounter",
-      "targetPath": "Condition.encounter.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-22",
-      "type": "STRUCTURAL",
-      "sourcePath": "Condition.onset[x]",
-      "targetPath": "Condition.onset[x]",
-      "description": "MustSupport added in target",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-23",
-      "type": "EXTENSION",
-      "sourcePath": "Condition.onset[x]",
-      "targetPath": "Condition.onset[x].extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-24",
-      "type": "STRUCTURAL",
-      "sourcePath": "Condition.abatement[x]",
-      "targetPath": "Condition.abatement[x]",
-      "description": "MustSupport added in target",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-25",
-      "type": "EXTENSION",
-      "sourcePath": "Condition.abatement[x]",
-      "targetPath": "Condition.abatement[x].extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-26",
-      "type": "STRUCTURAL",
-      "sourcePath": "Condition.recordedDate",
-      "targetPath": "Condition.recordedDate",
-      "description": "MustSupport added in target",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-27",
-      "type": "EXTENSION",
-      "sourcePath": "Condition.recordedDate",
-      "targetPath": "Condition.recordedDate.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-28",
-      "type": "EXTENSION",
-      "sourcePath": "",
-      "targetPath": "Condition.extension:assertedDate",
-      "description": "Extension added in target profile: Condition.extension:assertedDate",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-29",
-      "type": "STRUCTURAL",
-      "sourcePath": "",
-      "targetPath": "Condition.category:us-core",
-      "description": "New slice 'us-core' added in target profile",
-      "severity": "ERROR"
-    }
-  ]
+  "pairId" : "r4-condition-vs-us-core-condition",
+  "sourceClasspath" : "standard-profiles/r4/condition.profile.json",
+  "targetClasspath" : "standard-profiles/us-core/StructureDefinition-us-core-condition-encounter-diagnosis.json",
+  "drifts" : [ {
+    "id" : "rule-1",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Condition.extension",
+    "targetPath" : "Condition.extension",
+    "description" : "Slicing changed: none -> rules=open, discriminators=[value:url]",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-2",
+    "type" : "TERMINOLOGY",
+    "sourcePath" : "Condition.clinicalStatus",
+    "targetPath" : "Condition.clinicalStatus",
+    "description" : "Binding changed: required(http://hl7.org/fhir/ValueSet/condition-clinical|4.0.1) -> required(http://hl7.org/fhir/ValueSet/condition-clinical)",
+    "severity" : "ERROR"
+  }, {
+    "id" : "rule-3",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Condition.clinicalStatus",
+    "targetPath" : "Condition.clinicalStatus",
+    "description" : "MustSupport added in target",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-4",
+    "type" : "EXTENSION",
+    "sourcePath" : "Condition.clinicalStatus",
+    "targetPath" : "Condition.clinicalStatus.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+    "description" : "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-5",
+    "type" : "TERMINOLOGY",
+    "sourcePath" : "Condition.verificationStatus",
+    "targetPath" : "Condition.verificationStatus",
+    "description" : "Binding changed: required(http://hl7.org/fhir/ValueSet/condition-ver-status|4.0.1) -> required(http://hl7.org/fhir/ValueSet/condition-ver-status)",
+    "severity" : "ERROR"
+  }, {
+    "id" : "rule-6",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Condition.verificationStatus",
+    "targetPath" : "Condition.verificationStatus",
+    "description" : "MustSupport added in target",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-7",
+    "type" : "EXTENSION",
+    "sourcePath" : "Condition.verificationStatus",
+    "targetPath" : "Condition.verificationStatus.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+    "description" : "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-8",
+    "type" : "CARDINALITY",
+    "sourcePath" : "Condition.category",
+    "targetPath" : "Condition.category",
+    "description" : "Cardinality changed: [0..*] -> [1..*]",
+    "severity" : "ERROR"
+  }, {
+    "id" : "rule-9",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Condition.category",
+    "targetPath" : "Condition.category",
+    "description" : "MustSupport added in target",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-10",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Condition.category",
+    "targetPath" : "Condition.category",
+    "description" : "Slicing changed: none -> rules=open, discriminators=[pattern:$this]",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-11",
+    "type" : "EXTENSION",
+    "sourcePath" : "Condition.category",
+    "targetPath" : "Condition.category.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+    "description" : "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-12",
+    "type" : "CARDINALITY",
+    "sourcePath" : "Condition.code",
+    "targetPath" : "Condition.code",
+    "description" : "Cardinality changed: [0..1] -> [1..1]",
+    "severity" : "ERROR"
+  }, {
+    "id" : "rule-13",
+    "type" : "TERMINOLOGY",
+    "sourcePath" : "Condition.code",
+    "targetPath" : "Condition.code",
+    "description" : "Binding changed: example(http://hl7.org/fhir/ValueSet/condition-code) -> extensible(http://hl7.org/fhir/us/core/ValueSet/us-core-condition-code)",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-14",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Condition.code",
+    "targetPath" : "Condition.code",
+    "description" : "MustSupport added in target",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-15",
+    "type" : "EXTENSION",
+    "sourcePath" : "Condition.code",
+    "targetPath" : "Condition.code.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+    "description" : "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-16",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Condition.subject",
+    "targetPath" : "Condition.subject",
+    "description" : "Reference target profile changed: [http://hl7.org/fhir/StructureDefinition/Group, http://hl7.org/fhir/StructureDefinition/Patient] -> [http://hl7.org/fhir/us/core/StructureDefinition/us-core-patient]",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-17",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Condition.subject",
+    "targetPath" : "Condition.subject",
+    "description" : "MustSupport added in target",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-18",
+    "type" : "EXTENSION",
+    "sourcePath" : "Condition.subject",
+    "targetPath" : "Condition.subject.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+    "description" : "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-19",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Condition.encounter",
+    "targetPath" : "Condition.encounter",
+    "description" : "Reference target profile changed: [http://hl7.org/fhir/StructureDefinition/Encounter] -> [http://hl7.org/fhir/us/core/StructureDefinition/us-core-encounter]",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-20",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Condition.encounter",
+    "targetPath" : "Condition.encounter",
+    "description" : "MustSupport added in target",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-21",
+    "type" : "EXTENSION",
+    "sourcePath" : "Condition.encounter",
+    "targetPath" : "Condition.encounter.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+    "description" : "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-22",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Condition.onset[x]",
+    "targetPath" : "Condition.onset[x]",
+    "description" : "MustSupport added in target",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-23",
+    "type" : "EXTENSION",
+    "sourcePath" : "Condition.onset[x]",
+    "targetPath" : "Condition.onset[x].extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+    "description" : "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-24",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Condition.abatement[x]",
+    "targetPath" : "Condition.abatement[x]",
+    "description" : "MustSupport added in target",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-25",
+    "type" : "EXTENSION",
+    "sourcePath" : "Condition.abatement[x]",
+    "targetPath" : "Condition.abatement[x].extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+    "description" : "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-26",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Condition.recordedDate",
+    "targetPath" : "Condition.recordedDate",
+    "description" : "MustSupport added in target",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-27",
+    "type" : "EXTENSION",
+    "sourcePath" : "Condition.recordedDate",
+    "targetPath" : "Condition.recordedDate.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+    "description" : "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-28",
+    "type" : "EXTENSION",
+    "sourcePath" : "",
+    "targetPath" : "Condition.extension:assertedDate",
+    "description" : "Extension added in target profile: Condition.extension:assertedDate",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-29",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "",
+    "targetPath" : "Condition.category:us-core",
+    "description" : "New slice 'us-core' added in target profile",
+    "severity" : "ERROR"
+  } ]
 }

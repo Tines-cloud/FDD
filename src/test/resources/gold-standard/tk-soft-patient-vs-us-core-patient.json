@@ -1,495 +1,433 @@
 {
-  "pairId": "tk-soft-patient-vs-us-core-patient",
-  "sourceClasspath": "custom-profiles/tk-soft/tk-soft-patient.json",
-  "targetClasspath": "standard-profiles/us-core/StructureDefinition-us-core-patient.json",
-  "drifts": [
-    {
-      "id": "rule-1",
-      "type": "STRUCTURAL",
-      "sourcePath": "Patient",
-      "targetPath": "Patient",
-      "description": "Constraints removed in target: [tk-pat-1, tk-pat-2]",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-2",
-      "type": "STRUCTURAL",
-      "sourcePath": "Patient.identifier",
-      "targetPath": "Patient.identifier",
-      "description": "Slicing changed: rules=open, discriminators=[pattern:type] -> none",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-3",
-      "type": "EXTENSION",
-      "sourcePath": "Patient.identifier",
-      "targetPath": "Patient.identifier.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-4",
-      "type": "STRUCTURAL",
-      "sourcePath": "Patient.identifier.system",
-      "targetPath": "Patient.identifier.system",
-      "description": "MustSupport added in target",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-5",
-      "type": "EXTENSION",
-      "sourcePath": "Patient.identifier.system",
-      "targetPath": "Patient.identifier.system.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-6",
-      "type": "STRUCTURAL",
-      "sourcePath": "Patient.identifier.value",
-      "targetPath": "Patient.identifier.value",
-      "description": "MustSupport added in target",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-7",
-      "type": "EXTENSION",
-      "sourcePath": "Patient.identifier.value",
-      "targetPath": "Patient.identifier.value.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-8",
-      "type": "STRUCTURAL",
-      "sourcePath": "Patient.active",
-      "targetPath": "Patient.active",
-      "description": "MustSupport removed in target",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-9",
-      "type": "STRUCTURAL",
-      "sourcePath": "Patient.name",
-      "targetPath": "Patient.name",
-      "description": "Constraints added in target: [us-core-6]",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-10",
-      "type": "EXTENSION",
-      "sourcePath": "Patient.name",
-      "targetPath": "Patient.name.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-11",
-      "type": "EXTENSION",
-      "sourcePath": "Patient.name.use",
-      "targetPath": "Patient.name.use.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-12",
-      "type": "EXTENSION",
-      "sourcePath": "Patient.name.family",
-      "targetPath": "Patient.name.family.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-13",
-      "type": "EXTENSION",
-      "sourcePath": "Patient.name.given",
-      "targetPath": "Patient.name.given.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-14",
-      "type": "STRUCTURAL",
-      "sourcePath": "Patient.name.prefix",
-      "targetPath": "Patient.name.prefix",
-      "description": "MustSupport removed in target",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-15",
-      "type": "EXTENSION",
-      "sourcePath": "Patient.name.suffix",
-      "targetPath": "Patient.name.suffix.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-16",
-      "type": "EXTENSION",
-      "sourcePath": "Patient.name.period",
-      "targetPath": "Patient.name.period.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-17",
-      "type": "CARDINALITY",
-      "sourcePath": "Patient.telecom",
-      "targetPath": "Patient.telecom",
-      "description": "Cardinality changed: [1..5] -> [0..*]",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-18",
-      "type": "STRUCTURAL",
-      "sourcePath": "Patient.telecom",
-      "targetPath": "Patient.telecom",
-      "description": "MustSupport removed in target",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-19",
-      "type": "EXTENSION",
-      "sourcePath": "Patient.telecom",
-      "targetPath": "Patient.telecom.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-20",
-      "type": "EXTENSION",
-      "sourcePath": "Patient.telecom.system",
-      "targetPath": "Patient.telecom.system.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-21",
-      "type": "EXTENSION",
-      "sourcePath": "Patient.telecom.value",
-      "targetPath": "Patient.telecom.value.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-22",
-      "type": "EXTENSION",
-      "sourcePath": "Patient.telecom.use",
-      "targetPath": "Patient.telecom.use.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-23",
-      "type": "EXTENSION",
-      "sourcePath": "Patient.gender",
-      "targetPath": "Patient.gender.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-24",
-      "type": "CARDINALITY",
-      "sourcePath": "Patient.birthDate",
-      "targetPath": "Patient.birthDate",
-      "description": "Cardinality changed: [1..1] -> [0..1]",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-25",
-      "type": "EXTENSION",
-      "sourcePath": "Patient.birthDate",
-      "targetPath": "Patient.birthDate.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-26",
-      "type": "STRUCTURAL",
-      "sourcePath": "Patient.deceased[x]",
-      "targetPath": "Patient.deceased[x]",
-      "description": "MustSupport removed in target",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-27",
-      "type": "EXTENSION",
-      "sourcePath": "Patient.deceased[x]",
-      "targetPath": "Patient.deceased[x].extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-28",
-      "type": "EXTENSION",
-      "sourcePath": "Patient.address",
-      "targetPath": "Patient.address.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-29",
-      "type": "EXTENSION",
-      "sourcePath": "Patient.address.use",
-      "targetPath": "Patient.address.use.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-30",
-      "type": "EXTENSION",
-      "sourcePath": "Patient.address.line",
-      "targetPath": "Patient.address.line.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-31",
-      "type": "EXTENSION",
-      "sourcePath": "Patient.address.city",
-      "targetPath": "Patient.address.city.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-32",
-      "type": "TERMINOLOGY",
-      "sourcePath": "Patient.address.state",
-      "targetPath": "Patient.address.state",
-      "description": "Binding changed: none(none) -> extensible(http://hl7.org/fhir/us/core/ValueSet/us-core-usps-state)",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-33",
-      "type": "EXTENSION",
-      "sourcePath": "Patient.address.state",
-      "targetPath": "Patient.address.state.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-34",
-      "type": "EXTENSION",
-      "sourcePath": "Patient.address.postalCode",
-      "targetPath": "Patient.address.postalCode.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-35",
-      "type": "STRUCTURAL",
-      "sourcePath": "Patient.address.country",
-      "targetPath": "Patient.address.country",
-      "description": "MustSupport removed in target",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-36",
-      "type": "EXTENSION",
-      "sourcePath": "Patient.address.period",
-      "targetPath": "Patient.address.period.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-37",
-      "type": "TERMINOLOGY",
-      "sourcePath": "Patient.maritalStatus",
-      "targetPath": "Patient.maritalStatus",
-      "description": "Binding changed: extensible(https://tk-soft.example.com/fhir/ValueSet/marital-status) -> extensible(http://hl7.org/fhir/ValueSet/marital-status)",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-38",
-      "type": "CARDINALITY",
-      "sourcePath": "Patient.photo",
-      "targetPath": "Patient.photo",
-      "description": "Cardinality changed: [0..0] -> [0..*]",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-39",
-      "type": "EXTENSION",
-      "sourcePath": "Patient.contact",
-      "targetPath": "Patient.contact.extension(http://hl7.org/fhir/StructureDefinition/structuredefinition-explicit-type-name)",
-      "description": "Extension added in target element: http://hl7.org/fhir/StructureDefinition/structuredefinition-explicit-type-name",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-40",
-      "type": "TERMINOLOGY",
-      "sourcePath": "Patient.contact.relationship",
-      "targetPath": "Patient.contact.relationship",
-      "description": "Binding changed: extensible(https://tk-soft.example.com/fhir/ValueSet/contact-relationship) -> extensible(http://hl7.org/fhir/ValueSet/patient-contactrelationship)",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-41",
-      "type": "STRUCTURAL",
-      "sourcePath": "Patient.contact.relationship",
-      "targetPath": "Patient.contact.relationship",
-      "description": "MustSupport removed in target",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-42",
-      "type": "STRUCTURAL",
-      "sourcePath": "Patient.contact.name",
-      "targetPath": "Patient.contact.name",
-      "description": "MustSupport removed in target",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-43",
-      "type": "STRUCTURAL",
-      "sourcePath": "Patient.contact.telecom",
-      "targetPath": "Patient.contact.telecom",
-      "description": "MustSupport removed in target",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-44",
-      "type": "EXTENSION",
-      "sourcePath": "Patient.communication",
-      "targetPath": "Patient.communication.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-45",
-      "type": "TERMINOLOGY",
-      "sourcePath": "Patient.communication.language",
-      "targetPath": "Patient.communication.language",
-      "description": "Binding changed: extensible(https://tk-soft.example.com/fhir/ValueSet/languages) -> extensible(http://hl7.org/fhir/us/core/ValueSet/simple-language)",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-46",
-      "type": "EXTENSION",
-      "sourcePath": "Patient.communication.language",
-      "targetPath": "Patient.communication.language.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-47",
-      "type": "STRUCTURAL",
-      "sourcePath": "Patient.generalPractitioner",
-      "targetPath": "Patient.generalPractitioner",
-      "description": "Reference target profile changed: [https://tk-soft.example.com/fhir/StructureDefinition/Practitioner] -> [http://hl7.org/fhir/StructureDefinition/Organization, http://hl7.org/fhir/StructureDefinition/Practitioner, http://hl7.org/fhir/StructureDefinition/PractitionerRole]",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-48",
-      "type": "STRUCTURAL",
-      "sourcePath": "Patient.generalPractitioner",
-      "targetPath": "Patient.generalPractitioner",
-      "description": "MustSupport removed in target",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-49",
-      "type": "STRUCTURAL",
-      "sourcePath": "Patient.managingOrganization",
-      "targetPath": "Patient.managingOrganization",
-      "description": "Reference target profile changed: [https://tk-soft.example.com/fhir/StructureDefinition/Organization] -> [http://hl7.org/fhir/StructureDefinition/Organization]",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-50",
-      "type": "STRUCTURAL",
-      "sourcePath": "Patient.managingOrganization",
-      "targetPath": "Patient.managingOrganization",
-      "description": "MustSupport removed in target",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-51",
-      "type": "EXTENSION",
-      "sourcePath": "",
-      "targetPath": "Patient.extension:race",
-      "description": "Extension added in target profile: Patient.extension:race",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-52",
-      "type": "EXTENSION",
-      "sourcePath": "",
-      "targetPath": "Patient.extension:ethnicity",
-      "description": "Extension added in target profile: Patient.extension:ethnicity",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-53",
-      "type": "EXTENSION",
-      "sourcePath": "",
-      "targetPath": "Patient.extension:tribalAffiliation",
-      "description": "Extension added in target profile: Patient.extension:tribalAffiliation",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-54",
-      "type": "EXTENSION",
-      "sourcePath": "",
-      "targetPath": "Patient.extension:birthsex",
-      "description": "Extension added in target profile: Patient.extension:birthsex",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-55",
-      "type": "EXTENSION",
-      "sourcePath": "",
-      "targetPath": "Patient.extension:sex",
-      "description": "Extension added in target profile: Patient.extension:sex",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-56",
-      "type": "EXTENSION",
-      "sourcePath": "",
-      "targetPath": "Patient.extension:genderIdentity",
-      "description": "Extension added in target profile: Patient.extension:genderIdentity",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-57",
-      "type": "EXTENSION",
-      "sourcePath": "Patient.extension:employeeId",
-      "targetPath": "",
-      "description": "Extension removed in target profile: Patient.extension:employeeId (was mustSupport)",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-58",
-      "type": "EXTENSION",
-      "sourcePath": "Patient.extension:preferredLanguage",
-      "targetPath": "",
-      "description": "Extension removed in target profile: Patient.extension:preferredLanguage (was mustSupport)",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-59",
-      "type": "EXTENSION",
-      "sourcePath": "Patient.extension:ethnicGroup",
-      "targetPath": "",
-      "description": "Extension removed in target profile: Patient.extension:ethnicGroup",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-60",
-      "type": "STRUCTURAL",
-      "sourcePath": "Patient.identifier:mrn",
-      "targetPath": "",
-      "description": "Slice 'mrn' removed in target profile",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-61",
-      "type": "STRUCTURAL",
-      "sourcePath": "Patient.identifier:national",
-      "targetPath": "",
-      "description": "Slice 'national' removed in target profile",
-      "severity": "WARNING"
-    }
-  ]
+  "pairId" : "tk-soft-patient-vs-us-core-patient",
+  "sourceClasspath" : "custom-profiles/tk-soft/tk-soft-patient.json",
+  "targetClasspath" : "standard-profiles/us-core/StructureDefinition-us-core-patient.json",
+  "drifts" : [ {
+    "id" : "rule-1",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Patient",
+    "targetPath" : "Patient",
+    "description" : "Constraints removed in target: [tk-pat-1, tk-pat-2]",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-2",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Patient.identifier",
+    "targetPath" : "Patient.identifier",
+    "description" : "Slicing changed: rules=open, discriminators=[pattern:type] -> none",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-3",
+    "type" : "EXTENSION",
+    "sourcePath" : "Patient.identifier",
+    "targetPath" : "Patient.identifier.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+    "description" : "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-4",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Patient.identifier.system",
+    "targetPath" : "Patient.identifier.system",
+    "description" : "MustSupport added in target",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-5",
+    "type" : "EXTENSION",
+    "sourcePath" : "Patient.identifier.system",
+    "targetPath" : "Patient.identifier.system.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+    "description" : "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-6",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Patient.identifier.value",
+    "targetPath" : "Patient.identifier.value",
+    "description" : "MustSupport added in target",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-7",
+    "type" : "EXTENSION",
+    "sourcePath" : "Patient.identifier.value",
+    "targetPath" : "Patient.identifier.value.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+    "description" : "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-8",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Patient.active",
+    "targetPath" : "Patient.active",
+    "description" : "MustSupport removed in target",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-9",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Patient.name",
+    "targetPath" : "Patient.name",
+    "description" : "Constraints added in target: [us-core-6]",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-10",
+    "type" : "EXTENSION",
+    "sourcePath" : "Patient.name",
+    "targetPath" : "Patient.name.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+    "description" : "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-11",
+    "type" : "EXTENSION",
+    "sourcePath" : "Patient.name.use",
+    "targetPath" : "Patient.name.use.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+    "description" : "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-12",
+    "type" : "EXTENSION",
+    "sourcePath" : "Patient.name.family",
+    "targetPath" : "Patient.name.family.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+    "description" : "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-13",
+    "type" : "EXTENSION",
+    "sourcePath" : "Patient.name.given",
+    "targetPath" : "Patient.name.given.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+    "description" : "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-14",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Patient.name.prefix",
+    "targetPath" : "Patient.name.prefix",
+    "description" : "MustSupport removed in target",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-15",
+    "type" : "EXTENSION",
+    "sourcePath" : "Patient.name.suffix",
+    "targetPath" : "Patient.name.suffix.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+    "description" : "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-16",
+    "type" : "EXTENSION",
+    "sourcePath" : "Patient.name.period",
+    "targetPath" : "Patient.name.period.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+    "description" : "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-17",
+    "type" : "CARDINALITY",
+    "sourcePath" : "Patient.telecom",
+    "targetPath" : "Patient.telecom",
+    "description" : "Cardinality changed: [1..5] -> [0..*]",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-18",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Patient.telecom",
+    "targetPath" : "Patient.telecom",
+    "description" : "MustSupport removed in target",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-19",
+    "type" : "EXTENSION",
+    "sourcePath" : "Patient.telecom",
+    "targetPath" : "Patient.telecom.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+    "description" : "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-20",
+    "type" : "EXTENSION",
+    "sourcePath" : "Patient.telecom.system",
+    "targetPath" : "Patient.telecom.system.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+    "description" : "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-21",
+    "type" : "EXTENSION",
+    "sourcePath" : "Patient.telecom.value",
+    "targetPath" : "Patient.telecom.value.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+    "description" : "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-22",
+    "type" : "EXTENSION",
+    "sourcePath" : "Patient.telecom.use",
+    "targetPath" : "Patient.telecom.use.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+    "description" : "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-23",
+    "type" : "EXTENSION",
+    "sourcePath" : "Patient.gender",
+    "targetPath" : "Patient.gender.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+    "description" : "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-24",
+    "type" : "CARDINALITY",
+    "sourcePath" : "Patient.birthDate",
+    "targetPath" : "Patient.birthDate",
+    "description" : "Cardinality changed: [1..1] -> [0..1]",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-25",
+    "type" : "EXTENSION",
+    "sourcePath" : "Patient.birthDate",
+    "targetPath" : "Patient.birthDate.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+    "description" : "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-26",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Patient.deceased[x]",
+    "targetPath" : "Patient.deceased[x]",
+    "description" : "MustSupport removed in target",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-27",
+    "type" : "EXTENSION",
+    "sourcePath" : "Patient.deceased[x]",
+    "targetPath" : "Patient.deceased[x].extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+    "description" : "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-28",
+    "type" : "EXTENSION",
+    "sourcePath" : "Patient.address",
+    "targetPath" : "Patient.address.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+    "description" : "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-29",
+    "type" : "EXTENSION",
+    "sourcePath" : "Patient.address.use",
+    "targetPath" : "Patient.address.use.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+    "description" : "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-30",
+    "type" : "EXTENSION",
+    "sourcePath" : "Patient.address.line",
+    "targetPath" : "Patient.address.line.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+    "description" : "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-31",
+    "type" : "EXTENSION",
+    "sourcePath" : "Patient.address.city",
+    "targetPath" : "Patient.address.city.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+    "description" : "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-32",
+    "type" : "TERMINOLOGY",
+    "sourcePath" : "Patient.address.state",
+    "targetPath" : "Patient.address.state",
+    "description" : "Binding changed: none(none) -> extensible(http://hl7.org/fhir/us/core/ValueSet/us-core-usps-state)",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-33",
+    "type" : "EXTENSION",
+    "sourcePath" : "Patient.address.state",
+    "targetPath" : "Patient.address.state.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+    "description" : "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-34",
+    "type" : "EXTENSION",
+    "sourcePath" : "Patient.address.postalCode",
+    "targetPath" : "Patient.address.postalCode.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+    "description" : "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-35",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Patient.address.country",
+    "targetPath" : "Patient.address.country",
+    "description" : "MustSupport removed in target",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-36",
+    "type" : "EXTENSION",
+    "sourcePath" : "Patient.address.period",
+    "targetPath" : "Patient.address.period.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+    "description" : "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-37",
+    "type" : "TERMINOLOGY",
+    "sourcePath" : "Patient.maritalStatus",
+    "targetPath" : "Patient.maritalStatus",
+    "description" : "Binding changed: extensible(https://tk-soft.example.com/fhir/ValueSet/marital-status) -> extensible(http://hl7.org/fhir/ValueSet/marital-status)",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-38",
+    "type" : "CARDINALITY",
+    "sourcePath" : "Patient.photo",
+    "targetPath" : "Patient.photo",
+    "description" : "Cardinality changed: [0..0] -> [0..*]",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-39",
+    "type" : "EXTENSION",
+    "sourcePath" : "Patient.contact",
+    "targetPath" : "Patient.contact.extension(http://hl7.org/fhir/StructureDefinition/structuredefinition-explicit-type-name)",
+    "description" : "Extension added in target element: http://hl7.org/fhir/StructureDefinition/structuredefinition-explicit-type-name",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-40",
+    "type" : "TERMINOLOGY",
+    "sourcePath" : "Patient.contact.relationship",
+    "targetPath" : "Patient.contact.relationship",
+    "description" : "Binding changed: extensible(https://tk-soft.example.com/fhir/ValueSet/contact-relationship) -> extensible(http://hl7.org/fhir/ValueSet/patient-contactrelationship)",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-41",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Patient.contact.relationship",
+    "targetPath" : "Patient.contact.relationship",
+    "description" : "MustSupport removed in target",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-42",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Patient.contact.name",
+    "targetPath" : "Patient.contact.name",
+    "description" : "MustSupport removed in target",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-43",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Patient.contact.telecom",
+    "targetPath" : "Patient.contact.telecom",
+    "description" : "MustSupport removed in target",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-44",
+    "type" : "EXTENSION",
+    "sourcePath" : "Patient.communication",
+    "targetPath" : "Patient.communication.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+    "description" : "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-45",
+    "type" : "TERMINOLOGY",
+    "sourcePath" : "Patient.communication.language",
+    "targetPath" : "Patient.communication.language",
+    "description" : "Binding changed: extensible(https://tk-soft.example.com/fhir/ValueSet/languages) -> extensible(http://hl7.org/fhir/us/core/ValueSet/simple-language)",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-46",
+    "type" : "EXTENSION",
+    "sourcePath" : "Patient.communication.language",
+    "targetPath" : "Patient.communication.language.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+    "description" : "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-47",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Patient.generalPractitioner",
+    "targetPath" : "Patient.generalPractitioner",
+    "description" : "Reference target profile changed: [https://tk-soft.example.com/fhir/StructureDefinition/Practitioner] -> [http://hl7.org/fhir/StructureDefinition/Organization, http://hl7.org/fhir/StructureDefinition/Practitioner, http://hl7.org/fhir/StructureDefinition/PractitionerRole]",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-48",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Patient.generalPractitioner",
+    "targetPath" : "Patient.generalPractitioner",
+    "description" : "MustSupport removed in target",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-49",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Patient.managingOrganization",
+    "targetPath" : "Patient.managingOrganization",
+    "description" : "Reference target profile changed: [https://tk-soft.example.com/fhir/StructureDefinition/Organization] -> [http://hl7.org/fhir/StructureDefinition/Organization]",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-50",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Patient.managingOrganization",
+    "targetPath" : "Patient.managingOrganization",
+    "description" : "MustSupport removed in target",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-51",
+    "type" : "EXTENSION",
+    "sourcePath" : "",
+    "targetPath" : "Patient.extension:race",
+    "description" : "Extension added in target profile: Patient.extension:race",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-52",
+    "type" : "EXTENSION",
+    "sourcePath" : "",
+    "targetPath" : "Patient.extension:ethnicity",
+    "description" : "Extension added in target profile: Patient.extension:ethnicity",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-53",
+    "type" : "EXTENSION",
+    "sourcePath" : "",
+    "targetPath" : "Patient.extension:tribalAffiliation",
+    "description" : "Extension added in target profile: Patient.extension:tribalAffiliation",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-54",
+    "type" : "EXTENSION",
+    "sourcePath" : "",
+    "targetPath" : "Patient.extension:birthsex",
+    "description" : "Extension added in target profile: Patient.extension:birthsex",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-55",
+    "type" : "EXTENSION",
+    "sourcePath" : "",
+    "targetPath" : "Patient.extension:sex",
+    "description" : "Extension added in target profile: Patient.extension:sex",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-56",
+    "type" : "EXTENSION",
+    "sourcePath" : "",
+    "targetPath" : "Patient.extension:genderIdentity",
+    "description" : "Extension added in target profile: Patient.extension:genderIdentity",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-57",
+    "type" : "EXTENSION",
+    "sourcePath" : "Patient.extension:employeeId",
+    "targetPath" : "",
+    "description" : "Extension removed in target profile: Patient.extension:employeeId (was mustSupport)",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-58",
+    "type" : "EXTENSION",
+    "sourcePath" : "Patient.extension:preferredLanguage",
+    "targetPath" : "",
+    "description" : "Extension removed in target profile: Patient.extension:preferredLanguage (was mustSupport)",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-59",
+    "type" : "EXTENSION",
+    "sourcePath" : "Patient.extension:ethnicGroup",
+    "targetPath" : "",
+    "description" : "Extension removed in target profile: Patient.extension:ethnicGroup",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-60",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Patient.identifier:mrn",
+    "targetPath" : "",
+    "description" : "Slice 'mrn' removed in target profile",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-61",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Patient.identifier:national",
+    "targetPath" : "",
+    "description" : "Slice 'national' removed in target profile",
+    "severity" : "WARNING"
+  } ]
 }

@@ -67,12 +67,7 @@ class Experiment1DriftDetectionTest {
         }
 
         val results = goldPairs.map { gold ->
-            log.info(
-                "Evaluating pair: {} (source={}, target={})",
-                gold.pairId,
-                gold.sourceClasspath,
-                gold.targetClasspath
-            )
+            log.info("Evaluating pair: {} (source={}, target={})", gold.pairId, gold.sourceClasspath, gold.targetClasspath)
 
             val predicted = orchestrationService.analyzeDrift(
                 source = ProfileInput(classpath = gold.sourceClasspath),

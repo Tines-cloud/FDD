@@ -1,519 +1,454 @@
 {
-  "pairId": "r4-vs-us-core-patient",
-  "sourceClasspath": "standard-profiles/r4/patient.profile.json",
-  "targetClasspath": "standard-profiles/us-core/StructureDefinition-us-core-patient.json",
-  "drifts": [
-    {
-      "id": "rule-1",
-      "type": "STRUCTURAL",
-      "sourcePath": "Patient.extension",
-      "targetPath": "Patient.extension",
-      "description": "Slicing changed: none -> rules=open, discriminators=[value:url]",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-2",
-      "type": "CARDINALITY",
-      "sourcePath": "Patient.identifier",
-      "targetPath": "Patient.identifier",
-      "description": "Cardinality changed: [0..*] -> [1..*]",
-      "severity": "ERROR"
-    },
-    {
-      "id": "rule-3",
-      "type": "STRUCTURAL",
-      "sourcePath": "Patient.identifier",
-      "targetPath": "Patient.identifier",
-      "description": "MustSupport added in target",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-4",
-      "type": "EXTENSION",
-      "sourcePath": "Patient.identifier",
-      "targetPath": "Patient.identifier.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-5",
-      "type": "CARDINALITY",
-      "sourcePath": "Patient.name",
-      "targetPath": "Patient.name",
-      "description": "Cardinality changed: [0..*] -> [1..*]",
-      "severity": "ERROR"
-    },
-    {
-      "id": "rule-6",
-      "type": "STRUCTURAL",
-      "sourcePath": "Patient.name",
-      "targetPath": "Patient.name",
-      "description": "MustSupport added in target",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-7",
-      "type": "STRUCTURAL",
-      "sourcePath": "Patient.name",
-      "targetPath": "Patient.name",
-      "description": "Constraints added in target: [us-core-6]",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-8",
-      "type": "EXTENSION",
-      "sourcePath": "Patient.name",
-      "targetPath": "Patient.name.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-9",
-      "type": "EXTENSION",
-      "sourcePath": "Patient.telecom",
-      "targetPath": "Patient.telecom.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-10",
-      "type": "CARDINALITY",
-      "sourcePath": "Patient.gender",
-      "targetPath": "Patient.gender",
-      "description": "Cardinality changed: [0..1] -> [1..1]",
-      "severity": "ERROR"
-    },
-    {
-      "id": "rule-11",
-      "type": "TERMINOLOGY",
-      "sourcePath": "Patient.gender",
-      "targetPath": "Patient.gender",
-      "description": "Binding changed: required(http://hl7.org/fhir/ValueSet/administrative-gender|4.0.1) -> required(http://hl7.org/fhir/ValueSet/administrative-gender)",
-      "severity": "ERROR"
-    },
-    {
-      "id": "rule-12",
-      "type": "STRUCTURAL",
-      "sourcePath": "Patient.gender",
-      "targetPath": "Patient.gender",
-      "description": "MustSupport added in target",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-13",
-      "type": "EXTENSION",
-      "sourcePath": "Patient.gender",
-      "targetPath": "Patient.gender.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-14",
-      "type": "STRUCTURAL",
-      "sourcePath": "Patient.birthDate",
-      "targetPath": "Patient.birthDate",
-      "description": "MustSupport added in target",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-15",
-      "type": "EXTENSION",
-      "sourcePath": "Patient.birthDate",
-      "targetPath": "Patient.birthDate.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-16",
-      "type": "EXTENSION",
-      "sourcePath": "Patient.deceased[x]",
-      "targetPath": "Patient.deceased[x].extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-17",
-      "type": "STRUCTURAL",
-      "sourcePath": "Patient.address",
-      "targetPath": "Patient.address",
-      "description": "MustSupport added in target",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-18",
-      "type": "EXTENSION",
-      "sourcePath": "Patient.address",
-      "targetPath": "Patient.address.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-19",
-      "type": "EXTENSION",
-      "sourcePath": "Patient.communication",
-      "targetPath": "Patient.communication.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-20",
-      "type": "TERMINOLOGY",
-      "sourcePath": "Patient.communication.language",
-      "targetPath": "Patient.communication.language",
-      "description": "Binding changed: preferred(http://hl7.org/fhir/ValueSet/languages) -> extensible(http://hl7.org/fhir/us/core/ValueSet/simple-language)",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-21",
-      "type": "STRUCTURAL",
-      "sourcePath": "Patient.communication.language",
-      "targetPath": "Patient.communication.language",
-      "description": "MustSupport added in target",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-22",
-      "type": "EXTENSION",
-      "sourcePath": "Patient.communication.language",
-      "targetPath": "Patient.communication.language.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-23",
-      "type": "EXTENSION",
-      "sourcePath": "",
-      "targetPath": "Patient.extension:race",
-      "description": "Extension added in target profile: Patient.extension:race",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-24",
-      "type": "EXTENSION",
-      "sourcePath": "",
-      "targetPath": "Patient.extension:ethnicity",
-      "description": "Extension added in target profile: Patient.extension:ethnicity",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-25",
-      "type": "EXTENSION",
-      "sourcePath": "",
-      "targetPath": "Patient.extension:tribalAffiliation",
-      "description": "Extension added in target profile: Patient.extension:tribalAffiliation",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-26",
-      "type": "EXTENSION",
-      "sourcePath": "",
-      "targetPath": "Patient.extension:birthsex",
-      "description": "Extension added in target profile: Patient.extension:birthsex",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-27",
-      "type": "EXTENSION",
-      "sourcePath": "",
-      "targetPath": "Patient.extension:sex",
-      "description": "Extension added in target profile: Patient.extension:sex",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-28",
-      "type": "EXTENSION",
-      "sourcePath": "",
-      "targetPath": "Patient.extension:genderIdentity",
-      "description": "Extension added in target profile: Patient.extension:genderIdentity",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-29",
-      "type": "STRUCTURAL",
-      "sourcePath": "",
-      "targetPath": "Patient.identifier.id",
-      "description": "Element added in target profile: Patient.identifier.id",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-30",
-      "type": "STRUCTURAL",
-      "sourcePath": "",
-      "targetPath": "Patient.identifier.extension",
-      "description": "Element added in target profile: Patient.identifier.extension",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-31",
-      "type": "STRUCTURAL",
-      "sourcePath": "",
-      "targetPath": "Patient.identifier.use",
-      "description": "Element added in target profile: Patient.identifier.use",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-32",
-      "type": "STRUCTURAL",
-      "sourcePath": "",
-      "targetPath": "Patient.identifier.type",
-      "description": "Element added in target profile: Patient.identifier.type",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-33",
-      "type": "STRUCTURAL",
-      "sourcePath": "",
-      "targetPath": "Patient.identifier.system",
-      "description": "Element added in target profile: Patient.identifier.system",
-      "severity": "ERROR"
-    },
-    {
-      "id": "rule-34",
-      "type": "STRUCTURAL",
-      "sourcePath": "",
-      "targetPath": "Patient.identifier.value",
-      "description": "Element added in target profile: Patient.identifier.value",
-      "severity": "ERROR"
-    },
-    {
-      "id": "rule-35",
-      "type": "STRUCTURAL",
-      "sourcePath": "",
-      "targetPath": "Patient.identifier.period",
-      "description": "Element added in target profile: Patient.identifier.period",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-36",
-      "type": "STRUCTURAL",
-      "sourcePath": "",
-      "targetPath": "Patient.identifier.assigner",
-      "description": "Element added in target profile: Patient.identifier.assigner",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-37",
-      "type": "STRUCTURAL",
-      "sourcePath": "",
-      "targetPath": "Patient.name.id",
-      "description": "Element added in target profile: Patient.name.id",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-38",
-      "type": "STRUCTURAL",
-      "sourcePath": "",
-      "targetPath": "Patient.name.extension",
-      "description": "Element added in target profile: Patient.name.extension",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-39",
-      "type": "STRUCTURAL",
-      "sourcePath": "",
-      "targetPath": "Patient.name.use",
-      "description": "Element added in target profile: Patient.name.use",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-40",
-      "type": "STRUCTURAL",
-      "sourcePath": "",
-      "targetPath": "Patient.name.text",
-      "description": "Element added in target profile: Patient.name.text",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-41",
-      "type": "STRUCTURAL",
-      "sourcePath": "",
-      "targetPath": "Patient.name.family",
-      "description": "Element added in target profile: Patient.name.family",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-42",
-      "type": "STRUCTURAL",
-      "sourcePath": "",
-      "targetPath": "Patient.name.given",
-      "description": "Element added in target profile: Patient.name.given",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-43",
-      "type": "STRUCTURAL",
-      "sourcePath": "",
-      "targetPath": "Patient.name.prefix",
-      "description": "Element added in target profile: Patient.name.prefix",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-44",
-      "type": "STRUCTURAL",
-      "sourcePath": "",
-      "targetPath": "Patient.name.suffix",
-      "description": "Element added in target profile: Patient.name.suffix",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-45",
-      "type": "STRUCTURAL",
-      "sourcePath": "",
-      "targetPath": "Patient.name.period",
-      "description": "Element added in target profile: Patient.name.period",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-46",
-      "type": "STRUCTURAL",
-      "sourcePath": "",
-      "targetPath": "Patient.telecom.id",
-      "description": "Element added in target profile: Patient.telecom.id",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-47",
-      "type": "STRUCTURAL",
-      "sourcePath": "",
-      "targetPath": "Patient.telecom.extension",
-      "description": "Element added in target profile: Patient.telecom.extension",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-48",
-      "type": "STRUCTURAL",
-      "sourcePath": "",
-      "targetPath": "Patient.telecom.system",
-      "description": "Element added in target profile: Patient.telecom.system",
-      "severity": "ERROR"
-    },
-    {
-      "id": "rule-49",
-      "type": "STRUCTURAL",
-      "sourcePath": "",
-      "targetPath": "Patient.telecom.value",
-      "description": "Element added in target profile: Patient.telecom.value",
-      "severity": "ERROR"
-    },
-    {
-      "id": "rule-50",
-      "type": "STRUCTURAL",
-      "sourcePath": "",
-      "targetPath": "Patient.telecom.use",
-      "description": "Element added in target profile: Patient.telecom.use",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-51",
-      "type": "STRUCTURAL",
-      "sourcePath": "",
-      "targetPath": "Patient.telecom.rank",
-      "description": "Element added in target profile: Patient.telecom.rank",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-52",
-      "type": "STRUCTURAL",
-      "sourcePath": "",
-      "targetPath": "Patient.telecom.period",
-      "description": "Element added in target profile: Patient.telecom.period",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-53",
-      "type": "STRUCTURAL",
-      "sourcePath": "",
-      "targetPath": "Patient.address.id",
-      "description": "Element added in target profile: Patient.address.id",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-54",
-      "type": "STRUCTURAL",
-      "sourcePath": "",
-      "targetPath": "Patient.address.extension",
-      "description": "Element added in target profile: Patient.address.extension",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-55",
-      "type": "STRUCTURAL",
-      "sourcePath": "",
-      "targetPath": "Patient.address.use",
-      "description": "Element added in target profile: Patient.address.use",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-56",
-      "type": "STRUCTURAL",
-      "sourcePath": "",
-      "targetPath": "Patient.address.type",
-      "description": "Element added in target profile: Patient.address.type",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-57",
-      "type": "STRUCTURAL",
-      "sourcePath": "",
-      "targetPath": "Patient.address.text",
-      "description": "Element added in target profile: Patient.address.text",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-58",
-      "type": "STRUCTURAL",
-      "sourcePath": "",
-      "targetPath": "Patient.address.line",
-      "description": "Element added in target profile: Patient.address.line",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-59",
-      "type": "STRUCTURAL",
-      "sourcePath": "",
-      "targetPath": "Patient.address.city",
-      "description": "Element added in target profile: Patient.address.city",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-60",
-      "type": "STRUCTURAL",
-      "sourcePath": "",
-      "targetPath": "Patient.address.district",
-      "description": "Element added in target profile: Patient.address.district",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-61",
-      "type": "STRUCTURAL",
-      "sourcePath": "",
-      "targetPath": "Patient.address.state",
-      "description": "Element added in target profile: Patient.address.state",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-62",
-      "type": "STRUCTURAL",
-      "sourcePath": "",
-      "targetPath": "Patient.address.postalCode",
-      "description": "Element added in target profile: Patient.address.postalCode",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-63",
-      "type": "STRUCTURAL",
-      "sourcePath": "",
-      "targetPath": "Patient.address.country",
-      "description": "Element added in target profile: Patient.address.country",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-64",
-      "type": "STRUCTURAL",
-      "sourcePath": "",
-      "targetPath": "Patient.address.period",
-      "description": "Element added in target profile: Patient.address.period",
-      "severity": "INFO"
-    }
-  ]
+  "pairId" : "r4-vs-us-core-patient",
+  "sourceClasspath" : "standard-profiles/r4/patient.profile.json",
+  "targetClasspath" : "standard-profiles/us-core/StructureDefinition-us-core-patient.json",
+  "drifts" : [ {
+    "id" : "rule-1",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Patient.extension",
+    "targetPath" : "Patient.extension",
+    "description" : "Slicing changed: none -> rules=open, discriminators=[value:url]",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-2",
+    "type" : "CARDINALITY",
+    "sourcePath" : "Patient.identifier",
+    "targetPath" : "Patient.identifier",
+    "description" : "Cardinality changed: [0..*] -> [1..*]",
+    "severity" : "ERROR"
+  }, {
+    "id" : "rule-3",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Patient.identifier",
+    "targetPath" : "Patient.identifier",
+    "description" : "MustSupport added in target",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-4",
+    "type" : "EXTENSION",
+    "sourcePath" : "Patient.identifier",
+    "targetPath" : "Patient.identifier.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+    "description" : "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-5",
+    "type" : "CARDINALITY",
+    "sourcePath" : "Patient.name",
+    "targetPath" : "Patient.name",
+    "description" : "Cardinality changed: [0..*] -> [1..*]",
+    "severity" : "ERROR"
+  }, {
+    "id" : "rule-6",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Patient.name",
+    "targetPath" : "Patient.name",
+    "description" : "MustSupport added in target",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-7",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Patient.name",
+    "targetPath" : "Patient.name",
+    "description" : "Constraints added in target: [us-core-6]",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-8",
+    "type" : "EXTENSION",
+    "sourcePath" : "Patient.name",
+    "targetPath" : "Patient.name.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+    "description" : "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-9",
+    "type" : "EXTENSION",
+    "sourcePath" : "Patient.telecom",
+    "targetPath" : "Patient.telecom.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+    "description" : "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-10",
+    "type" : "CARDINALITY",
+    "sourcePath" : "Patient.gender",
+    "targetPath" : "Patient.gender",
+    "description" : "Cardinality changed: [0..1] -> [1..1]",
+    "severity" : "ERROR"
+  }, {
+    "id" : "rule-11",
+    "type" : "TERMINOLOGY",
+    "sourcePath" : "Patient.gender",
+    "targetPath" : "Patient.gender",
+    "description" : "Binding changed: required(http://hl7.org/fhir/ValueSet/administrative-gender|4.0.1) -> required(http://hl7.org/fhir/ValueSet/administrative-gender)",
+    "severity" : "ERROR"
+  }, {
+    "id" : "rule-12",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Patient.gender",
+    "targetPath" : "Patient.gender",
+    "description" : "MustSupport added in target",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-13",
+    "type" : "EXTENSION",
+    "sourcePath" : "Patient.gender",
+    "targetPath" : "Patient.gender.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+    "description" : "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-14",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Patient.birthDate",
+    "targetPath" : "Patient.birthDate",
+    "description" : "MustSupport added in target",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-15",
+    "type" : "EXTENSION",
+    "sourcePath" : "Patient.birthDate",
+    "targetPath" : "Patient.birthDate.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+    "description" : "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-16",
+    "type" : "EXTENSION",
+    "sourcePath" : "Patient.deceased[x]",
+    "targetPath" : "Patient.deceased[x].extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+    "description" : "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-17",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Patient.address",
+    "targetPath" : "Patient.address",
+    "description" : "MustSupport added in target",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-18",
+    "type" : "EXTENSION",
+    "sourcePath" : "Patient.address",
+    "targetPath" : "Patient.address.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+    "description" : "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-19",
+    "type" : "EXTENSION",
+    "sourcePath" : "Patient.communication",
+    "targetPath" : "Patient.communication.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+    "description" : "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-20",
+    "type" : "TERMINOLOGY",
+    "sourcePath" : "Patient.communication.language",
+    "targetPath" : "Patient.communication.language",
+    "description" : "Binding changed: preferred(http://hl7.org/fhir/ValueSet/languages) -> extensible(http://hl7.org/fhir/us/core/ValueSet/simple-language)",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-21",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Patient.communication.language",
+    "targetPath" : "Patient.communication.language",
+    "description" : "MustSupport added in target",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-22",
+    "type" : "EXTENSION",
+    "sourcePath" : "Patient.communication.language",
+    "targetPath" : "Patient.communication.language.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+    "description" : "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-23",
+    "type" : "EXTENSION",
+    "sourcePath" : "",
+    "targetPath" : "Patient.extension:race",
+    "description" : "Extension added in target profile: Patient.extension:race",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-24",
+    "type" : "EXTENSION",
+    "sourcePath" : "",
+    "targetPath" : "Patient.extension:ethnicity",
+    "description" : "Extension added in target profile: Patient.extension:ethnicity",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-25",
+    "type" : "EXTENSION",
+    "sourcePath" : "",
+    "targetPath" : "Patient.extension:tribalAffiliation",
+    "description" : "Extension added in target profile: Patient.extension:tribalAffiliation",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-26",
+    "type" : "EXTENSION",
+    "sourcePath" : "",
+    "targetPath" : "Patient.extension:birthsex",
+    "description" : "Extension added in target profile: Patient.extension:birthsex",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-27",
+    "type" : "EXTENSION",
+    "sourcePath" : "",
+    "targetPath" : "Patient.extension:sex",
+    "description" : "Extension added in target profile: Patient.extension:sex",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-28",
+    "type" : "EXTENSION",
+    "sourcePath" : "",
+    "targetPath" : "Patient.extension:genderIdentity",
+    "description" : "Extension added in target profile: Patient.extension:genderIdentity",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-29",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "",
+    "targetPath" : "Patient.identifier.id",
+    "description" : "Element added in target profile: Patient.identifier.id",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-30",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "",
+    "targetPath" : "Patient.identifier.extension",
+    "description" : "Element added in target profile: Patient.identifier.extension",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-31",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "",
+    "targetPath" : "Patient.identifier.use",
+    "description" : "Element added in target profile: Patient.identifier.use",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-32",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "",
+    "targetPath" : "Patient.identifier.type",
+    "description" : "Element added in target profile: Patient.identifier.type",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-33",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "",
+    "targetPath" : "Patient.identifier.system",
+    "description" : "Element added in target profile: Patient.identifier.system",
+    "severity" : "ERROR"
+  }, {
+    "id" : "rule-34",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "",
+    "targetPath" : "Patient.identifier.value",
+    "description" : "Element added in target profile: Patient.identifier.value",
+    "severity" : "ERROR"
+  }, {
+    "id" : "rule-35",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "",
+    "targetPath" : "Patient.identifier.period",
+    "description" : "Element added in target profile: Patient.identifier.period",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-36",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "",
+    "targetPath" : "Patient.identifier.assigner",
+    "description" : "Element added in target profile: Patient.identifier.assigner",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-37",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "",
+    "targetPath" : "Patient.name.id",
+    "description" : "Element added in target profile: Patient.name.id",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-38",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "",
+    "targetPath" : "Patient.name.extension",
+    "description" : "Element added in target profile: Patient.name.extension",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-39",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "",
+    "targetPath" : "Patient.name.use",
+    "description" : "Element added in target profile: Patient.name.use",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-40",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "",
+    "targetPath" : "Patient.name.text",
+    "description" : "Element added in target profile: Patient.name.text",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-41",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "",
+    "targetPath" : "Patient.name.family",
+    "description" : "Element added in target profile: Patient.name.family",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-42",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "",
+    "targetPath" : "Patient.name.given",
+    "description" : "Element added in target profile: Patient.name.given",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-43",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "",
+    "targetPath" : "Patient.name.prefix",
+    "description" : "Element added in target profile: Patient.name.prefix",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-44",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "",
+    "targetPath" : "Patient.name.suffix",
+    "description" : "Element added in target profile: Patient.name.suffix",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-45",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "",
+    "targetPath" : "Patient.name.period",
+    "description" : "Element added in target profile: Patient.name.period",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-46",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "",
+    "targetPath" : "Patient.telecom.id",
+    "description" : "Element added in target profile: Patient.telecom.id",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-47",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "",
+    "targetPath" : "Patient.telecom.extension",
+    "description" : "Element added in target profile: Patient.telecom.extension",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-48",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "",
+    "targetPath" : "Patient.telecom.system",
+    "description" : "Element added in target profile: Patient.telecom.system",
+    "severity" : "ERROR"
+  }, {
+    "id" : "rule-49",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "",
+    "targetPath" : "Patient.telecom.value",
+    "description" : "Element added in target profile: Patient.telecom.value",
+    "severity" : "ERROR"
+  }, {
+    "id" : "rule-50",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "",
+    "targetPath" : "Patient.telecom.use",
+    "description" : "Element added in target profile: Patient.telecom.use",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-51",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "",
+    "targetPath" : "Patient.telecom.rank",
+    "description" : "Element added in target profile: Patient.telecom.rank",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-52",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "",
+    "targetPath" : "Patient.telecom.period",
+    "description" : "Element added in target profile: Patient.telecom.period",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-53",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "",
+    "targetPath" : "Patient.address.id",
+    "description" : "Element added in target profile: Patient.address.id",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-54",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "",
+    "targetPath" : "Patient.address.extension",
+    "description" : "Element added in target profile: Patient.address.extension",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-55",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "",
+    "targetPath" : "Patient.address.use",
+    "description" : "Element added in target profile: Patient.address.use",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-56",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "",
+    "targetPath" : "Patient.address.type",
+    "description" : "Element added in target profile: Patient.address.type",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-57",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "",
+    "targetPath" : "Patient.address.text",
+    "description" : "Element added in target profile: Patient.address.text",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-58",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "",
+    "targetPath" : "Patient.address.line",
+    "description" : "Element added in target profile: Patient.address.line",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-59",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "",
+    "targetPath" : "Patient.address.city",
+    "description" : "Element added in target profile: Patient.address.city",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-60",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "",
+    "targetPath" : "Patient.address.district",
+    "description" : "Element added in target profile: Patient.address.district",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-61",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "",
+    "targetPath" : "Patient.address.state",
+    "description" : "Element added in target profile: Patient.address.state",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-62",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "",
+    "targetPath" : "Patient.address.postalCode",
+    "description" : "Element added in target profile: Patient.address.postalCode",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-63",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "",
+    "targetPath" : "Patient.address.country",
+    "description" : "Element added in target profile: Patient.address.country",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-64",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "",
+    "targetPath" : "Patient.address.period",
+    "description" : "Element added in target profile: Patient.address.period",
+    "severity" : "INFO"
+  } ]
 }

@@ -77,27 +77,15 @@ class GoldStandardGeneratorTest {
     private val allPairs = listOf(
         // ── Category 1: R4 Base → US Core (14 pairs) ──
         PairDef("r4-vs-us-core-patient", r4("patient"), us("us-core-patient")),
-        PairDef(
-            "r4-allergyintolerance-vs-us-core-allergyintolerance",
-            r4("allergyintolerance"),
-            us("us-core-allergyintolerance")
-        ),
+        PairDef("r4-allergyintolerance-vs-us-core-allergyintolerance", r4("allergyintolerance"), us("us-core-allergyintolerance")),
         PairDef("r4-careplan-vs-us-core-careplan", r4("careplan"), us("us-core-careplan")),
         PairDef("r4-condition-vs-us-core-condition", r4("condition"), us("us-core-condition-encounter-diagnosis")),
-        PairDef(
-            "r4-diagnosticreport-vs-us-core-diagnosticreport-lab",
-            r4("diagnosticreport"),
-            us("us-core-diagnosticreport-lab")
-        ),
+        PairDef("r4-diagnosticreport-vs-us-core-diagnosticreport-lab", r4("diagnosticreport"), us("us-core-diagnosticreport-lab")),
         PairDef("r4-encounter-vs-us-core-encounter", r4("encounter"), us("us-core-encounter")),
         PairDef("r4-immunization-vs-us-core-immunization", r4("immunization"), us("us-core-immunization")),
         PairDef("r4-location-vs-us-core-location", r4("location"), us("us-core-location")),
         PairDef("r4-medication-vs-us-core-medication", r4("medication"), us("us-core-medication")),
-        PairDef(
-            "r4-medicationrequest-vs-us-core-medicationrequest",
-            r4("medicationrequest"),
-            us("us-core-medicationrequest")
-        ),
+        PairDef("r4-medicationrequest-vs-us-core-medicationrequest", r4("medicationrequest"), us("us-core-medicationrequest")),
         PairDef("r4-observation-vs-us-core-observation", r4("observation"), us("us-core-observation-lab")),
         PairDef("r4-organization-vs-us-core-organization", r4("organization"), us("us-core-organization")),
         PairDef("r4-practitioner-vs-us-core-practitioner", r4("practitioner"), us("us-core-practitioner")),
@@ -105,25 +93,13 @@ class GoldStandardGeneratorTest {
 
         // ── Category 2: AU Core → US Core — cross-national (11 pairs) ──
         PairDef("au-core-patient-vs-us-core-patient", au("au-core-patient"), us("us-core-patient")),
-        PairDef(
-            "au-core-allergyintolerance-vs-us-core-allergyintolerance",
-            au("au-core-allergyintolerance"),
-            us("us-core-allergyintolerance")
-        ),
-        PairDef(
-            "au-core-condition-vs-us-core-condition",
-            au("au-core-condition"),
-            us("us-core-condition-encounter-diagnosis")
-        ),
+        PairDef("au-core-allergyintolerance-vs-us-core-allergyintolerance", au("au-core-allergyintolerance"), us("us-core-allergyintolerance")),
+        PairDef("au-core-condition-vs-us-core-condition", au("au-core-condition"), us("us-core-condition-encounter-diagnosis")),
         PairDef("au-core-encounter-vs-us-core-encounter", au("au-core-encounter"), us("us-core-encounter")),
         PairDef("au-core-immunization-vs-us-core-immunization", au("au-core-immunization"), us("us-core-immunization")),
         PairDef("au-core-location-vs-us-core-location", au("au-core-location"), us("us-core-location")),
         PairDef("au-core-medication-vs-us-core-medication", au("au-core-medication"), us("us-core-medication")),
-        PairDef(
-            "au-core-medicationrequest-vs-us-core-medicationrequest",
-            au("au-core-medicationrequest"),
-            us("us-core-medicationrequest")
-        ),
+        PairDef("au-core-medicationrequest-vs-us-core-medicationrequest", au("au-core-medicationrequest"), us("us-core-medicationrequest")),
         PairDef("au-core-organization-vs-us-core-organization", au("au-core-organization"), us("us-core-organization")),
         PairDef("au-core-practitioner-vs-us-core-practitioner", au("au-core-practitioner"), us("us-core-practitioner")),
         PairDef("au-core-procedure-vs-us-core-procedure", au("au-core-procedure"), us("us-core-procedure")),
@@ -135,11 +111,7 @@ class GoldStandardGeneratorTest {
         PairDef("tk-soft-practitioner-vs-iit-proj-practitioner", tk("practitioner"), ip("practitioner")),
         PairDef("tk-soft-encounter-vs-iit-proj-encounter", tk("encounter"), ip("encounter")),
         PairDef("tk-soft-medication-vs-iit-proj-medication", tk("medication"), ip("medication")),
-        PairDef(
-            "tk-soft-allergyintolerance-vs-iit-proj-allergyintolerance",
-            tk("allergyintolerance"),
-            ip("allergyintolerance")
-        ),
+        PairDef("tk-soft-allergyintolerance-vs-iit-proj-allergyintolerance", tk("allergyintolerance"), ip("allergyintolerance")),
 
         // ── Category 4: TK-Soft → Hemas — custom vs custom (5 pairs) ──
         PairDef("tk-soft-patient-vs-hemas-patient", tk("patient"), hm("patient")),

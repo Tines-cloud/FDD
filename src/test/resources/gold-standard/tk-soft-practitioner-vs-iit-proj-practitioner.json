@@ -1,119 +1,104 @@
 {
-  "pairId": "tk-soft-practitioner-vs-iit-proj-practitioner",
-  "sourceClasspath": "custom-profiles/tk-soft/tk-soft-practitioner.json",
-  "targetClasspath": "custom-profiles/iit-proj/iit-proj-practitioner.json",
-  "drifts": [
-    {
-      "id": "rule-1",
-      "type": "CARDINALITY",
-      "sourcePath": "Practitioner.name",
-      "targetPath": "Practitioner.name",
-      "description": "Cardinality changed: [1..*] -> [0..*]",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-2",
-      "type": "CARDINALITY",
-      "sourcePath": "Practitioner.name.family",
-      "targetPath": "Practitioner.name.family",
-      "description": "Cardinality changed: [1..1] -> [0..1]",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-3",
-      "type": "STRUCTURAL",
-      "sourcePath": "Practitioner.name.family",
-      "targetPath": "Practitioner.name.family",
-      "description": "MustSupport removed in target",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-4",
-      "type": "CARDINALITY",
-      "sourcePath": "Practitioner.name.given",
-      "targetPath": "Practitioner.name.given",
-      "description": "Cardinality changed: [1..*] -> [0..0]",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-5",
-      "type": "STRUCTURAL",
-      "sourcePath": "Practitioner.name.given",
-      "targetPath": "Practitioner.name.given",
-      "description": "MustSupport removed in target",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-6",
-      "type": "CARDINALITY",
-      "sourcePath": "Practitioner.telecom",
-      "targetPath": "Practitioner.telecom",
-      "description": "Cardinality changed: [0..*] -> [0..0]",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-7",
-      "type": "STRUCTURAL",
-      "sourcePath": "Practitioner.telecom",
-      "targetPath": "Practitioner.telecom",
-      "description": "MustSupport removed in target",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-8",
-      "type": "CARDINALITY",
-      "sourcePath": "Practitioner.address",
-      "targetPath": "Practitioner.address",
-      "description": "Cardinality changed: [0..*] -> [0..0]",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-9",
-      "type": "STRUCTURAL",
-      "sourcePath": "Practitioner.address",
-      "targetPath": "Practitioner.address",
-      "description": "MustSupport removed in target",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-10",
-      "type": "STRUCTURAL",
-      "sourcePath": "Practitioner.birthDate",
-      "targetPath": "Practitioner.birthDate",
-      "description": "MustSupport removed in target",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-11",
-      "type": "CARDINALITY",
-      "sourcePath": "Practitioner.qualification",
-      "targetPath": "Practitioner.qualification",
-      "description": "Cardinality changed: [1..*] -> [0..*]",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-12",
-      "type": "STRUCTURAL",
-      "sourcePath": "Practitioner.qualification.code",
-      "targetPath": "Practitioner.qualification.code",
-      "description": "MustSupport removed in target",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-13",
-      "type": "EXTENSION",
-      "sourcePath": "",
-      "targetPath": "Practitioner.extension:researchRole",
-      "description": "Extension added in target profile: Practitioner.extension:researchRole",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-14",
-      "type": "EXTENSION",
-      "sourcePath": "Practitioner.extension:registrationNumber",
-      "targetPath": "",
-      "description": "Extension removed in target profile: Practitioner.extension:registrationNumber (was required)",
-      "severity": "WARNING"
-    }
-  ]
+  "pairId" : "tk-soft-practitioner-vs-iit-proj-practitioner",
+  "sourceClasspath" : "custom-profiles/tk-soft/tk-soft-practitioner.json",
+  "targetClasspath" : "custom-profiles/iit-proj/iit-proj-practitioner.json",
+  "drifts" : [ {
+    "id" : "rule-1",
+    "type" : "CARDINALITY",
+    "sourcePath" : "Practitioner.name",
+    "targetPath" : "Practitioner.name",
+    "description" : "Cardinality changed: [1..*] -> [0..*]",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-2",
+    "type" : "CARDINALITY",
+    "sourcePath" : "Practitioner.name.family",
+    "targetPath" : "Practitioner.name.family",
+    "description" : "Cardinality changed: [1..1] -> [0..1]",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-3",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Practitioner.name.family",
+    "targetPath" : "Practitioner.name.family",
+    "description" : "MustSupport removed in target",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-4",
+    "type" : "CARDINALITY",
+    "sourcePath" : "Practitioner.name.given",
+    "targetPath" : "Practitioner.name.given",
+    "description" : "Cardinality changed: [1..*] -> [0..0]",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-5",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Practitioner.name.given",
+    "targetPath" : "Practitioner.name.given",
+    "description" : "MustSupport removed in target",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-6",
+    "type" : "CARDINALITY",
+    "sourcePath" : "Practitioner.telecom",
+    "targetPath" : "Practitioner.telecom",
+    "description" : "Cardinality changed: [0..*] -> [0..0]",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-7",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Practitioner.telecom",
+    "targetPath" : "Practitioner.telecom",
+    "description" : "MustSupport removed in target",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-8",
+    "type" : "CARDINALITY",
+    "sourcePath" : "Practitioner.address",
+    "targetPath" : "Practitioner.address",
+    "description" : "Cardinality changed: [0..*] -> [0..0]",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-9",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Practitioner.address",
+    "targetPath" : "Practitioner.address",
+    "description" : "MustSupport removed in target",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-10",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Practitioner.birthDate",
+    "targetPath" : "Practitioner.birthDate",
+    "description" : "MustSupport removed in target",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-11",
+    "type" : "CARDINALITY",
+    "sourcePath" : "Practitioner.qualification",
+    "targetPath" : "Practitioner.qualification",
+    "description" : "Cardinality changed: [1..*] -> [0..*]",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-12",
+    "type" : "STRUCTURAL",
+    "sourcePath" : "Practitioner.qualification.code",
+    "targetPath" : "Practitioner.qualification.code",
+    "description" : "MustSupport removed in target",
+    "severity" : "INFO"
+  }, {
+    "id" : "rule-13",
+    "type" : "EXTENSION",
+    "sourcePath" : "",
+    "targetPath" : "Practitioner.extension:researchRole",
+    "description" : "Extension added in target profile: Practitioner.extension:researchRole",
+    "severity" : "WARNING"
+  }, {
+    "id" : "rule-14",
+    "type" : "EXTENSION",
+    "sourcePath" : "Practitioner.extension:registrationNumber",
+    "targetPath" : "",
+    "description" : "Extension removed in target profile: Practitioner.extension:registrationNumber (was required)",
+    "severity" : "WARNING"
+  } ]
 }
