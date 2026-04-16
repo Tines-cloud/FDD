@@ -6,6 +6,62 @@ HAPI-FHIR's compiler in a **Trust-but-Verify** reflexion loop.
 
 ---
 
+## Research Context
+
+**Aim:** Design, develop, and evaluate a hybrid AI-assisted system for detecting, repairing, and validating profile-level semantic drift between FHIR profiles.
+
+**Research Objectives:**
+
+| # | Objective |
+|---|-----------|
+| RO1 | Design a software architecture that combines AI reasoning with formal validation for use in the healthcare domain |
+| RO2 | Develop AI prompting methods that allow accurate analysis of FHIR profiles |
+| RO3 | Develop a working FDD system that performs profile resolution, hybrid drift analysis, StructureMap generation, "Trust but Verify" validation, and deterministic coverage analysis |
+| RO4 | Create a labelled dataset of FHIR semantic drift examples, each clearly labelled with the correct answer |
+| RO5 | Evaluate the system using accuracy metrics, qualitative analysis, and controlled end-to-end testing in a test FHIR server environment |
+
+**Research Questions:**
+
+| # | Question |
+|---|----------|
+| RQ1 | How accurately can the system detect profile-level semantic drift between FHIR profiles across all five drift types? |
+| RQ2 | Can the system generate FHIR StructureMaps that compile successfully and provide repair logic for detected profile-level drifts? |
+| RQ3 | Do the generated transformations preserve meaning and support controlled end-to-end data exchange in a test FHIR server environment? |
+| RQ4 | Can the system correctly classify drift types and provide human-understandable explanations? |
+
+**Evaluation:**
+
+| Experiment | Metric | Dataset |
+|-----------|--------|---------|
+| 1. Drift Detection Accuracy | Precision, Recall, F1 | 60 gold-standard profile pairs (8 categories) |
+| 2. Syntactic Validity Rate | % FML maps passing HAPI compilation | 60 pairs, full pipeline |
+| 3. End-to-End Semantic Correctness | % successful transformations | 25 test cases, Testcontainers HAPI server |
+
+## Research Context
+
+**Title:** "Trust but Verify: Automated Semantic Drift Detection and StructureMap Generation for FHIR Interoperability"
+
+**Research Aim:** To design, develop, and evaluate a hybrid AI-assisted system for detecting, repairing, and validating profile-level semantic drift between FHIR profiles in order to improve the reliability and maintainability of FHIR-based interoperability.
+
+**Research Questions:**
+- **RQ1** — How accurately can the system detect profile-level semantic drift between FHIR profiles across all five drift types?
+- **RQ2** — Can the system generate FHIR StructureMaps that compile successfully and provide repair logic for detected profile-level drifts?
+- **RQ3** — Do the generated transformations preserve meaning and support controlled end-to-end data exchange in a test FHIR server environment?
+- **RQ4** — Can the system correctly classify drift types and provide human-understandable explanations?
+
+**Research Objectives:**
+- **RO1** — Design a software architecture that combines AI reasoning with formal validation for use in the healthcare domain.
+- **RO2** — Develop AI prompting methods that allow accurate analysis of FHIR profiles.
+- **RO3** — Develop a working FDD system that performs profile resolution, hybrid drift analysis, StructureMap generation, "Trust but Verify" validation, and deterministic coverage analysis.
+- **RO4** — Create a labelled dataset of FHIR semantic drift examples, each clearly labelled with the correct answer.
+- **RO5** — Evaluate the system using accuracy metrics, qualitative analysis, and controlled end-to-end testing in a test FHIR server environment.
+
+**Five Drift Categories:** Terminology · Extension · Structural · Cardinality · Version
+
+**Evaluation:** Three controlled experiments measure drift detection accuracy (Precision/Recall/F1), syntactic validity rate (SVR), and end-to-end semantic correctness rate (SCR) across 60 gold-standard profile pairs and 25 transformation test cases.
+
+---
+
 ## Architecture
 
 ```
