@@ -30,9 +30,6 @@ import java.time.format.DateTimeFormatter
  * Evaluates whether FDD-generated StructureMaps produce valid FHIR resources
  * when applied to synthetic source instances in a controlled HAPI FHIR server.
  *
- * Each test case runs as a **separate test** in the Gradle report so
- * individual case results, stdout, and pass/fail status are visible.
- *
  * Requires Docker and a valid LLM API key.
  */
 @SpringBootTest
@@ -234,7 +231,7 @@ class Experiment3SemanticCorrectnessTest {
             instanceFile = "fhir/instances/medicationrequest-r4-base.json",
             resourceType = "MedicationRequest"
         ),
-        // --- Custom -> Custom (Sri Lanka organisations) ---
+        // --- Custom -> Custom ---
         SemanticTestCase(
             id = "tk-soft-patient-to-iit-proj-patient",
             sourceClasspath = "custom-profiles/tk-soft/tk-soft-patient.json",
@@ -468,9 +465,9 @@ class Experiment3SemanticCorrectnessTest {
         )
     }
 
-    /* ================================================================
+    /* -------------------------------------------------------------------
      * Helper methods
-     * ================================================================ */
+     * ------------------------------------------------------------------- */
 
     private fun buildResult(
         testCase: SemanticTestCase,

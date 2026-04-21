@@ -16,7 +16,7 @@ fdd:
       api-key: test-key-not-real
       model: google/gemini-2.5-flash
   validation:
-    max-attempts: 2
+    max-attempts: 5
 
 logging:
   level:

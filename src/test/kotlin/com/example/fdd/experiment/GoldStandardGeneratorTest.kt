@@ -191,11 +191,11 @@ class GoldStandardGeneratorTest {
             }
         }
 
-        log.info("============================================")
+        log.info("------------------------------------")
         log.info("  Gold Standard Generation Complete")
         log.info("  Total pairs: {}  Success: {}  Failed: {}", allPairs.size, successCount, failCount)
         log.info("  Output: {}", outputDir.toAbsolutePath())
-        log.info("============================================")
+        log.info("------------------------------------")
     }
 
     private data class PairDef(

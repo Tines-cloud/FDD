@@ -22,12 +22,6 @@ import java.time.format.DateTimeFormatter
  * 2. Compare predicted items with gold-standard annotations.
  * 3. Compute Precision, Recall, and F1.
  * 4. Write per-pair and aggregate results to a JSON file.
- *
- * Each profile pair runs as a **separate test** in the Gradle report so
- * individual pair results, stdout, and pass/fail status are visible.
- *
- * This test requires a running LLM (set `fdd.ai.provider` and API key).
- * It is designed to run in CI/CD or manual evaluation, not on every build.
  */
 @SpringBootTest
 @ActiveProfiles("experiment")
@@ -123,7 +117,7 @@ class Experiment1DriftDetectionTest {
             "%.3f".format(avgRecall),
             "%.3f".format(avgF1)
         )
-        log.info("===================================================================")
+        log.info("-------------------------------------------------------------------")
 
         writeResultsFile(collectedResults, avgPrecision, avgRecall, avgF1)
     }

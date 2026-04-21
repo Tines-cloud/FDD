@@ -75,9 +75,9 @@ class RuleBasedDriftDetectorTest {
         modifierExtensions = modifierExtensions
     )
 
-    /* ================================
+    /* ------------------------------------
      * VERSION
-     * ================================ */
+     * ------------------------------------ */
     @Nested
     @DisplayName("VERSION drift")
     inner class VersionDrift {
@@ -105,9 +105,9 @@ class RuleBasedDriftDetectorTest {
         }
     }
 
-    /* ================================
+    /* ---------------------------------
      * CARDINALITY
-     * ================================ */
+     * ---------------------------------*/
     @Nested
     @DisplayName("CARDINALITY drift")
     inner class CardinalityDrift {
@@ -155,9 +155,9 @@ class RuleBasedDriftDetectorTest {
         }
     }
 
-    /* ================================
+    /* --------------------------------
      * TERMINOLOGY
-     * ================================ */
+     * --------------------------------*/
     @Nested
     @DisplayName("TERMINOLOGY drift")
     inner class TerminologyDrift {
@@ -230,9 +230,9 @@ class RuleBasedDriftDetectorTest {
         }
     }
 
-    /* ================================
+    /* --------------------------------
      * STRUCTURAL
-     * ================================ */
+     * -------------------------------- */
     @Nested
     @DisplayName("STRUCTURAL drift")
     inner class StructuralDrift {
@@ -464,9 +464,9 @@ class RuleBasedDriftDetectorTest {
         }
     }
 
-    /* ================================
+    /* --------------------------------
      * EXTENSION
-     * ================================ */
+     * -------------------------------- */
     @Nested
     @DisplayName("EXTENSION drift")
     inner class ExtensionDrift {
@@ -507,9 +507,9 @@ class RuleBasedDriftDetectorTest {
         }
     }
 
-    /* ================================
+    /* ---------------------------------
      * Composite / Edge Cases
-     * ================================ */
+     * --------------------------------- */
     @Nested
     @DisplayName("Composite scenarios")
     inner class CompositeScenarios {

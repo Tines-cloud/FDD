@@ -22,11 +22,6 @@ import java.time.format.DateTimeFormatter
  * 2. Record whether the generated StructureMap compiled successfully.
  * 3. Compute Syntactic Validity Rate = (# compiled) / (# generated).
  * 4. Write per-pair and aggregate results to a JSON file.
- *
- * Each profile pair runs as a **separate test** in the Gradle report so
- * individual pair results, stdout, and pass/fail status are visible.
- *
- * This test requires a running LLM. Designed for evaluation, not routine CI.
  */
 @SpringBootTest
 @ActiveProfiles("experiment")
@@ -103,7 +98,6 @@ class Experiment2SyntacticValidityTest {
                     "%.1f".format(result.dataShareabilityPercent), result.messages.size
                 )
 
-                // No hard assertion — we record all outcomes for the aggregate report
             }
         }
     }
