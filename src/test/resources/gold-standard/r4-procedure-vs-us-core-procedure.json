@@ -1,111 +1,127 @@
 {
-  "pairId" : "r4-procedure-vs-us-core-procedure",
-  "sourceClasspath" : "standard-profiles/r4/procedure.profile.json",
-  "targetClasspath" : "standard-profiles/us-core/StructureDefinition-us-core-procedure.json",
-  "drifts" : [ {
-    "id" : "rule-1",
-    "type" : "STRUCTURAL",
-    "sourcePath" : "Procedure",
-    "targetPath" : "Procedure",
-    "description" : "Constraints added in target: [us-core-7]",
-    "severity" : "WARNING"
-  }, {
-    "id" : "rule-2",
-    "type" : "STRUCTURAL",
-    "sourcePath" : "Procedure.basedOn",
-    "targetPath" : "Procedure.basedOn",
-    "description" : "Reference target profile changed: [http://hl7.org/fhir/StructureDefinition/CarePlan, http://hl7.org/fhir/StructureDefinition/ServiceRequest] -> [http://hl7.org/fhir/us/core/StructureDefinition/us-core-careplan, http://hl7.org/fhir/us/core/StructureDefinition/us-core-servicerequest]",
-    "severity" : "WARNING"
-  }, {
-    "id" : "rule-3",
-    "type" : "EXTENSION",
-    "sourcePath" : "Procedure.basedOn",
-    "targetPath" : "Procedure.basedOn.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-    "description" : "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
-    "severity" : "WARNING"
-  }, {
-    "id" : "rule-4",
-    "type" : "TERMINOLOGY",
-    "sourcePath" : "Procedure.status",
-    "targetPath" : "Procedure.status",
-    "description" : "Binding changed: required(http://hl7.org/fhir/ValueSet/event-status|4.0.1) -> required(http://hl7.org/fhir/ValueSet/event-status)",
-    "severity" : "ERROR"
-  }, {
-    "id" : "rule-5",
-    "type" : "STRUCTURAL",
-    "sourcePath" : "Procedure.status",
-    "targetPath" : "Procedure.status",
-    "description" : "MustSupport added in target",
-    "severity" : "INFO"
-  }, {
-    "id" : "rule-6",
-    "type" : "EXTENSION",
-    "sourcePath" : "Procedure.status",
-    "targetPath" : "Procedure.status.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-    "description" : "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
-    "severity" : "WARNING"
-  }, {
-    "id" : "rule-7",
-    "type" : "CARDINALITY",
-    "sourcePath" : "Procedure.code",
-    "targetPath" : "Procedure.code",
-    "description" : "Cardinality changed: [0..1] -> [1..1]",
-    "severity" : "ERROR"
-  }, {
-    "id" : "rule-8",
-    "type" : "TERMINOLOGY",
-    "sourcePath" : "Procedure.code",
-    "targetPath" : "Procedure.code",
-    "description" : "Binding changed: example(http://hl7.org/fhir/ValueSet/procedure-code) -> extensible(http://hl7.org/fhir/us/core/ValueSet/us-core-procedure-code)",
-    "severity" : "WARNING"
-  }, {
-    "id" : "rule-9",
-    "type" : "STRUCTURAL",
-    "sourcePath" : "Procedure.code",
-    "targetPath" : "Procedure.code",
-    "description" : "MustSupport added in target",
-    "severity" : "INFO"
-  }, {
-    "id" : "rule-10",
-    "type" : "EXTENSION",
-    "sourcePath" : "Procedure.code",
-    "targetPath" : "Procedure.code.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-    "description" : "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
-    "severity" : "WARNING"
-  }, {
-    "id" : "rule-11",
-    "type" : "STRUCTURAL",
-    "sourcePath" : "Procedure.subject",
-    "targetPath" : "Procedure.subject",
-    "description" : "Reference target profile changed: [http://hl7.org/fhir/StructureDefinition/Group, http://hl7.org/fhir/StructureDefinition/Patient] -> [http://hl7.org/fhir/us/core/StructureDefinition/us-core-patient]",
-    "severity" : "WARNING"
-  }, {
-    "id" : "rule-12",
-    "type" : "STRUCTURAL",
-    "sourcePath" : "Procedure.subject",
-    "targetPath" : "Procedure.subject",
-    "description" : "MustSupport added in target",
-    "severity" : "INFO"
-  }, {
-    "id" : "rule-13",
-    "type" : "EXTENSION",
-    "sourcePath" : "Procedure.subject",
-    "targetPath" : "Procedure.subject.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-    "description" : "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
-    "severity" : "WARNING"
-  }, {
-    "id" : "rule-14",
-    "type" : "STRUCTURAL",
-    "sourcePath" : "Procedure.performed[x]",
-    "targetPath" : "Procedure.performed[x]",
-    "description" : "MustSupport added in target",
-    "severity" : "INFO"
-  }, {
-    "id" : "rule-15",
-    "type" : "EXTENSION",
-    "sourcePath" : "Procedure.performed[x]",
-    "targetPath" : "Procedure.performed[x].extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-    "description" : "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
-    "severity" : "WARNING"
-  } ]
+  "pairId": "r4-procedure-vs-us-core-procedure",
+  "sourceClasspath": "standard-profiles/r4/procedure.profile.json",
+  "targetClasspath": "standard-profiles/us-core/StructureDefinition-us-core-procedure.json",
+  "drifts": [
+    {
+      "id": "rule-1",
+      "type": "STRUCTURAL",
+      "sourcePath": "Procedure",
+      "targetPath": "Procedure",
+      "description": "Constraint added in target: us-core-7 requires performed[x] when status is completed or in-progress",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-2",
+      "type": "STRUCTURAL",
+      "sourcePath": "Procedure.basedOn",
+      "targetPath": "Procedure.basedOn",
+      "description": "Reference target profile changed: [http://hl7.org/fhir/StructureDefinition/CarePlan, http://hl7.org/fhir/StructureDefinition/ServiceRequest] -> [http://hl7.org/fhir/us/core/StructureDefinition/us-core-careplan, http://hl7.org/fhir/us/core/StructureDefinition/us-core-servicerequest]",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-3",
+      "type": "EXTENSION",
+      "sourcePath": "Procedure.basedOn",
+      "targetPath": "Procedure.basedOn.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+      "description": "Extension present only in target: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-4",
+      "type": "STRUCTURAL",
+      "sourcePath": "Procedure.status",
+      "targetPath": "Procedure.status",
+      "description": "MustSupport added in target",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-5",
+      "type": "EXTENSION",
+      "sourcePath": "Procedure.status",
+      "targetPath": "Procedure.status.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+      "description": "Extension present only in target: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-6",
+      "type": "CARDINALITY",
+      "sourcePath": "Procedure.code",
+      "targetPath": "Procedure.code",
+      "description": "Cardinality changed: [0..1] -> [1..1]",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-7",
+      "type": "TERMINOLOGY",
+      "sourcePath": "Procedure.code",
+      "targetPath": "Procedure.code",
+      "description": "Binding changed: example(http://hl7.org/fhir/ValueSet/procedure-code) -> extensible(http://hl7.org/fhir/us/core/ValueSet/us-core-procedure-code)",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-8",
+      "type": "STRUCTURAL",
+      "sourcePath": "Procedure.code",
+      "targetPath": "Procedure.code",
+      "description": "MustSupport added in target",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-9",
+      "type": "EXTENSION",
+      "sourcePath": "Procedure.code",
+      "targetPath": "Procedure.code.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+      "description": "Extension present only in target: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-10",
+      "type": "STRUCTURAL",
+      "sourcePath": "Procedure.subject",
+      "targetPath": "Procedure.subject",
+      "description": "Reference target profile changed: [http://hl7.org/fhir/StructureDefinition/Group, http://hl7.org/fhir/StructureDefinition/Patient] -> [http://hl7.org/fhir/us/core/StructureDefinition/us-core-patient]",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-11",
+      "type": "STRUCTURAL",
+      "sourcePath": "Procedure.subject",
+      "targetPath": "Procedure.subject",
+      "description": "MustSupport added in target",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-12",
+      "type": "EXTENSION",
+      "sourcePath": "Procedure.subject",
+      "targetPath": "Procedure.subject.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+      "description": "Extension present only in target: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-13",
+      "type": "STRUCTURAL",
+      "sourcePath": "Procedure.performed[x]",
+      "targetPath": "Procedure.performed[x]",
+      "description": "MustSupport added in target",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-14",
+      "type": "STRUCTURAL",
+      "sourcePath": "Procedure.performed[x]",
+      "targetPath": "Procedure.performed[x]",
+      "description": "Type-level MustSupport added in target for the dateTime choice",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-15",
+      "type": "EXTENSION",
+      "sourcePath": "Procedure.performed[x]",
+      "targetPath": "Procedure.performed[x].extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+      "description": "Extension present only in target: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+      "severity": "WARNING"
+    }
+  ]
 }
