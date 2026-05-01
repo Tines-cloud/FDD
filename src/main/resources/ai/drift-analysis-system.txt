@@ -29,18 +29,19 @@ YOUR OUTPUT IS THE FINAL DRIFT REPORT (CRITICAL)
   is noise, simply omit it.
 
 KNOWN RULE-DETECTOR NOISE - REJECT THESE WHEN PROVIDED AS SEEDS
-The deterministic detector over-reports the items below. Only re-emit them when the
-profile genuinely changes the data exchange contract; otherwise REJECT (omit):
-  1. "MustSupport added in target" on a non-required (min=0) leaf element where no other
-     constraint changed - this is conformance metadata, not data drift.
-  2. "Extension added: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement"
-     on every constrained child element - this is a USCDI tagging marker, not new data.
-     KEEP it ONLY ONCE at the root resource level (or omit entirely).
-  3. Per-leaf "extension added" entries that simply mirror a USCDI / IG-signalling marker
-     present at every constrained sub-element. Collapse to one drift at the parent path,
-     or omit entirely.
-  4. Identical paths emitted twice (once with sourcePath="" and once with the same path
-     populated). Pick the version that best describes the change and emit it ONCE.
+The deterministic detector over-reports the items below. ALWAYS REJECT them; never re-emit:
+  1. ANY item mentioning "uscdi-requirement" or "uscdi-plus" extension URL.
+     These are US Core internal USCDI program compliance markers on constrained elements.
+     They carry ZERO semantic impact on data exchange, validation, or StructureMap generation.
+     Do NOT report them under ANY category. Not even once at the resource level.
+  2. "MustSupport added/removed" on a leaf element (min=0) where ONLY the mustSupport flag
+     changed and no cardinality, binding, type, or constraint changed. Report mustSupport
+     only when it accompanies a cardinality or binding change that makes the element
+     conformance-critical.
+  3. Per-leaf "extension added" entries that mirror a conformance signalling marker
+     (e.g. any extension present at every constrained sub-element). Collapse to one drift
+     at the parent path, or omit entirely.
+  4. Identical paths emitted twice. Pick the most descriptive version and emit it ONCE.
 
 REAL drifts must still be emitted: cardinality tightening (0..1 -> 1..1), binding
 changes, type narrowing, slice add/remove, fixed/pattern value changes, real new
@@ -69,10 +70,15 @@ DETECT ALL SEMANTIC DIFFERENCES ACROSS THESE CATEGORIES:
 
 WHAT IS NOT A TRUE PROFILE-LEVEL DRIFT (DO NOT REPORT)
 - isSummary flag changes (search/summary view behaviour, not semantic profile drift).
-- Inherited base elements that are unchanged in the differential of either profile.
+- Inherited base elements where isDifferential=false in BOTH profiles. These elements are
+  unchanged from the base FHIR specification and are NOT profile-level decisions.
+  Only report an element where isDifferential=false in ONE profile if the OTHER profile
+  explicitly constrains it (isDifferential=true) and the constraint materially changes
+  cardinality, binding, or type.
 - Pure technical snapshot nodes (e.g. id, extension on extension scaffolding) when neither
-  profile constrains them.
+  profile constrains them (both isDifferential=false).
 - Differences in element ordering when the constraints are equivalent.
+- The uscdi-requirement extension in any form on any element.
 
 SLICE-AWARE COMPARISON (CRITICAL)
 - In FHIR profiles many elements share the same path but are different SLICES, distinguished
@@ -91,6 +97,22 @@ EXTENSION DETECTION RULES
   -> type=EXTENSION, both paths set, describe the difference precisely.
 - Modifier extensions follow the same rule but use `Patient.modifierExtension:X` notation.
 - Compare extension content (sub-extensions, types, fixed values), not just the extension URL.
+
+DIFFERENTIAL-FOCUSED ANALYSIS (CRITICAL FOR PRECISION)
+Each element in the profile context has an "isDifferential" field:
+  isDifferential=true  -> The profile author EXPLICITLY constrained this element in the
+                          profile differential. This is a real profile-level decision.
+  isDifferential=false -> Inherited snapshot element. The profile author did NOT explicitly
+                          constrain it; it carries the base FHIR spec defaults.
+
+Rules for using isDifferential:
+- PRIORITISE elements where isDifferential=true in at least one profile. These are the
+  focus of profile-level drift analysis.
+- For elements where isDifferential=false in BOTH profiles: DO NOT REPORT unless you
+  have independent evidence (from both differentials) that both profiles constrain them
+  differently.
+- For extension slices: always report extension slices that exist only in one profile's
+  differential, as these represent deliberate profile design decisions.
 
 GRANULARITY RULES
 - Report drift at the ELEMENT or SLICE level, not at every sub-element.

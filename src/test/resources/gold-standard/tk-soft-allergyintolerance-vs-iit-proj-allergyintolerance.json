@@ -17,7 +17,7 @@
       "type": "STRUCTURAL",
       "sourcePath": "AllergyIntolerance",
       "targetPath": "AllergyIntolerance",
-      "description": "New constraint 'iit-ai-1' added in target (severity: error): 'Medication allergies must use MedDRA coding' — expression: category.where(value='medication').exists() implies reaction.manifestation.coding.where(system='http://www.meddra.org').exists(). Not present in source profile.",
+      "description": "New constraint 'iit-ai-1' added in target (severity: error): 'Medication allergies must use MedDRA coding' - expression: category.where(value='medication').exists() implies reaction.manifestation.coding.where(system='http://www.meddra.org').exists(). Not present in source profile.",
       "severity": "ERROR"
     },
     {
@@ -25,7 +25,7 @@
       "type": "STRUCTURAL",
       "sourcePath": "AllergyIntolerance",
       "targetPath": "AllergyIntolerance",
-      "description": "New constraint 'iit-ai-2' added in target (severity: warning): 'High criticality allergies should trigger SAE assessment' — expression: criticality = 'high' implies extension.where(url='...sae-assessment').exists(). Not present in source profile.",
+      "description": "New constraint 'iit-ai-2' added in target (severity: warning): 'High criticality allergies should trigger SAE assessment' - expression: criticality = 'high' implies extension.where(url='...sae-assessment').exists(). Not present in source profile.",
       "severity": "WARNING"
     },
     {
@@ -33,7 +33,7 @@
       "type": "STRUCTURAL",
       "sourcePath": "AllergyIntolerance",
       "targetPath": "AllergyIntolerance",
-      "description": "New constraint 'iit-ai-3' added in target (severity: error): 'Must have at least one reaction recorded' — expression: reaction.exists(). Not present in source profile.",
+      "description": "New constraint 'iit-ai-3' added in target (severity: error): 'Must have at least one reaction recorded' - expression: reaction.exists(). Not present in source profile.",
       "severity": "ERROR"
     },
     {
@@ -145,7 +145,7 @@
       "type": "TERMINOLOGY",
       "sourcePath": "AllergyIntolerance.code",
       "targetPath": "AllergyIntolerance.code",
-      "description": "Binding changed: Source uses extensible(https://tk-soft.example.com/fhir/ValueSet/allergy-code). Target uses extensible(https://iit-proj.example.com/fhir/ValueSet/study-allergy-substance). Same binding strength but different ValueSet — target restricts to study-specific allergy substances.",
+      "description": "Binding changed: Source uses extensible(https://tk-soft.example.com/fhir/ValueSet/allergy-code). Target uses extensible(https://iit-proj.example.com/fhir/ValueSet/study-allergy-substance). Same binding strength but different ValueSet - target restricts to study-specific allergy substances.",
       "severity": "WARNING"
     },
     {
@@ -225,7 +225,7 @@
       "type": "CARDINALITY",
       "sourcePath": "AllergyIntolerance.reaction",
       "targetPath": "AllergyIntolerance.reaction",
-      "description": "Cardinality changed: [0..*] -> [1..*]. Source has no explicit minimum (inherits R4 base min=0). Target requires at least one reaction — consistent with constraint iit-ai-3.",
+      "description": "Cardinality changed: [0..*] -> [1..*]. Source has no explicit minimum (inherits R4 base min=0). Target requires at least one reaction - consistent with constraint iit-ai-3.",
       "severity": "ERROR"
     },
     {

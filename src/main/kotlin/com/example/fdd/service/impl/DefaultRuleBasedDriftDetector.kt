@@ -45,6 +45,17 @@ class DefaultRuleBasedDriftDetector : RuleBasedDriftDetector {
 
     private val log = LoggerFactory.getLogger(javaClass)
 
+    /**
+     * Extension URLs that are conformance-program metadata markers with zero impact on
+     * data exchange, validation, or StructureMap generation.
+     * Removing them from seeds eliminates the primary source of false-positive EXTENSION
+     * drift items in all comparisons involving US Core profiles.
+     */
+    private val METADATA_EXTENSION_URLS = setOf(
+        "http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+        "http://hl7.org/fhir/us/core/StructureDefinition/uscdi-plus"
+    )
+
     override fun detect(context: ProfileContext): List<DriftItem> {
         val items = mutableListOf<DriftItem>()
         var idCounter = 0
@@ -165,10 +176,10 @@ class DefaultRuleBasedDriftDetector : RuleBasedDriftDetector {
         return items
     }
 
-    /* ------------------------------------------------------------------------
+    /* =====================================================================
      * Per-element rule helpers
      * Each returns a single DriftItem or null when there is no drift.
-     * ------------------------------------------------------------------------ */
+     * ===================================================================== */
 
     private fun detectCardinalityDrift(
         src: ElementSummary, tgt: ElementSummary, path: String, nextId: () -> String
@@ -481,8 +492,8 @@ class DefaultRuleBasedDriftDetector : RuleBasedDriftDetector {
     ): List<DriftItem> {
         val out = mutableListOf<DriftItem>()
 
-        val srcExts = src.extensions.toSet()
-        val tgtExts = tgt.extensions.toSet()
+        val srcExts = src.extensions.toSet() - METADATA_EXTENSION_URLS
+        val tgtExts = tgt.extensions.toSet() - METADATA_EXTENSION_URLS
         for (ext in tgtExts - srcExts) {
             out.add(
                 DriftItem(
@@ -537,9 +548,9 @@ class DefaultRuleBasedDriftDetector : RuleBasedDriftDetector {
         return out
     }
 
-    /* ------------------------------------------------------------------------
+    /* =====================================================================
      * Added / removed element item builders
-     * ------------------------------------------------------------------------ */
+     * ===================================================================== */
 
     private fun buildAddedElementItem(path: String, tgt: ElementSummary, id: String): DriftItem {
         return if (isExtensionSlicePath(path)) {
@@ -597,9 +608,9 @@ class DefaultRuleBasedDriftDetector : RuleBasedDriftDetector {
         }
     }
 
-    /* ------------------------------------------------------------------------
+    /* =====================================================================
      * Path utilities
-     * ------------------------------------------------------------------------ */
+     * ===================================================================== */
 
     /**
      * Returns true when [path] designates a named extension or modifier-extension

@@ -108,7 +108,7 @@ class DefaultMapValidator(
             // Column normalisation: HAPI embeds column numbers ("at 20, 13:") that drift by ±1
             // when the LLM tweaks indentation.  Strip column so "at 20, 13: msg" == "at 20, 12: msg".
             val normErrors = errors.map { normaliseError(it) }.toSet()
-            if (errorsByCycle.size >= 2 &&
+            if (errorsByCycle.size >= maxAttempts - 1 &&
                 errorsByCycle.last().map { normaliseError(it) }.toSet() == normErrors
             ) {
                 log.error(
@@ -383,6 +383,22 @@ class DefaultMapValidator(
             "(${m.groupValues[1]}).not()"
         }
 
+        // Anti-pattern 6a: multi-line rule where a continuation line starts with "."
+        // Handles both  ".path = value "rule";"  and  ".path as a -> tgt.path "rule";"
+        val multiLineDot = Regex(
+            """^([ \t]*)(.*[^\s{};/])\r?\n[ \t]+(\.[^\r\n]+)$""",
+            setOf(RegexOption.MULTILINE)
+        )
+        var dotChanged: Boolean
+        do {
+            dotChanged = false
+            result = multiLineDot.replace(result) { m ->
+                rewrites++
+                dotChanged = true
+                "${m.groupValues[1]}${m.groupValues[2]}${m.groupValues[3]}"
+            }
+        } while (dotChanged)
+
         // Anti-pattern 6: deep target paths in constant assignment rules.
         val fixed6 = fixDeepTargetPaths(result)
         if (fixed6 != result) {
@@ -412,6 +428,15 @@ class DefaultMapValidator(
             val sourceExpr = m.groupValues[2].trim()
             val targetPart = m.groupValues[3].trim()
             "${indent}${sourceExpr} -> ${targetPart}"
+        }
+
+        // Anti-pattern 8: empty parentheses alias "as ()" - LLM wraps alias in empty parens.
+        // INVALID:  src.code as () -> tgt.code = code "rule";
+        // VALID:    src.code as code -> tgt.code = code "rule";
+        val emptyAlias = Regex("""(\w+)\s+as\s*\(\s*\)""")
+        result = emptyAlias.replace(result) { m ->
+            rewrites++
+            "${m.groupValues[1]} as ${m.groupValues[1]}"
         }
 
         if (rewrites > 0) {

@@ -103,30 +103,32 @@ tasks.named<org.springframework.boot.gradle.tasks.run.BootRun>("bootRun") {
     }
 }
 
-// Separate task for integration / experiment tests
-// Run explicitly:  ./gradlew integrationTest
-// NOT part of the normal 'build' lifecycle — only runs when you call it directly.
-tasks.register<Test>("integrationTest") {
-    useJUnitPlatform {
-        includeTags("integration")
-    }
-    description = "Runs experiment/integration tests (requires LLM API key and Docker)"
+// ─────────────────────────────────────────────────────────────────────────────
+// Integration / Experiment tasks
+//
+//   All experiments:   .\gradlew.bat integrationTest
+//   Only Exp 1:        .\gradlew.bat experiment1
+//   Only Exp 2:        .\gradlew.bat experiment2
+//   Only Exp 3:        .\gradlew.bat experiment3
+//
+//   Selective pairs (PowerShell - set env var before the task):
+//     $env:FDD_PAIRS="pair1,pair2"; .\gradlew.bat experiment2
+// ─────────────────────────────────────────────────────────────────────────────
+
+// Base setup shared by all integration tasks (no JUnit platform config here)
+fun Test.configureIntegrationBase() {
     group = "verification"
-
-    // Only run when explicitly requested — prevents Kover/check from pulling it into 'build'
-    enabled = gradle.startParameter.taskNames.any { it.contains("integrationTest") }
-
-    // Use the same test classes and classpath as the default test task
+    enabled = gradle.startParameter.taskNames.any { name ->
+        name == this.name || name.contains("integrationTest") || name.contains("experiment")
+    }
     testClassesDirs = sourceSets["test"].output.classesDirs
     classpath = sourceSets["test"].runtimeClasspath
     jvmArgs("-Xmx2g", "-Xms512m")
-
-    systemProperty("fdd.pairs", project.findProperty("fdd.pairs")?.toString() ?: "")
-
-    // Pass the project root directory so tests can write output to a reliable absolute path
+    // Accept pairs from project property OR env var FDD_PAIRS (both work on PowerShell)
+    val pairsValue = project.findProperty("fdd.pairs")?.toString()
+        ?: System.getenv("FDD_PAIRS") ?: ""
+    systemProperty("fdd.pairs", pairsValue)
     systemProperty("project.root", project.projectDir.absolutePath)
-
-    // Load API keys from .env file so experiments can resolve LLM providers
     val envFile = file(".env")
     if (envFile.exists()) {
         envFile.readLines()
@@ -136,10 +138,37 @@ tasks.register<Test>("integrationTest") {
                 environment(key.trim(), value.trim())
             }
     }
-
-    // Also forward any system environment variables (CI, terminal exports, etc.)
     environment(System.getenv())
 }
+
+// All experiments
+tasks.register<Test>("integrationTest") {
+    description = "Runs ALL experiment/integration tests"
+    useJUnitPlatform { includeTags("integration") }
+    configureIntegrationBase()
+}
+
+// Experiment 1 only - Drift Detection Accuracy
+tasks.register<Test>("experiment1") {
+    description = "Experiment 1: Drift Detection Accuracy"
+    useJUnitPlatform { includeTags("experiment1") }
+    configureIntegrationBase()
+}
+
+// Experiment 2 only - Syntactic Validity Rate
+tasks.register<Test>("experiment2") {
+    description = "Experiment 2: Syntactic Validity Rate"
+    useJUnitPlatform { includeTags("experiment2") }
+    configureIntegrationBase()
+}
+
+// Experiment 3 only - Semantic Correctness (requires Docker)
+tasks.register<Test>("experiment3") {
+    description = "Experiment 3: Semantic Correctness (requires Docker)"
+    useJUnitPlatform { includeTags("experiment3") }
+    configureIntegrationBase()
+}
+
 
 // ---- Kover (code coverage) ----
 kover {

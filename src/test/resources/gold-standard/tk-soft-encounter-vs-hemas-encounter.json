@@ -17,7 +17,7 @@
       "type": "STRUCTURAL",
       "sourcePath": "Encounter",
       "targetPath": "Encounter",
-      "description": "New constraint 'hemas-enc-1' added in target (severity: error): 'Finished encounters must have an end date' — expression: status = 'finished' implies period.end.exists(). Not present in source profile.",
+      "description": "New constraint 'hemas-enc-1' added in target (severity: error): 'Finished encounters must have an end date' - expression: status = 'finished' implies period.end.exists(). Not present in source profile.",
       "severity": "ERROR"
     },
     {
@@ -25,7 +25,7 @@
       "type": "STRUCTURAL",
       "sourcePath": "Encounter",
       "targetPath": "Encounter",
-      "description": "New constraint 'hemas-enc-2' added in target (severity: warning): 'Emergency encounters should have a priority' — expression: class.code = 'EMER' implies priority.exists(). Not present in source profile.",
+      "description": "New constraint 'hemas-enc-2' added in target (severity: warning): 'Emergency encounters should have a priority' - expression: class.code = 'EMER' implies priority.exists(). Not present in source profile.",
       "severity": "WARNING"
     },
     {
@@ -33,7 +33,7 @@
       "type": "STRUCTURAL",
       "sourcePath": "Encounter",
       "targetPath": "Encounter",
-      "description": "New constraint 'hemas-enc-3' added in target (severity: error): 'Inpatient encounters must have a location' — expression: class.code = 'IMP' implies location.exists(). Not present in source profile.",
+      "description": "New constraint 'hemas-enc-3' added in target (severity: error): 'Inpatient encounters must have a location' - expression: class.code = 'IMP' implies location.exists(). Not present in source profile.",
       "severity": "ERROR"
     },
     {
@@ -137,7 +137,7 @@
       "type": "TERMINOLOGY",
       "sourcePath": "Encounter.type",
       "targetPath": "Encounter.type",
-      "description": "Binding changed: Source uses extensible(https://tk-soft.example.com/fhir/ValueSet/encounter-type). Target uses extensible(https://hemas.example.com/fhir/ValueSet/encounter-type). Same binding strength but different ValueSet — target uses hemas-specific encounter types.",
+      "description": "Binding changed: Source uses extensible(https://tk-soft.example.com/fhir/ValueSet/encounter-type). Target uses extensible(https://hemas.example.com/fhir/ValueSet/encounter-type). Same binding strength but different ValueSet - target uses hemas-specific encounter types.",
       "severity": "WARNING"
     },
     {
@@ -185,7 +185,7 @@
       "type": "STRUCTURAL",
       "sourcePath": "Encounter.participant.individual",
       "targetPath": "Encounter.participant.individual",
-      "description": "Reference target profile changed: Source constrains to [https://tk-soft.example.com/fhir/StructureDefinition/Practitioner]. Target has no explicit type constraint (inherits R4 base: Practitioner|PractitionerRole|RelatedPerson) — reference is widened.",
+      "description": "Reference target profile changed: Source constrains to [https://tk-soft.example.com/fhir/StructureDefinition/Practitioner]. Target has no explicit type constraint (inherits R4 base: Practitioner|PractitionerRole|RelatedPerson) - reference is widened.",
       "severity": "WARNING"
     },
     {
@@ -201,7 +201,7 @@
       "type": "STRUCTURAL",
       "sourcePath": "Encounter.diagnosis.condition",
       "targetPath": "Encounter.diagnosis.condition",
-      "description": "Reference target profile changed: Source constrains to [https://tk-soft.example.com/fhir/StructureDefinition/Condition]. Target has no explicit type constraint (inherits R4 base: Condition|Procedure) — reference is widened.",
+      "description": "Reference target profile changed: Source constrains to [https://tk-soft.example.com/fhir/StructureDefinition/Condition]. Target has no explicit type constraint (inherits R4 base: Condition|Procedure) - reference is widened.",
       "severity": "WARNING"
     },
     {
@@ -241,7 +241,7 @@
       "type": "STRUCTURAL",
       "sourcePath": "Encounter.location.location",
       "targetPath": "Encounter.location.location",
-      "description": "Reference target profile changed: Source constrains to [https://tk-soft.example.com/fhir/StructureDefinition/Location]. Target has no explicit type constraint (inherits R4 base: Location) — reference is widened to base R4.",
+      "description": "Reference target profile changed: Source constrains to [https://tk-soft.example.com/fhir/StructureDefinition/Location]. Target has no explicit type constraint (inherits R4 base: Location) - reference is widened to base R4.",
       "severity": "WARNING"
     },
     {
@@ -257,7 +257,7 @@
       "type": "CARDINALITY",
       "sourcePath": "Encounter.serviceProvider",
       "targetPath": "Encounter.serviceProvider",
-      "description": "Cardinality changed: [0..1] -> [1..1]. Source has no explicit minimum (inherits R4 base min=0). Target makes serviceProvider mandatory — every encounter must have an associated organisation.",
+      "description": "Cardinality changed: [0..1] -> [1..1]. Source has no explicit minimum (inherits R4 base min=0). Target makes serviceProvider mandatory - every encounter must have an associated organisation.",
       "severity": "ERROR"
     },
     {

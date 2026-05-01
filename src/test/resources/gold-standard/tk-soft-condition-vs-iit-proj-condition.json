@@ -129,7 +129,7 @@
       "type": "TERMINOLOGY",
       "sourcePath": "Condition.code",
       "targetPath": "Condition.code",
-      "description": "Binding changed in target: Source uses extensible(https://tk-soft.example.com/fhir/ValueSet/condition-code). Target uses example(http://hl7.org/fhir/ValueSet/condition-code) — binding strength weakened (extensible→example) and changed to R4 base VS.",
+      "description": "Binding changed in target: Source uses extensible(https://tk-soft.example.com/fhir/ValueSet/condition-code). Target uses example(http://hl7.org/fhir/ValueSet/condition-code) - binding strength weakened (extensible→example) and changed to R4 base VS.",
       "severity": "INFO"
     },
     {
@@ -185,7 +185,7 @@
       "type": "TERMINOLOGY",
       "sourcePath": "Condition.bodySite",
       "targetPath": "Condition.bodySite",
-      "description": "Binding changed in target: Source uses extensible(http://hl7.org/fhir/ValueSet/body-site). Target uses example(http://hl7.org/fhir/ValueSet/body-site) — binding strength weakened (extensible→example), same value set.",
+      "description": "Binding changed in target: Source uses extensible(http://hl7.org/fhir/ValueSet/body-site). Target uses example(http://hl7.org/fhir/ValueSet/body-site) - binding strength weakened (extensible→example), same value set.",
       "severity": "INFO"
     },
     {

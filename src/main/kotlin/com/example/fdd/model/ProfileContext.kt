@@ -58,6 +58,7 @@ data class ProfileSummary(
  */
 data class ElementSummary(
     val path: String,
+    val isDifferential: Boolean = false,
     val sliceName: String? = null,
     val slicing: SlicingSummary? = null,
     val types: List<TypeSummary> = emptyList(),

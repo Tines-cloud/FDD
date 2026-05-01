@@ -129,7 +129,7 @@
       "type": "CARDINALITY",
       "sourcePath": "Patient.identifier.type",
       "targetPath": "Patient.identifier.type",
-      "description": "identifier.type cardinality changed from [0..1] to [1..1] within the hospitalId slice — type becomes mandatory for the hospitalId identifier. Source had no explicit type constraint at this level.",
+      "description": "identifier.type cardinality changed from [0..1] to [1..1] within the hospitalId slice - type becomes mandatory for the hospitalId identifier. Source had no explicit type constraint at this level.",
       "severity": "ERROR"
     },
     {
@@ -137,7 +137,7 @@
       "type": "TERMINOLOGY",
       "sourcePath": "Patient.identifier.type",
       "targetPath": "Patient.identifier.type",
-      "description": "identifier.type pattern added in target within the hospitalId slice — hemas defines a specific patternCodeableConcept coding for the hospital identifier type. Source had no equivalent pattern constraint.",
+      "description": "identifier.type pattern added in target within the hospitalId slice - hemas defines a specific patternCodeableConcept coding for the hospital identifier type. Source had no equivalent pattern constraint.",
       "severity": "WARNING"
     },
     {
@@ -257,7 +257,7 @@
       "type": "TERMINOLOGY",
       "sourcePath": "Patient.address.country",
       "targetPath": "Patient.address.country",
-      "description": "address.country fixed value added in target: hemas sets fixedCode = 'LK' (Sri Lanka) for all patient addresses. Source had no fixed value on address.country — any country code was allowed.",
+      "description": "address.country fixed value added in target: hemas sets fixedCode = 'LK' (Sri Lanka) for all patient addresses. Source had no fixed value on address.country - any country code was allowed.",
       "severity": "ERROR"
     },
     {

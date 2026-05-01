@@ -161,8 +161,19 @@ class DefaultProfileContextBuilder(
     }
 
     private fun summarise(sd: StructureDefinition): ProfileSummary {
-        val elements = resolveElements(sd).map { it.toSummary() }
-        log.debug("Profile {} has {} elements", sd.url, elements.size)
+        // Build the set of paths that are explicitly constrained in the differential.
+        // snapshot-only elements (isDifferential=false) are inherited from the base profile unchanged.
+        val differentialPaths: Set<String> = if (sd.hasDifferential()) {
+            sd.differential.element.map { elem ->
+                if (elem.sliceName != null) "${elem.path ?: ""}:${elem.sliceName}" else (elem.path ?: "")
+            }.toSet()
+        } else emptySet()
+
+        val elements = resolveElements(sd).map { elem ->
+            val encodedPath = if (elem.sliceName != null) "${elem.path ?: ""}:${elem.sliceName}" else (elem.path ?: "")
+            elem.toSummary(isDifferential = encodedPath in differentialPaths)
+        }
+        log.debug("Profile {} has {} elements ({} in differential)", sd.url, elements.size, elements.count { it.isDifferential })
 
         return ProfileSummary(
             canonical = sd.url ?: "unknown",
@@ -239,11 +250,12 @@ class DefaultProfileContextBuilder(
      * Captures **all** semantically meaningful fields so the LLM can detect
      * drift anywhere - we do not pre-decide which fields are relevant.
      */
-    private fun ElementDefinition.toSummary(): ElementSummary = ElementSummary(
+    private fun ElementDefinition.toSummary(isDifferential: Boolean = false): ElementSummary = ElementSummary(
         // Include sliceName in path using standard FHIR notation (e.g. Patient.extension:employeeId).
         // This ensures extension slices are treated as distinct elements during comparison
         // rather than all collapsing to the same "Patient.extension" key.
         path = if (this.sliceName != null) "${this.path ?: ""}:${this.sliceName}" else (this.path ?: ""),
+        isDifferential = isDifferential,
         sliceName = this.sliceName,
         slicing = this.slicing?.takeIf { it.hasDiscriminator() || it.hasRules() }?.let { s ->
             SlicingSummary(
