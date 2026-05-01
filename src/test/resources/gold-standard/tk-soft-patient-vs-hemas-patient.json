@@ -1,335 +1,376 @@
 {
-  "pairId" : "tk-soft-patient-vs-hemas-patient",
-  "sourceClasspath" : "custom-profiles/tk-soft/tk-soft-patient.json",
-  "targetClasspath" : "custom-profiles/hemas/hemas-patient.json",
-  "drifts" : [ {
-    "id" : "rule-1",
-    "type" : "STRUCTURAL",
-    "sourcePath" : "Patient",
-    "targetPath" : "Patient",
-    "description" : "Constraints added in target: [hemas-pat-1, hemas-pat-2]",
-    "severity" : "WARNING"
-  }, {
-    "id" : "rule-2",
-    "type" : "STRUCTURAL",
-    "sourcePath" : "Patient",
-    "targetPath" : "Patient",
-    "description" : "Constraints removed in target: [tk-pat-1, tk-pat-2]",
-    "severity" : "WARNING"
-  }, {
-    "id" : "rule-3",
-    "type" : "CARDINALITY",
-    "sourcePath" : "Patient.identifier.type",
-    "targetPath" : "Patient.identifier.type",
-    "description" : "Cardinality changed: [0..1] -> [1..1]",
-    "severity" : "ERROR"
-  }, {
-    "id" : "rule-4",
-    "type" : "TERMINOLOGY",
-    "sourcePath" : "Patient.identifier.type",
-    "targetPath" : "Patient.identifier.type",
-    "description" : "Pattern value changed: 'none' -> 'org.hl7.fhir.r4.model.CodeableConcept@5e15c9ab'",
-    "severity" : "WARNING"
-  }, {
-    "id" : "rule-5",
-    "type" : "STRUCTURAL",
-    "sourcePath" : "Patient.identifier.type",
-    "targetPath" : "Patient.identifier.type",
-    "description" : "MustSupport added in target",
-    "severity" : "INFO"
-  }, {
-    "id" : "rule-6",
-    "type" : "TERMINOLOGY",
-    "sourcePath" : "Patient.identifier.system",
-    "targetPath" : "Patient.identifier.system",
-    "description" : "Fixed value changed: 'none' -> 'https://hemas.example.com/fhir/sid/nic'",
-    "severity" : "ERROR"
-  }, {
-    "id" : "rule-7",
-    "type" : "STRUCTURAL",
-    "sourcePath" : "Patient.identifier.system",
-    "targetPath" : "Patient.identifier.system",
-    "description" : "MustSupport added in target",
-    "severity" : "INFO"
-  }, {
-    "id" : "rule-8",
-    "type" : "STRUCTURAL",
-    "sourcePath" : "Patient.identifier.value",
-    "targetPath" : "Patient.identifier.value",
-    "description" : "MustSupport added in target",
-    "severity" : "INFO"
-  }, {
-    "id" : "rule-9",
-    "type" : "CARDINALITY",
-    "sourcePath" : "Patient.active",
-    "targetPath" : "Patient.active",
-    "description" : "Cardinality changed: [0..1] -> [1..1]",
-    "severity" : "ERROR"
-  }, {
-    "id" : "rule-10",
-    "type" : "CARDINALITY",
-    "sourcePath" : "Patient.name.family",
-    "targetPath" : "Patient.name.family",
-    "description" : "Cardinality changed: [0..1] -> [1..1]",
-    "severity" : "ERROR"
-  }, {
-    "id" : "rule-11",
-    "type" : "CARDINALITY",
-    "sourcePath" : "Patient.name.given",
-    "targetPath" : "Patient.name.given",
-    "description" : "Cardinality changed: [0..*] -> [1..*]",
-    "severity" : "ERROR"
-  }, {
-    "id" : "rule-12",
-    "type" : "STRUCTURAL",
-    "sourcePath" : "Patient.name.prefix",
-    "targetPath" : "Patient.name.prefix",
-    "description" : "MustSupport removed in target",
-    "severity" : "INFO"
-  }, {
-    "id" : "rule-13",
-    "type" : "CARDINALITY",
-    "sourcePath" : "Patient.telecom",
-    "targetPath" : "Patient.telecom",
-    "description" : "Cardinality changed: [1..5] -> [1..*]",
-    "severity" : "INFO"
-  }, {
-    "id" : "rule-14",
-    "type" : "TERMINOLOGY",
-    "sourcePath" : "Patient.telecom.use",
-    "targetPath" : "Patient.telecom.use",
-    "description" : "Binding changed: required(http://hl7.org/fhir/ValueSet/contact-point-use) -> required(http://hl7.org/fhir/ValueSet/contact-point-use|4.0.1)",
-    "severity" : "ERROR"
-  }, {
-    "id" : "rule-15",
-    "type" : "STRUCTURAL",
-    "sourcePath" : "Patient.telecom.use",
-    "targetPath" : "Patient.telecom.use",
-    "description" : "MustSupport removed in target",
-    "severity" : "INFO"
-  }, {
-    "id" : "rule-16",
-    "type" : "STRUCTURAL",
-    "sourcePath" : "Patient.deceased[x]",
-    "targetPath" : "Patient.deceased[x]",
-    "description" : "MustSupport removed in target",
-    "severity" : "INFO"
-  }, {
-    "id" : "rule-17",
-    "type" : "CARDINALITY",
-    "sourcePath" : "Patient.address",
-    "targetPath" : "Patient.address",
-    "description" : "Cardinality changed: [0..*] -> [1..*]",
-    "severity" : "ERROR"
-  }, {
-    "id" : "rule-18",
-    "type" : "CARDINALITY",
-    "sourcePath" : "Patient.address.line",
-    "targetPath" : "Patient.address.line",
-    "description" : "Cardinality changed: [0..*] -> [1..*]",
-    "severity" : "ERROR"
-  }, {
-    "id" : "rule-19",
-    "type" : "CARDINALITY",
-    "sourcePath" : "Patient.address.city",
-    "targetPath" : "Patient.address.city",
-    "description" : "Cardinality changed: [0..1] -> [1..1]",
-    "severity" : "ERROR"
-  }, {
-    "id" : "rule-20",
-    "type" : "STRUCTURAL",
-    "sourcePath" : "Patient.address.district",
-    "targetPath" : "Patient.address.district",
-    "description" : "MustSupport added in target",
-    "severity" : "INFO"
-  }, {
-    "id" : "rule-21",
-    "type" : "STRUCTURAL",
-    "sourcePath" : "Patient.address.state",
-    "targetPath" : "Patient.address.state",
-    "description" : "MustSupport removed in target",
-    "severity" : "INFO"
-  }, {
-    "id" : "rule-22",
-    "type" : "STRUCTURAL",
-    "sourcePath" : "Patient.address.postalCode",
-    "targetPath" : "Patient.address.postalCode",
-    "description" : "MustSupport removed in target",
-    "severity" : "INFO"
-  }, {
-    "id" : "rule-23",
-    "type" : "CARDINALITY",
-    "sourcePath" : "Patient.address.country",
-    "targetPath" : "Patient.address.country",
-    "description" : "Cardinality changed: [0..1] -> [1..1]",
-    "severity" : "ERROR"
-  }, {
-    "id" : "rule-24",
-    "type" : "TERMINOLOGY",
-    "sourcePath" : "Patient.address.country",
-    "targetPath" : "Patient.address.country",
-    "description" : "Fixed value changed: 'none' -> 'LK'",
-    "severity" : "ERROR"
-  }, {
-    "id" : "rule-25",
-    "type" : "TERMINOLOGY",
-    "sourcePath" : "Patient.maritalStatus",
-    "targetPath" : "Patient.maritalStatus",
-    "description" : "Binding changed: extensible(https://tk-soft.example.com/fhir/ValueSet/marital-status) -> extensible(http://hl7.org/fhir/ValueSet/marital-status)",
-    "severity" : "WARNING"
-  }, {
-    "id" : "rule-26",
-    "type" : "STRUCTURAL",
-    "sourcePath" : "Patient.maritalStatus",
-    "targetPath" : "Patient.maritalStatus",
-    "description" : "MustSupport added in target",
-    "severity" : "INFO"
-  }, {
-    "id" : "rule-27",
-    "type" : "CARDINALITY",
-    "sourcePath" : "Patient.photo",
-    "targetPath" : "Patient.photo",
-    "description" : "Cardinality changed: [0..0] -> [0..*]",
-    "severity" : "INFO"
-  }, {
-    "id" : "rule-28",
-    "type" : "STRUCTURAL",
-    "sourcePath" : "Patient.contact",
-    "targetPath" : "Patient.contact",
-    "description" : "MustSupport added in target",
-    "severity" : "INFO"
-  }, {
-    "id" : "rule-29",
-    "type" : "CARDINALITY",
-    "sourcePath" : "Patient.contact.relationship",
-    "targetPath" : "Patient.contact.relationship",
-    "description" : "Cardinality changed: [0..*] -> [1..*]",
-    "severity" : "ERROR"
-  }, {
-    "id" : "rule-30",
-    "type" : "TERMINOLOGY",
-    "sourcePath" : "Patient.contact.relationship",
-    "targetPath" : "Patient.contact.relationship",
-    "description" : "Binding changed: extensible(https://tk-soft.example.com/fhir/ValueSet/contact-relationship) -> extensible(http://hl7.org/fhir/ValueSet/patient-contactrelationship)",
-    "severity" : "WARNING"
-  }, {
-    "id" : "rule-31",
-    "type" : "CARDINALITY",
-    "sourcePath" : "Patient.contact.name",
-    "targetPath" : "Patient.contact.name",
-    "description" : "Cardinality changed: [0..1] -> [1..1]",
-    "severity" : "ERROR"
-  }, {
-    "id" : "rule-32",
-    "type" : "CARDINALITY",
-    "sourcePath" : "Patient.contact.telecom",
-    "targetPath" : "Patient.contact.telecom",
-    "description" : "Cardinality changed: [0..*] -> [1..*]",
-    "severity" : "ERROR"
-  }, {
-    "id" : "rule-33",
-    "type" : "STRUCTURAL",
-    "sourcePath" : "Patient.communication",
-    "targetPath" : "Patient.communication",
-    "description" : "MustSupport added in target",
-    "severity" : "INFO"
-  }, {
-    "id" : "rule-34",
-    "type" : "TERMINOLOGY",
-    "sourcePath" : "Patient.communication.language",
-    "targetPath" : "Patient.communication.language",
-    "description" : "Binding changed: extensible(https://tk-soft.example.com/fhir/ValueSet/languages) -> extensible(http://hl7.org/fhir/ValueSet/languages)",
-    "severity" : "WARNING"
-  }, {
-    "id" : "rule-35",
-    "type" : "STRUCTURAL",
-    "sourcePath" : "Patient.generalPractitioner",
-    "targetPath" : "Patient.generalPractitioner",
-    "description" : "Reference target profile changed: [https://tk-soft.example.com/fhir/StructureDefinition/Practitioner] -> [https://hemas.example.com/fhir/StructureDefinition/Practitioner]",
-    "severity" : "WARNING"
-  }, {
-    "id" : "rule-36",
-    "type" : "CARDINALITY",
-    "sourcePath" : "Patient.managingOrganization",
-    "targetPath" : "Patient.managingOrganization",
-    "description" : "Cardinality changed: [0..1] -> [1..1]",
-    "severity" : "ERROR"
-  }, {
-    "id" : "rule-37",
-    "type" : "STRUCTURAL",
-    "sourcePath" : "Patient.managingOrganization",
-    "targetPath" : "Patient.managingOrganization",
-    "description" : "Reference target profile changed: [https://tk-soft.example.com/fhir/StructureDefinition/Organization] -> [https://hemas.example.com/fhir/StructureDefinition/Organization]",
-    "severity" : "WARNING"
-  }, {
-    "id" : "rule-38",
-    "type" : "EXTENSION",
-    "sourcePath" : "",
-    "targetPath" : "Patient.extension:registrationDate",
-    "description" : "Extension added in target profile: Patient.extension:registrationDate",
-    "severity" : "WARNING"
-  }, {
-    "id" : "rule-39",
-    "type" : "EXTENSION",
-    "sourcePath" : "",
-    "targetPath" : "Patient.extension:vipStatus",
-    "description" : "Extension added in target profile: Patient.extension:vipStatus",
-    "severity" : "WARNING"
-  }, {
-    "id" : "rule-40",
-    "type" : "EXTENSION",
-    "sourcePath" : "",
-    "targetPath" : "Patient.extension:insuranceProvider",
-    "description" : "Extension added in target profile: Patient.extension:insuranceProvider",
-    "severity" : "WARNING"
-  }, {
-    "id" : "rule-41",
-    "type" : "STRUCTURAL",
-    "sourcePath" : "",
-    "targetPath" : "Patient.identifier:hospitalId",
-    "description" : "New slice 'hospitalId' added in target profile",
-    "severity" : "ERROR"
-  }, {
-    "id" : "rule-42",
-    "type" : "STRUCTURAL",
-    "sourcePath" : "",
-    "targetPath" : "Patient.identifier:nic",
-    "description" : "New slice 'nic' added in target profile",
-    "severity" : "INFO"
-  }, {
-    "id" : "rule-43",
-    "type" : "EXTENSION",
-    "sourcePath" : "Patient.extension:employeeId",
-    "targetPath" : "",
-    "description" : "Extension removed in target profile: Patient.extension:employeeId (was mustSupport)",
-    "severity" : "WARNING"
-  }, {
-    "id" : "rule-44",
-    "type" : "EXTENSION",
-    "sourcePath" : "Patient.extension:preferredLanguage",
-    "targetPath" : "",
-    "description" : "Extension removed in target profile: Patient.extension:preferredLanguage (was mustSupport)",
-    "severity" : "WARNING"
-  }, {
-    "id" : "rule-45",
-    "type" : "EXTENSION",
-    "sourcePath" : "Patient.extension:ethnicGroup",
-    "targetPath" : "",
-    "description" : "Extension removed in target profile: Patient.extension:ethnicGroup",
-    "severity" : "INFO"
-  }, {
-    "id" : "rule-46",
-    "type" : "STRUCTURAL",
-    "sourcePath" : "Patient.identifier:mrn",
-    "targetPath" : "",
-    "description" : "Slice 'mrn' removed in target profile",
-    "severity" : "WARNING"
-  }, {
-    "id" : "rule-47",
-    "type" : "STRUCTURAL",
-    "sourcePath" : "Patient.identifier:national",
-    "targetPath" : "",
-    "description" : "Slice 'national' removed in target profile",
-    "severity" : "WARNING"
-  } ]
+  "pairId": "tk-soft-patient-vs-hemas-patient",
+  "sourceClasspath": "custom-profiles/tk-soft/tk-soft-patient.json",
+  "targetClasspath": "custom-profiles/hemas/hemas-patient.json",
+  "_notes": "Source: tk-soft-patient. Target: hemas-patient. Both are enterprise custom profiles with different extension sets, identifier slicing schemes, and cardinality requirements. Hemas adds new mandatory elements for address, contact, and managingOrganization.",
+  "drifts": [
+    {
+      "id": "rule-1",
+      "type": "STRUCTURAL",
+      "sourcePath": "Patient",
+      "targetPath": "Patient",
+      "description": "Source constraints removed: [tk-pat-1 (error: Patient must have at least a family name or a given name), tk-pat-2 (warning: Active patients should have at least one telecom)]. No equivalent constraints in target.",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-2",
+      "type": "STRUCTURAL",
+      "sourcePath": "Patient",
+      "targetPath": "Patient",
+      "description": "New error constraint added in target: hemas-pat-1 (error: Patient must have at least one identifier with a system). Not in source.",
+      "severity": "ERROR"
+    },
+    {
+      "id": "rule-3",
+      "type": "STRUCTURAL",
+      "sourcePath": "Patient",
+      "targetPath": "Patient",
+      "description": "New warning constraint added in target: hemas-pat-2 (warning: Patient should have an emergency contact). Not in source.",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-4",
+      "type": "EXTENSION",
+      "sourcePath": "Patient.extension:employeeId",
+      "targetPath": "Patient.extension:employeeId",
+      "description": "Extension employeeId[0..1 mustSupport=true] present in source is removed in target (hemas-patient does not define this extension).",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-5",
+      "type": "EXTENSION",
+      "sourcePath": "Patient.extension:preferredLanguage",
+      "targetPath": "Patient.extension:preferredLanguage",
+      "description": "Extension preferredLanguage[0..1 mustSupport=true] present in source is removed in target.",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-6",
+      "type": "EXTENSION",
+      "sourcePath": "Patient.extension:ethnicGroup",
+      "targetPath": "Patient.extension:ethnicGroup",
+      "description": "Extension ethnicGroup[0..1 mustSupport=false] present in source is removed in target.",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-7",
+      "type": "EXTENSION",
+      "sourcePath": "Patient.extension:registrationDate",
+      "targetPath": "Patient.extension:registrationDate",
+      "description": "New extension registrationDate[0..1 mustSupport=true] added in target. Source does not define this extension.",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-8",
+      "type": "EXTENSION",
+      "sourcePath": "Patient.extension:vipStatus",
+      "targetPath": "Patient.extension:vipStatus",
+      "description": "New extension vipStatus[0..1 mustSupport=true] added in target. Source does not define this extension.",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-9",
+      "type": "EXTENSION",
+      "sourcePath": "Patient.extension:insuranceProvider",
+      "targetPath": "Patient.extension:insuranceProvider",
+      "description": "New extension insuranceProvider[0..* mustSupport=true] added in target. Source does not define this extension.",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-10",
+      "type": "STRUCTURAL",
+      "sourcePath": "Patient.identifier",
+      "targetPath": "Patient.identifier",
+      "description": "Identifier slicing scheme changed: source defines slices [mrn, national]; target defines slices [hospitalId, nic]. Discriminators and slice names differ entirely.",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-11",
+      "type": "STRUCTURAL",
+      "sourcePath": "Patient.identifier:mrn",
+      "targetPath": "Patient.identifier:mrn",
+      "description": "Source mandatory slice mrn[1..1 mustSupport=true] removed in target. No equivalent slice in hemas-patient.",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-12",
+      "type": "STRUCTURAL",
+      "sourcePath": "Patient.identifier:national",
+      "targetPath": "Patient.identifier:national",
+      "description": "Source optional slice national[0..1 mustSupport=true] removed in target. No equivalent slice in hemas-patient.",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-13",
+      "type": "CARDINALITY",
+      "sourcePath": "Patient.identifier",
+      "targetPath": "Patient.identifier:hospitalId",
+      "description": "New mandatory slice hospitalId[1..1 mustSupport=true] added in target. Source has no hospitalId slice.",
+      "severity": "ERROR"
+    },
+    {
+      "id": "rule-14",
+      "type": "STRUCTURAL",
+      "sourcePath": "Patient.identifier:hospitalId",
+      "targetPath": "Patient.identifier:hospitalId",
+      "description": "MustSupport on mandatory slice hospitalId (min=1, conformance-critical in target).",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-15",
+      "type": "STRUCTURAL",
+      "sourcePath": "Patient.identifier",
+      "targetPath": "Patient.identifier:nic",
+      "description": "New optional slice nic[0..1 mustSupport=true] added in target. Source has no nic slice.",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-15b",
+      "type": "CARDINALITY",
+      "sourcePath": "Patient.identifier.type",
+      "targetPath": "Patient.identifier.type",
+      "description": "identifier.type cardinality changed from [0..1] to [1..1] within the hospitalId slice — type becomes mandatory for the hospitalId identifier. Source had no explicit type constraint at this level.",
+      "severity": "ERROR"
+    },
+    {
+      "id": "rule-15c",
+      "type": "TERMINOLOGY",
+      "sourcePath": "Patient.identifier.type",
+      "targetPath": "Patient.identifier.type",
+      "description": "identifier.type pattern added in target within the hospitalId slice — hemas defines a specific patternCodeableConcept coding for the hospital identifier type. Source had no equivalent pattern constraint.",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-15d",
+      "type": "TERMINOLOGY",
+      "sourcePath": "Patient.identifier.system",
+      "targetPath": "Patient.identifier.system",
+      "description": "identifier.system fixed value added in target: hemas sets fixedUri = 'https://hemas.example.com/fhir/sid/nic' for the nic identifier slice. Source had no fixed system value on identifier.system.",
+      "severity": "ERROR"
+    },
+    {
+      "id": "rule-16",
+      "type": "CARDINALITY",
+      "sourcePath": "Patient.active",
+      "targetPath": "Patient.active",
+      "description": "active cardinality changed: source [0..1 mustSupport=true] → target [1..1 mustSupport=true]. Active becomes mandatory in hemas-patient.",
+      "severity": "ERROR"
+    },
+    {
+      "id": "rule-17",
+      "type": "CARDINALITY",
+      "sourcePath": "Patient.name.family",
+      "targetPath": "Patient.name.family",
+      "description": "name.family cardinality changed: source [0..1 mustSupport=true] → target [1..1 mustSupport=true]. Family name becomes mandatory.",
+      "severity": "ERROR"
+    },
+    {
+      "id": "rule-18",
+      "type": "CARDINALITY",
+      "sourcePath": "Patient.name.given",
+      "targetPath": "Patient.name.given",
+      "description": "name.given cardinality changed: source [0..*] → target [1..*]. Given name becomes mandatory (min increased from 0 to 1; max inherits R4 base *).",
+      "severity": "ERROR"
+    },
+    {
+      "id": "rule-19",
+      "type": "STRUCTURAL",
+      "sourcePath": "Patient.name.prefix",
+      "targetPath": "Patient.name.prefix",
+      "description": "MustSupport removed on name.prefix (source mustSupport=true; target does not constrain prefix).",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-20",
+      "type": "CARDINALITY",
+      "sourcePath": "Patient.telecom",
+      "targetPath": "Patient.telecom",
+      "description": "telecom max cardinality relaxed: source [1..5] → target [1..*]. Maximum cap removed.",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-20b",
+      "type": "TERMINOLOGY",
+      "sourcePath": "Patient.telecom.use",
+      "targetPath": "Patient.telecom.use",
+      "description": "telecom.use binding version pin added in target: Source uses required(http://hl7.org/fhir/ValueSet/contact-point-use) without version pin. Hemas target uses required(http://hl7.org/fhir/ValueSet/contact-point-use|4.0.1) with explicit R4 version pin.",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-21",
+      "type": "STRUCTURAL",
+      "sourcePath": "Patient.telecom.use",
+      "targetPath": "Patient.telecom.use",
+      "description": "telecom.use MustSupport removed and required binding on contact-point-use removed (source mustSupport=true required binding; target does not constrain telecom.use).",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-22",
+      "type": "CARDINALITY",
+      "sourcePath": "Patient.address",
+      "targetPath": "Patient.address",
+      "description": "address cardinality changed: source [0..* mustSupport=true] → target [1..* mustSupport=true]. Address becomes mandatory.",
+      "severity": "ERROR"
+    },
+    {
+      "id": "rule-23",
+      "type": "CARDINALITY",
+      "sourcePath": "Patient.address.line",
+      "targetPath": "Patient.address.line",
+      "description": "address.line cardinality changed: source [0..*] → target [1..*]. Address line becomes mandatory (min increased from 0 to 1; max inherits R4 Address base *).",
+      "severity": "ERROR"
+    },
+    {
+      "id": "rule-24",
+      "type": "CARDINALITY",
+      "sourcePath": "Patient.address.city",
+      "targetPath": "Patient.address.city",
+      "description": "address.city cardinality changed: source [0..1 mustSupport=true] → target [1..1 mustSupport=true]. City becomes mandatory.",
+      "severity": "ERROR"
+    },
+    {
+      "id": "rule-25",
+      "type": "STRUCTURAL",
+      "sourcePath": "Patient.address.state",
+      "targetPath": "Patient.address.state",
+      "description": "MustSupport removed on address.state (source mustSupport=true; target does not constrain state).",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-26",
+      "type": "STRUCTURAL",
+      "sourcePath": "Patient.address.postalCode",
+      "targetPath": "Patient.address.postalCode",
+      "description": "MustSupport removed on address.postalCode (source mustSupport=true; target does not constrain postalCode).",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-27",
+      "type": "CARDINALITY",
+      "sourcePath": "Patient.address.country",
+      "targetPath": "Patient.address.country",
+      "description": "address.country cardinality changed: source [0..1 mustSupport=true] → target [1..1 mustSupport=true]. Country becomes mandatory.",
+      "severity": "ERROR"
+    },
+    {
+      "id": "rule-27b",
+      "type": "TERMINOLOGY",
+      "sourcePath": "Patient.address.country",
+      "targetPath": "Patient.address.country",
+      "description": "address.country fixed value added in target: hemas sets fixedCode = 'LK' (Sri Lanka) for all patient addresses. Source had no fixed value on address.country — any country code was allowed.",
+      "severity": "ERROR"
+    },
+    {
+      "id": "rule-27c",
+      "type": "CARDINALITY",
+      "sourcePath": "Patient.photo",
+      "targetPath": "Patient.photo",
+      "description": "photo cardinality relaxed: source [0..0 banned] → target [0..*] (ban lifted). Hemas-patient allows photos; the source tk-soft profile explicitly prohibited photos (max=0).",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-28",
+      "type": "STRUCTURAL",
+      "sourcePath": "",
+      "targetPath": "Patient.address.district",
+      "description": "New optional MustSupport element address.district added in target (mustSupport=true; source does not constrain district).",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-29",
+      "type": "STRUCTURAL",
+      "sourcePath": "Patient.maritalStatus",
+      "targetPath": "Patient.maritalStatus",
+      "description": "MustSupport added on maritalStatus in target (source mustSupport=false; target mustSupport=true, optional element).",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-30",
+      "type": "TERMINOLOGY",
+      "sourcePath": "Patient.maritalStatus",
+      "targetPath": "Patient.maritalStatus",
+      "description": "Binding changed: source extensible(https://tk-soft.example.com/fhir/ValueSet/marital-status) → target extensible(http://hl7.org/fhir/ValueSet/marital-status). Different value sets, same strength.",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-31",
+      "type": "STRUCTURAL",
+      "sourcePath": "Patient.contact",
+      "targetPath": "Patient.contact",
+      "description": "MustSupport added on contact in target (source mustSupport=false; target mustSupport=true).",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-32",
+      "type": "CARDINALITY",
+      "sourcePath": "Patient.contact.relationship",
+      "targetPath": "Patient.contact.relationship",
+      "description": "contact.relationship cardinality changed: source [0..* mustSupport=true] → target [1..* mustSupport=true]. Relationship becomes mandatory in contacts.",
+      "severity": "ERROR"
+    },
+    {
+      "id": "rule-33",
+      "type": "TERMINOLOGY",
+      "sourcePath": "Patient.contact.relationship",
+      "targetPath": "Patient.contact.relationship",
+      "description": "contact.relationship binding changed: source extensible(https://tk-soft.example.com/fhir/ValueSet/contact-relationship) → target extensible(http://hl7.org/fhir/ValueSet/patient-contactrelationship). Different value sets, same strength.",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-34",
+      "type": "CARDINALITY",
+      "sourcePath": "Patient.contact.name",
+      "targetPath": "Patient.contact.name",
+      "description": "contact.name cardinality changed: source [0..1 mustSupport=true] → target [1..1 mustSupport=true]. Contact name becomes mandatory.",
+      "severity": "ERROR"
+    },
+    {
+      "id": "rule-35",
+      "type": "CARDINALITY",
+      "sourcePath": "Patient.contact.telecom",
+      "targetPath": "Patient.contact.telecom",
+      "description": "contact.telecom cardinality changed: source [0..* mustSupport=true] → target [1..* mustSupport=true]. Contact telecom becomes mandatory.",
+      "severity": "ERROR"
+    },
+    {
+      "id": "rule-36",
+      "type": "STRUCTURAL",
+      "sourcePath": "Patient.communication",
+      "targetPath": "Patient.communication",
+      "description": "communication MustSupport added in target (source mustSupport=false; target mustSupport=true).",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-37",
+      "type": "TERMINOLOGY",
+      "sourcePath": "Patient.communication.language",
+      "targetPath": "Patient.communication.language",
+      "description": "communication.language binding changed: source extensible(https://tk-soft.example.com/fhir/ValueSet/languages) → target extensible(http://hl7.org/fhir/ValueSet/languages). Different value sets, same strength.",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-38",
+      "type": "STRUCTURAL",
+      "sourcePath": "Patient.generalPractitioner",
+      "targetPath": "Patient.generalPractitioner",
+      "description": "Reference target changed: source constrains to tk-soft/Practitioner; target constrains to hemas/Practitioner.",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-39",
+      "type": "CARDINALITY",
+      "sourcePath": "Patient.managingOrganization",
+      "targetPath": "Patient.managingOrganization",
+      "description": "managingOrganization cardinality changed: source [0..1 mustSupport=true] → target [1..1 mustSupport=true]. Becomes mandatory in hemas-patient.",
+      "severity": "ERROR"
+    },
+    {
+      "id": "rule-40",
+      "type": "STRUCTURAL",
+      "sourcePath": "Patient.managingOrganization",
+      "targetPath": "Patient.managingOrganization",
+      "description": "Reference target changed: source constrains to tk-soft/Organization; target constrains to hemas/Organization.",
+      "severity": "WARNING"
+    }
+  ]
 }

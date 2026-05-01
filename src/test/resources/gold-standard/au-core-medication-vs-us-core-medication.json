@@ -2,61 +2,46 @@
   "pairId": "au-core-medication-vs-us-core-medication",
   "sourceClasspath": "standard-profiles/au-core/StructureDefinition-au-core-medication.json",
   "targetClasspath": "standard-profiles/us-core/StructureDefinition-us-core-medication.json",
+  "_notes": "Source: AU Core Medication (Australian realm). Target: US Core Medication (US realm). Both make code mandatory (min=1, MS). Key difference: AU Core uses AU-specific medication code slicing on code.coding (PBS items and AMT Australian Medication required sub-slices) with no overall code binding; US Core replaces this entirely with a single extensible US NLM medication codes binding at the code level and no sub-slices.",
   "drifts": [
     {
       "id": "rule-1",
-      "type": "TERMINOLOGY",
-      "sourcePath": "Medication.code",
-      "targetPath": "Medication.code",
-      "description": "Binding changed: source uses the base medication code binding with AU-specific preferred bindings for Australian Medication, PBS item, MIMS, and GTIN, while target uses extensible(http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1010.4)",
+      "type": "STRUCTURAL",
+      "sourcePath": "Medication.code.coding",
+      "targetPath": "Medication.code.coding",
+      "description": "code.coding slicing removed in target: source AU Core defines pattern-type slicing on code.coding with two AU-specific required binding slices (pbs, amt); target US Core has no slicing on code.coding.",
       "severity": "WARNING"
     },
     {
       "id": "rule-2",
-      "type": "EXTENSION",
-      "sourcePath": "Medication.code.extension(http://hl7.org/fhir/StructureDefinition/obligation)",
-      "targetPath": "Medication.code",
-      "description": "Extension removed in target element: http://hl7.org/fhir/StructureDefinition/obligation",
+      "type": "STRUCTURAL",
+      "sourcePath": "Medication.code.coding:pbs",
+      "targetPath": "Medication.code.coding:pbs",
+      "description": "code.coding:pbs slice removed in target: source has [mustSupport=true, required(http://terminology.hl7.org.au/ValueSet/pbs-item)] [AU PBS items VS]; target has no equivalent slice.",
       "severity": "WARNING"
     },
     {
       "id": "rule-3",
-      "type": "EXTENSION",
-      "sourcePath": "Medication.code",
-      "targetPath": "Medication.code.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+      "type": "STRUCTURAL",
+      "sourcePath": "Medication.code.coding:amt",
+      "targetPath": "Medication.code.coding:amt",
+      "description": "code.coding:amt slice removed in target: source has [mustSupport=true, required(https://healthterminologies.gov.au/fhir/ValueSet/australian-medication-1)] [AU AMT medications VS]; target has no equivalent slice.",
       "severity": "WARNING"
     },
     {
       "id": "rule-4",
-      "type": "STRUCTURAL",
-      "sourcePath": "Medication.code.coding",
-      "targetPath": "Medication.code.coding",
-      "description": "Slicing changed: source slices coding with rules=open and discriminator=[pattern:$this], while target has no coding slice definition",
+      "type": "TERMINOLOGY",
+      "sourcePath": "Medication.code",
+      "targetPath": "Medication.code",
+      "description": "code overall binding added in target: US Core adds extensible(http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1010.4) [US NLM medication codes VS]; source AU Core has no overall binding on code (only AU-specific required bindings on sub-slices). New US realm binding replaces AU sub-slice required bindings.",
       "severity": "WARNING"
     },
     {
       "id": "rule-5",
-      "type": "STRUCTURAL",
-      "sourcePath": "Medication.code.coding:pbs",
-      "targetPath": "",
-      "description": "Slice removed in target profile: Medication.code.coding:pbs (mustSupport=true, binding=required(http://terminology.hl7.org.au/ValueSet/pbs-item), with AU obligation extension)",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-6",
-      "type": "STRUCTURAL",
-      "sourcePath": "Medication.code.coding:amt",
-      "targetPath": "",
-      "description": "Slice removed in target profile: Medication.code.coding:amt (mustSupport=true, binding=required(https://healthterminologies.gov.au/fhir/ValueSet/australian-medication-1), with AU obligation extension)",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-7",
       "type": "TERMINOLOGY",
       "sourcePath": "Medication.form",
       "targetPath": "Medication.form",
-      "description": "Binding changed: preferred(https://healthterminologies.gov.au/fhir/ValueSet/medication-form-1) -> example(http://hl7.org/fhir/ValueSet/medication-form-codes)",
+      "description": "form binding changed: source preferred(https://healthterminologies.gov.au/fhir/ValueSet/medication-form-1) [AU medication form VS] → target example(http://hl7.org/fhir/ValueSet/medication-form-codes) [R4 example VS]. Binding strength weakened from preferred to example and AU-specific VS replaced by R4 example VS.",
       "severity": "WARNING"
     }
   ]

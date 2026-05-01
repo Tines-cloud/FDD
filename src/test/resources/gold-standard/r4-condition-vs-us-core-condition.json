@@ -2,230 +2,255 @@
   "pairId": "r4-condition-vs-us-core-condition",
   "sourceClasspath": "standard-profiles/r4/condition.profile.json",
   "targetClasspath": "standard-profiles/us-core/StructureDefinition-us-core-condition-encounter-diagnosis.json",
+  "_notes": "Hand-curated by reading the US Core Condition-Encounter-Diagnosis differential (12 elements) line by line against the R4 Condition snapshot. Key R4 facts: clinicalStatus min=0 required:condition-clinical|4.0.1; verificationStatus min=0 required:condition-ver-status|4.0.1; category min=0 extensible:condition-category; code min=0 example:condition-code; subject min=1 Reference(Patient|Group); encounter min=0 Reference(Encounter); onset[x] min=0; abatement[x] min=0; recordedDate min=0. US Core adds assertedDate extension slice, makes category [1..*] with mandatory 'us-core' slice (encounter-diagnosis), makes code [1..1], tightens bindings, and adds USCDI annotations throughout.",
   "drifts": [
     {
-      "id": "rule-1",
+      "id": "gold-con-1",
+      "type": "STRUCTURAL",
+      "sourcePath": null,
+      "targetPath": "Condition.extension:assertedDate",
+      "description": "New MustSupport extension slice 'assertedDate' added (max=1) using profile http://hl7.org/fhir/StructureDefinition/condition-assertedDate. Not present in R4 base Condition. MustSupport=true on a new slice (min=0).",
+      "severity": "WARNING"
+    },
+    {
+      "id": "gold-con-2",
+      "type": "EXTENSION",
+      "sourcePath": null,
+      "targetPath": "Condition.extension:assertedDate",
+      "description": "Element-level USCDI requirement annotation extension (uscdi-requirement=true) added to Condition.extension:assertedDate in target profile. Marks this element as a US Core Data for Interoperability requirement.",
+      "severity": "INFO"
+    },
+    {
+      "id": "gold-con-3",
       "type": "STRUCTURAL",
       "sourcePath": "Condition.clinicalStatus",
       "targetPath": "Condition.clinicalStatus",
-      "description": "MustSupport added in target",
+      "description": "MustSupport added in target (min=0, optional but must be supported when present).",
       "severity": "INFO"
     },
     {
-      "id": "rule-2",
-      "type": "EXTENSION",
+      "id": "gold-con-4",
+      "type": "TERMINOLOGY",
       "sourcePath": "Condition.clinicalStatus",
-      "targetPath": "Condition.clinicalStatus.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "Extension present only in target: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+      "targetPath": "Condition.clinicalStatus",
+      "description": "Binding version pin removed: R4 binds to 'condition-clinical|4.0.1' (version-locked). US Core binds to 'condition-clinical' (no version pin). Strength remains required in both.",
       "severity": "WARNING"
     },
     {
-      "id": "rule-3",
+      "id": "gold-con-5",
+      "type": "EXTENSION",
+      "sourcePath": "Condition.clinicalStatus",
+      "targetPath": "Condition.clinicalStatus",
+      "description": "Element-level USCDI requirement annotation extension (uscdi-requirement=true) added to Condition.clinicalStatus in target profile. Marks this element as a US Core Data for Interoperability requirement.",
+      "severity": "INFO"
+    },
+    {
+      "id": "gold-con-6",
       "type": "STRUCTURAL",
       "sourcePath": "Condition.verificationStatus",
       "targetPath": "Condition.verificationStatus",
-      "description": "MustSupport added in target",
+      "description": "MustSupport added in target (min=0, optional but must be supported when present).",
       "severity": "INFO"
     },
     {
-      "id": "rule-4",
-      "type": "EXTENSION",
+      "id": "gold-con-7",
+      "type": "TERMINOLOGY",
       "sourcePath": "Condition.verificationStatus",
-      "targetPath": "Condition.verificationStatus.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "Extension present only in target: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+      "targetPath": "Condition.verificationStatus",
+      "description": "Binding version pin removed: R4 binds to 'condition-ver-status|4.0.1' (version-locked). US Core binds to 'condition-ver-status' (no version pin). Strength remains required in both.",
       "severity": "WARNING"
     },
     {
-      "id": "rule-5",
+      "id": "gold-con-8",
+      "type": "EXTENSION",
+      "sourcePath": "Condition.verificationStatus",
+      "targetPath": "Condition.verificationStatus",
+      "description": "Element-level USCDI requirement annotation extension (uscdi-requirement=true) added to Condition.verificationStatus in target profile. Marks this element as a US Core Data for Interoperability requirement.",
+      "severity": "INFO"
+    },
+    {
+      "id": "gold-con-9",
       "type": "CARDINALITY",
       "sourcePath": "Condition.category",
       "targetPath": "Condition.category",
-      "description": "Cardinality changed: [0..*] -> [1..*]",
-      "severity": "WARNING"
+      "description": "Cardinality changed: [0..*] -> [1..*]. At least one category becomes mandatory in US Core; R4 allows a Condition without a category.",
+      "severity": "ERROR"
     },
     {
-      "id": "rule-6",
+      "id": "gold-con-10",
       "type": "STRUCTURAL",
       "sourcePath": "Condition.category",
       "targetPath": "Condition.category",
-      "description": "MustSupport added in target",
+      "description": "MustSupport added in target (min becomes 1 -> conformance-critical).",
+      "severity": "WARNING"
+    },
+    {
+      "id": "gold-con-11",
+      "type": "STRUCTURAL",
+      "sourcePath": "Condition.category",
+      "targetPath": "Condition.category",
+      "description": "Slicing added on Condition.category: discriminator type=pattern, path=$this, rules=open. Allows named category slices to be defined.",
       "severity": "INFO"
     },
     {
-      "id": "rule-7",
-      "type": "STRUCTURAL",
-      "sourcePath": "Condition.category",
-      "targetPath": "Condition.category",
-      "description": "Slicing changed: none -> rules=open, discriminators=[pattern:$this]",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-8",
+      "id": "gold-con-12",
       "type": "EXTENSION",
       "sourcePath": "Condition.category",
-      "targetPath": "Condition.category.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "Extension present only in target: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
-      "severity": "WARNING"
+      "targetPath": "Condition.category",
+      "description": "Element-level USCDI requirement annotation extension (uscdi-requirement=true) added to Condition.category in target profile. Marks this element as a US Core Data for Interoperability requirement.",
+      "severity": "INFO"
     },
     {
-      "id": "rule-9",
-      "type": "STRUCTURAL",
-      "sourcePath": "",
+      "id": "gold-con-13",
+      "type": "CARDINALITY",
+      "sourcePath": null,
       "targetPath": "Condition.category:us-core",
-      "description": "Slice present only in target: Condition.category:us-core (min=1, max=1, mustSupport=true, required pattern Coding(system=http://terminology.hl7.org/CodeSystem/condition-category, code=encounter-diagnosis))",
+      "description": "New mandatory slice 'us-core' added [1..1]: patternCodeableConcept coding system=http://terminology.hl7.org/CodeSystem/condition-category code=encounter-diagnosis. No equivalent in R4 base.",
+      "severity": "ERROR"
+    },
+    {
+      "id": "gold-con-14",
+      "type": "STRUCTURAL",
+      "sourcePath": null,
+      "targetPath": "Condition.category:us-core",
+      "description": "MustSupport added on mandatory slice 'us-core' (min=1 -> conformance-critical). A new MS=true slice is added.",
       "severity": "WARNING"
     },
     {
-      "id": "rule-10",
+      "id": "gold-con-15",
+      "type": "EXTENSION",
+      "sourcePath": null,
+      "targetPath": "Condition.category:us-core",
+      "description": "Element-level USCDI requirement annotation extension (uscdi-requirement=true) added to Condition.category:us-core in target profile. Marks this element as a US Core Data for Interoperability requirement.",
+      "severity": "INFO"
+    },
+    {
+      "id": "gold-con-16",
       "type": "CARDINALITY",
       "sourcePath": "Condition.code",
       "targetPath": "Condition.code",
-      "description": "Cardinality changed: [0..1] -> [1..1]",
+      "description": "Cardinality changed: [0..1] -> [1..1]. Code becomes mandatory in US Core; R4 allows a Condition without a code.",
+      "severity": "ERROR"
+    },
+    {
+      "id": "gold-con-17",
+      "type": "STRUCTURAL",
+      "sourcePath": "Condition.code",
+      "targetPath": "Condition.code",
+      "description": "MustSupport added in target (min becomes 1 -> conformance-critical).",
       "severity": "WARNING"
     },
     {
-      "id": "rule-11",
+      "id": "gold-con-18",
       "type": "TERMINOLOGY",
       "sourcePath": "Condition.code",
       "targetPath": "Condition.code",
-      "description": "Binding changed: example(http://hl7.org/fhir/ValueSet/condition-code) -> extensible(http://hl7.org/fhir/us/core/ValueSet/us-core-condition-code)",
+      "description": "Binding changed: R4 uses example strength to http://hl7.org/fhir/ValueSet/condition-code. US Core tightens to extensible strength with http://hl7.org/fhir/us/core/ValueSet/us-core-condition-code (US-specific condition codes). Binding strength tightened: example -> extensible.",
       "severity": "WARNING"
     },
     {
-      "id": "rule-12",
-      "type": "STRUCTURAL",
+      "id": "gold-con-19",
+      "type": "EXTENSION",
       "sourcePath": "Condition.code",
       "targetPath": "Condition.code",
-      "description": "MustSupport added in target",
+      "description": "Element-level USCDI requirement annotation extension (uscdi-requirement=true) added to Condition.code in target profile. Marks this element as a US Core Data for Interoperability requirement.",
       "severity": "INFO"
     },
     {
-      "id": "rule-13",
-      "type": "EXTENSION",
-      "sourcePath": "Condition.code",
-      "targetPath": "Condition.code.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "Extension present only in target: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-14",
+      "id": "gold-con-20",
       "type": "STRUCTURAL",
       "sourcePath": "Condition.subject",
       "targetPath": "Condition.subject",
-      "description": "Reference target profile changed: [http://hl7.org/fhir/StructureDefinition/Patient, http://hl7.org/fhir/StructureDefinition/Group] -> [http://hl7.org/fhir/us/core/StructureDefinition/us-core-patient]",
+      "description": "MustSupport added in target (min=1 in R4 -> conformance-critical).",
       "severity": "WARNING"
     },
     {
-      "id": "rule-15",
+      "id": "gold-con-21",
       "type": "STRUCTURAL",
       "sourcePath": "Condition.subject",
       "targetPath": "Condition.subject",
-      "description": "MustSupport added in target",
-      "severity": "INFO"
+      "description": "Reference target profile constrained: R4 allows Reference(Patient|Group). US Core restricts to Reference(us-core-patient) only.",
+      "severity": "WARNING"
     },
     {
-      "id": "rule-16",
+      "id": "gold-con-22",
       "type": "EXTENSION",
       "sourcePath": "Condition.subject",
-      "targetPath": "Condition.subject.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "Extension present only in target: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
-      "severity": "WARNING"
+      "targetPath": "Condition.subject",
+      "description": "Element-level USCDI requirement annotation extension (uscdi-requirement=true) added to Condition.subject in target profile. Marks this element as a US Core Data for Interoperability requirement.",
+      "severity": "INFO"
     },
     {
-      "id": "rule-17",
+      "id": "gold-con-23",
       "type": "STRUCTURAL",
       "sourcePath": "Condition.encounter",
       "targetPath": "Condition.encounter",
-      "description": "Reference target profile changed: [http://hl7.org/fhir/StructureDefinition/Encounter] -> [http://hl7.org/fhir/us/core/StructureDefinition/us-core-encounter]",
-      "severity": "WARNING"
+      "description": "MustSupport added in target (min=0, optional but must be supported when present).",
+      "severity": "INFO"
     },
     {
-      "id": "rule-18",
+      "id": "gold-con-24",
       "type": "STRUCTURAL",
       "sourcePath": "Condition.encounter",
       "targetPath": "Condition.encounter",
-      "description": "MustSupport added in target",
-      "severity": "INFO"
+      "description": "Reference target profile constrained: R4 allows Reference(Encounter). US Core restricts to Reference(us-core-encounter).",
+      "severity": "WARNING"
     },
     {
-      "id": "rule-19",
+      "id": "gold-con-25",
       "type": "EXTENSION",
       "sourcePath": "Condition.encounter",
-      "targetPath": "Condition.encounter.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "Extension present only in target: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
-      "severity": "WARNING"
+      "targetPath": "Condition.encounter",
+      "description": "Element-level USCDI requirement annotation extension (uscdi-requirement=true) added to Condition.encounter in target profile. Marks this element as a US Core Data for Interoperability requirement.",
+      "severity": "INFO"
     },
     {
-      "id": "rule-20",
+      "id": "gold-con-26",
       "type": "STRUCTURAL",
       "sourcePath": "Condition.onset[x]",
       "targetPath": "Condition.onset[x]",
-      "description": "MustSupport added in target",
+      "description": "MustSupport added in target (min=0, optional but must be supported when present).",
       "severity": "INFO"
     },
     {
-      "id": "rule-21",
-      "type": "STRUCTURAL",
+      "id": "gold-con-27",
+      "type": "EXTENSION",
       "sourcePath": "Condition.onset[x]",
       "targetPath": "Condition.onset[x]",
-      "description": "Type-level MustSupport added in target for the dateTime choice",
+      "description": "Element-level USCDI requirement annotation extension (uscdi-requirement=true) added to Condition.onset[x] in target profile. Marks this element as a US Core Data for Interoperability requirement.",
       "severity": "INFO"
     },
     {
-      "id": "rule-22",
-      "type": "EXTENSION",
-      "sourcePath": "Condition.onset[x]",
-      "targetPath": "Condition.onset[x].extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "Extension present only in target: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-23",
+      "id": "gold-con-28",
       "type": "STRUCTURAL",
       "sourcePath": "Condition.abatement[x]",
       "targetPath": "Condition.abatement[x]",
-      "description": "MustSupport added in target",
+      "description": "MustSupport added in target (min=0, optional but must be supported when present).",
       "severity": "INFO"
     },
     {
-      "id": "rule-24",
-      "type": "STRUCTURAL",
-      "sourcePath": "Condition.abatement[x]",
-      "targetPath": "Condition.abatement[x]",
-      "description": "Type-level MustSupport added in target for the dateTime choice",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-25",
+      "id": "gold-con-29",
       "type": "EXTENSION",
       "sourcePath": "Condition.abatement[x]",
-      "targetPath": "Condition.abatement[x].extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "Extension present only in target: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
-      "severity": "WARNING"
+      "targetPath": "Condition.abatement[x]",
+      "description": "Element-level USCDI requirement annotation extension (uscdi-requirement=true) added to Condition.abatement[x] in target profile. Marks this element as a US Core Data for Interoperability requirement.",
+      "severity": "INFO"
     },
     {
-      "id": "rule-26",
+      "id": "gold-con-30",
       "type": "STRUCTURAL",
       "sourcePath": "Condition.recordedDate",
       "targetPath": "Condition.recordedDate",
-      "description": "MustSupport added in target",
+      "description": "MustSupport added in target (min=0, optional but must be supported when present).",
       "severity": "INFO"
     },
     {
-      "id": "rule-27",
+      "id": "gold-con-31",
       "type": "EXTENSION",
       "sourcePath": "Condition.recordedDate",
-      "targetPath": "Condition.recordedDate.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "Extension present only in target: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-28",
-      "type": "EXTENSION",
-      "sourcePath": "",
-      "targetPath": "Condition.extension:assertedDate",
-      "description": "Extension present only in target: Condition.extension:assertedDate (profile=http://hl7.org/fhir/StructureDefinition/condition-assertedDate, type=dateTime, max=1, mustSupport=true)",
-      "severity": "WARNING"
+      "targetPath": "Condition.recordedDate",
+      "description": "Element-level USCDI requirement annotation extension (uscdi-requirement=true) added to Condition.recordedDate in target profile. Marks this element as a US Core Data for Interoperability requirement.",
+      "severity": "INFO"
     }
   ]
 }

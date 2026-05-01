@@ -1,431 +1,504 @@
-{
+﻿{
   "pairId": "r4-vs-us-core-patient",
   "sourceClasspath": "standard-profiles/r4/patient.profile.json",
   "targetClasspath": "standard-profiles/us-core/StructureDefinition-us-core-patient.json",
+  "_notes": "Hand-curated by walking every element in the US Core Patient differential against the R4 Patient snapshot. Verified with PowerShell against actual JSON files on 2026-04-30. Covers: slicing addition, 6 extension slices (race/ethnicity/tribalAffiliation/birthsex/sex/genderIdentity), cardinality tightenings (identifier 0-\u003e1, identifier.system 0-\u003e1, identifier.value 0-\u003e1, name 0-\u003e1, telecom.system 0-\u003e1, telecom.value 0-\u003e1, gender 0-\u003e1), MustSupport additions, binding changes (gender version-pin removal; address.state new binding; communication.language strength preferred-\u003eextensible + new VS; telecom.system and telecom.use bindings made explicit), constraint us-core-6 on name, and element-level uscdi-requirement annotation extensions on all constrained elements.",
   "drifts": [
     {
-      "id": "rule-1",
-      "type": "CARDINALITY",
-      "sourcePath": "Patient.identifier",
-      "targetPath": "Patient.identifier",
-      "description": "Cardinality changed: [0..*] -> [1..*]",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-2",
+      "id": "gold-1",
       "type": "STRUCTURAL",
-      "sourcePath": "Patient.identifier",
-      "targetPath": "Patient.identifier",
-      "description": "MustSupport added in target",
+      "sourcePath": "Patient.extension",
+      "targetPath": "Patient.extension",
+      "description": "Slicing added to Patient.extension in US Core (discriminator: value:url, rules: open). R4 base Patient has no explicit slicing on this element.",
       "severity": "INFO"
     },
     {
-      "id": "rule-3",
+      "id": "gold-2",
       "type": "EXTENSION",
+      "sourcePath": null,
+      "targetPath": "Patient.extension:race",
+      "description": "Extension slice \u0027race\u0027 added in target profile (0..1) typed Extension\u003cus-core-race\u003e. Not present in R4 base Patient.",
+      "severity": "INFO"
+    },
+    {
+      "id": "gold-3",
+      "type": "EXTENSION",
+      "sourcePath": null,
+      "targetPath": "Patient.extension:ethnicity",
+      "description": "Extension slice \u0027ethnicity\u0027 added in target profile (0..1) typed Extension\u003cus-core-ethnicity\u003e. Not present in R4 base Patient.",
+      "severity": "INFO"
+    },
+    {
+      "id": "gold-4",
+      "type": "EXTENSION",
+      "sourcePath": null,
+      "targetPath": "Patient.extension:tribalAffiliation",
+      "description": "Extension slice \u0027tribalAffiliation\u0027 added in target profile (0..*) typed Extension\u003cus-core-tribal-affiliation\u003e. Not present in R4 base Patient.",
+      "severity": "INFO"
+    },
+    {
+      "id": "gold-5",
+      "type": "EXTENSION",
+      "sourcePath": null,
+      "targetPath": "Patient.extension:birthsex",
+      "description": "Extension slice \u0027birthsex\u0027 added in target profile (0..1) typed Extension\u003cus-core-birthsex\u003e. Not present in R4 base Patient.",
+      "severity": "INFO"
+    },
+    {
+      "id": "gold-6",
+      "type": "EXTENSION",
+      "sourcePath": null,
+      "targetPath": "Patient.extension:sex",
+      "description": "Extension slice \u0027sex\u0027 added in target profile (0..1) typed Extension\u003cus-core-sex\u003e. Not present in R4 base Patient.",
+      "severity": "INFO"
+    },
+    {
+      "id": "gold-7",
+      "type": "EXTENSION",
+      "sourcePath": null,
+      "targetPath": "Patient.extension:genderIdentity",
+      "description": "Extension slice \u0027genderIdentity\u0027 added in target profile (0..*) typed Extension\u003cus-core-genderIdentity\u003e. Not present in R4 base Patient.",
+      "severity": "INFO"
+    },
+    {
+      "id": "gold-8",
+      "type": "CARDINALITY",
       "sourcePath": "Patient.identifier",
-      "targetPath": "Patient.identifier.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "Extension present only in target: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+      "targetPath": "Patient.identifier",
+      "description": "Cardinality changed: [0..*] -\u003e [1..*]. Identifier becomes mandatory in US Core; R4 base allows zero identifiers.",
+      "severity": "ERROR"
+    },
+    {
+      "id": "gold-9",
+      "type": "STRUCTURAL",
+      "sourcePath": "Patient.identifier",
+      "targetPath": "Patient.identifier",
+      "description": "MustSupport added in target (min=1 -\u003e conformance-critical).",
       "severity": "WARNING"
     },
     {
-      "id": "rule-4",
+      "id": "gold-10",
+      "type": "EXTENSION",
+      "sourcePath": "Patient.identifier",
+      "targetPath": "Patient.identifier",
+      "description": "Element-level USCDI v3 annotation extension (uscdi-requirement=true) added to Patient.identifier in target. Marks this as a US Core Data for Interoperability requirement.",
+      "severity": "INFO"
+    },
+    {
+      "id": "gold-11",
+      "type": "CARDINALITY",
+      "sourcePath": "Patient.identifier.system",
+      "targetPath": "Patient.identifier.system",
+      "description": "Cardinality changed: [0..1] -\u003e [1..1]. Identifier system URI becomes mandatory when an identifier is present.",
+      "severity": "ERROR"
+    },
+    {
+      "id": "gold-12",
       "type": "STRUCTURAL",
       "sourcePath": "Patient.identifier.system",
       "targetPath": "Patient.identifier.system",
-      "description": "Element constrained only in target: minimum cardinality 1 and MustSupport added",
+      "description": "MustSupport added in target (min=1 -\u003e conformance-critical).",
       "severity": "WARNING"
     },
     {
-      "id": "rule-5",
+      "id": "gold-13",
       "type": "EXTENSION",
       "sourcePath": "Patient.identifier.system",
-      "targetPath": "Patient.identifier.system.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "Extension present only in target: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
-      "severity": "WARNING"
+      "targetPath": "Patient.identifier.system",
+      "description": "Element-level USCDI v3 annotation extension added to Patient.identifier.system in target.",
+      "severity": "INFO"
     },
     {
-      "id": "rule-6",
+      "id": "gold-14",
+      "type": "CARDINALITY",
+      "sourcePath": "Patient.identifier.value",
+      "targetPath": "Patient.identifier.value",
+      "description": "Cardinality changed: [0..1] -\u003e [1..1]. Identifier value becomes mandatory when an identifier is present.",
+      "severity": "ERROR"
+    },
+    {
+      "id": "gold-15",
       "type": "STRUCTURAL",
       "sourcePath": "Patient.identifier.value",
       "targetPath": "Patient.identifier.value",
-      "description": "Element constrained only in target: minimum cardinality 1 and MustSupport added",
+      "description": "MustSupport added in target (min=1 -\u003e conformance-critical).",
       "severity": "WARNING"
     },
     {
-      "id": "rule-7",
+      "id": "gold-16",
       "type": "EXTENSION",
       "sourcePath": "Patient.identifier.value",
-      "targetPath": "Patient.identifier.value.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "Extension present only in target: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-8",
-      "type": "CARDINALITY",
-      "sourcePath": "Patient.name",
-      "targetPath": "Patient.name",
-      "description": "Cardinality changed: [0..*] -> [1..*]",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-9",
-      "type": "STRUCTURAL",
-      "sourcePath": "Patient.name",
-      "targetPath": "Patient.name",
-      "description": "MustSupport added in target",
+      "targetPath": "Patient.identifier.value",
+      "description": "Element-level USCDI v3 annotation extension added to Patient.identifier.value in target.",
       "severity": "INFO"
     },
     {
-      "id": "rule-10",
+      "id": "gold-17",
+      "type": "CARDINALITY",
+      "sourcePath": "Patient.name",
+      "targetPath": "Patient.name",
+      "description": "Cardinality changed: [0..*] -\u003e [1..*]. At least one name becomes mandatory in US Core.",
+      "severity": "ERROR"
+    },
+    {
+      "id": "gold-18",
       "type": "STRUCTURAL",
       "sourcePath": "Patient.name",
       "targetPath": "Patient.name",
-      "description": "Constraint present only in target: us-core-6 requires at least family or given, or a Data Absent Reason extension",
+      "description": "MustSupport added in target (min=1 -\u003e conformance-critical).",
       "severity": "WARNING"
     },
     {
-      "id": "rule-11",
+      "id": "gold-19",
+      "type": "STRUCTURAL",
+      "sourcePath": "Patient.name",
+      "targetPath": "Patient.name",
+      "description": "Constraint \u0027us-core-6\u0027 added (profile severity: error): At least name.given and/or name.family are present or, if neither is available, the Data Absent Reason Extension is present. FHIRPath: (family.exists() or given.exists()) xor extension.where(url=\u0027http://hl7.org/fhir/StructureDefinition/data-absent-reason\u0027).exists()",
+      "severity": "WARNING"
+    },
+    {
+      "id": "gold-20",
       "type": "EXTENSION",
       "sourcePath": "Patient.name",
-      "targetPath": "Patient.name.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "Extension present only in target: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
-      "severity": "WARNING"
+      "targetPath": "Patient.name",
+      "description": "Element-level USCDI v3 annotation extension added to Patient.name in target.",
+      "severity": "INFO"
     },
     {
-      "id": "rule-12",
+      "id": "gold-21",
       "type": "EXTENSION",
       "sourcePath": "Patient.name.use",
-      "targetPath": "Patient.name.use.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "Extension present only in target: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
-      "severity": "WARNING"
+      "targetPath": "Patient.name.use",
+      "description": "Element-level USCDI v3 annotation extension added to Patient.name.use in target. No cardinality or MustSupport change.",
+      "severity": "INFO"
     },
     {
-      "id": "rule-13",
+      "id": "gold-22",
       "type": "STRUCTURAL",
       "sourcePath": "Patient.name.family",
       "targetPath": "Patient.name.family",
-      "description": "MustSupport added in target",
+      "description": "MustSupport added in target (min=0, optional but must be supported when present).",
       "severity": "INFO"
     },
     {
-      "id": "rule-14",
+      "id": "gold-23",
       "type": "EXTENSION",
       "sourcePath": "Patient.name.family",
-      "targetPath": "Patient.name.family.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "Extension present only in target: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
-      "severity": "WARNING"
+      "targetPath": "Patient.name.family",
+      "description": "Element-level USCDI v3 annotation extension added to Patient.name.family in target.",
+      "severity": "INFO"
     },
     {
-      "id": "rule-15",
+      "id": "gold-24",
       "type": "STRUCTURAL",
       "sourcePath": "Patient.name.given",
       "targetPath": "Patient.name.given",
-      "description": "MustSupport added in target",
+      "description": "MustSupport added in target (min=0, optional but must be supported when present).",
       "severity": "INFO"
     },
     {
-      "id": "rule-16",
+      "id": "gold-25",
       "type": "EXTENSION",
       "sourcePath": "Patient.name.given",
-      "targetPath": "Patient.name.given.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "Extension present only in target: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
-      "severity": "WARNING"
+      "targetPath": "Patient.name.given",
+      "description": "Element-level USCDI v3 annotation extension added to Patient.name.given in target.",
+      "severity": "INFO"
     },
     {
-      "id": "rule-17",
+      "id": "gold-26",
       "type": "EXTENSION",
       "sourcePath": "Patient.name.suffix",
-      "targetPath": "Patient.name.suffix.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "Extension present only in target: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
-      "severity": "WARNING"
+      "targetPath": "Patient.name.suffix",
+      "description": "Element-level USCDI v3 annotation extension added to Patient.name.suffix in target. No MustSupport or cardinality change.",
+      "severity": "INFO"
     },
     {
-      "id": "rule-18",
+      "id": "gold-27",
       "type": "EXTENSION",
       "sourcePath": "Patient.name.period",
-      "targetPath": "Patient.name.period.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "Extension present only in target: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
-      "severity": "WARNING"
+      "targetPath": "Patient.name.period",
+      "description": "Element-level USCDI v3 annotation extension added to Patient.name.period in target. No MustSupport or cardinality change.",
+      "severity": "INFO"
     },
     {
-      "id": "rule-19",
+      "id": "gold-28",
       "type": "EXTENSION",
       "sourcePath": "Patient.telecom",
-      "targetPath": "Patient.telecom.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "Extension present only in target: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
-      "severity": "WARNING"
+      "targetPath": "Patient.telecom",
+      "description": "Element-level USCDI v3 annotation extension added to Patient.telecom in target. No MustSupport or cardinality change.",
+      "severity": "INFO"
     },
     {
-      "id": "rule-20",
+      "id": "gold-29",
+      "type": "CARDINALITY",
+      "sourcePath": "Patient.telecom.system",
+      "targetPath": "Patient.telecom.system",
+      "description": "Cardinality changed: [0..1] -\u003e [1..1]. Telecom system code becomes mandatory when a telecom is present. R4 Patient profile does not constrain telecom.system; US Core explicitly does.",
+      "severity": "ERROR"
+    },
+    {
+      "id": "gold-30",
       "type": "STRUCTURAL",
       "sourcePath": "Patient.telecom.system",
       "targetPath": "Patient.telecom.system",
-      "description": "Element constrained only in target: minimum cardinality 1 and MustSupport added",
+      "description": "MustSupport added in target (min=1 -\u003e conformance-critical).",
       "severity": "WARNING"
     },
     {
-      "id": "rule-21",
+      "id": "gold-31",
+      "type": "TERMINOLOGY",
+      "sourcePath": "Patient.telecom.system",
+      "targetPath": "Patient.telecom.system",
+      "description": "Binding explicitly stated in target profile: required binding to http://hl7.org/fhir/ValueSet/contact-point-system. R4 Patient profile does not state this binding (it is inherited from ContactPoint data type but not declared in the Patient profile itself).",
+      "severity": "WARNING"
+    },
+    {
+      "id": "gold-32",
       "type": "EXTENSION",
       "sourcePath": "Patient.telecom.system",
-      "targetPath": "Patient.telecom.system.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "Extension present only in target: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
-      "severity": "WARNING"
+      "targetPath": "Patient.telecom.system",
+      "description": "Element-level USCDI v3 annotation extension added to Patient.telecom.system in target.",
+      "severity": "INFO"
     },
     {
-      "id": "rule-22",
+      "id": "gold-33",
+      "type": "CARDINALITY",
+      "sourcePath": "Patient.telecom.value",
+      "targetPath": "Patient.telecom.value",
+      "description": "Cardinality changed: [0..1] -\u003e [1..1]. Telecom value becomes mandatory when a telecom is present. R4 Patient profile does not constrain telecom.value.",
+      "severity": "ERROR"
+    },
+    {
+      "id": "gold-34",
       "type": "STRUCTURAL",
       "sourcePath": "Patient.telecom.value",
       "targetPath": "Patient.telecom.value",
-      "description": "Element constrained only in target: minimum cardinality 1 and MustSupport added",
+      "description": "MustSupport added in target (min=1 -\u003e conformance-critical).",
       "severity": "WARNING"
     },
     {
-      "id": "rule-23",
+      "id": "gold-35",
       "type": "EXTENSION",
       "sourcePath": "Patient.telecom.value",
-      "targetPath": "Patient.telecom.value.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "Extension present only in target: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
-      "severity": "WARNING"
+      "targetPath": "Patient.telecom.value",
+      "description": "Element-level USCDI v3 annotation extension added to Patient.telecom.value in target.",
+      "severity": "INFO"
     },
     {
-      "id": "rule-24",
+      "id": "gold-36",
       "type": "STRUCTURAL",
       "sourcePath": "Patient.telecom.use",
       "targetPath": "Patient.telecom.use",
-      "description": "MustSupport added in target",
+      "description": "MustSupport added in target (min=0, optional but must be supported when present).",
       "severity": "INFO"
     },
     {
-      "id": "rule-25",
-      "type": "EXTENSION",
+      "id": "gold-37",
+      "type": "TERMINOLOGY",
       "sourcePath": "Patient.telecom.use",
-      "targetPath": "Patient.telecom.use.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "Extension present only in target: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+      "targetPath": "Patient.telecom.use",
+      "description": "Binding explicitly stated in target profile: required binding to http://hl7.org/fhir/ValueSet/contact-point-use. R4 Patient profile does not state this binding (inherited from ContactPoint but not declared in the Patient profile).",
       "severity": "WARNING"
     },
     {
-      "id": "rule-26",
+      "id": "gold-38",
+      "type": "EXTENSION",
+      "sourcePath": "Patient.telecom.use",
+      "targetPath": "Patient.telecom.use",
+      "description": "Element-level USCDI v3 annotation extension added to Patient.telecom.use in target.",
+      "severity": "INFO"
+    },
+    {
+      "id": "gold-39",
       "type": "CARDINALITY",
       "sourcePath": "Patient.gender",
       "targetPath": "Patient.gender",
-      "description": "Cardinality changed: [0..1] -> [1..1]",
-      "severity": "WARNING"
+      "description": "Cardinality changed: [0..1] -\u003e [1..1]. Gender becomes mandatory in US Core; R4 base allows gender to be absent.",
+      "severity": "ERROR"
     },
     {
-      "id": "rule-27",
+      "id": "gold-40",
       "type": "STRUCTURAL",
       "sourcePath": "Patient.gender",
       "targetPath": "Patient.gender",
-      "description": "MustSupport added in target",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-28",
-      "type": "EXTENSION",
-      "sourcePath": "Patient.gender",
-      "targetPath": "Patient.gender.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "Extension present only in target: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+      "description": "MustSupport added in target (min=1 -\u003e conformance-critical).",
       "severity": "WARNING"
     },
     {
-      "id": "rule-29",
+      "id": "gold-41",
+      "type": "TERMINOLOGY",
+      "sourcePath": "Patient.gender",
+      "targetPath": "Patient.gender",
+      "description": "Binding version pin removed: R4 Patient binds to \u0027administrative-gender|4.0.1\u0027 (version-locked to 4.0.1). US Core binds to \u0027administrative-gender\u0027 with no version pin, allowing any ValueSet version. Binding strength remains required in both.",
+      "severity": "WARNING"
+    },
+    {
+      "id": "gold-42",
+      "type": "EXTENSION",
+      "sourcePath": "Patient.gender",
+      "targetPath": "Patient.gender",
+      "description": "Element-level USCDI v3 annotation extension added to Patient.gender in target.",
+      "severity": "INFO"
+    },
+    {
+      "id": "gold-43",
       "type": "STRUCTURAL",
       "sourcePath": "Patient.birthDate",
       "targetPath": "Patient.birthDate",
-      "description": "MustSupport added in target",
+      "description": "MustSupport added in target (min=0, optional but must be supported when present).",
       "severity": "INFO"
     },
     {
-      "id": "rule-30",
+      "id": "gold-44",
       "type": "EXTENSION",
       "sourcePath": "Patient.birthDate",
-      "targetPath": "Patient.birthDate.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "Extension present only in target: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
-      "severity": "WARNING"
+      "targetPath": "Patient.birthDate",
+      "description": "Element-level USCDI v3 annotation extension added to Patient.birthDate in target.",
+      "severity": "INFO"
     },
     {
-      "id": "rule-31",
+      "id": "gold-45",
       "type": "EXTENSION",
       "sourcePath": "Patient.deceased[x]",
-      "targetPath": "Patient.deceased[x].extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "Extension present only in target: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
-      "severity": "WARNING"
+      "targetPath": "Patient.deceased[x]",
+      "description": "Element-level USCDI v3 annotation extension added to Patient.deceased[x] in target. No cardinality or MustSupport change.",
+      "severity": "INFO"
     },
     {
-      "id": "rule-32",
+      "id": "gold-46",
       "type": "STRUCTURAL",
       "sourcePath": "Patient.address",
       "targetPath": "Patient.address",
-      "description": "MustSupport added in target",
+      "description": "MustSupport added in target (min=0, optional but must be supported when present).",
       "severity": "INFO"
     },
     {
-      "id": "rule-33",
+      "id": "gold-47",
       "type": "EXTENSION",
       "sourcePath": "Patient.address",
-      "targetPath": "Patient.address.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "Extension present only in target: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
-      "severity": "WARNING"
+      "targetPath": "Patient.address",
+      "description": "Element-level USCDI v3 annotation extension added to Patient.address in target.",
+      "severity": "INFO"
     },
     {
-      "id": "rule-34",
+      "id": "gold-48",
+      "type": "EXTENSION",
+      "sourcePath": "Patient.address.use",
+      "targetPath": "Patient.address.use",
+      "description": "Element-level USCDI v3 annotation extension added to Patient.address.use in target. No MustSupport or cardinality change.",
+      "severity": "INFO"
+    },
+    {
+      "id": "gold-49",
       "type": "STRUCTURAL",
       "sourcePath": "Patient.address.line",
       "targetPath": "Patient.address.line",
-      "description": "MustSupport added in target",
+      "description": "MustSupport added in target (min=0, optional but must be supported when present).",
       "severity": "INFO"
     },
     {
-      "id": "rule-35",
+      "id": "gold-50",
       "type": "EXTENSION",
       "sourcePath": "Patient.address.line",
-      "targetPath": "Patient.address.line.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "Extension present only in target: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
-      "severity": "WARNING"
+      "targetPath": "Patient.address.line",
+      "description": "Element-level USCDI v3 annotation extension added to Patient.address.line in target.",
+      "severity": "INFO"
     },
     {
-      "id": "rule-36",
+      "id": "gold-51",
       "type": "STRUCTURAL",
       "sourcePath": "Patient.address.city",
       "targetPath": "Patient.address.city",
-      "description": "MustSupport added in target",
+      "description": "MustSupport added in target (min=0, optional but must be supported when present).",
       "severity": "INFO"
     },
     {
-      "id": "rule-37",
+      "id": "gold-52",
       "type": "EXTENSION",
       "sourcePath": "Patient.address.city",
-      "targetPath": "Patient.address.city.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "Extension present only in target: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
-      "severity": "WARNING"
+      "targetPath": "Patient.address.city",
+      "description": "Element-level USCDI v3 annotation extension added to Patient.address.city in target.",
+      "severity": "INFO"
     },
     {
-      "id": "rule-38",
+      "id": "gold-53",
       "type": "STRUCTURAL",
       "sourcePath": "Patient.address.state",
       "targetPath": "Patient.address.state",
-      "description": "MustSupport added in target",
+      "description": "MustSupport added in target (min=0, optional but must be supported when present).",
       "severity": "INFO"
     },
     {
-      "id": "rule-39",
+      "id": "gold-54",
       "type": "TERMINOLOGY",
       "sourcePath": "Patient.address.state",
       "targetPath": "Patient.address.state",
-      "description": "Binding added in target: extensible(http://hl7.org/fhir/us/core/ValueSet/us-core-usps-state)",
+      "description": "New binding added in target: extensible binding to http://hl7.org/fhir/us/core/ValueSet/us-core-usps-state (US USPS state codes). R4 Patient base does not constrain address.state with any binding.",
       "severity": "WARNING"
     },
     {
-      "id": "rule-40",
+      "id": "gold-55",
       "type": "EXTENSION",
       "sourcePath": "Patient.address.state",
-      "targetPath": "Patient.address.state.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "Extension present only in target: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
-      "severity": "WARNING"
+      "targetPath": "Patient.address.state",
+      "description": "Element-level USCDI v3 annotation extension added to Patient.address.state in target.",
+      "severity": "INFO"
     },
     {
-      "id": "rule-41",
+      "id": "gold-56",
       "type": "STRUCTURAL",
       "sourcePath": "Patient.address.postalCode",
       "targetPath": "Patient.address.postalCode",
-      "description": "MustSupport added in target",
+      "description": "MustSupport added in target (min=0, optional but must be supported when present).",
       "severity": "INFO"
     },
     {
-      "id": "rule-42",
+      "id": "gold-57",
       "type": "EXTENSION",
       "sourcePath": "Patient.address.postalCode",
-      "targetPath": "Patient.address.postalCode.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "Extension present only in target: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
-      "severity": "WARNING"
+      "targetPath": "Patient.address.postalCode",
+      "description": "Element-level USCDI v3 annotation extension added to Patient.address.postalCode in target.",
+      "severity": "INFO"
     },
     {
-      "id": "rule-43",
+      "id": "gold-58",
       "type": "EXTENSION",
       "sourcePath": "Patient.address.period",
-      "targetPath": "Patient.address.period.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "Extension present only in target: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
-      "severity": "WARNING"
+      "targetPath": "Patient.address.period",
+      "description": "Element-level USCDI v3 annotation extension added to Patient.address.period in target. No MustSupport or cardinality change.",
+      "severity": "INFO"
     },
     {
-      "id": "rule-44",
+      "id": "gold-59",
       "type": "EXTENSION",
       "sourcePath": "Patient.communication",
-      "targetPath": "Patient.communication.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "Extension present only in target: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
-      "severity": "WARNING"
+      "targetPath": "Patient.communication",
+      "description": "Element-level USCDI v3 annotation extension added to Patient.communication in target. No MustSupport or cardinality change.",
+      "severity": "INFO"
     },
     {
-      "id": "rule-45",
-      "type": "TERMINOLOGY",
-      "sourcePath": "Patient.communication.language",
-      "targetPath": "Patient.communication.language",
-      "description": "Binding changed: preferred(http://hl7.org/fhir/ValueSet/languages) -> extensible(http://hl7.org/fhir/us/core/ValueSet/simple-language)",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-46",
+      "id": "gold-60",
       "type": "STRUCTURAL",
       "sourcePath": "Patient.communication.language",
       "targetPath": "Patient.communication.language",
-      "description": "MustSupport added in target",
-      "severity": "INFO"
+      "description": "MustSupport added in target. Cardinality is 1..1 in both R4 and US Core, so this is conformance-critical (WARNING, not INFO).",
+      "severity": "WARNING"
     },
     {
-      "id": "rule-47",
+      "id": "gold-61",
+      "type": "TERMINOLOGY",
+      "sourcePath": "Patient.communication.language",
+      "targetPath": "Patient.communication.language",
+      "description": "Binding changed: R4 uses preferred strength to http://hl7.org/fhir/ValueSet/languages. US Core tightens to extensible strength and changes ValueSet to http://hl7.org/fhir/us/core/ValueSet/simple-language (US-specific language codes).",
+      "severity": "WARNING"
+    },
+    {
+      "id": "gold-62",
       "type": "EXTENSION",
       "sourcePath": "Patient.communication.language",
-      "targetPath": "Patient.communication.language.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "Extension present only in target: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-48",
-      "type": "EXTENSION",
-      "sourcePath": "",
-      "targetPath": "Patient.extension:race",
-      "description": "Extension present only in target: Patient.extension:race (profile=http://hl7.org/fhir/us/core/StructureDefinition/us-core-race, max=1)",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-49",
-      "type": "EXTENSION",
-      "sourcePath": "",
-      "targetPath": "Patient.extension:ethnicity",
-      "description": "Extension present only in target: Patient.extension:ethnicity (profile=http://hl7.org/fhir/us/core/StructureDefinition/us-core-ethnicity, max=1)",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-50",
-      "type": "EXTENSION",
-      "sourcePath": "",
-      "targetPath": "Patient.extension:tribalAffiliation",
-      "description": "Extension present only in target: Patient.extension:tribalAffiliation (profile=http://hl7.org/fhir/us/core/StructureDefinition/us-core-tribal-affiliation, max=*)",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-51",
-      "type": "EXTENSION",
-      "sourcePath": "",
-      "targetPath": "Patient.extension:birthsex",
-      "description": "Extension present only in target: Patient.extension:birthsex (profile=http://hl7.org/fhir/us/core/StructureDefinition/us-core-birthsex, max=1)",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-52",
-      "type": "EXTENSION",
-      "sourcePath": "",
-      "targetPath": "Patient.extension:sex",
-      "description": "Extension present only in target: Patient.extension:sex (profile=http://hl7.org/fhir/us/core/StructureDefinition/us-core-sex, max=1)",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-53",
-      "type": "EXTENSION",
-      "sourcePath": "",
-      "targetPath": "Patient.extension:genderIdentity",
-      "description": "Extension present only in target: Patient.extension:genderIdentity (profile=http://hl7.org/fhir/us/core/StructureDefinition/us-core-genderIdentity, max=*)",
-      "severity": "WARNING"
+      "targetPath": "Patient.communication.language",
+      "description": "Element-level USCDI v3 annotation extension added to Patient.communication.language in target.",
+      "severity": "INFO"
     }
   ]
 }

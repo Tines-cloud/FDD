@@ -1,4 +1,4 @@
-{
+﻿{
   "resourceType": "Condition",
   "id": "r4-condition-001",
   "meta": {
@@ -6,6 +6,23 @@
       "http://hl7.org/fhir/StructureDefinition/Condition"
     ]
   },
+  "text": {
+    "status": "generated",
+    "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\"><p><b>Type 2 diabetes mellitus</b> (SNOMED 44054006 / ICD-10 E11.9). Active, confirmed. Onset: 2020-06-15. Recorded by Dr. Emily Chen.</p></div>"
+  },
+  "extension": [
+    {
+      "url": "http://hl7.org/fhir/StructureDefinition/condition-assertedDate",
+      "valueDateTime": "2020-06-15T10:00:00+00:00"
+    }
+  ],
+  "identifier": [
+    {
+      "use": "official",
+      "system": "http://hospital.example.org/conditions",
+      "value": "CON-2026-0001"
+    }
+  ],
   "clinicalStatus": {
     "coding": [
       {
@@ -13,7 +30,8 @@
         "code": "active",
         "display": "Active"
       }
-    ]
+    ],
+    "text": "Active"
   },
   "verificationStatus": {
     "coding": [
@@ -22,7 +40,8 @@
         "code": "confirmed",
         "display": "Confirmed"
       }
-    ]
+    ],
+    "text": "Confirmed"
   },
   "category": [
     {
@@ -32,23 +51,124 @@
           "code": "encounter-diagnosis",
           "display": "Encounter Diagnosis"
         }
-      ]
+      ],
+      "text": "Encounter Diagnosis"
     }
   ],
+  "severity": {
+    "coding": [
+      {
+        "system": "http://snomed.info/sct",
+        "code": "6736007",
+        "display": "Moderate"
+      }
+    ],
+    "text": "Moderate"
+  },
   "code": {
     "coding": [
       {
         "system": "http://snomed.info/sct",
         "code": "44054006",
         "display": "Type 2 diabetes mellitus"
+      },
+      {
+        "system": "http://hl7.org/fhir/sid/icd-10-cm",
+        "code": "E11.9",
+        "display": "Type 2 diabetes mellitus without complications"
       }
     ],
     "text": "Type 2 diabetes mellitus"
   },
+  "bodySite": [
+    {
+      "coding": [
+        {
+          "system": "http://snomed.info/sct",
+          "code": "113331007",
+          "display": "Structure of endocrine system"
+        }
+      ],
+      "text": "Endocrine system"
+    }
+  ],
   "subject": {
     "reference": "Patient/r4-patient-001",
-    "display": "James Williams"
+    "display": "James Robert Williams"
+  },
+  "encounter": {
+    "reference": "Encounter/r4-encounter-001",
+    "display": "Outpatient Consultation 2025-11-20"
   },
   "onsetDateTime": "2020-06-15",
-  "recordedDate": "2020-06-15"
+  "recordedDate": "2020-06-15",
+  "recorder": {
+    "reference": "Practitioner/r4-practitioner-001",
+    "display": "Dr. Emily Chen"
+  },
+  "asserter": {
+    "reference": "Practitioner/r4-practitioner-001",
+    "display": "Dr. Emily Chen"
+  },
+  "stage": [
+    {
+      "summary": {
+        "coding": [
+          {
+            "system": "http://snomed.info/sct",
+            "code": "65921004",
+            "display": "Intermediate stage"
+          }
+        ],
+        "text": "Intermediate stage"
+      },
+      "assessment": [
+        {
+          "reference": "Observation/r4-observation-001",
+          "display": "Blood Glucose (Fasting)"
+        }
+      ],
+      "type": {
+        "coding": [
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/condition-stage-type",
+            "code": "clinical",
+            "display": "Clinical Staging"
+          }
+        ]
+      }
+    }
+  ],
+  "evidence": [
+    {
+      "code": [
+        {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "4548-4",
+              "display": "Hemoglobin A1c/Hemoglobin.total in Blood"
+            }
+          ],
+          "text": "HbA1c 8.2%"
+        }
+      ],
+      "detail": [
+        {
+          "reference": "Observation/r4-observation-001",
+          "display": "Fasting Blood Glucose"
+        }
+      ]
+    }
+  ],
+  "note": [
+    {
+      "authorReference": {
+        "reference": "Practitioner/r4-practitioner-001",
+        "display": "Dr. Emily Chen"
+      },
+      "time": "2020-06-15",
+      "text": "Patient diagnosed with T2DM following HbA1c 8.2% and fasting glucose 7.4 mmol/L. Commenced metformin 500 mg twice daily with dietary and lifestyle modification advice."
+    }
+  ]
 }

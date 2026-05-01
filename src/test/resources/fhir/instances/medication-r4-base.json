@@ -1,34 +1,66 @@
-{
+﻿{
   "resourceType": "Medication",
   "id": "r4-medication-001",
   "meta": {
+    "lastUpdated": "2026-05-01T12:00:00+00:00",
     "profile": [
       "http://hl7.org/fhir/StructureDefinition/Medication"
     ]
   },
+  "text": {
+    "status": "generated",
+    "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\"><p><b>Metformin hydrochloride 500 mg oral tablet</b>. Status: active. Manufacturer: Mylan Pharmaceuticals. Batch: B-METF-20251101, expiry 2027-01-31.</p></div>"
+  },
+  "identifier": [
+    {
+      "use": "official",
+      "system": "http://hospital.example.org/medications",
+      "value": "MED-METFORMIN-500"
+    }
+  ],
   "code": {
     "coding": [
       {
         "system": "http://www.nlm.nih.gov/research/umls/rxnorm",
-        "code": "860975",
+        "code": "861007",
         "display": "Metformin hydrochloride 500 MG Oral Tablet"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "372567009",
+        "display": "Metformin hydrochloride"
       }
     ],
-    "text": "Metformin 500mg Tablet"
+    "text": "Metformin hydrochloride 500 mg oral tablet"
   },
   "status": "active",
   "manufacturer": {
-    "reference": "Organization/r4-organization-001",
-    "display": "Springfield General Hospital"
+    "reference": "Organization/r4-org-manufacturer-002",
+    "display": "Mylan Pharmaceuticals Inc."
   },
   "form": {
     "coding": [
       {
         "system": "http://snomed.info/sct",
         "code": "385055001",
-        "display": "Tablet dose form"
+        "display": "Tablet"
       }
-    ]
+    ],
+    "text": "Oral tablet"
+  },
+  "amount": {
+    "numerator": {
+      "value": 500,
+      "unit": "mg",
+      "system": "http://unitsofmeasure.org",
+      "code": "mg"
+    },
+    "denominator": {
+      "value": 1,
+      "unit": "tablet",
+      "system": "http://unitsofmeasure.org",
+      "code": "{tablet}"
+    }
   },
   "ingredient": [
     {
@@ -39,8 +71,10 @@
             "code": "6809",
             "display": "Metformin"
           }
-        ]
+        ],
+        "text": "Metformin hydrochloride"
       },
+      "isActive": true,
       "strength": {
         "numerator": {
           "value": 500,
@@ -51,10 +85,27 @@
         "denominator": {
           "value": 1,
           "unit": "tablet",
-          "system": "http://terminology.hl7.org/CodeSystem/v3-orderableDrugForm",
-          "code": "TAB"
+          "system": "http://unitsofmeasure.org",
+          "code": "{tablet}"
         }
       }
+    },
+    {
+      "itemCodeableConcept": {
+        "coding": [
+          {
+            "system": "http://snomed.info/sct",
+            "code": "387405002",
+            "display": "Magnesium stearate"
+          }
+        ],
+        "text": "Magnesium stearate (excipient)"
+      },
+      "isActive": false
     }
-  ]
+  ],
+  "batch": {
+    "lotNumber": "B-METF-20251101",
+    "expirationDate": "2027-01-31"
+  }
 }

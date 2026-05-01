@@ -2,150 +2,151 @@
   "pairId": "r4-allergyintolerance-vs-us-core-allergyintolerance",
   "sourceClasspath": "standard-profiles/r4/allergyintolerance.profile.json",
   "targetClasspath": "standard-profiles/us-core/StructureDefinition-us-core-allergyintolerance.json",
+  "_notes": "Hand-curated by reading the US Core AllergyIntolerance differential (7 elements) line by line against the R4 AllergyIntolerance snapshot. Key R4 facts: clinicalStatus min=0 required:allergyintolerance-clinical|4.0.1 (version-pinned); verificationStatus min=0 required:allergyintolerance-verification|4.0.1 (version-pinned); code min=0 example:allergyintolerance-code; patient min=1 Reference(Patient); reaction min=0; reaction.manifestation min=1 example:clinical-findings. All non-root diff elements have USCDI annotations.",
   "drifts": [
     {
-      "id": "rule-1",
-      "type": "VERSION",
-      "sourcePath": "AllergyIntolerance.clinicalStatus",
-      "targetPath": "AllergyIntolerance.clinicalStatus",
-      "description": "Binding version pin changed: required(http://hl7.org/fhir/ValueSet/allergyintolerance-clinical|4.0.1) -> required(http://hl7.org/fhir/ValueSet/allergyintolerance-clinical)",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-2",
+      "id": "gold-ai-1",
       "type": "STRUCTURAL",
       "sourcePath": "AllergyIntolerance.clinicalStatus",
       "targetPath": "AllergyIntolerance.clinicalStatus",
-      "description": "MustSupport added in target",
+      "description": "MustSupport added in target (min=0, optional but must be supported when present).",
       "severity": "INFO"
     },
     {
-      "id": "rule-3",
-      "type": "EXTENSION",
+      "id": "gold-ai-2",
+      "type": "TERMINOLOGY",
       "sourcePath": "AllergyIntolerance.clinicalStatus",
-      "targetPath": "AllergyIntolerance.clinicalStatus.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "Extension present only in target: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+      "targetPath": "AllergyIntolerance.clinicalStatus",
+      "description": "Binding version pin removed: R4 binds to 'allergyintolerance-clinical|4.0.1' (version-locked). US Core binds to 'allergyintolerance-clinical' (no version pin). Strength remains required in both.",
       "severity": "WARNING"
     },
     {
-      "id": "rule-4",
-      "type": "VERSION",
-      "sourcePath": "AllergyIntolerance.verificationStatus",
-      "targetPath": "AllergyIntolerance.verificationStatus",
-      "description": "Binding version pin changed: required(http://hl7.org/fhir/ValueSet/allergyintolerance-verification|4.0.1) -> required(http://hl7.org/fhir/ValueSet/allergyintolerance-verification)",
+      "id": "gold-ai-3",
+      "type": "EXTENSION",
+      "sourcePath": "AllergyIntolerance.clinicalStatus",
+      "targetPath": "AllergyIntolerance.clinicalStatus",
+      "description": "Element-level USCDI requirement annotation extension (uscdi-requirement=true) added to AllergyIntolerance.clinicalStatus in target profile. Marks this element as a US Core Data for Interoperability requirement.",
       "severity": "INFO"
     },
     {
-      "id": "rule-5",
+      "id": "gold-ai-4",
       "type": "STRUCTURAL",
       "sourcePath": "AllergyIntolerance.verificationStatus",
       "targetPath": "AllergyIntolerance.verificationStatus",
-      "description": "MustSupport added in target",
+      "description": "MustSupport added in target (min=0, optional but must be supported when present).",
       "severity": "INFO"
     },
     {
-      "id": "rule-6",
-      "type": "EXTENSION",
+      "id": "gold-ai-5",
+      "type": "TERMINOLOGY",
       "sourcePath": "AllergyIntolerance.verificationStatus",
-      "targetPath": "AllergyIntolerance.verificationStatus.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "Extension present only in target: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+      "targetPath": "AllergyIntolerance.verificationStatus",
+      "description": "Binding version pin removed: R4 binds to 'allergyintolerance-verification|4.0.1' (version-locked). US Core binds to 'allergyintolerance-verification' (no version pin). Strength remains required in both.",
       "severity": "WARNING"
     },
     {
-      "id": "rule-7",
+      "id": "gold-ai-6",
+      "type": "EXTENSION",
+      "sourcePath": "AllergyIntolerance.verificationStatus",
+      "targetPath": "AllergyIntolerance.verificationStatus",
+      "description": "Element-level USCDI requirement annotation extension (uscdi-requirement=true) added to AllergyIntolerance.verificationStatus in target profile. Marks this element as a US Core Data for Interoperability requirement.",
+      "severity": "INFO"
+    },
+    {
+      "id": "gold-ai-7",
       "type": "CARDINALITY",
       "sourcePath": "AllergyIntolerance.code",
       "targetPath": "AllergyIntolerance.code",
-      "description": "Cardinality changed: [0..1] -> [1..1]",
+      "description": "Cardinality changed: [0..1] -> [1..1]. Code becomes mandatory in US Core; R4 allows an AllergyIntolerance without a code.",
+      "severity": "ERROR"
+    },
+    {
+      "id": "gold-ai-8",
+      "type": "STRUCTURAL",
+      "sourcePath": "AllergyIntolerance.code",
+      "targetPath": "AllergyIntolerance.code",
+      "description": "MustSupport added in target (min becomes 1 -> conformance-critical).",
       "severity": "WARNING"
     },
     {
-      "id": "rule-8",
+      "id": "gold-ai-9",
       "type": "TERMINOLOGY",
       "sourcePath": "AllergyIntolerance.code",
       "targetPath": "AllergyIntolerance.code",
-      "description": "Binding changed: example(http://hl7.org/fhir/ValueSet/allergyintolerance-code) -> extensible(http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1186.8)",
+      "description": "Binding changed: R4 uses example strength to http://hl7.org/fhir/ValueSet/allergyintolerance-code. US Core tightens to extensible strength with http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1186.8 (US-specific allergy substance codes). Binding strength tightened: example -> extensible.",
       "severity": "WARNING"
     },
     {
-      "id": "rule-9",
-      "type": "STRUCTURAL",
+      "id": "gold-ai-10",
+      "type": "EXTENSION",
       "sourcePath": "AllergyIntolerance.code",
       "targetPath": "AllergyIntolerance.code",
-      "description": "MustSupport added in target",
+      "description": "Element-level USCDI requirement annotation extension (uscdi-requirement=true) added to AllergyIntolerance.code in target profile. Marks this element as a US Core Data for Interoperability requirement.",
       "severity": "INFO"
     },
     {
-      "id": "rule-10",
+      "id": "gold-ai-11",
+      "type": "STRUCTURAL",
+      "sourcePath": "AllergyIntolerance.patient",
+      "targetPath": "AllergyIntolerance.patient",
+      "description": "MustSupport added in target (min=1 in R4 -> conformance-critical).",
+      "severity": "WARNING"
+    },
+    {
+      "id": "gold-ai-12",
+      "type": "STRUCTURAL",
+      "sourcePath": "AllergyIntolerance.patient",
+      "targetPath": "AllergyIntolerance.patient",
+      "description": "Reference target profile constrained: R4 allows Reference(Patient). US Core restricts to Reference(us-core-patient), requiring a US Core-profiled patient.",
+      "severity": "WARNING"
+    },
+    {
+      "id": "gold-ai-13",
       "type": "EXTENSION",
-      "sourcePath": "AllergyIntolerance.code",
-      "targetPath": "AllergyIntolerance.code.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "Extension present only in target: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-11",
-      "type": "STRUCTURAL",
       "sourcePath": "AllergyIntolerance.patient",
       "targetPath": "AllergyIntolerance.patient",
-      "description": "Reference target profile changed: [http://hl7.org/fhir/StructureDefinition/Patient] -> [http://hl7.org/fhir/us/core/StructureDefinition/us-core-patient]",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-12",
-      "type": "STRUCTURAL",
-      "sourcePath": "AllergyIntolerance.patient",
-      "targetPath": "AllergyIntolerance.patient",
-      "description": "MustSupport added in target",
+      "description": "Element-level USCDI requirement annotation extension (uscdi-requirement=true) added to AllergyIntolerance.patient in target profile. Marks this element as a US Core Data for Interoperability requirement.",
       "severity": "INFO"
     },
     {
-      "id": "rule-13",
-      "type": "EXTENSION",
-      "sourcePath": "AllergyIntolerance.patient",
-      "targetPath": "AllergyIntolerance.patient.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "Extension present only in target: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-14",
+      "id": "gold-ai-14",
       "type": "STRUCTURAL",
       "sourcePath": "AllergyIntolerance.reaction",
       "targetPath": "AllergyIntolerance.reaction",
-      "description": "MustSupport added in target",
+      "description": "MustSupport added in target (min=0, optional but must be supported when present).",
       "severity": "INFO"
     },
     {
-      "id": "rule-15",
+      "id": "gold-ai-15",
       "type": "EXTENSION",
       "sourcePath": "AllergyIntolerance.reaction",
-      "targetPath": "AllergyIntolerance.reaction.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "Extension present only in target: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
-      "severity": "WARNING"
+      "targetPath": "AllergyIntolerance.reaction",
+      "description": "Element-level USCDI requirement annotation extension (uscdi-requirement=true) added to AllergyIntolerance.reaction in target profile. Marks this element as a US Core Data for Interoperability requirement.",
+      "severity": "INFO"
     },
     {
-      "id": "rule-16",
-      "type": "TERMINOLOGY",
-      "sourcePath": "AllergyIntolerance.reaction.manifestation",
-      "targetPath": "AllergyIntolerance.reaction.manifestation",
-      "description": "Binding changed: example(http://hl7.org/fhir/ValueSet/clinical-findings) -> extensible(http://hl7.org/fhir/ValueSet/clinical-findings)",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-17",
+      "id": "gold-ai-16",
       "type": "STRUCTURAL",
       "sourcePath": "AllergyIntolerance.reaction.manifestation",
       "targetPath": "AllergyIntolerance.reaction.manifestation",
-      "description": "MustSupport added in target",
-      "severity": "INFO"
+      "description": "MustSupport added in target (min=1 in R4 -> conformance-critical).",
+      "severity": "WARNING"
     },
     {
-      "id": "rule-18",
+      "id": "gold-ai-17",
+      "type": "TERMINOLOGY",
+      "sourcePath": "AllergyIntolerance.reaction.manifestation",
+      "targetPath": "AllergyIntolerance.reaction.manifestation",
+      "description": "Binding strength tightened: R4 uses example strength to http://hl7.org/fhir/ValueSet/clinical-findings. US Core tightens to extensible strength with the same ValueSet (http://hl7.org/fhir/ValueSet/clinical-findings). ValueSet URL unchanged; only strength tightened: example -> extensible.",
+      "severity": "WARNING"
+    },
+    {
+      "id": "gold-ai-18",
       "type": "EXTENSION",
       "sourcePath": "AllergyIntolerance.reaction.manifestation",
-      "targetPath": "AllergyIntolerance.reaction.manifestation.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "Extension present only in target: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
-      "severity": "WARNING"
+      "targetPath": "AllergyIntolerance.reaction.manifestation",
+      "description": "Element-level USCDI requirement annotation extension (uscdi-requirement=true) added to AllergyIntolerance.reaction.manifestation in target profile. Marks this element as a US Core Data for Interoperability requirement.",
+      "severity": "INFO"
     }
   ]
 }

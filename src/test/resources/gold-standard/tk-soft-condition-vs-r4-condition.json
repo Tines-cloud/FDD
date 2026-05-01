@@ -1,279 +1,336 @@
 {
-  "pairId" : "tk-soft-condition-vs-r4-condition",
-  "sourceClasspath" : "custom-profiles/tk-soft/tk-soft-condition.json",
-  "targetClasspath" : "standard-profiles/r4/condition.profile.json",
-  "drifts" : [ {
-    "id" : "rule-1",
-    "type" : "STRUCTURAL",
-    "sourcePath" : "Condition",
-    "targetPath" : "Condition",
-    "description" : "Constraints removed in target: [tk-con-1, tk-con-2]",
-    "severity" : "WARNING"
-  }, {
-    "id" : "rule-2",
-    "type" : "STRUCTURAL",
-    "sourcePath" : "Condition.extension",
-    "targetPath" : "Condition.extension",
-    "description" : "Slicing changed: rules=open, discriminators=[value:url] -> none",
-    "severity" : "WARNING"
-  }, {
-    "id" : "rule-3",
-    "type" : "CARDINALITY",
-    "sourcePath" : "Condition.clinicalStatus",
-    "targetPath" : "Condition.clinicalStatus",
-    "description" : "Cardinality changed: [1..1] -> [0..1]",
-    "severity" : "INFO"
-  }, {
-    "id" : "rule-4",
-    "type" : "TERMINOLOGY",
-    "sourcePath" : "Condition.clinicalStatus",
-    "targetPath" : "Condition.clinicalStatus",
-    "description" : "Binding changed: required(http://hl7.org/fhir/ValueSet/condition-clinical) -> required(http://hl7.org/fhir/ValueSet/condition-clinical|4.0.1)",
-    "severity" : "ERROR"
-  }, {
-    "id" : "rule-5",
-    "type" : "STRUCTURAL",
-    "sourcePath" : "Condition.clinicalStatus",
-    "targetPath" : "Condition.clinicalStatus",
-    "description" : "MustSupport removed in target",
-    "severity" : "INFO"
-  }, {
-    "id" : "rule-6",
-    "type" : "TERMINOLOGY",
-    "sourcePath" : "Condition.verificationStatus",
-    "targetPath" : "Condition.verificationStatus",
-    "description" : "Binding changed: required(http://hl7.org/fhir/ValueSet/condition-ver-status) -> required(http://hl7.org/fhir/ValueSet/condition-ver-status|4.0.1)",
-    "severity" : "ERROR"
-  }, {
-    "id" : "rule-7",
-    "type" : "STRUCTURAL",
-    "sourcePath" : "Condition.verificationStatus",
-    "targetPath" : "Condition.verificationStatus",
-    "description" : "MustSupport removed in target",
-    "severity" : "INFO"
-  }, {
-    "id" : "rule-8",
-    "type" : "CARDINALITY",
-    "sourcePath" : "Condition.category",
-    "targetPath" : "Condition.category",
-    "description" : "Cardinality changed: [1..*] -> [0..*]",
-    "severity" : "INFO"
-  }, {
-    "id" : "rule-9",
-    "type" : "STRUCTURAL",
-    "sourcePath" : "Condition.category",
-    "targetPath" : "Condition.category",
-    "description" : "MustSupport removed in target",
-    "severity" : "INFO"
-  }, {
-    "id" : "rule-10",
-    "type" : "STRUCTURAL",
-    "sourcePath" : "Condition.category",
-    "targetPath" : "Condition.category",
-    "description" : "Slicing changed: rules=open, discriminators=[pattern:$this] -> none",
-    "severity" : "WARNING"
-  }, {
-    "id" : "rule-11",
-    "type" : "TERMINOLOGY",
-    "sourcePath" : "Condition.severity",
-    "targetPath" : "Condition.severity",
-    "description" : "Binding changed: extensible(http://hl7.org/fhir/ValueSet/condition-severity) -> preferred(http://hl7.org/fhir/ValueSet/condition-severity)",
-    "severity" : "WARNING"
-  }, {
-    "id" : "rule-12",
-    "type" : "STRUCTURAL",
-    "sourcePath" : "Condition.severity",
-    "targetPath" : "Condition.severity",
-    "description" : "MustSupport removed in target",
-    "severity" : "INFO"
-  }, {
-    "id" : "rule-13",
-    "type" : "CARDINALITY",
-    "sourcePath" : "Condition.code",
-    "targetPath" : "Condition.code",
-    "description" : "Cardinality changed: [1..1] -> [0..1]",
-    "severity" : "INFO"
-  }, {
-    "id" : "rule-14",
-    "type" : "TERMINOLOGY",
-    "sourcePath" : "Condition.code",
-    "targetPath" : "Condition.code",
-    "description" : "Binding changed: extensible(https://tk-soft.example.com/fhir/ValueSet/condition-code) -> example(http://hl7.org/fhir/ValueSet/condition-code)",
-    "severity" : "WARNING"
-  }, {
-    "id" : "rule-15",
-    "type" : "STRUCTURAL",
-    "sourcePath" : "Condition.code",
-    "targetPath" : "Condition.code",
-    "description" : "MustSupport removed in target",
-    "severity" : "INFO"
-  }, {
-    "id" : "rule-16",
-    "type" : "TERMINOLOGY",
-    "sourcePath" : "Condition.bodySite",
-    "targetPath" : "Condition.bodySite",
-    "description" : "Binding changed: extensible(http://hl7.org/fhir/ValueSet/body-site) -> example(http://hl7.org/fhir/ValueSet/body-site)",
-    "severity" : "WARNING"
-  }, {
-    "id" : "rule-17",
-    "type" : "STRUCTURAL",
-    "sourcePath" : "Condition.bodySite",
-    "targetPath" : "Condition.bodySite",
-    "description" : "MustSupport removed in target",
-    "severity" : "INFO"
-  }, {
-    "id" : "rule-18",
-    "type" : "STRUCTURAL",
-    "sourcePath" : "Condition.subject",
-    "targetPath" : "Condition.subject",
-    "description" : "Reference target profile changed: [https://tk-soft.example.com/fhir/StructureDefinition/Patient] -> [http://hl7.org/fhir/StructureDefinition/Group, http://hl7.org/fhir/StructureDefinition/Patient]",
-    "severity" : "WARNING"
-  }, {
-    "id" : "rule-19",
-    "type" : "STRUCTURAL",
-    "sourcePath" : "Condition.subject",
-    "targetPath" : "Condition.subject",
-    "description" : "MustSupport removed in target",
-    "severity" : "INFO"
-  }, {
-    "id" : "rule-20",
-    "type" : "STRUCTURAL",
-    "sourcePath" : "Condition.encounter",
-    "targetPath" : "Condition.encounter",
-    "description" : "Reference target profile changed: [https://tk-soft.example.com/fhir/StructureDefinition/Encounter] -> [http://hl7.org/fhir/StructureDefinition/Encounter]",
-    "severity" : "WARNING"
-  }, {
-    "id" : "rule-21",
-    "type" : "STRUCTURAL",
-    "sourcePath" : "Condition.encounter",
-    "targetPath" : "Condition.encounter",
-    "description" : "MustSupport removed in target",
-    "severity" : "INFO"
-  }, {
-    "id" : "rule-22",
-    "type" : "STRUCTURAL",
-    "sourcePath" : "Condition.onset[x]",
-    "targetPath" : "Condition.onset[x]",
-    "description" : "Type changed: [Age, Period, dateTime] -> [Age, Period, Range, dateTime, string]",
-    "severity" : "WARNING"
-  }, {
-    "id" : "rule-23",
-    "type" : "STRUCTURAL",
-    "sourcePath" : "Condition.onset[x]",
-    "targetPath" : "Condition.onset[x]",
-    "description" : "MustSupport removed in target",
-    "severity" : "INFO"
-  }, {
-    "id" : "rule-24",
-    "type" : "STRUCTURAL",
-    "sourcePath" : "Condition.abatement[x]",
-    "targetPath" : "Condition.abatement[x]",
-    "description" : "Type changed: [Age, Period, dateTime] -> [Age, Period, Range, dateTime, string]",
-    "severity" : "WARNING"
-  }, {
-    "id" : "rule-25",
-    "type" : "STRUCTURAL",
-    "sourcePath" : "Condition.abatement[x]",
-    "targetPath" : "Condition.abatement[x]",
-    "description" : "MustSupport removed in target",
-    "severity" : "INFO"
-  }, {
-    "id" : "rule-26",
-    "type" : "CARDINALITY",
-    "sourcePath" : "Condition.recordedDate",
-    "targetPath" : "Condition.recordedDate",
-    "description" : "Cardinality changed: [1..1] -> [0..1]",
-    "severity" : "INFO"
-  }, {
-    "id" : "rule-27",
-    "type" : "STRUCTURAL",
-    "sourcePath" : "Condition.recordedDate",
-    "targetPath" : "Condition.recordedDate",
-    "description" : "MustSupport removed in target",
-    "severity" : "INFO"
-  }, {
-    "id" : "rule-28",
-    "type" : "STRUCTURAL",
-    "sourcePath" : "Condition.recorder",
-    "targetPath" : "Condition.recorder",
-    "description" : "Reference target profile changed: [https://tk-soft.example.com/fhir/StructureDefinition/Practitioner] -> [http://hl7.org/fhir/StructureDefinition/Patient, http://hl7.org/fhir/StructureDefinition/Practitioner, http://hl7.org/fhir/StructureDefinition/PractitionerRole, http://hl7.org/fhir/StructureDefinition/RelatedPerson]",
-    "severity" : "WARNING"
-  }, {
-    "id" : "rule-29",
-    "type" : "STRUCTURAL",
-    "sourcePath" : "Condition.recorder",
-    "targetPath" : "Condition.recorder",
-    "description" : "MustSupport removed in target",
-    "severity" : "INFO"
-  }, {
-    "id" : "rule-30",
-    "type" : "STRUCTURAL",
-    "sourcePath" : "Condition.note",
-    "targetPath" : "Condition.note",
-    "description" : "MustSupport removed in target",
-    "severity" : "INFO"
-  }, {
-    "id" : "rule-31",
-    "type" : "EXTENSION",
-    "sourcePath" : "Condition.extension:conditionDuration",
-    "targetPath" : "",
-    "description" : "Extension removed in target profile: Condition.extension:conditionDuration (was mustSupport)",
-    "severity" : "WARNING"
-  }, {
-    "id" : "rule-32",
-    "type" : "EXTENSION",
-    "sourcePath" : "Condition.extension:conditionSeverityScore",
-    "targetPath" : "",
-    "description" : "Extension removed in target profile: Condition.extension:conditionSeverityScore (was mustSupport)",
-    "severity" : "WARNING"
-  }, {
-    "id" : "rule-33",
-    "type" : "EXTENSION",
-    "sourcePath" : "Condition.extension:diagnosisGroup",
-    "targetPath" : "",
-    "description" : "Extension removed in target profile: Condition.extension:diagnosisGroup (was mustSupport)",
-    "severity" : "WARNING"
-  }, {
-    "id" : "rule-34",
-    "type" : "STRUCTURAL",
-    "sourcePath" : "Condition.category:problemList",
-    "targetPath" : "",
-    "description" : "Slice 'problemList' removed in target profile",
-    "severity" : "WARNING"
-  }, {
-    "id" : "rule-35",
-    "type" : "STRUCTURAL",
-    "sourcePath" : "Condition.category:encounterDiagnosis",
-    "targetPath" : "",
-    "description" : "Slice 'encounterDiagnosis' removed in target profile",
-    "severity" : "WARNING"
-  }, {
-    "id" : "rule-36",
-    "type" : "STRUCTURAL",
-    "sourcePath" : "Condition.code.id",
-    "targetPath" : "",
-    "description" : "Element removed in target profile: Condition.code.id",
-    "severity" : "INFO"
-  }, {
-    "id" : "rule-37",
-    "type" : "STRUCTURAL",
-    "sourcePath" : "Condition.code.extension",
-    "targetPath" : "",
-    "description" : "Element removed in target profile: Condition.code.extension",
-    "severity" : "INFO"
-  }, {
-    "id" : "rule-38",
-    "type" : "STRUCTURAL",
-    "sourcePath" : "Condition.code.coding",
-    "targetPath" : "",
-    "description" : "Element removed in target profile: Condition.code.coding (was required)",
-    "severity" : "WARNING"
-  }, {
-    "id" : "rule-39",
-    "type" : "STRUCTURAL",
-    "sourcePath" : "Condition.code.text",
-    "targetPath" : "",
-    "description" : "Element removed in target profile: Condition.code.text",
-    "severity" : "INFO"
-  } ]
+  "pairId": "tk-soft-condition-vs-r4-condition",
+  "sourceClasspath": "custom-profiles/tk-soft/tk-soft-condition.json",
+  "targetClasspath": "standard-profiles/r4/condition.profile.json",
+  "_notes": "Hand-curated by reading tk-soft-condition differential against R4 Condition profile snapshot/differential. Source (tk-soft) is a constrained profile; target (R4) is the base FHIR R4 Condition resource. Direction is custom->base so most drifts are relaxations (INFO cardinalities). Key source constraints removed in R4: 2 root constraints, 3 custom extensions, category slicing with 2 slices, elevated cardinalities (clinicalStatus min=1, code min=1, recordedDate min=1), custom ValueSet bindings, narrowed type choices (onset/abatement), restricted reference targets, and code.coding mandatory sub-elements. R4 adds: version-pinned bindings (clinicalStatus, verificationStatus), extensible category binding where source had none, preferred severity binding (source had extensible), example bodySite binding (source had extensible), and widens onset/abatement types to include Range and string. Condition.subject min=1 is unchanged (both inherit R4 min=1).",
+  "drifts": [
+    {
+      "id": "rule-1",
+      "type": "STRUCTURAL",
+      "sourcePath": "Condition",
+      "targetPath": "Condition",
+      "description": "Root constraints removed in target: [tk-con-1 (error: Condition must have either a code or a category), tk-con-2 (warning: Resolved conditions should have an abatement date)]. R4 base profile has no custom constraints.",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-2",
+      "type": "STRUCTURAL",
+      "sourcePath": "Condition.extension",
+      "targetPath": "Condition.extension",
+      "description": "Extension slicing removed in target: Source defines extension slicing (discriminator type=value, path=url). R4 base Condition profile has no extension slicing in its differential.",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-3",
+      "type": "EXTENSION",
+      "sourcePath": "Condition.extension:conditionDuration",
+      "targetPath": "",
+      "description": "Extension slice 'conditionDuration' (0..1, MustSupport=true) removed in target profile. R4 does not define this extension.",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-4",
+      "type": "EXTENSION",
+      "sourcePath": "Condition.extension:conditionSeverityScore",
+      "targetPath": "",
+      "description": "Extension slice 'conditionSeverityScore' (0..1, MustSupport=true) removed in target profile. R4 does not define this extension.",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-5",
+      "type": "EXTENSION",
+      "sourcePath": "Condition.extension:diagnosisGroup",
+      "targetPath": "",
+      "description": "Extension slice 'diagnosisGroup' (0..1, MustSupport=true) removed in target profile. R4 does not define this extension.",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-6",
+      "type": "CARDINALITY",
+      "sourcePath": "Condition.clinicalStatus",
+      "targetPath": "Condition.clinicalStatus",
+      "description": "Cardinality changed: [1..1] -> [0..1]. Source makes clinicalStatus mandatory (min=1). R4 base allows it to be absent (min=0).",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-7",
+      "type": "TERMINOLOGY",
+      "sourcePath": "Condition.clinicalStatus",
+      "targetPath": "Condition.clinicalStatus",
+      "description": "Binding version pin added in target: Source uses required(http://hl7.org/fhir/ValueSet/condition-clinical) without version pin. R4 target uses required(http://hl7.org/fhir/ValueSet/condition-clinical|4.0.1) with version pin locking to R4 release.",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-8",
+      "type": "STRUCTURAL",
+      "sourcePath": "Condition.verificationStatus",
+      "targetPath": "Condition.verificationStatus",
+      "description": "MustSupport removed in target. Source had verificationStatus as MustSupport=true. R4 base profile has no MustSupport on this element.",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-9",
+      "type": "TERMINOLOGY",
+      "sourcePath": "Condition.verificationStatus",
+      "targetPath": "Condition.verificationStatus",
+      "description": "Binding version pin added in target: Source uses required(http://hl7.org/fhir/ValueSet/condition-ver-status) without version pin. R4 target uses required(http://hl7.org/fhir/ValueSet/condition-ver-status|4.0.1) with version pin.",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-10",
+      "type": "CARDINALITY",
+      "sourcePath": "Condition.category",
+      "targetPath": "Condition.category",
+      "description": "Cardinality changed: [1..*] -> [0..*]. Source requires at least one category (min=1). R4 base allows category to be absent (min=0).",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-11",
+      "type": "STRUCTURAL",
+      "sourcePath": "Condition.category",
+      "targetPath": "Condition.category",
+      "description": "MustSupport removed in target. Source had category as MustSupport=true. R4 base profile has no MustSupport on this element.",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-12",
+      "type": "STRUCTURAL",
+      "sourcePath": "Condition.category",
+      "targetPath": "Condition.category",
+      "description": "Slicing removed in target: Source defines category slicing (discriminator type=pattern, path=$this). R4 base has no slicing on Condition.category.",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-13",
+      "type": "STRUCTURAL",
+      "sourcePath": "Condition.category:problemList",
+      "targetPath": "",
+      "description": "Slice 'problemList' (0..1, MustSupport=true, patternCodeableConcept=problem-list-item) removed in target profile. R4 has no named category slices.",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-14",
+      "type": "STRUCTURAL",
+      "sourcePath": "Condition.category:encounterDiagnosis",
+      "targetPath": "",
+      "description": "Slice 'encounterDiagnosis' (0..1, MustSupport=true, patternCodeableConcept=encounter-diagnosis) removed in target profile. R4 has no named category slices.",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-15",
+      "type": "TERMINOLOGY",
+      "sourcePath": "Condition.category",
+      "targetPath": "Condition.category",
+      "description": "Binding added in target: Source has no explicit binding on category. R4 target adds extensible(http://hl7.org/fhir/ValueSet/condition-category). Target introduces a recommended ValueSet.",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-16",
+      "type": "TERMINOLOGY",
+      "sourcePath": "Condition.severity",
+      "targetPath": "Condition.severity",
+      "description": "Binding strength changed: Source uses extensible(http://hl7.org/fhir/ValueSet/condition-severity). R4 target uses preferred(http://hl7.org/fhir/ValueSet/condition-severity). Same ValueSet but binding strength reduced: extensible -> preferred.",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-17",
+      "type": "STRUCTURAL",
+      "sourcePath": "Condition.severity",
+      "targetPath": "Condition.severity",
+      "description": "MustSupport removed in target. Source had severity as MustSupport=true. R4 base profile has no MustSupport on this element.",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-18",
+      "type": "CARDINALITY",
+      "sourcePath": "Condition.code",
+      "targetPath": "Condition.code",
+      "description": "Cardinality changed: [1..1] -> [0..1]. Source makes code mandatory (min=1). R4 base allows code to be absent (min=0).",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-19",
+      "type": "STRUCTURAL",
+      "sourcePath": "Condition.code",
+      "targetPath": "Condition.code",
+      "description": "MustSupport removed in target. Source had code as MustSupport=true. R4 base profile has no MustSupport on this element.",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-20",
+      "type": "TERMINOLOGY",
+      "sourcePath": "Condition.code",
+      "targetPath": "Condition.code",
+      "description": "Binding changed: Source uses extensible(https://tk-soft.example.com/fhir/ValueSet/condition-code). R4 target uses example(http://hl7.org/fhir/ValueSet/condition-code). Different ValueSet and binding strength reduced: extensible -> example.",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-21",
+      "type": "CARDINALITY",
+      "sourcePath": "Condition.code.coding",
+      "targetPath": "Condition.code.coding",
+      "description": "Cardinality changed: [1..*] -> [0..*]. Source requires at least one coding element (min=1). R4 CodeableConcept base allows coding to be absent (min=0).",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-22",
+      "type": "STRUCTURAL",
+      "sourcePath": "Condition.code.coding",
+      "targetPath": "Condition.code.coding",
+      "description": "MustSupport removed in target. Source had code.coding as MustSupport=true. R4 base has no MustSupport on this element.",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-23",
+      "type": "CARDINALITY",
+      "sourcePath": "Condition.code.coding.system",
+      "targetPath": "Condition.code.coding.system",
+      "description": "Cardinality changed: [1..1] -> [0..1]. Source makes code.coding.system mandatory (min=1). R4 CodeableConcept.coding.system has min=0.",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-24",
+      "type": "STRUCTURAL",
+      "sourcePath": "Condition.code.coding.system",
+      "targetPath": "Condition.code.coding.system",
+      "description": "MustSupport removed in target. Source had code.coding.system as MustSupport=true. R4 base has no MustSupport on this element.",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-25",
+      "type": "CARDINALITY",
+      "sourcePath": "Condition.code.coding.code",
+      "targetPath": "Condition.code.coding.code",
+      "description": "Cardinality changed: [1..1] -> [0..1]. Source makes code.coding.code mandatory (min=1). R4 CodeableConcept.coding.code has min=0.",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-26",
+      "type": "STRUCTURAL",
+      "sourcePath": "Condition.code.coding.code",
+      "targetPath": "Condition.code.coding.code",
+      "description": "MustSupport removed in target. Source had code.coding.code as MustSupport=true. R4 base has no MustSupport on this element.",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-27",
+      "type": "TERMINOLOGY",
+      "sourcePath": "Condition.bodySite",
+      "targetPath": "Condition.bodySite",
+      "description": "Binding strength changed: Source uses extensible(http://hl7.org/fhir/ValueSet/body-site). R4 target uses example(http://hl7.org/fhir/ValueSet/body-site). Same ValueSet but binding strength reduced: extensible -> example.",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-28",
+      "type": "STRUCTURAL",
+      "sourcePath": "Condition.bodySite",
+      "targetPath": "Condition.bodySite",
+      "description": "MustSupport removed in target. Source had bodySite as MustSupport=true. R4 base has no MustSupport on this element.",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-29",
+      "type": "STRUCTURAL",
+      "sourcePath": "Condition.subject",
+      "targetPath": "Condition.subject",
+      "description": "Reference target profile changed: Source constrains to [https://tk-soft.example.com/fhir/StructureDefinition/Patient]. R4 target allows [Patient, Group] (base R4 reference). Reference is widened.",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-30",
+      "type": "STRUCTURAL",
+      "sourcePath": "Condition.subject",
+      "targetPath": "Condition.subject",
+      "description": "MustSupport removed in target. Source had subject as MustSupport=true. R4 base has no MustSupport on this element.",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-31",
+      "type": "STRUCTURAL",
+      "sourcePath": "Condition.encounter",
+      "targetPath": "Condition.encounter",
+      "description": "MustSupport removed in target. Source had encounter as MustSupport=true. R4 base has no MustSupport on this element.",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-32",
+      "type": "STRUCTURAL",
+      "sourcePath": "Condition.encounter",
+      "targetPath": "Condition.encounter",
+      "description": "Reference target profile changed: Source constrains to [https://tk-soft.example.com/fhir/StructureDefinition/Encounter]. R4 target allows base [Encounter] resource. Reference is widened.",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-33",
+      "type": "STRUCTURAL",
+      "sourcePath": "Condition.onset[x]",
+      "targetPath": "Condition.onset[x]",
+      "description": "Type widened: Source restricts to [dateTime, Age, Period]. R4 target allows [dateTime, Age, Period, Range, string]. Types Range and string are added in target.",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-34",
+      "type": "STRUCTURAL",
+      "sourcePath": "Condition.onset[x]",
+      "targetPath": "Condition.onset[x]",
+      "description": "MustSupport removed in target. Source had onset[x] as MustSupport=true. R4 base has no MustSupport on this element.",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-35",
+      "type": "STRUCTURAL",
+      "sourcePath": "Condition.abatement[x]",
+      "targetPath": "Condition.abatement[x]",
+      "description": "Type widened: Source restricts to [dateTime, Age, Period]. R4 target allows [dateTime, Age, Period, Range, string]. Types Range and string are added in target.",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-36",
+      "type": "STRUCTURAL",
+      "sourcePath": "Condition.abatement[x]",
+      "targetPath": "Condition.abatement[x]",
+      "description": "MustSupport removed in target. Source had abatement[x] as MustSupport=true. R4 base has no MustSupport on this element.",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-37",
+      "type": "CARDINALITY",
+      "sourcePath": "Condition.recordedDate",
+      "targetPath": "Condition.recordedDate",
+      "description": "Cardinality changed: [1..1] -> [0..1]. Source makes recordedDate mandatory (min=1). R4 base allows it to be absent (min=0).",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-38",
+      "type": "STRUCTURAL",
+      "sourcePath": "Condition.recordedDate",
+      "targetPath": "Condition.recordedDate",
+      "description": "MustSupport removed in target. Source had recordedDate as MustSupport=true. R4 base has no MustSupport on this element.",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-39",
+      "type": "STRUCTURAL",
+      "sourcePath": "Condition.recorder",
+      "targetPath": "Condition.recorder",
+      "description": "Reference target profile changed: Source constrains to [https://tk-soft.example.com/fhir/StructureDefinition/Practitioner]. R4 target allows [Practitioner, PractitionerRole, Patient, RelatedPerson] (base R4 reference). Reference is widened.",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-40",
+      "type": "STRUCTURAL",
+      "sourcePath": "Condition.recorder",
+      "targetPath": "Condition.recorder",
+      "description": "MustSupport removed in target. Source had recorder as MustSupport=true. R4 base has no MustSupport on this element.",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-41",
+      "type": "STRUCTURAL",
+      "sourcePath": "Condition.note",
+      "targetPath": "Condition.note",
+      "description": "MustSupport removed in target. Source had note as MustSupport=true. R4 base has no MustSupport on this element.",
+      "severity": "INFO"
+    }
+  ]
 }

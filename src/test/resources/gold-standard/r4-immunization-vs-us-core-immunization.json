@@ -1,127 +1,144 @@
-{
-  "pairId": "r4-immunization-vs-us-core-immunization",
+﻿{
+  "pairId": "manual-r4-immunization-vs-us-core-immunization",
   "sourceClasspath": "standard-profiles/r4/immunization.profile.json",
   "targetClasspath": "standard-profiles/us-core/StructureDefinition-us-core-immunization.json",
+  "_notes": "Hand-curated by walking the US Core Immunization differential (7 elements) against the R4 Immunization snapshot. Verified with PowerShell. Covers: binding version pin removal (status), binding tightening (vaccineCode example->extensible with new CVX ValueSet), reference profile narrowing (patient), MustSupport additions, and a SHOULD-level constraint (us-core-5).",
   "drifts": [
     {
-      "id": "rule-1",
+      "id": "gold-imm-1",
       "type": "STRUCTURAL",
-      "sourcePath": "Immunization.vaccineCode",
-      "targetPath": "Immunization.vaccineCode",
-      "description": "Constraint added in target: us-core-5 SHOULD have a translation to the NDC value set",
+      "sourcePath": "Immunization",
+      "targetPath": "Immunization",
+      "description": "Constraint 'us-core-5' added (severity: warning): vaccineCode SHOULD have a translation to the NDC value set. R4 base Immunization does not carry this constraint.",
       "severity": "WARNING"
     },
     {
-      "id": "rule-2",
+      "id": "gold-imm-2",
       "type": "STRUCTURAL",
       "sourcePath": "Immunization.status",
       "targetPath": "Immunization.status",
-      "description": "MustSupport added in target",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-3",
-      "type": "EXTENSION",
-      "sourcePath": "Immunization.status",
-      "targetPath": "Immunization.status.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "Extension present only in target: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+      "description": "MustSupport added in target (min=1 in R4 -> conformance-critical).",
       "severity": "WARNING"
     },
     {
-      "id": "rule-4",
+      "id": "gold-imm-3",
+      "type": "TERMINOLOGY",
+      "sourcePath": "Immunization.status",
+      "targetPath": "Immunization.status",
+      "description": "Binding version pin removed: R4 binds to 'immunization-status|4.0.1' (version-locked). US Core binds to 'immunization-status' (no version pin). Strength remains required in both.",
+      "severity": "WARNING"
+    },
+    {
+      "id": "gold-imm-4",
       "type": "STRUCTURAL",
       "sourcePath": "Immunization.statusReason",
       "targetPath": "Immunization.statusReason",
-      "description": "MustSupport added in target",
+      "description": "MustSupport added in target (min=0, optional but must be supported when present). Binding unchanged (example:immunization-status-reason in both).",
       "severity": "INFO"
     },
     {
-      "id": "rule-5",
-      "type": "EXTENSION",
-      "sourcePath": "Immunization.statusReason",
-      "targetPath": "Immunization.statusReason.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "Extension present only in target: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+      "id": "gold-imm-5",
+      "type": "STRUCTURAL",
+      "sourcePath": "Immunization.vaccineCode",
+      "targetPath": "Immunization.vaccineCode",
+      "description": "MustSupport added in target (min=1 in R4 -> conformance-critical).",
       "severity": "WARNING"
     },
     {
-      "id": "rule-6",
+      "id": "gold-imm-6",
       "type": "TERMINOLOGY",
       "sourcePath": "Immunization.vaccineCode",
       "targetPath": "Immunization.vaccineCode",
-      "description": "Binding changed: example(http://hl7.org/fhir/ValueSet/vaccine-code) -> extensible(http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1010.6)",
+      "description": "Binding changed: R4 uses example strength to http://hl7.org/fhir/ValueSet/vaccine-code. US Core tightens to extensible strength with http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1010.6 (CVX codes for US vaccines). Binding strength tightened: example -> extensible.",
       "severity": "WARNING"
     },
     {
-      "id": "rule-7",
-      "type": "STRUCTURAL",
-      "sourcePath": "Immunization.vaccineCode",
-      "targetPath": "Immunization.vaccineCode",
-      "description": "MustSupport added in target",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-8",
-      "type": "EXTENSION",
-      "sourcePath": "Immunization.vaccineCode",
-      "targetPath": "Immunization.vaccineCode.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "Extension present only in target: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-9",
+      "id": "gold-imm-7",
       "type": "STRUCTURAL",
       "sourcePath": "Immunization.patient",
       "targetPath": "Immunization.patient",
-      "description": "Reference target profile changed: [http://hl7.org/fhir/StructureDefinition/Patient] -> [http://hl7.org/fhir/us/core/StructureDefinition/us-core-patient]",
+      "description": "MustSupport added in target (min=1 in R4 -> conformance-critical).",
       "severity": "WARNING"
     },
     {
-      "id": "rule-10",
+      "id": "gold-imm-8",
       "type": "STRUCTURAL",
       "sourcePath": "Immunization.patient",
       "targetPath": "Immunization.patient",
-      "description": "MustSupport added in target",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-11",
-      "type": "EXTENSION",
-      "sourcePath": "Immunization.patient",
-      "targetPath": "Immunization.patient.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "Extension present only in target: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+      "description": "Reference target profile constrained: R4 allows Reference(Patient). US Core restricts to Reference(us-core-patient).",
       "severity": "WARNING"
     },
     {
-      "id": "rule-12",
+      "id": "gold-imm-9",
       "type": "STRUCTURAL",
       "sourcePath": "Immunization.occurrence[x]",
       "targetPath": "Immunization.occurrence[x]",
-      "description": "MustSupport added in target",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-13",
-      "type": "EXTENSION",
-      "sourcePath": "Immunization.occurrence[x]",
-      "targetPath": "Immunization.occurrence[x].extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "Extension present only in target: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+      "description": "MustSupport added in target (min=1 in R4 -> conformance-critical). Types are unchanged (dateTime|string in both).",
       "severity": "WARNING"
     },
     {
-      "id": "rule-14",
+      "id": "gold-imm-10",
       "type": "STRUCTURAL",
       "sourcePath": "Immunization.primarySource",
       "targetPath": "Immunization.primarySource",
-      "description": "MustSupport added in target",
+      "description": "MustSupport added in target (min=0, optional but must be supported when present).",
       "severity": "INFO"
     },
     {
-      "id": "rule-15",
+      "id": "gold-imm-10b",
+      "type": "STRUCTURAL",
+      "sourcePath": "Immunization.patient",
+      "targetPath": "Immunization.patient",
+      "description": "Reference target profile narrowed: R4 base allows any Patient; US Core constrains to [us-core-patient] specifically. MustSupport also added in target.",
+      "severity": "WARNING"
+    },
+    {
+      "id": "gold-imm-11",
+      "type": "EXTENSION",
+      "sourcePath": "Immunization.status",
+      "targetPath": "Immunization.status",
+      "description": "Element-level USCDI requirement annotation extension (uscdi-requirement=true) added to Immunization.status in target profile. Marks this element as a US Core Data for Interoperability requirement.",
+      "severity": "INFO"
+    },
+    {
+      "id": "gold-imm-12",
+      "type": "EXTENSION",
+      "sourcePath": "Immunization.statusReason",
+      "targetPath": "Immunization.statusReason",
+      "description": "Element-level USCDI requirement annotation extension (uscdi-requirement=true) added to Immunization.statusReason in target profile. Marks this element as a US Core Data for Interoperability requirement.",
+      "severity": "INFO"
+    },
+    {
+      "id": "gold-imm-13",
+      "type": "EXTENSION",
+      "sourcePath": "Immunization.vaccineCode",
+      "targetPath": "Immunization.vaccineCode",
+      "description": "Element-level USCDI requirement annotation extension (uscdi-requirement=true) added to Immunization.vaccineCode in target profile. Marks this element as a US Core Data for Interoperability requirement.",
+      "severity": "INFO"
+    },
+    {
+      "id": "gold-imm-14",
+      "type": "EXTENSION",
+      "sourcePath": "Immunization.patient",
+      "targetPath": "Immunization.patient",
+      "description": "Element-level USCDI requirement annotation extension (uscdi-requirement=true) added to Immunization.patient in target profile. Marks this element as a US Core Data for Interoperability requirement.",
+      "severity": "INFO"
+    },
+    {
+      "id": "gold-imm-15",
+      "type": "EXTENSION",
+      "sourcePath": "Immunization.occurrence[x]",
+      "targetPath": "Immunization.occurrence[x]",
+      "description": "Element-level USCDI requirement annotation extension (uscdi-requirement=true) added to Immunization.occurrence[x] in target profile. Marks this element as a US Core Data for Interoperability requirement.",
+      "severity": "INFO"
+    },
+    {
+      "id": "gold-imm-16",
       "type": "EXTENSION",
       "sourcePath": "Immunization.primarySource",
-      "targetPath": "Immunization.primarySource.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "Extension present only in target: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
-      "severity": "WARNING"
+      "targetPath": "Immunization.primarySource",
+      "description": "Element-level USCDI requirement annotation extension (uscdi-requirement=true) added to Immunization.primarySource in target profile. Marks this element as a US Core Data for Interoperability requirement.",
+      "severity": "INFO"
     }
   ]
 }

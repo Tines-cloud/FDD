@@ -16,15 +16,28 @@ import org.springframework.stereotype.Service
 import tools.jackson.databind.ObjectMapper
 
 /**
- * Default [com.example.fdd.service.DriftAnalyzer] implementation using a hybrid approach.
+ * Default [com.example.fdd.service.DriftAnalyzer] implementation - **AI is the primary detector**.
+ *
+ * Pipeline role:
+ * - The LLM is the authoritative semantic drift detector. It receives the full normalised
+ *   profile context plus the rule-based items as **seed hints** (not gospel). The LLM is
+ *   expected to confirm, refine, expand, or reject seeds and to find drift the rules missed.
+ * - The deterministic [com.example.fdd.service.RuleBasedDriftDetector] is a safety net only:
+ *   it catches structural fundamentals (cardinality, version mismatch) that must never be
+ *   missed if the LLM hallucinates.
  *
  * Steps:
- * 1. Build a [com.example.fdd.model.ProfileContext] from both profiles
- *    via [com.example.fdd.fhir.ProfileContextBuilder].
- * 2. Run [com.example.fdd.service.RuleBasedDriftDetector] for fast, deterministic checks.
- * 3. Pass the rule-based results to the LLM as seed items.
- * 4. Call [com.example.fdd.ai.LlmClient] and parse the JSON response into a [com.example.fdd.model.DriftReport].
- * 5. Merge both result sets, removing duplicates by path + type.
+ * 1. Build a [com.example.fdd.model.ProfileContext] from both profiles.
+ * 2. Run [com.example.fdd.service.RuleBasedDriftDetector] to produce SEED items.
+ * 3. Send full profile context + seeds to the LLM.
+ * 4. Parse LLM JSON response - these items are the FINAL drift report
+ *    (`source = "ai"` for new discoveries, `source = "hybrid"` when a seed triple matched).
+ * 5. Rule seeds the LLM confirmed are promoted to `source = "hybrid"`.
+ *    Rule seeds the LLM did NOT re-emit are backfilled as `source = "rule"` (safety-net).
+ *    This prevents false negatives from rule-only structural drifts the LLM may omit.
+ *    `source` provenance lets evaluation code distinguish each type of finding.
+ *
+ * Fallback: if the LLM call fails entirely, return rule-only items with a clear warning.
  */
 @Service
 class DefaultDriftAnalyzer(
@@ -52,7 +65,8 @@ class DefaultDriftAnalyzer(
 
         // 2. Rule-based pre-analysis (uses the same normalised elements as the LLM)
         val ruleItems = ruleBasedDetector.detect(context)
-        log.info("Rule-based detector found {} seed items", ruleItems.size)
+            .map { it.copy(source = "rule") }
+        log.info("Rule-based detector produced {} SEED items (hints for the LLM)", ruleItems.size)
 
         // 3. Include rule-based seeds in the prompt
         val seedJson = if (ruleItems.isNotEmpty()) {
@@ -75,12 +89,13 @@ class DefaultDriftAnalyzer(
         return try {
             val response = llmClient.chat(systemPrompt, userPrompt, temperature = 0.1)
 
-            // 6. Parse and merge results
+            // 6. Parse LLM response - these are the PRIMARY drift items
             val llmReport = parseDriftReport(response, sourceUrl, targetUrl)
             mergeResults(llmReport, ruleItems, sourceUrl, targetUrl)
         } catch (ex: Exception) {
             log.warn(
-                "LLM call failed ({}), falling back to rule-based drift detection only ({} items)",
+                "LLM call failed ({}), falling back to rule-based seeds only ({} items). " +
+                        "Output will contain rule items only - re-run when the LLM is available.",
                 ex.message, ruleItems.size
             )
             DriftReport(
@@ -92,14 +107,27 @@ class DefaultDriftAnalyzer(
     }
 
     /**
-     * Merge rule-based items with LLM-detected items, de-duplicating by
-     * (type, sourcePath, targetPath) triple.
+     * Merge LLM-detected items (PRIMARY, gatekeeper) with rule-based seeds.
      *
-     * **Merge strategy:** Rule items are prioritised - they are deterministic and always
-     * correct for structural comparison. LLM items are appended only when they add a
-     * drift observation not already covered by the rule detector (e.g. semantic renames,
-     * cross-version behavioural differences). This prevents the LLM from overriding a
-     * precise rule finding with a less accurate paraphrase.
+     * **Strategy - the LLM is the AUTHORITATIVE filter:**
+     *
+     * 1. The LLM has already been instructed (drift-analysis prompts) to confirm,
+     *    refine, or REJECT each rule-based seed and to add its own discoveries.
+     * 2. The output is therefore the LLM's emitted set, NOTHING ELSE. Rule seeds
+     *    that the LLM omitted are treated as REJECTED (not silently re-added),
+     *    because the rule-based detector is known to over-report (`MustSupport`,
+     *    `uscdi-requirement` markers, slice-name noise) and the user wants only
+     *    the AI-curated set as the final report.
+     * 3. Provenance: each LLM item whose `(type, sourcePath, targetPath)` triple
+     *    matches a rule seed is marked `source = "hybrid"` (rule-confirmed).
+     *    Pure LLM discoveries are marked `source = "ai"`.
+     *
+     * The fallback when the LLM call fails entirely is handled in [analyzeDrift]
+     * - in that case the rule items are returned with a clear warning log.
+     *
+     * Path normalisation: the LLM and the rule detector sometimes differ between
+     * `null` and `""` for one-sided drifts (e.g. extension added in target only).
+     * Triple matching normalises both to "" so a hybrid match is not missed.
      */
     private fun mergeResults(
         llmReport: DriftReport,
@@ -107,24 +135,42 @@ class DefaultDriftAnalyzer(
         sourceCanonical: String,
         targetCanonical: String
     ): DriftReport {
-        // Rule items are the ground truth - include all of them unconditionally
-        val ruleKeys = ruleItems.map { Triple(it.type, it.sourcePath, it.targetPath) }.toSet()
+        fun key(item: DriftItem) = Triple(item.type, item.sourcePath.trim(), item.targetPath.trim())
 
-        // LLM items are included only when they report something the rules did not catch
-        val uniqueLlmItems = llmReport.items.filter {
-            Triple(it.type, it.sourcePath, it.targetPath) !in ruleKeys
+        // Index rule seeds by normalised triple for fast lookup
+        val ruleByTriple = ruleItems.associateBy { key(it) }
+        val matchedSeedTriples = mutableSetOf<Triple<DriftType, String, String>>()
+
+        // Step 1: Emit LLM items, marking provenance based on whether a rule seed corroborated it.
+        val llmEmitted = llmReport.items.map { llmItem ->
+            val triple = key(llmItem)
+            if (triple in ruleByTriple) {
+                matchedSeedTriples.add(triple)
+                llmItem.copy(source = "hybrid")
+            } else {
+                llmItem.copy(source = "ai")
+            }
         }
 
-        val mergedItems = ruleItems + uniqueLlmItems
+        // Step 2: Backfill unmatched rule seeds as source="rule" (safety net).
+        // Rule seeds whose triple was NOT confirmed/overridden by the LLM are appended.
+        // This preserves the deterministic baseline and prevents silent data loss.
+        val unmatchedSeeds = ruleItems.filter { key(it) !in matchedSeedTriples }
+
+        val finalItems = llmEmitted + unmatchedSeeds
+
+        val aiOnly = llmEmitted.count { it.source == "ai" }
+        val hybrid = llmEmitted.count { it.source == "hybrid" }
+        val ruleOnly = unmatchedSeeds.size
         log.info(
-            "Merged {} rule items + {} unique LLM items = {} total",
-            ruleItems.size, uniqueLlmItems.size, mergedItems.size
+            "Drift analysis complete - {} item(s) in final report: {} AI-discovered, {} hybrid (LLM-confirmed seed), {} rule-only (safety net backfill).",
+            finalItems.size, aiOnly, hybrid, ruleOnly
         )
 
         return DriftReport(
             sourceProfileCanonical = sourceCanonical,
             targetProfileCanonical = targetCanonical,
-            items = mergedItems
+            items = finalItems
         )
     }
 
@@ -147,12 +193,13 @@ class DefaultDriftAnalyzer(
 
             val items = rawItems.mapIndexed { idx, raw ->
                 DriftItem(
-                    id = raw.id ?: "drift-${idx + 1}",
+                    id = raw.id ?: "ai-${idx + 1}",
                     type = parseDriftType(raw.type),
                     sourcePath = raw.sourcePath ?: "",
                     targetPath = raw.targetPath ?: "",
                     description = raw.description ?: "",
-                    severity = raw.severity ?: "WARNING"
+                    severity = raw.severity ?: "WARNING",
+                    source = "ai"
                 )
             }
 

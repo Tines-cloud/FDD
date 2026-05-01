@@ -1,54 +1,58 @@
-Analyse the semantic drift between the following two FHIR profiles.
+Compare these two FHIR profiles and detect EVERY semantic drift between them.
 
-## Profile Context
+YOU ARE THE PRIMARY DETECTOR AND THE FINAL FILTER.
+- The seeds below are HINTS from a deterministic comparator known to over-report.
+- Your emitted JSON array IS the final drift report. Anything you omit is treated as
+  REJECTED and will NOT be added back downstream.
+- Confirm real seeds by re-emitting them, refine where needed, REJECT (omit) seeds that
+  are inherited base noise or low-value conformance markers (see system prompt).
+- Add every drift the seeds missed.
+
+PROFILE CONTEXT (full normalised data for both profiles):
 
 {{profileContext}}
 
-## Rule-Based Pre-Analysis (Seed Items)
-
-The following drift items were detected by a deterministic structural comparator.
-These items are PRE-VALIDATED and accurate - include ALL of them in your output.
-Do NOT contradict, omit, or downgrade any seed item. You MAY improve the description
-wording if you have better context, but the type, paths, and severity must not change.
+RULE-BASED PRE-ANALYSIS (SEED ITEMS - HINTS ONLY, NOT GROUND TRUTH):
 
 {{ruleBasedSeeds}}
 
-## Instructions
+INSTRUCTIONS
 
-- Compare every element in the source profile with the corresponding element in the target profile.
-- Report ALL differences across TERMINOLOGY, EXTENSION, STRUCTURAL, CARDINALITY, and VERSION categories.
-- Use the element paths exactly as they appear in the profiles (including slice notation like `Patient.extension:employeeId`).
-- Be thorough - missing a drift item is worse than reporting a borderline false positive.
-- Include all seed items above PLUS any additional semantic drift you detect.
+1. Use the `source` and `target` blocks of the profile context to compare elements,
+   slices, extensions, bindings, cardinalities, types, fixed/pattern values, and
+   constraints SLICE-BY-SLICE.
 
-Specific checks - verify each of these explicitly:
-1. Cardinality (min/max): check BOTH min and max for every element.
-2. Binding strength AND valueSet URL: a valueSet URL change is drift even if strength is unchanged.
-3. Fixed values (fixed[x]): any addition, removal, or change is ERROR-level drift.
-4. Pattern values (pattern[x]): any addition, removal, or change is WARNING-level drift.
-5. Default values (defaultValue[x]): any addition, removal, or change is WARNING-level drift.
-6. meaningWhenMissing: any change is INFO-level drift.
-7. Named extension slices: check every `path:sliceName` element in both profiles.
-8. Constraint expressions: for constraints with the same key in both profiles, check if the
-   expression or severity changed - report as STRUCTURAL drift if so.
-9. Type code changes: report if the type code list changes for any element.
-10. Reference target profiles: report if targetProfile URLs change on Reference-type elements.
+2. For each seed item:
+   - If you agree it is a true profile-level semantic drift, RE-EMIT it with the same
+     `type`, `sourcePath`, and `targetPath` (it will be marked "hybrid" downstream).
+     You may improve `description` and `severity`.
+   - If you disagree (the seed is wrong, irrelevant, or inherited base noise), OMIT it.
 
-Extension detection - check these specifically:
-- Look for elements with paths like `Patient.extension:X` or `Patient.modifierExtension:X` in each profile.
-- Any such named slice present in source but not in target -> EXTENSION type, sourcePath="Patient.extension:X", targetPath="".
-- Any such named slice present in target but not in source -> EXTENSION type, sourcePath="", targetPath="Patient.extension:X".
-- Report each missing/extra named extension as a separate EXTENSION drift item.
+3. Now perform your own independent analysis and emit drift items for EVERY semantic
+   difference you find that is NOT in the seed list - including:
+   - Slices added or removed (use `path:sliceName` notation, never bare path).
+   - Extension differences in URL, type, internal content, or cardinality.
+   - Binding value-set changes, additional bindings, max value sets, strength shifts.
+   - Type code changes (including one-sided: when one profile has a type the other lacks).
+   - Constraint additions, removals, or expression changes.
+   - Fixed/pattern value differences on identifier system, Reference targetProfile,
+     boolean, or coded elements.
+   - Cardinality changes (min or max).
+   - Cross-version (R4 vs R5) structural differences.
 
-Granularity - avoid redundant sub-element expansion:
-- When an element (e.g., `Patient.identifier`) is being added to or removed from a profile, report
-  ONE item at the parent element level only. Do NOT emit separate items for every child sub-element
-  (e.g., `Patient.identifier.id`, `Patient.identifier.use`, etc.) unless those children have
-  independent specific differences (cardinality, terminology, or extension changes).
+4. Skip pure noise: isSummary changes, untouched inherited base elements, snapshot
+   technical scaffolding.
 
-Severity assignment - follow the rules in the system prompt precisely:
-  - ERROR   : min cardinality increased, binding tightened to "required", fixed value added/changed, isModifier changed.
-  - WARNING : max cardinality tightened, extension added/removed, binding relaxed, constraint expression changed.
-  - INFO    : mustSupport/isSummary changed, cardinality relaxed, defaultValue/meaningWhenMissing changed.
+5. Prefer ELEMENT/SLICE-level granularity. Do not emit one drift per sub-element when
+   one parent-level item conveys the same information.
 
-- Return a JSON array of drift items following the schema specified in the system prompt.
+6. Use slice notation in paths whenever a sliceName exists
+   (e.g. `Organization.identifier:hpio`, `Patient.extension:employeeId`).
+
+7. Severity: ERROR for breakage/data loss; WARNING for interoperability impact;
+   INFO for cosmetic-only.
+
+OUTPUT
+Return ONLY a JSON array of drift items - no markdown, no code fences, no prose.
+The array must include both your re-emitted seeds (those you agreed with) AND your
+own newly-detected drifts. Use ids `ai-1`, `ai-2`, ... for new items.

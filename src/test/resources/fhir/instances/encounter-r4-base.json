@@ -1,4 +1,4 @@
-{
+﻿{
   "resourceType": "Encounter",
   "id": "r4-encounter-001",
   "meta": {
@@ -6,18 +6,69 @@
       "http://hl7.org/fhir/StructureDefinition/Encounter"
     ]
   },
+  "text": {
+    "status": "generated",
+    "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\"><p><b>Outpatient Consultation</b> - 20 Nov 2025. Patient: James Robert Williams. Clinician: Dr. Emily Chen. Springfield General Hospital. Status: Finished.</p></div>"
+  },
   "identifier": [
     {
+      "use": "official",
+      "type": {
+        "coding": [
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v2-0203",
+            "code": "VN",
+            "display": "Visit Number"
+          }
+        ],
+        "text": "Visit Number"
+      },
       "system": "http://hospital.example.org/encounters",
       "value": "ENC-2025-0042"
     }
   ],
   "status": "finished",
+  "statusHistory": [
+    {
+      "status": "arrived",
+      "period": {
+        "start": "2025-11-20T08:55:00+00:00",
+        "end": "2025-11-20T09:00:00+00:00"
+      }
+    },
+    {
+      "status": "in-progress",
+      "period": {
+        "start": "2025-11-20T09:00:00+00:00",
+        "end": "2025-11-20T09:45:00+00:00"
+      }
+    },
+    {
+      "status": "finished",
+      "period": {
+        "start": "2025-11-20T09:45:00+00:00",
+        "end": "2025-11-20T09:45:00+00:00"
+      }
+    }
+  ],
   "class": {
     "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
     "code": "AMB",
     "display": "ambulatory"
   },
+  "classHistory": [
+    {
+      "class": {
+        "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+        "code": "AMB",
+        "display": "ambulatory"
+      },
+      "period": {
+        "start": "2025-11-20T09:00:00+00:00",
+        "end": "2025-11-20T09:45:00+00:00"
+      }
+    }
+  ],
   "type": [
     {
       "coding": [
@@ -30,10 +81,41 @@
       "text": "Outpatient Consultation"
     }
   ],
+  "serviceType": {
+    "coding": [
+      {
+        "system": "http://snomed.info/sct",
+        "code": "394814009",
+        "display": "General practice"
+      }
+    ],
+    "text": "General Practice"
+  },
+  "priority": {
+    "coding": [
+      {
+        "system": "http://terminology.hl7.org/CodeSystem/v3-ActPriority",
+        "code": "R",
+        "display": "Routine"
+      }
+    ]
+  },
   "subject": {
     "reference": "Patient/r4-patient-001",
-    "display": "James Williams"
+    "display": "James Robert Williams"
   },
+  "episodeOfCare": [
+    {
+      "reference": "EpisodeOfCare/r4-episodeofcare-001",
+      "display": "Diabetes Management Episode"
+    }
+  ],
+  "basedOn": [
+    {
+      "reference": "ServiceRequest/r4-servicerequest-001",
+      "display": "Outpatient follow-up for T2DM"
+    }
+  ],
   "participant": [
     {
       "type": [
@@ -47,22 +129,176 @@
           ]
         }
       ],
+      "period": {
+        "start": "2025-11-20T09:00:00+00:00",
+        "end": "2025-11-20T09:45:00+00:00"
+      },
       "individual": {
         "reference": "Practitioner/r4-practitioner-001",
         "display": "Dr. Emily Chen"
       }
     }
   ],
+  "appointment": [
+    {
+      "reference": "Appointment/r4-appointment-001",
+      "display": "Scheduled outpatient appointment 2025-11-20"
+    }
+  ],
   "period": {
     "start": "2025-11-20T09:00:00+00:00",
     "end": "2025-11-20T09:45:00+00:00"
+  },
+  "length": {
+    "value": 45,
+    "unit": "minutes",
+    "system": "http://unitsofmeasure.org",
+    "code": "min"
+  },
+  "reasonCode": [
+    {
+      "coding": [
+        {
+          "system": "http://snomed.info/sct",
+          "code": "44054006",
+          "display": "Type 2 diabetes mellitus"
+        }
+      ],
+      "text": "Annual diabetes management review"
+    }
+  ],
+  "reasonReference": [
+    {
+      "reference": "Condition/r4-condition-001",
+      "display": "Type 2 diabetes mellitus"
+    }
+  ],
+  "diagnosis": [
+    {
+      "condition": {
+        "reference": "Condition/r4-condition-001",
+        "display": "Type 2 diabetes mellitus"
+      },
+      "use": {
+        "coding": [
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/diagnosis-role",
+            "code": "AD",
+            "display": "Admission diagnosis"
+          }
+        ]
+      },
+      "rank": 1
+    }
+  ],
+  "account": [
+    {
+      "reference": "Account/r4-account-001",
+      "display": "Patient Billing Account"
+    }
+  ],
+  "hospitalization": {
+    "preAdmissionIdentifier": {
+      "system": "http://hospital.example.org/pre-admit",
+      "value": "PRE-2025-0042"
+    },
+    "origin": {
+      "reference": "Location/r4-location-home-001",
+      "display": "Patient Home"
+    },
+    "admitSource": {
+      "coding": [
+        {
+          "system": "http://terminology.hl7.org/CodeSystem/admit-source",
+          "code": "gp",
+          "display": "General Practitioner referral"
+        }
+      ]
+    },
+    "reAdmission": {
+      "coding": [
+        {
+          "system": "http://terminology.hl7.org/CodeSystem/v2-0092",
+          "code": "R",
+          "display": "Re-admission"
+        }
+      ]
+    },
+    "dietPreference": [
+      {
+        "coding": [
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/diet",
+            "code": "diabetic",
+            "display": "Diabetic diet"
+          }
+        ]
+      }
+    ],
+    "specialCourtesy": [
+      {
+        "coding": [
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-EncounterSpecialCourtesy",
+            "code": "NRM",
+            "display": "normal courtesy"
+          }
+        ]
+      }
+    ],
+    "specialArrangement": [
+      {
+        "coding": [
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/encounter-special-arrangements",
+            "code": "wheel",
+            "display": "Wheelchair"
+          }
+        ]
+      }
+    ],
+    "destination": {
+      "reference": "Location/r4-location-home-001",
+      "display": "Patient Home"
+    },
+    "dischargeDisposition": {
+      "coding": [
+        {
+          "system": "http://terminology.hl7.org/CodeSystem/discharge-disposition",
+          "code": "home",
+          "display": "Home"
+        }
+      ]
+    }
   },
   "location": [
     {
       "location": {
         "reference": "Location/r4-location-001",
-        "display": "General Practice Clinic"
+        "display": "General Practice Clinic - Room 3"
+      },
+      "status": "completed",
+      "physicalType": {
+        "coding": [
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/location-physical-type",
+            "code": "ro",
+            "display": "Room"
+          }
+        ]
+      },
+      "period": {
+        "start": "2025-11-20T09:00:00+00:00",
+        "end": "2025-11-20T09:45:00+00:00"
       }
     }
-  ]
+  ],
+  "serviceProvider": {
+    "reference": "Organization/r4-organization-001",
+    "display": "Springfield General Hospital"
+  },
+  "partOf": {
+    "reference": "Encounter/r4-encounter-parent-001",
+    "display": "Parent episode of care encounter"
+  }
 }

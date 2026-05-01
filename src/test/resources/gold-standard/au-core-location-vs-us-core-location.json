@@ -2,173 +2,134 @@
   "pairId": "au-core-location-vs-us-core-location",
   "sourceClasspath": "standard-profiles/au-core/StructureDefinition-au-core-location.json",
   "targetClasspath": "standard-profiles/us-core/StructureDefinition-us-core-location.json",
+  "_notes": "Source: AU Core Location (Australian realm). Target: US Core Location (US realm). Key differences: AU Core has an error constraint (au-core-loc-01) absent in US Core; AU Core marks type and physicalType as MS while US Core does not; US Core makes name mandatory (min=1) while AU Core has it optional MS; US Core adds telecom MS and address sub-element constraints (line/city/state/postalCode) with US-state binding; both have address and managingOrganization MS; managingOrganization reference targets differ; US Core adds status MS absent in AU Core.",
   "drifts": [
     {
       "id": "rule-1",
       "type": "STRUCTURAL",
       "sourcePath": "Location",
       "targetPath": "Location",
-      "description": "Constraint present only in source: au-core-loc-01 requires the location to have at least a valid identifier or address or type",
+      "description": "Source constraint au-core-loc-01(error) removed in target: AU Core defines an error-level constraint on Location (requiring fields when certain conditions are met); US Core Location has no equivalent root constraint.",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-1b",
+      "type": "STRUCTURAL",
+      "sourcePath": "Location.identifier",
+      "targetPath": "Location.identifier",
+      "description": "identifier type profile changed: source allows AU-specific identifier profiles (au-locationspecificpracticenumber, au-natasitenumber) on identifier elements; target US Core uses only the base Identifier type. AU-specific identifier profiles removed.",
       "severity": "WARNING"
     },
     {
       "id": "rule-2",
       "type": "STRUCTURAL",
-      "sourcePath": "Location.identifier",
-      "targetPath": "Location.identifier",
-      "description": "Type profile changed: source allows AU-specific identifier profiles http://hl7.org.au/fhir/StructureDefinition/au-locationspecificpracticenumber and http://hl7.org.au/fhir/StructureDefinition/au-natasitenumber, while target uses only the base Identifier type",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-3",
-      "type": "STRUCTURAL",
       "sourcePath": "Location.status",
       "targetPath": "Location.status",
-      "description": "MustSupport added in target",
+      "description": "status MustSupport added on optional element in target: US Core adds status[mustSupport=true]; source AU Core does not constrain status in its differential. MS added on optional element.",
       "severity": "INFO"
     },
     {
-      "id": "rule-4",
+      "id": "rule-3",
       "type": "CARDINALITY",
       "sourcePath": "Location.name",
       "targetPath": "Location.name",
-      "description": "Cardinality changed: [0..1] -> [1..1]",
-      "severity": "WARNING"
+      "description": "name min cardinality strictly increased: source [0..1, mustSupport=true] → target [min=1, mustSupport=true]. Min increased from 0 to 1; name becomes mandatory.",
+      "severity": "ERROR"
+    },
+    {
+      "id": "rule-4",
+      "type": "STRUCTURAL",
+      "sourcePath": "Location.telecom",
+      "targetPath": "Location.telecom",
+      "description": "telecom MustSupport added on optional element in target: US Core adds telecom[mustSupport=true]; source AU Core does not constrain telecom in its differential. MS added on optional element.",
+      "severity": "INFO"
     },
     {
       "id": "rule-5",
-      "type": "EXTENSION",
-      "sourcePath": "Location.name.extension(http://hl7.org/fhir/StructureDefinition/obligation)",
-      "targetPath": "Location.name",
-      "description": "Extension removed in target element: http://hl7.org/fhir/StructureDefinition/obligation",
+      "type": "STRUCTURAL",
+      "sourcePath": "Location.type",
+      "targetPath": "Location.type",
+      "description": "type MustSupport removed on optional element: source AU Core marks type[mustSupport=true]; target US Core does not constrain type in its differential. MS removed on optional element.",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-5b",
+      "type": "TERMINOLOGY",
+      "sourcePath": "Location.type",
+      "targetPath": "Location.type",
+      "description": "type binding changed: source extensible(http://terminology.hl7.org.au/ValueSet/v3-ServiceDeliveryLocationRoleType-extended) [AU extended service delivery location VS] → target extensible(http://terminology.hl7.org/ValueSet/v3-ServiceDeliveryLocationRoleType) [R4 base VS]. Same binding strength, AU-extended VS replaced.",
       "severity": "WARNING"
     },
     {
       "id": "rule-6",
       "type": "STRUCTURAL",
-      "sourcePath": "Location.telecom",
-      "targetPath": "Location.telecom",
-      "description": "MustSupport added in target",
+      "sourcePath": "Location.address.line",
+      "targetPath": "Location.address.line",
+      "description": "address.line MustSupport added on optional element in target: US Core adds address.line[max=*, mustSupport=true]; source AU Core marks address as MS but does not constrain address sub-elements. MS added on optional element.",
       "severity": "INFO"
+    },
+    {
+      "id": "rule-5c",
+      "type": "STRUCTURAL",
+      "sourcePath": "Location.address",
+      "targetPath": "Location.address",
+      "description": "address type profile changed: source AU Core uses address with au-address profile (http://hl7.org.au/fhir/StructureDefinition/au-address); target US Core uses the base Address type. AU-specific address profile removed.",
+      "severity": "WARNING"
     },
     {
       "id": "rule-7",
       "type": "STRUCTURAL",
-      "sourcePath": "Location.type",
-      "targetPath": "Location.type",
-      "description": "MustSupport removed in target",
+      "sourcePath": "Location.address.city",
+      "targetPath": "Location.address.city",
+      "description": "address.city MustSupport added on optional element in target: US Core adds address.city[mustSupport=true]; source AU Core does not constrain address.city. MS added on optional element.",
       "severity": "INFO"
     },
     {
       "id": "rule-8",
-      "type": "TERMINOLOGY",
-      "sourcePath": "Location.type",
-      "targetPath": "Location.type",
-      "description": "Binding changed: extensible(http://terminology.hl7.org.au/ValueSet/v3-ServiceDeliveryLocationRoleType-extended) -> extensible(http://terminology.hl7.org/ValueSet/v3-ServiceDeliveryLocationRoleType)",
-      "severity": "WARNING"
+      "type": "STRUCTURAL",
+      "sourcePath": "Location.address.state",
+      "targetPath": "Location.address.state",
+      "description": "address.state MustSupport added on optional element in target: US Core adds address.state[mustSupport=true]; source does not constrain address.state. MS added on optional element.",
+      "severity": "INFO"
     },
     {
       "id": "rule-9",
-      "type": "EXTENSION",
-      "sourcePath": "Location.type.extension(http://hl7.org/fhir/StructureDefinition/obligation)",
-      "targetPath": "Location.type",
-      "description": "Extension removed in target element: http://hl7.org/fhir/StructureDefinition/obligation",
+      "type": "TERMINOLOGY",
+      "sourcePath": "Location.address.state",
+      "targetPath": "Location.address.state",
+      "description": "address.state new binding added in target: US Core adds extensible(http://hl7.org/fhir/us/core/ValueSet/us-core-usps-state) [US postal state codes]; source has no binding on address.state. New US realm-specific binding applied.",
       "severity": "WARNING"
     },
     {
       "id": "rule-10",
       "type": "STRUCTURAL",
-      "sourcePath": "Location.address",
-      "targetPath": "Location.address",
-      "description": "Type profile changed: source uses Address with AU profile http://hl7.org.au/fhir/StructureDefinition/au-address, while target uses only the base Address type",
-      "severity": "WARNING"
+      "sourcePath": "Location.address.postalCode",
+      "targetPath": "Location.address.postalCode",
+      "description": "address.postalCode MustSupport added on optional element in target: US Core adds address.postalCode[mustSupport=true]; source does not constrain address.postalCode. MS added on optional element.",
+      "severity": "INFO"
     },
     {
       "id": "rule-11",
-      "type": "EXTENSION",
-      "sourcePath": "Location.address.extension(http://hl7.org/fhir/StructureDefinition/obligation)",
-      "targetPath": "Location.address",
-      "description": "Extension removed in target element: http://hl7.org/fhir/StructureDefinition/obligation",
+      "type": "STRUCTURAL",
+      "sourcePath": "Location.physicalType",
+      "targetPath": "Location.physicalType",
+      "description": "physicalType MustSupport removed on optional element: source AU Core marks physicalType[mustSupport=true]; target US Core does not constrain physicalType in its differential. MS removed on optional element.",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-11b",
+      "type": "TERMINOLOGY",
+      "sourcePath": "Location.physicalType",
+      "targetPath": "Location.physicalType",
+      "description": "physicalType binding changed: source preferred(http://terminology.hl7.org.au/ValueSet/location-physical-type-extended) [AU extended location physical type VS] → target example(http://hl7.org/fhir/ValueSet/location-physical-type) [R4 base VS]. Binding strength weakened from preferred to example and AU-extended VS replaced.",
       "severity": "WARNING"
     },
     {
       "id": "rule-12",
       "type": "STRUCTURAL",
-      "sourcePath": "Location.address.line",
-      "targetPath": "Location.address.line",
-      "description": "MustSupport added in target",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-13",
-      "type": "STRUCTURAL",
-      "sourcePath": "Location.address.city",
-      "targetPath": "Location.address.city",
-      "description": "MustSupport added in target",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-14",
-      "type": "STRUCTURAL",
-      "sourcePath": "Location.address.state",
-      "targetPath": "Location.address.state",
-      "description": "MustSupport added in target",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-15",
-      "type": "TERMINOLOGY",
-      "sourcePath": "Location.address.state",
-      "targetPath": "Location.address.state",
-      "description": "Binding added in target: extensible(http://hl7.org/fhir/us/core/ValueSet/us-core-usps-state)",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-16",
-      "type": "STRUCTURAL",
-      "sourcePath": "Location.address.postalCode",
-      "targetPath": "Location.address.postalCode",
-      "description": "MustSupport added in target",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-17",
-      "type": "STRUCTURAL",
-      "sourcePath": "Location.physicalType",
-      "targetPath": "Location.physicalType",
-      "description": "MustSupport removed in target",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-18",
-      "type": "TERMINOLOGY",
-      "sourcePath": "Location.physicalType",
-      "targetPath": "Location.physicalType",
-      "description": "Binding changed: preferred(http://terminology.hl7.org.au/ValueSet/location-physical-type-extended) -> example(http://hl7.org/fhir/ValueSet/location-physical-type)",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-19",
-      "type": "EXTENSION",
-      "sourcePath": "Location.physicalType.extension(http://hl7.org/fhir/StructureDefinition/obligation)",
-      "targetPath": "Location.physicalType",
-      "description": "Extension removed in target element: http://hl7.org/fhir/StructureDefinition/obligation",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-20",
-      "type": "STRUCTURAL",
       "sourcePath": "Location.managingOrganization",
       "targetPath": "Location.managingOrganization",
-      "description": "Reference target profile changed: [http://hl7.org.au/fhir/core/StructureDefinition/au-core-organization] -> [http://hl7.org/fhir/us/core/StructureDefinition/us-core-organization]",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-21",
-      "type": "EXTENSION",
-      "sourcePath": "Location.managingOrganization.extension(http://hl7.org/fhir/StructureDefinition/obligation)",
-      "targetPath": "Location.managingOrganization",
-      "description": "Extension removed in target element: http://hl7.org/fhir/StructureDefinition/obligation",
+      "description": "managingOrganization reference target changed: source constrains to au-core-organization (http://hl7.org.au/fhir/core/StructureDefinition/au-core-organization) → target constrains to us-core-organization (http://hl7.org/fhir/us/core/StructureDefinition/us-core-organization). Different realm-specific organization profiles.",
       "severity": "WARNING"
     }
   ]

@@ -1,4 +1,4 @@
-{
+﻿{
   "resourceType": "CarePlan",
   "id": "r4-careplan-001",
   "meta": {
@@ -8,8 +8,33 @@
   },
   "text": {
     "status": "additional",
-    "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\"><p>Diabetes management plan for James Williams including diet, exercise, and medication management. Follow-up every 3 months with HbA1c monitoring.</p></div>"
+    "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\"><p><b>Diabetes Management Plan</b> - Active plan for James Robert Williams. Period: 2025-11-20 to 2026-05-20. Author: Dr. Emily Chen. Goal: HbA1c &lt; 7%. Activities: quarterly HbA1c monitoring, dietary counselling, and metformin therapy review.</p></div>"
   },
+  "identifier": [
+    {
+      "use": "official",
+      "system": "http://hospital.example.org/careplans",
+      "value": "CP-2025-0042"
+    }
+  ],
+  "instantiatesCanonical": [
+    "http://example.org/fhir/PlanDefinition/diabetes-management-protocol"
+  ],
+  "instantiatesUri": [
+    "https://www.diabetes.org/clinical-guidelines/standards-of-medical-care"
+  ],
+  "basedOn": [
+    {
+      "reference": "CarePlan/r4-careplan-previous-001",
+      "display": "Previous Diabetes Management Plan"
+    }
+  ],
+  "replaces": [
+    {
+      "reference": "CarePlan/r4-careplan-old-001",
+      "display": "Retired Diabetes Management Plan 2024"
+    }
+  ],
   "status": "active",
   "intent": "plan",
   "category": [
@@ -20,32 +45,94 @@
           "code": "assess-plan",
           "display": "Assessment and Plan of Treatment"
         }
-      ]
+      ],
+      "text": "Assessment and Plan of Treatment"
     }
   ],
   "title": "Diabetes Management Plan",
+  "description": "Comprehensive diabetes management plan including glycaemic control targets, medication management (metformin), dietary counselling, regular HbA1c monitoring every 3 months, and annual retinal and foot examinations.",
   "subject": {
     "reference": "Patient/r4-patient-001",
-    "display": "James Williams"
+    "display": "James Robert Williams"
+  },
+  "encounter": {
+    "reference": "Encounter/r4-encounter-001",
+    "display": "Outpatient Consultation 2025-11-20"
   },
   "period": {
     "start": "2025-11-20",
     "end": "2026-05-20"
   },
+  "created": "2025-11-20",
   "author": {
     "reference": "Practitioner/r4-practitioner-001",
     "display": "Dr. Emily Chen"
   },
+  "contributor": [
+    {
+      "reference": "Practitioner/r4-practitioner-002",
+      "display": "Dr. Sarah Lee (Endocrinologist)"
+    }
+  ],
+  "careTeam": [
+    {
+      "reference": "CareTeam/r4-careteam-001",
+      "display": "Diabetes Care Team"
+    }
+  ],
   "addresses": [
     {
       "reference": "Condition/r4-condition-001",
       "display": "Type 2 diabetes mellitus"
     }
   ],
+  "supportingInfo": [
+    {
+      "reference": "Observation/r4-observation-001",
+      "display": "Blood Glucose (Fasting)"
+    }
+  ],
+  "goal": [
+    {
+      "reference": "Goal/r4-goal-001",
+      "display": "Maintain HbA1c below 7%"
+    }
+  ],
   "activity": [
     {
+      "outcomeCodeableConcept": [
+        {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "182992009",
+              "display": "Treatment completed"
+            }
+          ],
+          "text": "HbA1c monitoring completed"
+        }
+      ],
+      "outcomeReference": [
+        {
+          "reference": "Observation/r4-observation-hba1c-001",
+          "display": "HbA1c result"
+        }
+      ],
+      "progress": [
+        {
+          "authorReference": {
+            "reference": "Practitioner/r4-practitioner-001",
+            "display": "Dr. Emily Chen"
+          },
+          "time": "2025-11-20",
+          "text": "HbA1c at 7.8% - target not yet met; continuing metformin and lifestyle interventions."
+        }
+      ],
       "detail": {
         "kind": "ServiceRequest",
+        "instantiatesCanonical": [
+          "http://example.org/fhir/ActivityDefinition/hba1c-monitoring"
+        ],
         "code": {
           "coding": [
             {
@@ -56,15 +143,107 @@
           ],
           "text": "HbA1c Monitoring"
         },
-        "status": "scheduled",
+        "reasonCode": [
+          {
+            "coding": [
+              {
+                "system": "http://snomed.info/sct",
+                "code": "44054006",
+                "display": "Type 2 diabetes mellitus"
+              }
+            ]
+          }
+        ],
+        "reasonReference": [
+          {
+            "reference": "Condition/r4-condition-001",
+            "display": "Type 2 diabetes mellitus"
+          }
+        ],
+        "goal": [
+          {
+            "reference": "Goal/r4-goal-001",
+            "display": "Maintain HbA1c below 7%"
+          }
+        ],
+        "status": "in-progress",
+        "statusReason": {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "410521004",
+              "display": "Not yet started"
+            }
+          ],
+          "text": "Awaiting next quarterly test"
+        },
+        "doNotPerform": false,
         "scheduledTiming": {
           "repeat": {
             "frequency": 1,
             "period": 3,
             "periodUnit": "mo"
           }
-        }
+        },
+        "location": {
+          "reference": "Location/r4-location-001",
+          "display": "General Practice Clinic - Room 3"
+        },
+        "performer": [
+          {
+            "reference": "Practitioner/r4-practitioner-001",
+            "display": "Dr. Emily Chen"
+          }
+        ],
+        "dailyAmount": {
+          "value": 1,
+          "unit": "test",
+          "system": "http://unitsofmeasure.org",
+          "code": "{test}"
+        },
+        "description": "Quarterly HbA1c blood test to monitor long-term glycaemic control. Target: HbA1c < 7%."
       }
+    },
+    {
+      "detail": {
+        "kind": "ServiceRequest",
+        "code": {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "11816003",
+              "display": "Diet education"
+            }
+          ],
+          "text": "Dietary Counselling"
+        },
+        "status": "scheduled",
+        "doNotPerform": false,
+        "scheduledTiming": {
+          "repeat": {
+            "frequency": 1,
+            "period": 6,
+            "periodUnit": "mo"
+          }
+        },
+        "performer": [
+          {
+            "reference": "Practitioner/r4-practitioner-dietitian-001",
+            "display": "Ms. Jane Doe (Dietitian)"
+          }
+        ],
+        "description": "Structured dietary counselling focused on carbohydrate counting, meal planning, and weight management to support glycaemic control."
+      }
+    }
+  ],
+  "note": [
+    {
+      "authorReference": {
+        "reference": "Practitioner/r4-practitioner-001",
+        "display": "Dr. Emily Chen"
+      },
+      "time": "2025-11-20",
+      "text": "Patient engaged with management plan. Expressed willingness to improve diet and exercise. Penicillin allergy noted - avoid any beta-lactam medications."
     }
   ]
 }

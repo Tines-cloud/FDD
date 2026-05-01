@@ -1,104 +1,88 @@
 {
-  "pairId" : "tk-soft-practitioner-vs-iit-proj-practitioner",
-  "sourceClasspath" : "custom-profiles/tk-soft/tk-soft-practitioner.json",
-  "targetClasspath" : "custom-profiles/iit-proj/iit-proj-practitioner.json",
-  "drifts" : [ {
-    "id" : "rule-1",
-    "type" : "CARDINALITY",
-    "sourcePath" : "Practitioner.name",
-    "targetPath" : "Practitioner.name",
-    "description" : "Cardinality changed: [1..*] -> [0..*]",
-    "severity" : "INFO"
-  }, {
-    "id" : "rule-2",
-    "type" : "CARDINALITY",
-    "sourcePath" : "Practitioner.name.family",
-    "targetPath" : "Practitioner.name.family",
-    "description" : "Cardinality changed: [1..1] -> [0..1]",
-    "severity" : "INFO"
-  }, {
-    "id" : "rule-3",
-    "type" : "STRUCTURAL",
-    "sourcePath" : "Practitioner.name.family",
-    "targetPath" : "Practitioner.name.family",
-    "description" : "MustSupport removed in target",
-    "severity" : "INFO"
-  }, {
-    "id" : "rule-4",
-    "type" : "CARDINALITY",
-    "sourcePath" : "Practitioner.name.given",
-    "targetPath" : "Practitioner.name.given",
-    "description" : "Cardinality changed: [1..*] -> [0..0]",
-    "severity" : "INFO"
-  }, {
-    "id" : "rule-5",
-    "type" : "STRUCTURAL",
-    "sourcePath" : "Practitioner.name.given",
-    "targetPath" : "Practitioner.name.given",
-    "description" : "MustSupport removed in target",
-    "severity" : "INFO"
-  }, {
-    "id" : "rule-6",
-    "type" : "CARDINALITY",
-    "sourcePath" : "Practitioner.telecom",
-    "targetPath" : "Practitioner.telecom",
-    "description" : "Cardinality changed: [0..*] -> [0..0]",
-    "severity" : "WARNING"
-  }, {
-    "id" : "rule-7",
-    "type" : "STRUCTURAL",
-    "sourcePath" : "Practitioner.telecom",
-    "targetPath" : "Practitioner.telecom",
-    "description" : "MustSupport removed in target",
-    "severity" : "INFO"
-  }, {
-    "id" : "rule-8",
-    "type" : "CARDINALITY",
-    "sourcePath" : "Practitioner.address",
-    "targetPath" : "Practitioner.address",
-    "description" : "Cardinality changed: [0..*] -> [0..0]",
-    "severity" : "WARNING"
-  }, {
-    "id" : "rule-9",
-    "type" : "STRUCTURAL",
-    "sourcePath" : "Practitioner.address",
-    "targetPath" : "Practitioner.address",
-    "description" : "MustSupport removed in target",
-    "severity" : "INFO"
-  }, {
-    "id" : "rule-10",
-    "type" : "STRUCTURAL",
-    "sourcePath" : "Practitioner.birthDate",
-    "targetPath" : "Practitioner.birthDate",
-    "description" : "MustSupport removed in target",
-    "severity" : "INFO"
-  }, {
-    "id" : "rule-11",
-    "type" : "CARDINALITY",
-    "sourcePath" : "Practitioner.qualification",
-    "targetPath" : "Practitioner.qualification",
-    "description" : "Cardinality changed: [1..*] -> [0..*]",
-    "severity" : "INFO"
-  }, {
-    "id" : "rule-12",
-    "type" : "STRUCTURAL",
-    "sourcePath" : "Practitioner.qualification.code",
-    "targetPath" : "Practitioner.qualification.code",
-    "description" : "MustSupport removed in target",
-    "severity" : "INFO"
-  }, {
-    "id" : "rule-13",
-    "type" : "EXTENSION",
-    "sourcePath" : "",
-    "targetPath" : "Practitioner.extension:researchRole",
-    "description" : "Extension added in target profile: Practitioner.extension:researchRole",
-    "severity" : "WARNING"
-  }, {
-    "id" : "rule-14",
-    "type" : "EXTENSION",
-    "sourcePath" : "Practitioner.extension:registrationNumber",
-    "targetPath" : "",
-    "description" : "Extension removed in target profile: Practitioner.extension:registrationNumber (was required)",
-    "severity" : "WARNING"
-  } ]
+  "pairId": "tk-soft-practitioner-vs-iit-proj-practitioner",
+  "sourceClasspath": "custom-profiles/tk-soft/tk-soft-practitioner.json",
+  "targetClasspath": "custom-profiles/iit-proj/iit-proj-practitioner.json",
+  "_notes": "Source: tk-soft-practitioner (clinical). Target: iit-proj-practitioner (research, extreme blinding). Target bans name.given, telecom, and address for practitioner de-identification. Mandatory registration extension in source has no equivalent in target. Target adds optional research-role extension.",
+  "drifts": [
+    {
+      "id": "rule-1",
+      "type": "EXTENSION",
+      "sourcePath": "Practitioner.extension:registrationNumber",
+      "targetPath": "Practitioner.extension:registrationNumber",
+      "description": "Mandatory extension registrationNumber[1..1 mustSupport=true] present in source is removed in target. Source required this extension; target does not define it.",
+      "severity": "ERROR"
+    },
+    {
+      "id": "rule-2",
+      "type": "EXTENSION",
+      "sourcePath": "Practitioner.extension:researchRole",
+      "targetPath": "Practitioner.extension:researchRole",
+      "description": "New optional extension researchRole[0..1 mustSupport=true] added in target. Source does not define this extension.",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-3",
+      "type": "CARDINALITY",
+      "sourcePath": "Practitioner.name",
+      "targetPath": "Practitioner.name",
+      "description": "name cardinality relaxed: source [1..*] → target [0..*] (inherits R4 base). Min decreased from 1 to 0. MustSupport preserved in both.",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-4",
+      "type": "CARDINALITY",
+      "sourcePath": "Practitioner.name.family",
+      "targetPath": "Practitioner.name.family",
+      "description": "name.family cardinality relaxed from [1..1 mustSupport=true] to [0..1 mustSupport=false] (target inherits R4 base). Min decreased and MustSupport removed.",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-5",
+      "type": "CARDINALITY",
+      "sourcePath": "Practitioner.name.given",
+      "targetPath": "Practitioner.name.given",
+      "description": "name.given cardinality changed: source [1..* mustSupport=true] → target [0..0]. name.given completely banned in target for practitioner blinding. Source required at least one given name; target prohibits it.",
+      "severity": "ERROR"
+    },
+    {
+      "id": "rule-6",
+      "type": "CARDINALITY",
+      "sourcePath": "Practitioner.telecom",
+      "targetPath": "Practitioner.telecom",
+      "description": "telecom cardinality changed: source [0..* mustSupport=true] → target [0..0]. telecom completely banned in target for practitioner blinding.",
+      "severity": "ERROR"
+    },
+    {
+      "id": "rule-7",
+      "type": "CARDINALITY",
+      "sourcePath": "Practitioner.address",
+      "targetPath": "Practitioner.address",
+      "description": "address cardinality changed: source [0..* mustSupport=true] → target [0..0]. address completely banned in target for practitioner blinding.",
+      "severity": "ERROR"
+    },
+    {
+      "id": "rule-8",
+      "type": "STRUCTURAL",
+      "sourcePath": "Practitioner.birthDate",
+      "targetPath": "Practitioner.birthDate",
+      "description": "MustSupport removed on birthDate (source mustSupport=true; target does not constrain birthDate, inherits R4 base [0..1 mustSupport=false]).",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-9",
+      "type": "CARDINALITY",
+      "sourcePath": "Practitioner.qualification",
+      "targetPath": "Practitioner.qualification",
+      "description": "qualification cardinality relaxed: source [1..*] → target [0..*] (target inherits R4 base min=0). Min decreased. MustSupport preserved in both.",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-10",
+      "type": "STRUCTURAL",
+      "sourcePath": "Practitioner.qualification.code",
+      "targetPath": "Practitioner.qualification.code",
+      "description": "MustSupport removed on qualification.code (source mustSupport=true; target does not constrain qualification.code in differential; both inherit R4 base [1..1 mustSupport=false]). Required element with MustSupport removed.",
+      "severity": "WARNING"
+    }
+  ]
 }

@@ -1,125 +1,112 @@
 {
-  "pairId" : "hemas-organization-vs-r4-organization",
-  "sourceClasspath" : "custom-profiles/hemas/hemas-organization.json",
-  "targetClasspath" : "standard-profiles/r4/organization.profile.json",
-  "drifts" : [ {
-    "id" : "rule-1",
-    "type" : "STRUCTURAL",
-    "sourcePath" : "Organization.extension",
-    "targetPath" : "Organization.extension",
-    "description" : "Slicing changed: rules=open, discriminators=[value:url] -> none",
-    "severity" : "WARNING"
-  }, {
-    "id" : "rule-2",
-    "type" : "CARDINALITY",
-    "sourcePath" : "Organization.identifier",
-    "targetPath" : "Organization.identifier",
-    "description" : "Cardinality changed: [1..*] -> [0..*]",
-    "severity" : "INFO"
-  }, {
-    "id" : "rule-3",
-    "type" : "STRUCTURAL",
-    "sourcePath" : "Organization.identifier",
-    "targetPath" : "Organization.identifier",
-    "description" : "MustSupport removed in target",
-    "severity" : "INFO"
-  }, {
-    "id" : "rule-4",
-    "type" : "CARDINALITY",
-    "sourcePath" : "Organization.type",
-    "targetPath" : "Organization.type",
-    "description" : "Cardinality changed: [1..*] -> [0..*]",
-    "severity" : "INFO"
-  }, {
-    "id" : "rule-5",
-    "type" : "STRUCTURAL",
-    "sourcePath" : "Organization.type",
-    "targetPath" : "Organization.type",
-    "description" : "MustSupport removed in target",
-    "severity" : "INFO"
-  }, {
-    "id" : "rule-6",
-    "type" : "CARDINALITY",
-    "sourcePath" : "Organization.name",
-    "targetPath" : "Organization.name",
-    "description" : "Cardinality changed: [1..1] -> [0..1]",
-    "severity" : "INFO"
-  }, {
-    "id" : "rule-7",
-    "type" : "STRUCTURAL",
-    "sourcePath" : "Organization.name",
-    "targetPath" : "Organization.name",
-    "description" : "MustSupport removed in target",
-    "severity" : "INFO"
-  }, {
-    "id" : "rule-8",
-    "type" : "STRUCTURAL",
-    "sourcePath" : "Organization.telecom",
-    "targetPath" : "Organization.telecom",
-    "description" : "MustSupport removed in target",
-    "severity" : "INFO"
-  }, {
-    "id" : "rule-9",
-    "type" : "STRUCTURAL",
-    "sourcePath" : "Organization.address",
-    "targetPath" : "Organization.address",
-    "description" : "MustSupport removed in target",
-    "severity" : "INFO"
-  }, {
-    "id" : "rule-10",
-    "type" : "STRUCTURAL",
-    "sourcePath" : "Organization.partOf",
-    "targetPath" : "Organization.partOf",
-    "description" : "MustSupport removed in target",
-    "severity" : "INFO"
-  }, {
-    "id" : "rule-11",
-    "type" : "CARDINALITY",
-    "sourcePath" : "Organization.contact",
-    "targetPath" : "Organization.contact",
-    "description" : "Cardinality changed: [1..*] -> [0..*]",
-    "severity" : "INFO"
-  }, {
-    "id" : "rule-12",
-    "type" : "STRUCTURAL",
-    "sourcePath" : "Organization.contact",
-    "targetPath" : "Organization.contact",
-    "description" : "MustSupport removed in target",
-    "severity" : "INFO"
-  }, {
-    "id" : "rule-13",
-    "type" : "STRUCTURAL",
-    "sourcePath" : "Organization.contact.purpose",
-    "targetPath" : "Organization.contact.purpose",
-    "description" : "MustSupport removed in target",
-    "severity" : "INFO"
-  }, {
-    "id" : "rule-14",
-    "type" : "STRUCTURAL",
-    "sourcePath" : "Organization.contact.name",
-    "targetPath" : "Organization.contact.name",
-    "description" : "MustSupport removed in target",
-    "severity" : "INFO"
-  }, {
-    "id" : "rule-15",
-    "type" : "STRUCTURAL",
-    "sourcePath" : "Organization.contact.telecom",
-    "targetPath" : "Organization.contact.telecom",
-    "description" : "MustSupport removed in target",
-    "severity" : "INFO"
-  }, {
-    "id" : "rule-16",
-    "type" : "EXTENSION",
-    "sourcePath" : "Organization.extension:licenseNumber",
-    "targetPath" : "",
-    "description" : "Extension removed in target profile: Organization.extension:licenseNumber (was required)",
-    "severity" : "WARNING"
-  }, {
-    "id" : "rule-17",
-    "type" : "EXTENSION",
-    "sourcePath" : "Organization.extension:accreditationStatus",
-    "targetPath" : "",
-    "description" : "Extension removed in target profile: Organization.extension:accreditationStatus (was mustSupport)",
-    "severity" : "WARNING"
-  } ]
+  "pairId": "hemas-organization-vs-r4-organization",
+  "sourceClasspath": "custom-profiles/hemas/hemas-organization.json",
+  "targetClasspath": "standard-profiles/r4/organization.profile.json",
+  "_notes": "Source: hemas-organization (hospital). Target: R4 base Organization (unconstrained). All drifts are relaxations from hemas-specific constraints back to the R4 base. Mandatory licenseNumber extension, mandatory type, mandatory contact all removed. R4 base adds org-1 (error) structural constraint and organization-type example binding.",
+  "drifts": [
+    {
+      "id": "rule-1",
+      "type": "EXTENSION",
+      "sourcePath": "Organization.extension:licenseNumber",
+      "targetPath": "Organization.extension:licenseNumber",
+      "description": "Mandatory extension licenseNumber[1..1 mustSupport=true] present in source is removed in target (R4 base has no extension constraints).",
+      "severity": "ERROR"
+    },
+    {
+      "id": "rule-2",
+      "type": "EXTENSION",
+      "sourcePath": "Organization.extension:accreditationStatus",
+      "targetPath": "Organization.extension:accreditationStatus",
+      "description": "Optional extension accreditationStatus[0..1 mustSupport=true] present in source is removed in target.",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-3",
+      "type": "STRUCTURAL",
+      "sourcePath": "Organization.extension",
+      "targetPath": "Organization.extension",
+      "description": "Source extension slicing removed in target: source defines slices [licenseNumber, accreditationStatus]; R4 base has no extension slicing.",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-4",
+      "type": "CARDINALITY",
+      "sourcePath": "Organization.identifier",
+      "targetPath": "Organization.identifier",
+      "description": "identifier MustSupport removed: source [1..* mustSupport=true] → target [0..* mustSupport=false] (R4 base). Min decreased and MS removed.",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-5",
+      "type": "CARDINALITY",
+      "sourcePath": "Organization.type",
+      "targetPath": "Organization.type",
+      "description": "Organization.type MustSupport removed from required element and cardinality relaxed: source [1..* mustSupport=true] → target [0..* mustSupport=false example:organization-type] (R4 base). Min decreased and MS removed. New example binding added in target.",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-6",
+      "type": "CARDINALITY",
+      "sourcePath": "Organization.name",
+      "targetPath": "Organization.name",
+      "description": "name MustSupport removed from required element: source [1..1 mustSupport=true] → target [0..1 mustSupport=false] (R4 base). Min decreased and MS removed.",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-7",
+      "type": "STRUCTURAL",
+      "sourcePath": "Organization.telecom",
+      "targetPath": "Organization.telecom",
+      "description": "telecom MustSupport removed: source mustSupport=true; R4 base mustSupport=false. Optional element.",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-8",
+      "type": "STRUCTURAL",
+      "sourcePath": "Organization.address",
+      "targetPath": "Organization.address",
+      "description": "address MustSupport removed: source mustSupport=true; R4 base mustSupport=false. Optional element.",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-9",
+      "type": "STRUCTURAL",
+      "sourcePath": "Organization.partOf",
+      "targetPath": "Organization.partOf",
+      "description": "partOf MustSupport removed: source mustSupport=true; R4 base mustSupport=false. Optional element.",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-10",
+      "type": "CARDINALITY",
+      "sourcePath": "Organization.contact",
+      "targetPath": "Organization.contact",
+      "description": "contact cardinality relaxed and MustSupport removed from required element: source [1..* mustSupport=true] → target [0..* mustSupport=false] (R4 base). Min decreased and MS removed.",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-11",
+      "type": "STRUCTURAL",
+      "sourcePath": "Organization.contact.purpose",
+      "targetPath": "Organization.contact.purpose",
+      "description": "contact.purpose MustSupport removed: source mustSupport=true; R4 base mustSupport=false. Same extensible:contactentity-type binding preserved in R4 base. MS removed from optional element.",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-12",
+      "type": "STRUCTURAL",
+      "sourcePath": "Organization.contact.name",
+      "targetPath": "Organization.contact.name",
+      "description": "contact.name MustSupport removed: source mustSupport=true; R4 base mustSupport=false. MS removed from optional element.",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-13",
+      "type": "STRUCTURAL",
+      "sourcePath": "Organization.contact.telecom",
+      "targetPath": "Organization.contact.telecom",
+      "description": "contact.telecom MustSupport removed: source mustSupport=true; R4 base mustSupport=false. MS removed from optional element.",
+      "severity": "INFO"
+    }
+  ]
 }

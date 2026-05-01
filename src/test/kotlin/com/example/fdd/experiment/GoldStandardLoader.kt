@@ -20,20 +20,30 @@ object GoldStandardLoader {
 
     /**
      * Load all gold-standard pairs from the test classpath.
+     *
+     * Loads JSON files from `gold-standard/`
      */
     fun loadAll(): List<GoldStandardPair> {
         val resolver = PathMatchingResourcePatternResolver()
         return try {
-            val resources = resolver.getResources("classpath:gold-standard/*.json")
-            resources.mapNotNull { resource ->
+            val resources = resolver.getResources("classpath*:gold-standard*/*.json")
+            val byPair = linkedMapOf<String, GoldStandardPair>()
+            for (resource in resources) {
                 try {
-                    resource.inputStream.use {
+                    val pair = resource.inputStream.use {
                         objectMapper.readValue(it, GoldStandardPair::class.java)
+                    }
+                    val existing = byPair[pair.pairId]
+                    val isManual = resource.url?.toString()?.contains("gold-standard") == true
+                    if (existing == null || isManual) {
+                        byPair[pair.pairId] = pair
                     }
                 } catch (ex: Exception) {
                     log.warn("Failed to load gold standard file: {}", resource.filename, ex)
-                    null
                 }
+            }
+            byPair.values.toList().also {
+                log.info("Loaded {} gold-standard pair(s) from classpath", it.size)
             }
         } catch (ex: Exception) {
             log.warn("No gold-standard resources found", ex)
@@ -46,14 +56,33 @@ object GoldStandardLoader {
      * and a gold-standard [GoldStandardPair].
      *
      * Match criteria: same [DriftType], sourcePath, and targetPath.
+     * Null and empty-string paths are treated as equivalent, since gold files
+     * may serialise "no path" as `null` while the rule-based detector emits "".
+     *
+     * **Multiset matching**: a gold standard file may legally have two items with
+     * the same (type, sourcePath, targetPath) triple but different semantic reasons
+     * (e.g. mustSupport change AND a new constraint on the same element path).
+     * Converting to a Set would collapse those, under-counting the gold denominator
+     * and inflating recall.  We therefore count occurrences and take the per-triple
+     * minimum of gold vs predicted counts to determine true positives.
      */
     fun evaluate(predicted: DriftReport, gold: GoldStandardPair): EvaluationMetrics {
-        val goldSet = gold.drifts.map { Triple(it.type, it.sourcePath, it.targetPath) }.toSet()
-        val predSet = predicted.items.map { Triple(it.type, it.sourcePath, it.targetPath) }.toSet()
+        fun norm(p: String?): String = p?.trim().orEmpty()
 
-        val tp = predSet.intersect(goldSet).size
-        val fp = predSet.size - tp
-        val fn = goldSet.size - tp
+        // Multiset: count how many times each triple appears
+        val goldCounts = gold.drifts
+            .map { Triple(it.type, norm(it.sourcePath), norm(it.targetPath)) }
+            .groupingBy { it }.eachCount()
+        val predCounts = predicted.items
+            .map { Triple(it.type, norm(it.sourcePath), norm(it.targetPath)) }
+            .groupingBy { it }.eachCount()
+
+        // TP = sum over all distinct triples of min(goldCount, predCount)
+        val tp = goldCounts.entries.sumOf { (triple, goldCount) ->
+            minOf(goldCount, predCounts.getOrDefault(triple, 0))
+        }
+        val fp = predicted.items.size - tp
+        val fn = gold.drifts.size - tp
 
         val precision = if (tp + fp > 0) tp.toDouble() / (tp + fp) else 0.0
         val recall = if (tp + fn > 0) tp.toDouble() / (tp + fn) else 0.0

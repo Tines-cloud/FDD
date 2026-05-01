@@ -1,279 +1,304 @@
 {
-  "pairId" : "tk-soft-allergyintolerance-vs-iit-proj-allergyintolerance",
-  "sourceClasspath" : "custom-profiles/tk-soft/tk-soft-allergyintolerance.json",
-  "targetClasspath" : "custom-profiles/iit-proj/iit-proj-allergyintolerance.json",
-  "drifts" : [ {
-    "id" : "rule-1",
-    "type" : "STRUCTURAL",
-    "sourcePath" : "AllergyIntolerance",
-    "targetPath" : "AllergyIntolerance",
-    "description" : "Constraints added in target: [iit-ai-1, iit-ai-2, iit-ai-3]",
-    "severity" : "WARNING"
-  }, {
-    "id" : "rule-2",
-    "type" : "STRUCTURAL",
-    "sourcePath" : "AllergyIntolerance",
-    "targetPath" : "AllergyIntolerance",
-    "description" : "Constraints removed in target: [tk-ai-1, tk-ai-2]",
-    "severity" : "WARNING"
-  }, {
-    "id" : "rule-3",
-    "type" : "CARDINALITY",
-    "sourcePath" : "AllergyIntolerance.verificationStatus",
-    "targetPath" : "AllergyIntolerance.verificationStatus",
-    "description" : "Cardinality changed: [0..1] -> [1..1]",
-    "severity" : "ERROR"
-  }, {
-    "id" : "rule-4",
-    "type" : "CARDINALITY",
-    "sourcePath" : "AllergyIntolerance.type",
-    "targetPath" : "AllergyIntolerance.type",
-    "description" : "Cardinality changed: [0..1] -> [1..1]",
-    "severity" : "ERROR"
-  }, {
-    "id" : "rule-5",
-    "type" : "TERMINOLOGY",
-    "sourcePath" : "AllergyIntolerance.type",
-    "targetPath" : "AllergyIntolerance.type",
-    "description" : "Binding changed: required(http://hl7.org/fhir/ValueSet/allergy-intolerance-type) -> required(http://hl7.org/fhir/ValueSet/allergy-intolerance-type|4.0.1)",
-    "severity" : "ERROR"
-  }, {
-    "id" : "rule-6",
-    "type" : "TERMINOLOGY",
-    "sourcePath" : "AllergyIntolerance.category",
-    "targetPath" : "AllergyIntolerance.category",
-    "description" : "Binding changed: required(http://hl7.org/fhir/ValueSet/allergy-intolerance-category) -> required(http://hl7.org/fhir/ValueSet/allergy-intolerance-category|4.0.1)",
-    "severity" : "ERROR"
-  }, {
-    "id" : "rule-7",
-    "type" : "CARDINALITY",
-    "sourcePath" : "AllergyIntolerance.criticality",
-    "targetPath" : "AllergyIntolerance.criticality",
-    "description" : "Cardinality changed: [0..1] -> [1..1]",
-    "severity" : "ERROR"
-  }, {
-    "id" : "rule-8",
-    "type" : "TERMINOLOGY",
-    "sourcePath" : "AllergyIntolerance.criticality",
-    "targetPath" : "AllergyIntolerance.criticality",
-    "description" : "Binding changed: required(http://hl7.org/fhir/ValueSet/allergy-intolerance-criticality) -> required(http://hl7.org/fhir/ValueSet/allergy-intolerance-criticality|4.0.1)",
-    "severity" : "ERROR"
-  }, {
-    "id" : "rule-9",
-    "type" : "TERMINOLOGY",
-    "sourcePath" : "AllergyIntolerance.code",
-    "targetPath" : "AllergyIntolerance.code",
-    "description" : "Binding changed: extensible(https://tk-soft.example.com/fhir/ValueSet/allergy-code) -> extensible(https://iit-proj.example.com/fhir/ValueSet/study-allergy-substance)",
-    "severity" : "WARNING"
-  }, {
-    "id" : "rule-10",
-    "type" : "CARDINALITY",
-    "sourcePath" : "AllergyIntolerance.code.coding.display",
-    "targetPath" : "AllergyIntolerance.code.coding.display",
-    "description" : "Cardinality changed: [0..1] -> [1..1]",
-    "severity" : "ERROR"
-  }, {
-    "id" : "rule-11",
-    "type" : "STRUCTURAL",
-    "sourcePath" : "AllergyIntolerance.code.coding.display",
-    "targetPath" : "AllergyIntolerance.code.coding.display",
-    "description" : "MustSupport added in target",
-    "severity" : "INFO"
-  }, {
-    "id" : "rule-12",
-    "type" : "STRUCTURAL",
-    "sourcePath" : "AllergyIntolerance.patient",
-    "targetPath" : "AllergyIntolerance.patient",
-    "description" : "Reference target profile changed: [https://tk-soft.example.com/fhir/StructureDefinition/Patient] -> [https://iit-proj.example.com/fhir/StructureDefinition/Patient]",
-    "severity" : "WARNING"
-  }, {
-    "id" : "rule-13",
-    "type" : "STRUCTURAL",
-    "sourcePath" : "AllergyIntolerance.encounter",
-    "targetPath" : "AllergyIntolerance.encounter",
-    "description" : "Reference target profile changed: [https://tk-soft.example.com/fhir/StructureDefinition/Encounter] -> [https://iit-proj.example.com/fhir/StructureDefinition/Encounter]",
-    "severity" : "WARNING"
-  }, {
-    "id" : "rule-14",
-    "type" : "STRUCTURAL",
-    "sourcePath" : "AllergyIntolerance.onset[x]",
-    "targetPath" : "AllergyIntolerance.onset[x]",
-    "description" : "Type changed: [Age, Period, dateTime] -> [dateTime]",
-    "severity" : "WARNING"
-  }, {
-    "id" : "rule-15",
-    "type" : "CARDINALITY",
-    "sourcePath" : "AllergyIntolerance.recorder",
-    "targetPath" : "AllergyIntolerance.recorder",
-    "description" : "Cardinality changed: [0..1] -> [0..0]",
-    "severity" : "WARNING"
-  }, {
-    "id" : "rule-16",
-    "type" : "STRUCTURAL",
-    "sourcePath" : "AllergyIntolerance.recorder",
-    "targetPath" : "AllergyIntolerance.recorder",
-    "description" : "Reference target profile changed: [https://tk-soft.example.com/fhir/StructureDefinition/Practitioner] -> [http://hl7.org/fhir/StructureDefinition/Patient, http://hl7.org/fhir/StructureDefinition/Practitioner, http://hl7.org/fhir/StructureDefinition/PractitionerRole, http://hl7.org/fhir/StructureDefinition/RelatedPerson]",
-    "severity" : "WARNING"
-  }, {
-    "id" : "rule-17",
-    "type" : "STRUCTURAL",
-    "sourcePath" : "AllergyIntolerance.recorder",
-    "targetPath" : "AllergyIntolerance.recorder",
-    "description" : "MustSupport removed in target",
-    "severity" : "INFO"
-  }, {
-    "id" : "rule-18",
-    "type" : "CARDINALITY",
-    "sourcePath" : "AllergyIntolerance.asserter",
-    "targetPath" : "AllergyIntolerance.asserter",
-    "description" : "Cardinality changed: [0..1] -> [0..0]",
-    "severity" : "WARNING"
-  }, {
-    "id" : "rule-19",
-    "type" : "STRUCTURAL",
-    "sourcePath" : "AllergyIntolerance.asserter",
-    "targetPath" : "AllergyIntolerance.asserter",
-    "description" : "Reference target profile changed: [https://tk-soft.example.com/fhir/StructureDefinition/Patient, https://tk-soft.example.com/fhir/StructureDefinition/Practitioner] -> [http://hl7.org/fhir/StructureDefinition/Patient, http://hl7.org/fhir/StructureDefinition/Practitioner, http://hl7.org/fhir/StructureDefinition/PractitionerRole, http://hl7.org/fhir/StructureDefinition/RelatedPerson]",
-    "severity" : "WARNING"
-  }, {
-    "id" : "rule-20",
-    "type" : "STRUCTURAL",
-    "sourcePath" : "AllergyIntolerance.asserter",
-    "targetPath" : "AllergyIntolerance.asserter",
-    "description" : "MustSupport removed in target",
-    "severity" : "INFO"
-  }, {
-    "id" : "rule-21",
-    "type" : "STRUCTURAL",
-    "sourcePath" : "AllergyIntolerance.lastOccurrence",
-    "targetPath" : "AllergyIntolerance.lastOccurrence",
-    "description" : "MustSupport added in target",
-    "severity" : "INFO"
-  }, {
-    "id" : "rule-22",
-    "type" : "CARDINALITY",
-    "sourcePath" : "AllergyIntolerance.reaction",
-    "targetPath" : "AllergyIntolerance.reaction",
-    "description" : "Cardinality changed: [0..*] -> [1..*]",
-    "severity" : "ERROR"
-  }, {
-    "id" : "rule-23",
-    "type" : "TERMINOLOGY",
-    "sourcePath" : "AllergyIntolerance.reaction.substance",
-    "targetPath" : "AllergyIntolerance.reaction.substance",
-    "description" : "Binding changed: extensible(https://tk-soft.example.com/fhir/ValueSet/allergy-substance) -> example(http://hl7.org/fhir/ValueSet/substance-code)",
-    "severity" : "WARNING"
-  }, {
-    "id" : "rule-24",
-    "type" : "TERMINOLOGY",
-    "sourcePath" : "AllergyIntolerance.reaction.manifestation",
-    "targetPath" : "AllergyIntolerance.reaction.manifestation",
-    "description" : "Binding changed: extensible(https://tk-soft.example.com/fhir/ValueSet/allergy-manifestation) -> example(http://hl7.org/fhir/ValueSet/clinical-findings)",
-    "severity" : "WARNING"
-  }, {
-    "id" : "rule-25",
-    "type" : "STRUCTURAL",
-    "sourcePath" : "AllergyIntolerance.reaction.description",
-    "targetPath" : "AllergyIntolerance.reaction.description",
-    "description" : "MustSupport added in target",
-    "severity" : "INFO"
-  }, {
-    "id" : "rule-26",
-    "type" : "CARDINALITY",
-    "sourcePath" : "AllergyIntolerance.reaction.onset",
-    "targetPath" : "AllergyIntolerance.reaction.onset",
-    "description" : "Cardinality changed: [0..1] -> [1..1]",
-    "severity" : "ERROR"
-  }, {
-    "id" : "rule-27",
-    "type" : "CARDINALITY",
-    "sourcePath" : "AllergyIntolerance.reaction.severity",
-    "targetPath" : "AllergyIntolerance.reaction.severity",
-    "description" : "Cardinality changed: [0..1] -> [1..1]",
-    "severity" : "ERROR"
-  }, {
-    "id" : "rule-28",
-    "type" : "STRUCTURAL",
-    "sourcePath" : "AllergyIntolerance.reaction.exposureRoute",
-    "targetPath" : "AllergyIntolerance.reaction.exposureRoute",
-    "description" : "MustSupport added in target",
-    "severity" : "INFO"
-  }, {
-    "id" : "rule-29",
-    "type" : "EXTENSION",
-    "sourcePath" : "",
-    "targetPath" : "AllergyIntolerance.extension:saeAssessment",
-    "description" : "Extension added in target profile: AllergyIntolerance.extension:saeAssessment",
-    "severity" : "WARNING"
-  }, {
-    "id" : "rule-30",
-    "type" : "EXTENSION",
-    "sourcePath" : "",
-    "targetPath" : "AllergyIntolerance.extension:causalityAssessment",
-    "description" : "Extension added in target profile: AllergyIntolerance.extension:causalityAssessment",
-    "severity" : "WARNING"
-  }, {
-    "id" : "rule-31",
-    "type" : "EXTENSION",
-    "sourcePath" : "",
-    "targetPath" : "AllergyIntolerance.extension:studyDrugRelation",
-    "description" : "Extension added in target profile: AllergyIntolerance.extension:studyDrugRelation",
-    "severity" : "WARNING"
-  }, {
-    "id" : "rule-32",
-    "type" : "STRUCTURAL",
-    "sourcePath" : "",
-    "targetPath" : "AllergyIntolerance.reaction.manifestation.id",
-    "description" : "Element added in target profile: AllergyIntolerance.reaction.manifestation.id",
-    "severity" : "INFO"
-  }, {
-    "id" : "rule-33",
-    "type" : "STRUCTURAL",
-    "sourcePath" : "",
-    "targetPath" : "AllergyIntolerance.reaction.manifestation.extension",
-    "description" : "Element added in target profile: AllergyIntolerance.reaction.manifestation.extension",
-    "severity" : "INFO"
-  }, {
-    "id" : "rule-34",
-    "type" : "STRUCTURAL",
-    "sourcePath" : "",
-    "targetPath" : "AllergyIntolerance.reaction.manifestation.coding",
-    "description" : "Element added in target profile: AllergyIntolerance.reaction.manifestation.coding",
-    "severity" : "ERROR"
-  }, {
-    "id" : "rule-35",
-    "type" : "STRUCTURAL",
-    "sourcePath" : "",
-    "targetPath" : "AllergyIntolerance.reaction.manifestation.coding:meddra",
-    "description" : "New slice 'meddra' added in target profile",
-    "severity" : "INFO"
-  }, {
-    "id" : "rule-36",
-    "type" : "STRUCTURAL",
-    "sourcePath" : "",
-    "targetPath" : "AllergyIntolerance.reaction.manifestation.text",
-    "description" : "Element added in target profile: AllergyIntolerance.reaction.manifestation.text",
-    "severity" : "INFO"
-  }, {
-    "id" : "rule-37",
-    "type" : "EXTENSION",
-    "sourcePath" : "AllergyIntolerance.extension:allergySource",
-    "targetPath" : "",
-    "description" : "Extension removed in target profile: AllergyIntolerance.extension:allergySource (was mustSupport)",
-    "severity" : "WARNING"
-  }, {
-    "id" : "rule-38",
-    "type" : "EXTENSION",
-    "sourcePath" : "AllergyIntolerance.extension:confirmedBy",
-    "targetPath" : "",
-    "description" : "Extension removed in target profile: AllergyIntolerance.extension:confirmedBy (was mustSupport)",
-    "severity" : "WARNING"
-  }, {
-    "id" : "rule-39",
-    "type" : "EXTENSION",
-    "sourcePath" : "AllergyIntolerance.extension:allergyEndReason",
-    "targetPath" : "",
-    "description" : "Extension removed in target profile: AllergyIntolerance.extension:allergyEndReason (was mustSupport)",
-    "severity" : "WARNING"
-  } ]
+  "pairId": "tk-soft-allergyintolerance-vs-iit-proj-allergyintolerance",
+  "sourceClasspath": "custom-profiles/tk-soft/tk-soft-allergyintolerance.json",
+  "targetClasspath": "custom-profiles/iit-proj/iit-proj-allergyintolerance.json",
+  "_notes": "Hand-curated by reading both differentials in full. Source (tk-soft) has 2 root constraints, 3 custom extensions (allergySource, confirmedBy, allergyEndReason), and modestly constrained clinical fields. Target (iit-proj) replaces all 3 extensions with clinical-trial-specific ones (saeAssessment, causalityAssessment, studyDrugRelation), adds 3 new root constraints (iit-ai-1 error, iit-ai-2 warning, iit-ai-3 error), tightens several cardinalities (verificationStatus, type, criticality, reaction, reaction.onset, reaction.severity all become min=1), bans recorder and asserter (max=0), narrows onset[x] types to dateTime only, changes code binding to iit-proj ValueSet, and adds reaction.manifestation.coding slicing with meddra slice. clinicalStatus, code.coding, code.coding.system, code.coding.code, recordedDate, and note are identical between profiles.",
+  "drifts": [
+    {
+      "id": "rule-1",
+      "type": "STRUCTURAL",
+      "sourcePath": "AllergyIntolerance",
+      "targetPath": "AllergyIntolerance",
+      "description": "Root constraints removed in target: [tk-ai-1 (error: AllergyIntolerance must have a code or a reaction), tk-ai-2 (warning: Active allergies should have a clinical status)]. These constraints no longer apply in target profile.",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-2",
+      "type": "STRUCTURAL",
+      "sourcePath": "AllergyIntolerance",
+      "targetPath": "AllergyIntolerance",
+      "description": "New constraint 'iit-ai-1' added in target (severity: error): 'Medication allergies must use MedDRA coding' — expression: category.where(value='medication').exists() implies reaction.manifestation.coding.where(system='http://www.meddra.org').exists(). Not present in source profile.",
+      "severity": "ERROR"
+    },
+    {
+      "id": "rule-3",
+      "type": "STRUCTURAL",
+      "sourcePath": "AllergyIntolerance",
+      "targetPath": "AllergyIntolerance",
+      "description": "New constraint 'iit-ai-2' added in target (severity: warning): 'High criticality allergies should trigger SAE assessment' — expression: criticality = 'high' implies extension.where(url='...sae-assessment').exists(). Not present in source profile.",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-4",
+      "type": "STRUCTURAL",
+      "sourcePath": "AllergyIntolerance",
+      "targetPath": "AllergyIntolerance",
+      "description": "New constraint 'iit-ai-3' added in target (severity: error): 'Must have at least one reaction recorded' — expression: reaction.exists(). Not present in source profile.",
+      "severity": "ERROR"
+    },
+    {
+      "id": "rule-5",
+      "type": "EXTENSION",
+      "sourcePath": "AllergyIntolerance.extension:allergySource",
+      "targetPath": "",
+      "description": "Extension slice 'allergySource' (0..1, MustSupport=true) removed in target profile. Was defined in source for tracking the source of allergy information.",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-6",
+      "type": "EXTENSION",
+      "sourcePath": "AllergyIntolerance.extension:confirmedBy",
+      "targetPath": "",
+      "description": "Extension slice 'confirmedBy' (0..1, MustSupport=true) removed in target profile. Was defined in source for identifying who confirmed the allergy.",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-7",
+      "type": "EXTENSION",
+      "sourcePath": "AllergyIntolerance.extension:allergyEndReason",
+      "targetPath": "",
+      "description": "Extension slice 'allergyEndReason' (0..1, MustSupport=true) removed in target profile. Was defined in source for capturing the reason an allergy ended.",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-8",
+      "type": "EXTENSION",
+      "sourcePath": "",
+      "targetPath": "AllergyIntolerance.extension:saeAssessment",
+      "description": "New extension slice 'saeAssessment' added in target (0..1, MustSupport=true). Supports serious adverse event assessment specific to clinical trial context. Not present in source profile.",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-9",
+      "type": "EXTENSION",
+      "sourcePath": "",
+      "targetPath": "AllergyIntolerance.extension:causalityAssessment",
+      "description": "New extension slice 'causalityAssessment' added in target (0..1, MustSupport=true). Supports causality assessment between allergy/reaction and study drug. Not present in source profile.",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-10",
+      "type": "EXTENSION",
+      "sourcePath": "",
+      "targetPath": "AllergyIntolerance.extension:studyDrugRelation",
+      "description": "New extension slice 'studyDrugRelation' added in target (0..1, MustSupport=true). Captures relation between allergy/reaction and the investigational product. Not present in source profile.",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-11",
+      "type": "CARDINALITY",
+      "sourcePath": "AllergyIntolerance.verificationStatus",
+      "targetPath": "AllergyIntolerance.verificationStatus",
+      "description": "Cardinality changed: [0..1] -> [1..1]. Source has no explicit minimum (inherits R4 base min=0). Target makes verificationStatus mandatory.",
+      "severity": "ERROR"
+    },
+    {
+      "id": "rule-12",
+      "type": "CARDINALITY",
+      "sourcePath": "AllergyIntolerance.type",
+      "targetPath": "AllergyIntolerance.type",
+      "description": "Cardinality changed: [0..1] -> [1..1]. Source has no explicit minimum (inherits R4 base min=0). Target makes type mandatory.",
+      "severity": "ERROR"
+    },
+    {
+      "id": "rule-13",
+      "type": "TERMINOLOGY",
+      "sourcePath": "AllergyIntolerance.type",
+      "targetPath": "AllergyIntolerance.type",
+      "description": "Binding version pin added in target: Source uses required(http://hl7.org/fhir/ValueSet/allergy-intolerance-type) without version pin; target uses required(http://hl7.org/fhir/ValueSet/allergy-intolerance-type|4.0.1) with explicit version pin. Same value set and strength.",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-14",
+      "type": "TERMINOLOGY",
+      "sourcePath": "AllergyIntolerance.category",
+      "targetPath": "AllergyIntolerance.category",
+      "description": "Binding version pin added in target: Source uses required(http://hl7.org/fhir/ValueSet/allergy-intolerance-category) without version pin; target uses required(http://hl7.org/fhir/ValueSet/allergy-intolerance-category|4.0.1) with explicit version pin. Same value set and strength.",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-15",
+      "type": "CARDINALITY",
+      "sourcePath": "AllergyIntolerance.criticality",
+      "targetPath": "AllergyIntolerance.criticality",
+      "description": "Cardinality changed: [0..1] -> [1..1]. Source has no explicit minimum (inherits R4 base min=0). Target makes criticality mandatory.",
+      "severity": "ERROR"
+    },
+    {
+      "id": "rule-15b",
+      "type": "TERMINOLOGY",
+      "sourcePath": "AllergyIntolerance.type",
+      "targetPath": "AllergyIntolerance.type",
+      "description": "Binding version pin added in target: Source uses required(http://hl7.org/fhir/ValueSet/allergy-intolerance-type) without version pin; target uses required(http://hl7.org/fhir/ValueSet/allergy-intolerance-type|4.0.1) with explicit version pin. Same value set and strength.",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-16",
+      "type": "TERMINOLOGY",
+      "sourcePath": "AllergyIntolerance.criticality",
+      "targetPath": "AllergyIntolerance.criticality",
+      "description": "Binding version pin added in target: Source uses required(http://hl7.org/fhir/ValueSet/allergy-intolerance-criticality) without version pin; target uses required(http://hl7.org/fhir/ValueSet/allergy-intolerance-criticality|4.0.1) with explicit version pin. Same value set and strength.",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-17",
+      "type": "TERMINOLOGY",
+      "sourcePath": "AllergyIntolerance.code",
+      "targetPath": "AllergyIntolerance.code",
+      "description": "Binding changed: Source uses extensible(https://tk-soft.example.com/fhir/ValueSet/allergy-code). Target uses extensible(https://iit-proj.example.com/fhir/ValueSet/study-allergy-substance). Same binding strength but different ValueSet — target restricts to study-specific allergy substances.",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-18",
+      "type": "CARDINALITY",
+      "sourcePath": "AllergyIntolerance.code.coding.display",
+      "targetPath": "AllergyIntolerance.code.coding.display",
+      "description": "Cardinality changed: [0..1] -> [1..1]. Source has no explicit constraint on code.coding.display (inherits R4 base min=0). Target adds min=1 making display text mandatory on every allergy code coding.",
+      "severity": "ERROR"
+    },
+    {
+      "id": "rule-19",
+      "type": "STRUCTURAL",
+      "sourcePath": "AllergyIntolerance.patient",
+      "targetPath": "AllergyIntolerance.patient",
+      "description": "Reference target profile changed: Source constrains to [https://tk-soft.example.com/fhir/StructureDefinition/Patient]. Target constrains to [https://iit-proj.example.com/fhir/StructureDefinition/Patient].",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-20",
+      "type": "STRUCTURAL",
+      "sourcePath": "AllergyIntolerance.encounter",
+      "targetPath": "AllergyIntolerance.encounter",
+      "description": "Reference target profile changed: Source constrains to [https://tk-soft.example.com/fhir/StructureDefinition/Encounter]. Target constrains to [https://iit-proj.example.com/fhir/StructureDefinition/Encounter].",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-21",
+      "type": "STRUCTURAL",
+      "sourcePath": "AllergyIntolerance.onset[x]",
+      "targetPath": "AllergyIntolerance.onset[x]",
+      "description": "Type narrowed: Source allows [dateTime, Age, Period]. Target restricts to [dateTime] only. Age and Period type options are removed in target.",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-22",
+      "type": "CARDINALITY",
+      "sourcePath": "AllergyIntolerance.recorder",
+      "targetPath": "AllergyIntolerance.recorder",
+      "description": "Cardinality changed: [0..1] -> [0..0]. Element is completely banned in target. Source defined recorder as MustSupport with Reference(tk-soft/Practitioner). Target explicitly prohibits this element (max=0).",
+      "severity": "ERROR"
+    },
+    {
+      "id": "rule-23",
+      "type": "STRUCTURAL",
+      "sourcePath": "AllergyIntolerance.recorder",
+      "targetPath": "AllergyIntolerance.recorder",
+      "description": "MustSupport removed in target. Source had recorder as MustSupport=true. Target sets max=0 and removes MustSupport.",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-24",
+      "type": "CARDINALITY",
+      "sourcePath": "AllergyIntolerance.asserter",
+      "targetPath": "AllergyIntolerance.asserter",
+      "description": "Cardinality changed: [0..1] -> [0..0]. Element is completely banned in target. Source defined asserter as MustSupport with Reference(tk-soft/Patient|Practitioner). Target explicitly prohibits this element (max=0).",
+      "severity": "ERROR"
+    },
+    {
+      "id": "rule-25",
+      "type": "STRUCTURAL",
+      "sourcePath": "AllergyIntolerance.asserter",
+      "targetPath": "AllergyIntolerance.asserter",
+      "description": "MustSupport removed in target. Source had asserter as MustSupport=true. Target sets max=0 and removes MustSupport.",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-26",
+      "type": "STRUCTURAL",
+      "sourcePath": "",
+      "targetPath": "AllergyIntolerance.lastOccurrence",
+      "description": "New MustSupport element 'lastOccurrence' added in target (min=0, MustSupport=true). Tracks the date of the last known occurrence of a reaction. Not present in source profile.",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-27",
+      "type": "CARDINALITY",
+      "sourcePath": "AllergyIntolerance.reaction",
+      "targetPath": "AllergyIntolerance.reaction",
+      "description": "Cardinality changed: [0..*] -> [1..*]. Source has no explicit minimum (inherits R4 base min=0). Target requires at least one reaction — consistent with constraint iit-ai-3.",
+      "severity": "ERROR"
+    },
+    {
+      "id": "rule-28",
+      "type": "TERMINOLOGY",
+      "sourcePath": "AllergyIntolerance.reaction.substance",
+      "targetPath": "AllergyIntolerance.reaction.substance",
+      "description": "Binding changed in target: Source uses extensible(https://tk-soft.example.com/fhir/ValueSet/allergy-substance); target uses example(http://hl7.org/fhir/ValueSet/substance-code). Binding strength weakened (extensible→example) to a different R4 base VS.",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-29",
+      "type": "TERMINOLOGY",
+      "sourcePath": "AllergyIntolerance.reaction.manifestation",
+      "targetPath": "AllergyIntolerance.reaction.manifestation",
+      "description": "Binding changed in target: Source uses extensible(https://tk-soft.example.com/fhir/ValueSet/allergy-manifestation); target uses example(http://hl7.org/fhir/ValueSet/clinical-findings). Binding strength weakened (extensible→example) to a different R4 base VS.",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-30",
+      "type": "CARDINALITY",
+      "sourcePath": "AllergyIntolerance.reaction.manifestation.coding",
+      "targetPath": "AllergyIntolerance.reaction.manifestation.coding",
+      "description": "Cardinality changed: [0..*] -> [1..*]. Source has no explicit constraint on reaction.manifestation.coding (inherits CodeableConcept.coding min=0). Target makes at least one coding mandatory.",
+      "severity": "ERROR"
+    },
+    {
+      "id": "rule-31",
+      "type": "STRUCTURAL",
+      "sourcePath": "AllergyIntolerance.reaction.manifestation.coding",
+      "targetPath": "AllergyIntolerance.reaction.manifestation.coding",
+      "description": "Slicing added in target: discriminator type=value, path=system, rules=open. Allows named coding slices for specific terminologies (e.g., MedDRA).",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-32",
+      "type": "STRUCTURAL",
+      "sourcePath": "",
+      "targetPath": "AllergyIntolerance.reaction.manifestation.coding:meddra",
+      "description": "New MustSupport slice 'meddra' added in target (0..1, MustSupport=true). Captures MedDRA-coded manifestation for adverse events. Internal constraints: meddra.system min=1, meddra.code min=1 (MustSupport). Not present in source profile.",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-33",
+      "type": "STRUCTURAL",
+      "sourcePath": "",
+      "targetPath": "AllergyIntolerance.reaction.description",
+      "description": "New MustSupport element 'reaction.description' added in target (min=0, MustSupport=true). Captures free-text description of the reaction. Not present in source profile.",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-34",
+      "type": "CARDINALITY",
+      "sourcePath": "AllergyIntolerance.reaction.onset",
+      "targetPath": "AllergyIntolerance.reaction.onset",
+      "description": "Cardinality changed: [0..1] -> [1..1]. Source has no explicit minimum (inherits R4 base min=0). Target makes reaction onset date mandatory.",
+      "severity": "ERROR"
+    },
+    {
+      "id": "rule-35",
+      "type": "CARDINALITY",
+      "sourcePath": "AllergyIntolerance.reaction.severity",
+      "targetPath": "AllergyIntolerance.reaction.severity",
+      "description": "Cardinality changed: [0..1] -> [1..1]. Source has no explicit minimum (inherits R4 base min=0). Target makes severity mandatory. Both profiles use required(http://hl7.org/fhir/ValueSet/reaction-event-severity) binding.",
+      "severity": "ERROR"
+    },
+    {
+      "id": "rule-36",
+      "type": "STRUCTURAL",
+      "sourcePath": "",
+      "targetPath": "AllergyIntolerance.reaction.exposureRoute",
+      "description": "New MustSupport element 'reaction.exposureRoute' added in target (min=0, MustSupport=true). Captures the route of exposure to the substance. Not present in source profile.",
+      "severity": "INFO"
+    }
+  ]
 }

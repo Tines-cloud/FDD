@@ -2,6 +2,26 @@
 Your task is to generate a valid FHIR StructureMap in FML syntax that transforms
 instances conforming to a Source profile into instances conforming to a Target profile.
 
+## ABSOLUTELY WRONG - THE TOP 7 FAILURES YOU MUST AVOID
+
+These anti-patterns account for ~99% of compilation failures. If you are about
+to write any of these, STOP and use the CORRECT alternative on the right.
+
+| # | ABSOLUTELY WRONG                                       | CORRECT                                                            |
+|---|--------------------------------------------------------|--------------------------------------------------------------------|
+| 1 | src.name.family as f -> tgt.name.family = f "x";       | use a sub-group: src.name as sn -> tgt.name as tn then MapName(sn,tn) "name"; |
+| 2 | src.id as v -> tgt.id = v;            (no name)         | src.id as v -> tgt.id = v "set-id";                                |
+| 3 | uses "url" alias X as source                            | uses "url" as source                                               |
+| 4 | src.extension.where(url='...') as e -> ...              | src.extension as e where e.url = 'http://...' -> ... "rule";       |
+| 5 | group MapContact(source src : Patient.Contact, ...)     | group MapContact(source src : BackboneElement, target tgt : BackboneElement) |
+| 6 | where not(src.status = 'x')                             | where (src.status = 'x').not()   - not() takes ZERO params in FHIRPath |
+| 7 | src -> t.coding.system = "url", t.coding.code = "LAB" "n"; | use a sub-group for multi-field coded objects (see rule 13 below) |
+| 8 | src.el as v where COND then\n    src -> tgt.el as w ... "n"; | src.el as v where COND -> tgt.el as w ... "n";  (single line, use -> not then) |
+
+NEVER write multi-level dotted source paths inside a group. ALWAYS introduce a
+sub-group when the path goes more than one level deep. Failure to do this is the
+single biggest cause of repeated reflexion failure.
+
 ## CRITICAL RULES - VIOLATIONS WILL FAIL COMPILATION
 
 1. A StructureMap starts with:  map "url" = "name"
@@ -49,6 +69,36 @@ instances conforming to a Source profile into instances conforming to a Target p
     CORRECT:   group MapContact(source src : BackboneElement, target tgt : BackboneElement)
 
 12. For static/default values:  src -> tgt.element = 'fixed-value' "default-element";
+
+13. For multi-field coded objects (category.coding, type.coding, etc.) ALWAYS use
+    a sub-group. NEVER write comma-chained deep-path assignments on one rule line.
+    WRONG (causes 3 "Found '=' expecting ';'" on the same line):
+      src -> tgt.category.coding.system = "url", tgt.category.coding.code = "LAB" "name";
+    CORRECT - delegate to sub-groups:
+      src -> tgt.category as cat then SetCategory(src, cat) "set-cat";
+      group SetCategory(source src : Resource, target tgt : CodeableConcept) {
+        src -> tgt.coding as c then SetLabCoding(src, c) "set-coding";
+      }
+      group SetLabCoding(source src : Resource, target tgt : Coding) {
+        src -> tgt.system = "http://terminology.hl7.org/CodeSystem/v2-0074" "set-sys";
+        src -> tgt.code = "LAB" "set-code";
+        src -> tgt.display = "Laboratory" "set-display";
+      }
+
+14. Negation in where clauses: FHIRPath not() takes ZERO parameters.
+    WRONG:    src.field where not(src.field = 'x') as v -> ...
+    CORRECT:  src.field where (src.field = 'x').not() as v -> ...
+    The preprocessor will auto-fix not(expr) -> (expr).not() but do not rely on it -
+    write the correct form from the start.
+
+15. 'then' keyword means ONLY "invoke a sub-group inline" - NOT an if-then block.
+    WRONG (causes cascade of "expecting group" errors):
+      src.category as sc where CONDITION then
+          src -> tgt.category as tc then CreateLabCategory(src, tc) "name";
+    'then' MUST be part of the SAME rule line as the '->', not on a separate line.
+    CORRECT (single rule with -> and then inline):
+      src.category as sc where CONDITION -> tgt.category as tc then CreateLabCategory(src, tc) "name";
+    The where-clause FHIRPath CAN include .where(), .empty(), .exists() etc.
 
 ## NAMING RULES
 - Rule names must be unique within each group. Use descriptive kebab-case names.

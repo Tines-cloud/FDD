@@ -8,6 +8,109 @@ consistent with every drift item - do NOT silently drop, merge, or alter any map
 rule that corresponds to a listed drift item. Semantic correctness matters as much
 as syntactic correctness.
 
+## THE #1 CAUSE OF COMPILATION FAILURE: Nested dot paths
+
+The errors `Found "." expecting ";"` and `Found "." expecting "("` BOTH mean you
+wrote a multi-level dotted path where only ONE level is allowed.
+
+**SOURCE side** (causes `Found "." expecting ";"`):
+  src.name.family as f -> ...           <- WILL NOT COMPILE
+  src.address.line as l -> ...          <- WILL NOT COMPILE
+  src.result.reference as r -> ...      <- WILL NOT COMPILE
+
+**TARGET side** (also causes `Found "." expecting ";"`):
+  src -> tgt.coding.system = "url" "r"; <- WILL NOT COMPILE
+  src -> tgt.category.text = "x" "r";  <- WILL NOT COMPILE
+
+FML does NOT support chained dots beyond one level on EITHER side. Use sub-groups.
+  CORRECT:  src.name as sn -> tgt.name as tn then MapName(sn, tn) "map-name";
+  Then define group MapName with: src.family as f -> tgt.family = f "set-family";
+
+If you see MANY `Found "." expecting "("` errors, find EVERY multi-level dotted
+path in your code and replace them with sub-group delegation.
+
+## ALTERNATIVE SYNTAX LIBRARY (use when oscillating)
+
+When the same error keeps coming back on the same line, you are clearly trying minor
+variations of the SAME wrong construct. Switch to a fundamentally DIFFERENT pattern
+from the catalogue below:
+
+### A. Setting a constant / required default value
+  Pattern A1: src -> tgt.status = 'active' "default-status";
+  Pattern A2: src.id as i -> tgt.status = 'active' "default-status";   // anchored to a source element
+  Pattern A3: omit the rule entirely if the field is already populated upstream.
+
+### B. Copying a simple element with one level of nesting
+  Pattern B1: src.code as c -> tgt.code = c "copy-code";
+  Pattern B2 (use when B1 errors): use a sub-group
+    src.code as sc -> tgt.code as tc then MapCodeable(sc, tc) "map-code";
+
+### C. Copying a field two or more levels deep (NEVER use src.a.b inline)
+  Pattern C1: delegate to a sub-group at the parent
+    src.name as sn -> tgt.name as tn then MapName(sn, tn) "map-name";
+    group MapName(source src : HumanName, target tgt : HumanName) {
+      src.family as f -> tgt.family = f "set-family";
+    }
+  Pattern C2: same idea for BackboneElement children (Patient.contact, etc.)
+    src.contact as sc -> tgt.contact as tc then MapContact(sc, tc) "map-contact";
+    group MapContact(source src : BackboneElement, target tgt : BackboneElement) {
+      src.relationship as r -> tgt.relationship = r "set-rel";
+    }
+
+### D. Filtering an extension by URL
+  Pattern D1 (CORRECT):
+    src.extension as ext where ext.url = 'http://example.org/ext'
+      -> tgt.extension as t then CopyExt(ext, t) "ext-rule";
+  Anti-pattern (DO NOT USE):
+    src.extension.where(url='...') as ext   <- FHIRPath syntax, FML rejects it.
+
+### E. Skipping an element you cannot map
+  Pattern E1: write a comment explaining why and OMIT the rule entirely.
+    // drift gold-12 unmappable: target requires extension that does not exist in source
+  Do NOT emit a half-broken rule just to "cover" a drift item.
+
+### F. Rule names
+  EVERY rule must end with a UNIQUE quoted name before the semicolon:
+    src.id as v -> tgt.id = v "set-id";
+
+### G. Negation in where clauses - not() takes ZERO parameters
+  ERROR:    The function "not" requires 0 parameters
+  CAUSE:    You wrote  not(condition)  but FHIRPath not() takes NO arguments.
+  WRONG:    src.status where not(src.status = 'entered-in-error') as v -> ...
+  CORRECT:  src.status where (src.status = 'entered-in-error').not() as v -> ...
+  RULE:     Always write  (condition).not()  NEVER  not(condition)
+
+### H. Setting multiple fixed values on a coded element (category.coding, etc.)
+  ERROR:    Found "=" expecting ";"   (appears 2-3 times on the SAME line)
+  CAUSE:    Comma-chained deep-path assignments like:
+              src -> tgt.coding.system = "url", tgt.coding.code = "LAB" "name";
+            The parser finishes at the first assignment and then finds "=" where it
+            wants ";". Even if the target path is shallow, chaining multiple = targets
+            with commas does NOT work in HAPI FML.
+  CORRECT:  Always use a sub-group for multi-field coded objects:
+    src -> tgt.category as cat then SetLabCategory(src, cat) "set-cat";
+    group SetLabCategory(source src : Resource, target tgt : CodeableConcept) {
+      src -> tgt.coding as c then SetLabCoding(src, c) "set-coding";
+    }
+    group SetLabCoding(source src : Resource, target tgt : Coding) {
+
+### I. Multi-line conditional "then" construct - NEVER valid FML
+  ERROR:    Found "." expecting ";"  (on the source line) + cascade of "expecting group" errors
+  CAUSE:    You wrote a two-line construct treating 'then' as an if-then block:
+              src.element as v where CONDITION then
+                  src -> tgt.element as w then Group(v, w) "name";
+            'then' in FML means "invoke a sub-group inline" - it is NOT a block starter.
+            The rule MUST have '->' connecting source to target on the SAME logical line.
+  CORRECT:  Merge into a single rule using '->':
+              src.element as v where CONDITION -> tgt.element as w then Group(v, w) "name";
+  NOTE:     Where conditions support full FHIRPath including .where(), .empty(), .exists() etc.
+      src -> tgt.system = "http://terminology.hl7.org/CodeSystem/v2-0074" "set-sys";
+      src -> tgt.code = "LAB" "set-code";
+      src -> tgt.display = "Laboratory" "set-display";
+    }
+  WRONG (causes 3 "=" errors on one line):
+    src -> tgt.coding.system = "http://...", tgt.coding.code = "LAB", tgt.coding.display = "Laboratory" "name";
+
 ## CRITICAL: No oscillation or regression
 
 When you receive follow-up errors, it means your PREVIOUS fix attempt introduced
@@ -18,26 +121,16 @@ from earlier versions that you must NOT reintroduce.
 
 If you see "REGRESSION DETECTED", it means your fix for a specific line replaced
 one error with a DIFFERENT error on the SAME line. Both your old and new versions
-of that line are wrong. You MUST use a fundamentally different FML syntax or
-construct for that line - not a minor variation of the same approach.
+of that line are wrong. You MUST pick a DIFFERENT pattern letter (A/B/C/D/E above)
+for that line - not a minor variation of the same approach.
+
+If you see "OSCILLATION DETECTED", the same exact error has appeared in 2+ cycles.
+Do NOT try yet another variation of the same construct. Switch to pattern E
+(comment + omit) if no other pattern can express the mapping cleanly. A FML that
+compiles but skips one drift item is far more useful than one that fails to compile.
 
 Your fix MUST NOT introduce any new compilation errors. If you are unsure about
 the correct syntax, use a simpler construct that you know is valid.
-
-## THE #1 CAUSE OF COMPILATION FAILURE: Nested dot paths
-
-The error `Found "." expecting "("` almost ALWAYS means you wrote a multi-level
-dotted path on the source side inside a group, like:
-  src.name.family as f -> ...           <- WILL NOT COMPILE
-  src.contact.name as n -> ...          <- WILL NOT COMPILE
-  src.address.line as l -> ...          <- WILL NOT COMPILE
-
-FML does NOT support chained dots beyond one level. You MUST use sub-groups:
-  CORRECT:  src.name as sn -> tgt.name as tn then MapName(sn, tn) "map-name";
-  Then define group MapName with: src.family as f -> tgt.family = f "set-family";
-
-If you see MANY `Found "." expecting "("` errors, find EVERY multi-level dotted
-path in your code and replace them with sub-group delegation.
 
 ## "Complex rules must have an explicit name"
 

@@ -92,7 +92,10 @@ class MapValidatorTest {
             validator.validateAndRepair(invalidFml, source, target, emptyDriftReport)
         }
 
-        assertTrue(ex.message!!.contains("3 attempts"))
+        assertTrue(
+            ex.message!!.contains("attempts") || ex.message!!.contains("stuck") || ex.message!!.contains("converging"),
+            "Expected a compilation failure message, got: ${ex.message}"
+        )
         // All cycle errors must appear in the details list - one entry per error per cycle
         assertTrue(ex.attemptErrors.isNotEmpty())
         // Every entry must carry a [Cycle N] prefix

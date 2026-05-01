@@ -1,160 +1,152 @@
-{
-  "pairId" : "tk-soft-medication-vs-hemas-medication",
-  "sourceClasspath" : "custom-profiles/tk-soft/tk-soft-medication.json",
-  "targetClasspath" : "custom-profiles/hemas/hemas-medication.json",
-  "drifts" : [ {
-    "id" : "rule-1",
-    "type" : "STRUCTURAL",
-    "sourcePath" : "Medication",
-    "targetPath" : "Medication",
-    "description" : "Constraints added in target: [hemas-med-1, hemas-med-2]",
-    "severity" : "WARNING"
-  }, {
-    "id" : "rule-2",
-    "type" : "STRUCTURAL",
-    "sourcePath" : "Medication",
-    "targetPath" : "Medication",
-    "description" : "Constraints removed in target: [tk-med-1, tk-med-2]",
-    "severity" : "WARNING"
-  }, {
-    "id" : "rule-3",
-    "type" : "TERMINOLOGY",
-    "sourcePath" : "Medication.code",
-    "targetPath" : "Medication.code",
-    "description" : "Binding changed: extensible(https://tk-soft.example.com/fhir/ValueSet/medication-code) -> extensible(https://hemas.example.com/fhir/ValueSet/medication-code)",
-    "severity" : "WARNING"
-  }, {
-    "id" : "rule-4",
-    "type" : "STRUCTURAL",
-    "sourcePath" : "Medication.code.coding",
-    "targetPath" : "Medication.code.coding",
-    "description" : "Slicing changed: rules=open, discriminators=[pattern:$this] -> none",
-    "severity" : "WARNING"
-  }, {
-    "id" : "rule-5",
-    "type" : "STRUCTURAL",
-    "sourcePath" : "Medication.manufacturer",
-    "targetPath" : "Medication.manufacturer",
-    "description" : "Reference target profile changed: [https://tk-soft.example.com/fhir/StructureDefinition/Organization] -> [http://hl7.org/fhir/StructureDefinition/Organization]",
-    "severity" : "WARNING"
-  }, {
-    "id" : "rule-6",
-    "type" : "TERMINOLOGY",
-    "sourcePath" : "Medication.form",
-    "targetPath" : "Medication.form",
-    "description" : "Binding changed: extensible(https://tk-soft.example.com/fhir/ValueSet/medication-form) -> extensible(https://hemas.example.com/fhir/ValueSet/medication-form)",
-    "severity" : "WARNING"
-  }, {
-    "id" : "rule-7",
-    "type" : "STRUCTURAL",
-    "sourcePath" : "Medication.ingredient.item[x]",
-    "targetPath" : "Medication.ingredient.item[x]",
-    "description" : "Reference target profile changed: [http://hl7.org/fhir/StructureDefinition/Medication, http://hl7.org/fhir/StructureDefinition/Substance] -> [http://hl7.org/fhir/StructureDefinition/Substance]",
-    "severity" : "WARNING"
-  }, {
-    "id" : "rule-8",
-    "type" : "EXTENSION",
-    "sourcePath" : "",
-    "targetPath" : "Medication.extension:pharmacyCategory",
-    "description" : "Extension added in target profile: Medication.extension:pharmacyCategory",
-    "severity" : "WARNING"
-  }, {
-    "id" : "rule-9",
-    "type" : "EXTENSION",
-    "sourcePath" : "",
-    "targetPath" : "Medication.extension:storageCondition",
-    "description" : "Extension added in target profile: Medication.extension:storageCondition",
-    "severity" : "WARNING"
-  }, {
-    "id" : "rule-10",
-    "type" : "EXTENSION",
-    "sourcePath" : "",
-    "targetPath" : "Medication.extension:localDrugCode",
-    "description" : "Extension added in target profile: Medication.extension:localDrugCode",
-    "severity" : "WARNING"
-  }, {
-    "id" : "rule-11",
-    "type" : "STRUCTURAL",
-    "sourcePath" : "",
-    "targetPath" : "Medication.code.coding.id",
-    "description" : "Element added in target profile: Medication.code.coding.id",
-    "severity" : "INFO"
-  }, {
-    "id" : "rule-12",
-    "type" : "STRUCTURAL",
-    "sourcePath" : "",
-    "targetPath" : "Medication.code.coding.extension",
-    "description" : "Element added in target profile: Medication.code.coding.extension",
-    "severity" : "INFO"
-  }, {
-    "id" : "rule-13",
-    "type" : "STRUCTURAL",
-    "sourcePath" : "",
-    "targetPath" : "Medication.code.coding.system",
-    "description" : "Element added in target profile: Medication.code.coding.system",
-    "severity" : "ERROR"
-  }, {
-    "id" : "rule-14",
-    "type" : "STRUCTURAL",
-    "sourcePath" : "",
-    "targetPath" : "Medication.code.coding.version",
-    "description" : "Element added in target profile: Medication.code.coding.version",
-    "severity" : "INFO"
-  }, {
-    "id" : "rule-15",
-    "type" : "STRUCTURAL",
-    "sourcePath" : "",
-    "targetPath" : "Medication.code.coding.code",
-    "description" : "Element added in target profile: Medication.code.coding.code",
-    "severity" : "ERROR"
-  }, {
-    "id" : "rule-16",
-    "type" : "STRUCTURAL",
-    "sourcePath" : "",
-    "targetPath" : "Medication.code.coding.display",
-    "description" : "Element added in target profile: Medication.code.coding.display",
-    "severity" : "INFO"
-  }, {
-    "id" : "rule-17",
-    "type" : "STRUCTURAL",
-    "sourcePath" : "",
-    "targetPath" : "Medication.code.coding.userSelected",
-    "description" : "Element added in target profile: Medication.code.coding.userSelected",
-    "severity" : "INFO"
-  }, {
-    "id" : "rule-18",
-    "type" : "EXTENSION",
-    "sourcePath" : "Medication.extension:genericName",
-    "targetPath" : "",
-    "description" : "Extension removed in target profile: Medication.extension:genericName (was mustSupport)",
-    "severity" : "WARNING"
-  }, {
-    "id" : "rule-19",
-    "type" : "EXTENSION",
-    "sourcePath" : "Medication.extension:brandName",
-    "targetPath" : "",
-    "description" : "Extension removed in target profile: Medication.extension:brandName (was mustSupport)",
-    "severity" : "WARNING"
-  }, {
-    "id" : "rule-20",
-    "type" : "EXTENSION",
-    "sourcePath" : "Medication.extension:controlledSubstanceSchedule",
-    "targetPath" : "",
-    "description" : "Extension removed in target profile: Medication.extension:controlledSubstanceSchedule (was mustSupport)",
-    "severity" : "WARNING"
-  }, {
-    "id" : "rule-21",
-    "type" : "STRUCTURAL",
-    "sourcePath" : "Medication.code.coding:rxnorm",
-    "targetPath" : "",
-    "description" : "Slice 'rxnorm' removed in target profile",
-    "severity" : "WARNING"
-  }, {
-    "id" : "rule-22",
-    "type" : "STRUCTURAL",
-    "sourcePath" : "Medication.code.coding:ndc",
-    "targetPath" : "",
-    "description" : "Slice 'ndc' removed in target profile",
-    "severity" : "WARNING"
-  } ]
+﻿{
+  "pairId": "tk-soft-medication-vs-hemas-medication",
+  "sourceClasspath": "custom-profiles/tk-soft/tk-soft-medication.json",
+  "targetClasspath": "custom-profiles/hemas/hemas-medication.json",
+  "_notes": "Source tk-soft-medication has constraints tk-med-1(error)/tk-med-2(warning), extensions genericName/brandName/controlledSubstanceSchedule, code.coding slicing with rxnorm/ndc slices, binding on code and form from tk-soft VS. Target hemas-medication has constraints hemas-med-1(error)/hemas-med-2(warning), extensions pharmacyCategory/storageCondition/localDrugCode, code.coding adds system/code mandatory, ingredient.item[x] type widened to include Reference(Substance).",
+  "drifts": [
+    {
+      "id": "rule-1",
+      "type": "STRUCTURAL",
+      "sourcePath": "Medication",
+      "targetPath": "Medication",
+      "description": "Constraints removed in target: [tk-med-1, tk-med-2]",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-2",
+      "type": "STRUCTURAL",
+      "sourcePath": "Medication",
+      "targetPath": "Medication",
+      "description": "New error constraint added in target: hemas-med-1 (Medication must have a code with at least one coding)",
+      "severity": "ERROR"
+    },
+    {
+      "id": "rule-3",
+      "type": "STRUCTURAL",
+      "sourcePath": "Medication",
+      "targetPath": "Medication",
+      "description": "New warning constraint added in target: hemas-med-2 (Active medications should have a form)",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-4",
+      "type": "TERMINOLOGY",
+      "sourcePath": "Medication.code",
+      "targetPath": "Medication.code",
+      "description": "Binding changed: extensible(https://tk-soft.example.com/fhir/ValueSet/medication-code) -\u003e extensible(https://hemas.example.com/fhir/ValueSet/medication-code)",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-5",
+      "type": "STRUCTURAL",
+      "sourcePath": "Medication.code.coding",
+      "targetPath": "Medication.code.coding",
+      "description": "Slicing removed in target: source had discriminator=[{type:pattern, path:$this}] with slices rxnorm/ndc",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-6",
+      "type": "STRUCTURAL",
+      "sourcePath": "Medication.code.coding:rxnorm",
+      "targetPath": "",
+      "description": "Slice \u0027rxnorm\u0027 removed in target (was mustSupport [0..1])",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-7",
+      "type": "STRUCTURAL",
+      "sourcePath": "Medication.code.coding:ndc",
+      "targetPath": "",
+      "description": "Slice \u0027ndc\u0027 removed in target (was mustSupport [0..1])",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-8",
+      "type": "CARDINALITY",
+      "sourcePath": "Medication.code.coding.system",
+      "targetPath": "Medication.code.coding.system",
+      "description": "Cardinality changed: [0..1] -\u003e [1..1] and MustSupport added in target",
+      "severity": "ERROR"
+    },
+    {
+      "id": "rule-9",
+      "type": "CARDINALITY",
+      "sourcePath": "Medication.code.coding.code",
+      "targetPath": "Medication.code.coding.code",
+      "description": "Cardinality changed: [0..1] -\u003e [1..1] and MustSupport added in target",
+      "severity": "ERROR"
+    },
+    {
+      "id": "rule-9b",
+      "type": "STRUCTURAL",
+      "sourcePath": "Medication.manufacturer",
+      "targetPath": "Medication.manufacturer",
+      "description": "Reference target profile changed: Source constrains to [https://tk-soft.example.com/fhir/StructureDefinition/Organization]. Target uses R4 base Reference(Organization) without profile restriction.",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-10",
+      "type": "TERMINOLOGY",
+      "sourcePath": "Medication.form",
+      "targetPath": "Medication.form",
+      "description": "Binding changed: extensible(https://tk-soft.example.com/fhir/ValueSet/medication-form) -\u003e extensible(https://hemas.example.com/fhir/ValueSet/medication-form)",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-11",
+      "type": "STRUCTURAL",
+      "sourcePath": "Medication.ingredient.item[x]",
+      "targetPath": "Medication.ingredient.item[x]",
+      "description": "Reference target narrowed: Source allows ingredient.item[x] as CodeableConcept or Reference(Substance, Medication). Target (hemas) restricts to CodeableConcept or Reference(Substance) only; Reference(Medication) reference target removed from allowed types.",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-12",
+      "type": "EXTENSION",
+      "sourcePath": "Medication.extension:genericName",
+      "targetPath": "",
+      "description": "Extension removed in target profile: Medication.extension:genericName (was mustSupport)",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-13",
+      "type": "EXTENSION",
+      "sourcePath": "Medication.extension:brandName",
+      "targetPath": "",
+      "description": "Extension removed in target profile: Medication.extension:brandName (was mustSupport)",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-14",
+      "type": "EXTENSION",
+      "sourcePath": "Medication.extension:controlledSubstanceSchedule",
+      "targetPath": "",
+      "description": "Extension removed in target profile: Medication.extension:controlledSubstanceSchedule (was mustSupport)",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-15",
+      "type": "EXTENSION",
+      "sourcePath": "",
+      "targetPath": "Medication.extension:pharmacyCategory",
+      "description": "Extension added in target profile: Medication.extension:pharmacyCategory (mustSupport)",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-16",
+      "type": "EXTENSION",
+      "sourcePath": "",
+      "targetPath": "Medication.extension:storageCondition",
+      "description": "Extension added in target profile: Medication.extension:storageCondition (mustSupport)",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-17",
+      "type": "EXTENSION",
+      "sourcePath": "",
+      "targetPath": "Medication.extension:localDrugCode",
+      "description": "Extension added in target profile: Medication.extension:localDrugCode (mustSupport)",
+      "severity": "WARNING"
+    }
+  ]
 }

@@ -1,39 +1,40 @@
 {
-  "pairId": "r4-medication-vs-us-core-medication",
+  "pairId": "manual-r4-medication-vs-us-core-medication",
   "sourceClasspath": "standard-profiles/r4/medication.profile.json",
   "targetClasspath": "standard-profiles/us-core/StructureDefinition-us-core-medication.json",
+  "_notes": "Hand-curated by reading the US Core Medication differential (2 elements) line by line against the R4 Medication snapshot. The differential has only 1 constrained element: Medication.code. R4 base: Medication.code min=0, max=1, binding=example:http://hl7.org/fhir/ValueSet/medication-codes, mustSupport=false. US Core adds: min=1, mustSupport=true, binding=extensible:http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1010.4.",
   "drifts": [
     {
-      "id": "rule-1",
+      "id": "gold-med-1",
       "type": "CARDINALITY",
       "sourcePath": "Medication.code",
       "targetPath": "Medication.code",
-      "description": "Cardinality changed: [0..1] -> [1..1]",
-      "severity": "WARNING"
+      "description": "Cardinality changed: [0..1] -> [1..1]. Medication code becomes mandatory in US Core; R4 allows a Medication resource without a code.",
+      "severity": "ERROR"
     },
     {
-      "id": "rule-2",
-      "type": "TERMINOLOGY",
-      "sourcePath": "Medication.code",
-      "targetPath": "Medication.code",
-      "description": "Binding changed: example(http://hl7.org/fhir/ValueSet/medication-codes) -> extensible(http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1010.4)",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-3",
+      "id": "gold-med-2",
       "type": "STRUCTURAL",
       "sourcePath": "Medication.code",
       "targetPath": "Medication.code",
-      "description": "MustSupport added in target",
-      "severity": "INFO"
+      "description": "MustSupport added in target (min becomes 1 -> conformance-critical).",
+      "severity": "WARNING"
     },
     {
-      "id": "rule-4",
+      "id": "gold-med-3",
+      "type": "TERMINOLOGY",
+      "sourcePath": "Medication.code",
+      "targetPath": "Medication.code",
+      "description": "Binding changed: R4 uses example strength to http://hl7.org/fhir/ValueSet/medication-codes (general medication codes). US Core tightens to extensible strength with http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1010.4 (US-specific medication clinical drug codes). Binding strength tightened: example -> extensible.",
+      "severity": "WARNING"
+    },
+    {
+      "id": "gold-med-4",
       "type": "EXTENSION",
       "sourcePath": "Medication.code",
-      "targetPath": "Medication.code.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "Extension present only in target: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
-      "severity": "WARNING"
+      "targetPath": "Medication.code",
+      "description": "Element-level USCDI requirement annotation extension (uscdi-requirement=true) added to Medication.code in target profile. Marks this element as a US Core Data for Interoperability requirement.",
+      "severity": "INFO"
     }
   ]
 }

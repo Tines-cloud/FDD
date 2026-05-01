@@ -202,26 +202,41 @@ class RuleBasedDriftDetectorTest {
         }
 
         @Test
-        @DisplayName("Detects fixed value change")
+        @DisplayName("Detects fixed value change on boolean element (classified as STRUCTURAL)")
         fun detectsFixedValueChange() {
+            // A boolean fixed value is a structural constraint, not a terminology change -
+            // there is no value set involved. The detector classifies it as STRUCTURAL.
             val items = detector.detect(
                 context(
                     sourceElements = listOf(element("Patient.active", fixedValue = "true")),
                     targetElements = listOf(element("Patient.active", fixedValue = "false"))
                 )
             )
-            val term = items.filter { it.type == DriftType.TERMINOLOGY && it.description.contains("Fixed") }
-            assertEquals(1, term.size)
-            assertEquals("ERROR", term[0].severity)
+            val struct = items.filter { it.type == DriftType.STRUCTURAL && it.description.contains("Fixed") }
+            assertEquals(1, struct.size)
+            assertEquals("ERROR", struct[0].severity)
         }
 
         @Test
-        @DisplayName("Detects pattern value change")
+        @DisplayName("Detects pattern value change on coded element with binding (TERMINOLOGY)")
         fun detectsPatternValueChange() {
+            // A pattern value on a bound coded element changes the allowed concept -> TERMINOLOGY.
             val items = detector.detect(
                 context(
-                    sourceElements = listOf(element("Patient.code", patternValue = "CodeA")),
-                    targetElements = listOf(element("Patient.code", patternValue = "CodeB"))
+                    sourceElements = listOf(
+                        element(
+                            "Patient.code",
+                            patternValue = "CodeA",
+                            binding = BindingSummary("required", "http://vs/example")
+                        )
+                    ),
+                    targetElements = listOf(
+                        element(
+                            "Patient.code",
+                            patternValue = "CodeB",
+                            binding = BindingSummary("required", "http://vs/example")
+                        )
+                    )
                 )
             )
             val term = items.filter { it.type == DriftType.TERMINOLOGY && it.description.contains("Pattern") }

@@ -2,229 +2,214 @@
   "pairId": "au-core-practitioner-vs-us-core-practitioner",
   "sourceClasspath": "standard-profiles/au-core/StructureDefinition-au-core-practitioner.json",
   "targetClasspath": "standard-profiles/us-core/StructureDefinition-us-core-practitioner.json",
+  "_notes": "Source: AU Core Practitioner (Australian realm). Target: US Core Practitioner (US realm). Both make name[min=1 MS] and name.family[min=1 MS] mandatory. Key differences: AU Core uses type-discriminator slicing with AU-specific hpii identifier slice; US Core makes identifier mandatory [min=1] with $this-discriminator slicing, mandatory identifier sub-elements (system/value min=1), and NPI slice with error constraints; US Core adds telecom and address with detailed sub-element MS constraints; AU Core marks name.given as MS while US Core does not.",
   "drifts": [
     {
-      "id": "rule-1",
+      "id": "rule-0a",
       "type": "STRUCTURAL",
       "sourcePath": "Practitioner",
       "targetPath": "Practitioner",
-      "description": "Constraints present only in source: inv-pra-0, inv-pra-1, inv-pra-2, inv-pra-3, inv-pra-4 restrict gender identity, pronouns, and recorded sex or gender extension codings to AU value sets",
+      "description": "Source root constraints removed in target: AU Core defines inv-pra-0 through inv-pra-4 restricting gender identity, pronouns, and recorded sex or gender extension codings to AU value sets; US Core Practitioner has no equivalent root constraints.",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-0b",
+      "type": "EXTENSION",
+      "sourcePath": "Practitioner.extension:genderIdentity",
+      "targetPath": "",
+      "description": "Extension genderIdentity removed in target: AU Core defines Practitioner.extension:genderIdentity (optional, non-MS); US Core Practitioner has no genderIdentity extension slice.",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-0c",
+      "type": "EXTENSION",
+      "sourcePath": "Practitioner.extension:individualPronouns",
+      "targetPath": "",
+      "description": "Extension individualPronouns removed in target: AU Core defines Practitioner.extension:individualPronouns (optional, non-MS); US Core Practitioner has no individualPronouns extension slice.",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-0d",
+      "type": "EXTENSION",
+      "sourcePath": "Practitioner.extension:recordedSexOrGender",
+      "targetPath": "",
+      "description": "Extension recordedSexOrGender removed in target: AU Core defines Practitioner.extension:recordedSexOrGender (optional, non-MS); US Core Practitioner has no such extension slice.",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-1",
+      "type": "STRUCTURAL",
+      "sourcePath": "Practitioner.identifier",
+      "targetPath": "Practitioner.identifier",
+      "description": "identifier slicing discriminator changed: source uses pattern:type discriminator (AU hpii slice); target uses pattern:$this discriminator (US NPI slice). Slicing approach changed between realms.",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-1b",
+      "type": "STRUCTURAL",
+      "sourcePath": "Practitioner.identifier",
+      "targetPath": "Practitioner.identifier",
+      "description": "identifier type profile changed: source AU Core allows AU-specific identifier profiles (au-hpii, au-pbsprescribernumber, au-careagencyemployeeidentifier, au-ahpraregistrationnumber) in addition to base Identifier; target US Core uses base Identifier only.",
       "severity": "WARNING"
     },
     {
       "id": "rule-2",
-      "type": "EXTENSION",
-      "sourcePath": "Practitioner.extension:genderIdentity",
-      "targetPath": "",
-      "description": "Extension present only in source: Practitioner.extension:genderIdentity (profile=http://hl7.org/fhir/StructureDefinition/individual-genderIdentity, max=*)",
+      "type": "STRUCTURAL",
+      "sourcePath": "Practitioner.identifier:hpii",
+      "targetPath": "Practitioner.identifier:hpii",
+      "description": "identifier:hpii AU slice [max=1, mustSupport=true, types=Identifier[au-hpii]] removed in target: US Core has no AU identifier slices.",
       "severity": "WARNING"
     },
     {
       "id": "rule-3",
-      "type": "EXTENSION",
-      "sourcePath": "Practitioner.extension:individualPronouns",
-      "targetPath": "",
-      "description": "Extension present only in source: Practitioner.extension:individualPronouns (profile=http://hl7.org/fhir/StructureDefinition/individual-pronouns, max=*)",
-      "severity": "WARNING"
+      "type": "CARDINALITY",
+      "sourcePath": "Practitioner.identifier",
+      "targetPath": "Practitioner.identifier",
+      "description": "identifier min cardinality strictly increased: target adds identifier[min=1, mustSupport=true]; source AU Core has identifier[mustSupport=true] with no min constraint (effective min=0). Min increased 0→1.",
+      "severity": "ERROR"
     },
     {
       "id": "rule-4",
-      "type": "EXTENSION",
-      "sourcePath": "Practitioner.extension:recordedSexOrGender",
-      "targetPath": "",
-      "description": "Extension present only in source: Practitioner.extension:recordedSexOrGender (profile=http://hl7.org/fhir/StructureDefinition/individual-recordedSexOrGender, max=*)",
-      "severity": "WARNING"
+      "type": "CARDINALITY",
+      "sourcePath": "Practitioner.identifier.system",
+      "targetPath": "Practitioner.identifier.system",
+      "description": "identifier.system min cardinality strictly increased: target adds identifier.system[min=1, max=1, mustSupport=true]; source AU Core has no sub-element constraint on identifier.system (effective min=0). Min increased 0→1.",
+      "severity": "ERROR"
     },
     {
       "id": "rule-5",
       "type": "CARDINALITY",
-      "sourcePath": "Practitioner.identifier",
-      "targetPath": "Practitioner.identifier",
-      "description": "Cardinality changed: [0..*] -> [1..*]",
-      "severity": "WARNING"
+      "sourcePath": "Practitioner.identifier.value",
+      "targetPath": "Practitioner.identifier.value",
+      "description": "identifier.value min cardinality strictly increased: target adds identifier.value[min=1, max=1, mustSupport=true]; source AU Core has no sub-element constraint on identifier.value (effective min=0). Min increased 0→1.",
+      "severity": "ERROR"
     },
     {
       "id": "rule-6",
       "type": "STRUCTURAL",
-      "sourcePath": "Practitioner.identifier",
-      "targetPath": "Practitioner.identifier",
-      "description": "Type profile constraint changed: source allows AU-specific identifier profiles (au-hpii, au-pbsprescribernumber, au-careagencyemployeeidentifier, au-ahpraregistrationnumber) in addition to base Identifier, while target uses base Identifier only",
-      "severity": "WARNING"
+      "sourcePath": "Practitioner.identifier:NPI",
+      "targetPath": "Practitioner.identifier:NPI",
+      "description": "New identifier:NPI slice with error constraints added in target: US Core adds identifier:NPI[mustSupport=true] with error constraints us-core-16(error) and us-core-17(error) requiring valid NPI format; source AU Core has no NPI slice.",
+      "severity": "ERROR"
     },
     {
       "id": "rule-7",
       "type": "STRUCTURAL",
-      "sourcePath": "Practitioner.identifier",
-      "targetPath": "Practitioner.identifier",
-      "description": "Slicing changed: rules=open, discriminators=[pattern:type] -> rules=open, discriminators=[pattern:$this]",
-      "severity": "WARNING"
+      "sourcePath": "Practitioner.name.given",
+      "targetPath": "Practitioner.name.given",
+      "description": "name.given MustSupport removed on optional element: source AU Core marks name.given[mustSupport=true]; US Core does not constrain name.given in its differential. MS removed on optional element.",
+      "severity": "INFO"
     },
     {
       "id": "rule-8",
-      "type": "EXTENSION",
-      "sourcePath": "Practitioner.identifier.extension(http://hl7.org/fhir/StructureDefinition/obligation)",
-      "targetPath": "Practitioner.identifier",
-      "description": "Obligation present only in source: SHALL:populate-if-known for AU Core Responder and SHALL:no-error for AU Core Requester",
-      "severity": "WARNING"
+      "type": "STRUCTURAL",
+      "sourcePath": "Practitioner.telecom",
+      "targetPath": "Practitioner.telecom",
+      "description": "telecom MustSupport added on optional element in target: US Core adds telecom[mustSupport=true]; source AU Core does not constrain telecom. MS added on optional element.",
+      "severity": "INFO"
     },
     {
       "id": "rule-9",
       "type": "STRUCTURAL",
-      "sourcePath": "Practitioner.identifier.system",
-      "targetPath": "Practitioner.identifier.system",
-      "description": "Element constrained only in target: cardinality [1..1] and MustSupport added",
-      "severity": "WARNING"
+      "sourcePath": "Practitioner.telecom.system",
+      "targetPath": "Practitioner.telecom.system",
+      "description": "telecom.system MustSupport added on optional element in target: US Core adds telecom.system[mustSupport=true]; source AU Core does not constrain telecom.system. MS added on optional element.",
+      "severity": "INFO"
     },
     {
       "id": "rule-10",
       "type": "STRUCTURAL",
-      "sourcePath": "Practitioner.identifier.value",
-      "targetPath": "Practitioner.identifier.value",
-      "description": "Element constrained only in target: cardinality [1..1] and MustSupport added",
-      "severity": "WARNING"
+      "sourcePath": "Practitioner.telecom.value",
+      "targetPath": "Practitioner.telecom.value",
+      "description": "telecom.value MustSupport added on optional element in target: US Core adds telecom.value[mustSupport=true]; source AU Core does not constrain telecom.value. MS added on optional element.",
+      "severity": "INFO"
     },
     {
       "id": "rule-11",
       "type": "STRUCTURAL",
-      "sourcePath": "Practitioner.identifier:hpii",
-      "targetPath": "",
-      "description": "Slice present only in source: Practitioner.identifier:hpii (max=1, profile=http://hl7.org.au/fhir/StructureDefinition/au-hpii, mustSupport=true)",
+      "sourcePath": "Practitioner.address",
+      "targetPath": "Practitioner.address",
+      "description": "address MustSupport added on optional element in target: US Core adds address[mustSupport=true]; source AU Core does not constrain address. MS added on optional element.",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-11b",
+      "type": "STRUCTURAL",
+      "sourcePath": "Practitioner.address",
+      "targetPath": "Practitioner.address",
+      "description": "address type profile changed: source AU Core uses au-address profile (http://hl7.org.au/fhir/StructureDefinition/au-address) on address; target US Core uses base Address only.",
       "severity": "WARNING"
     },
     {
       "id": "rule-12",
       "type": "STRUCTURAL",
-      "sourcePath": "",
-      "targetPath": "Practitioner.identifier:NPI",
-      "description": "Slice present only in target: Practitioner.identifier:NPI with fixed system http://hl7.org/fhir/sid/us-npi, MustSupport=true, and constraints us-core-16 and us-core-17",
+      "sourcePath": "Practitioner.address.line",
+      "targetPath": "Practitioner.address.line",
+      "description": "address.line MustSupport added on optional element in target: US Core adds address.line[max=4, mustSupport=true]; source AU Core does not constrain address.line. MS added on optional element.",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-12b",
+      "type": "CARDINALITY",
+      "sourcePath": "Practitioner.address.line",
+      "targetPath": "Practitioner.address.line",
+      "description": "address.line max cardinality tightened: source [0..*] → target [0..4]. Max decreased from unbounded to 4.",
       "severity": "WARNING"
     },
     {
       "id": "rule-13",
-      "type": "EXTENSION",
-      "sourcePath": "Practitioner.name.extension(http://hl7.org/fhir/StructureDefinition/obligation)",
-      "targetPath": "Practitioner.name",
-      "description": "Obligation present only in source: SHALL:populate-if-known for AU Core Responder and SHALL:no-error for AU Core Requester",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-14",
-      "type": "EXTENSION",
-      "sourcePath": "Practitioner.name.family.extension(http://hl7.org/fhir/StructureDefinition/obligation)",
-      "targetPath": "Practitioner.name.family",
-      "description": "Obligation present only in source: SHALL:populate-if-known for AU Core Responder and SHALL:no-error for AU Core Requester",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-15",
       "type": "STRUCTURAL",
-      "sourcePath": "Practitioner.name.given",
-      "targetPath": "Practitioner.name.given",
-      "description": "MustSupport removed in target",
+      "sourcePath": "Practitioner.address.city",
+      "targetPath": "Practitioner.address.city",
+      "description": "address.city MustSupport added on optional element in target: US Core adds address.city[max=1, mustSupport=true]; source AU Core does not constrain address.city. MS added on optional element.",
       "severity": "INFO"
     },
     {
-      "id": "rule-16",
-      "type": "EXTENSION",
-      "sourcePath": "Practitioner.name.given.extension(http://hl7.org/fhir/StructureDefinition/obligation)",
-      "targetPath": "Practitioner.name.given",
-      "description": "Obligation present only in source: SHALL:populate-if-known for AU Core Responder and SHALL:no-error for AU Core Requester",
+      "id": "rule-14",
+      "type": "STRUCTURAL",
+      "sourcePath": "Practitioner.address.state",
+      "targetPath": "Practitioner.address.state",
+      "description": "address.state MustSupport added on optional element in target: US Core adds address.state[max=1, mustSupport=true]; source AU Core does not constrain address.state. MS added on optional element.",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-15",
+      "type": "TERMINOLOGY",
+      "sourcePath": "Practitioner.address.state",
+      "targetPath": "Practitioner.address.state",
+      "description": "address.state new binding added in target: US Core adds extensible(http://hl7.org/fhir/us/core/ValueSet/us-core-usps-state) [US postal state codes]; source AU Core has no binding on address.state. New US realm-specific binding applied.",
       "severity": "WARNING"
+    },
+    {
+      "id": "rule-16",
+      "type": "STRUCTURAL",
+      "sourcePath": "Practitioner.address.postalCode",
+      "targetPath": "Practitioner.address.postalCode",
+      "description": "address.postalCode MustSupport added on optional element in target: US Core adds address.postalCode[max=1, mustSupport=true]; source AU Core does not constrain address.postalCode. MS added on optional element.",
+      "severity": "INFO"
     },
     {
       "id": "rule-17",
       "type": "STRUCTURAL",
-      "sourcePath": "Practitioner.telecom",
-      "targetPath": "Practitioner.telecom",
-      "description": "MustSupport added in target",
+      "sourcePath": "Practitioner.address.country",
+      "targetPath": "Practitioner.address.country",
+      "description": "address.country MustSupport added on optional element in target: US Core adds address.country[max=1, mustSupport=true]; source AU Core does not constrain address.country. MS added on optional element.",
       "severity": "INFO"
     },
     {
       "id": "rule-18",
-      "type": "STRUCTURAL",
-      "sourcePath": "Practitioner.telecom.system",
-      "targetPath": "Practitioner.telecom.system",
-      "description": "Element constrained only in target: MustSupport added",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-19",
-      "type": "STRUCTURAL",
-      "sourcePath": "Practitioner.telecom.value",
-      "targetPath": "Practitioner.telecom.value",
-      "description": "Element constrained only in target: MustSupport added",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-20",
-      "type": "STRUCTURAL",
-      "sourcePath": "Practitioner.address",
-      "targetPath": "Practitioner.address",
-      "description": "Type profile constraint changed: source uses Address with AU profile http://hl7.org.au/fhir/StructureDefinition/au-address, while target uses base Address only",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-21",
-      "type": "STRUCTURAL",
-      "sourcePath": "Practitioner.address",
-      "targetPath": "Practitioner.address",
-      "description": "MustSupport added in target",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-22",
-      "type": "STRUCTURAL",
-      "sourcePath": "Practitioner.address.line",
-      "targetPath": "Practitioner.address.line",
-      "description": "Element constrained only in target: maximum cardinality set to 4 and MustSupport added",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-23",
-      "type": "STRUCTURAL",
-      "sourcePath": "Practitioner.address.city",
-      "targetPath": "Practitioner.address.city",
-      "description": "Element constrained only in target: MustSupport added",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-24",
-      "type": "STRUCTURAL",
-      "sourcePath": "Practitioner.address.state",
-      "targetPath": "Practitioner.address.state",
-      "description": "Element constrained only in target: MustSupport added and extensible binding to http://hl7.org/fhir/us/core/ValueSet/us-core-usps-state",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-25",
-      "type": "STRUCTURAL",
-      "sourcePath": "Practitioner.address.postalCode",
-      "targetPath": "Practitioner.address.postalCode",
-      "description": "Element constrained only in target: MustSupport added",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-26",
-      "type": "STRUCTURAL",
-      "sourcePath": "Practitioner.address.country",
-      "targetPath": "Practitioner.address.country",
-      "description": "Element constrained only in target: MustSupport added",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-27",
       "type": "TERMINOLOGY",
       "sourcePath": "Practitioner.qualification.code",
       "targetPath": "Practitioner.qualification.code",
-      "description": "Binding changed: preferred(http://terminology.hl7.org.au/ValueSet/v2-0360-extended) -> example(http://terminology.hl7.org/ValueSet/v2-2.7-0360)",
+      "description": "qualification.code binding changed: source preferred(http://terminology.hl7.org.au/ValueSet/v2-0360-extended) [AU extended qualification code VS] → target example(http://terminology.hl7.org/ValueSet/v2-2.7-0360) [R4 base VS]. Binding strength weakened from preferred to example and AU-extended VS replaced.",
       "severity": "WARNING"
     },
     {
-      "id": "rule-28",
+      "id": "rule-19",
       "type": "TERMINOLOGY",
       "sourcePath": "Practitioner.communication",
       "targetPath": "Practitioner.communication",
-      "description": "Binding changed: extensible(https://healthterminologies.gov.au/fhir/ValueSet/common-languages-australia-2) -> preferred(http://hl7.org/fhir/ValueSet/languages)",
+      "description": "communication binding changed: source extensible(https://healthterminologies.gov.au/fhir/ValueSet/common-languages-australia-2) [AU common languages VS] → target preferred(http://hl7.org/fhir/ValueSet/languages) [R4 languages VS]. Binding strength changed from extensible to preferred, and AU-specific VS replaced.",
       "severity": "WARNING"
     }
   ]

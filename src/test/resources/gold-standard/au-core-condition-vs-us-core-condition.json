@@ -2,301 +2,166 @@
   "pairId": "au-core-condition-vs-us-core-condition-encounter-diagnosis",
   "sourceClasspath": "standard-profiles/au-core/StructureDefinition-au-core-condition.json",
   "targetClasspath": "standard-profiles/us-core/StructureDefinition-us-core-condition-encounter-diagnosis.json",
+  "_notes": "Source: AU Core Condition (Australian realm). Target: US Core Condition Encounter Diagnosis (US realm, encounter-diagnosis category). Both make category[1..1] and code[1..1] mandatory, add MS on clinicalStatus/verificationStatus/subject/onset/abatement. Key differences: US Core adds assertedDate extension (MS), US Core explicitly requires clinicalStatus and verificationStatus bindings; US Core adds mandatory category slice us-core[1..1] with encounter-diagnosis pattern; code VS differ (AU clinical-condition-1 vs US us-core-condition-code); AU uses bodySite with error constraint and AU-specific VS absent in US Core; subject and encounter reference targets differ; US Core adds encounter[MS] and recordedDate[MS] not in AU Core; US Core onset/abatement include string type while AU Core excludes string; AU Core has severity[MS] and note[MS] not in US Core.",
   "drifts": [
     {
       "id": "rule-1",
-      "type": "VERSION",
-      "sourcePath": "Condition.clinicalStatus",
-      "targetPath": "Condition.clinicalStatus",
-      "description": "Binding version pin changed: required(http://hl7.org/fhir/ValueSet/condition-clinical|4.0.1) -> required(http://hl7.org/fhir/ValueSet/condition-clinical)",
-      "severity": "INFO"
+      "type": "EXTENSION",
+      "sourcePath": "Condition.extension:assertedDate",
+      "targetPath": "Condition.extension:assertedDate",
+      "description": "New optional MS extension assertedDate[max=1 mustSupport=true] added in target (http://hl7.org/fhir/StructureDefinition/condition-assertedDate); source AU Core has no such extension.",
+      "severity": "WARNING"
     },
     {
       "id": "rule-2",
-      "type": "EXTENSION",
-      "sourcePath": "Condition.clinicalStatus.extension(http://hl7.org/fhir/StructureDefinition/obligation)",
+      "type": "TERMINOLOGY",
+      "sourcePath": "Condition.clinicalStatus",
       "targetPath": "Condition.clinicalStatus",
-      "description": "Obligation present only in source: SHALL:populate-if-known for AU Core Responder and SHALL:no-error for AU Core Requester",
+      "description": "clinicalStatus binding tightened in target: source does not explicitly declare a binding in its differential; target explicitly adds required(http://hl7.org/fhir/ValueSet/condition-clinical). Required binding explicitly declared in target but absent in source differential.",
       "severity": "WARNING"
     },
     {
       "id": "rule-3",
-      "type": "EXTENSION",
-      "sourcePath": "Condition.clinicalStatus",
-      "targetPath": "Condition.clinicalStatus.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "USCDI requirement extension present only in target",
+      "type": "TERMINOLOGY",
+      "sourcePath": "Condition.verificationStatus",
+      "targetPath": "Condition.verificationStatus",
+      "description": "verificationStatus binding tightened in target: source does not explicitly declare a binding in its differential; target explicitly adds required(http://hl7.org/fhir/ValueSet/condition-ver-status). Required binding explicitly declared in target but absent in source differential.",
       "severity": "WARNING"
     },
     {
       "id": "rule-4",
-      "type": "VERSION",
-      "sourcePath": "Condition.verificationStatus",
-      "targetPath": "Condition.verificationStatus",
-      "description": "Binding version pin changed: required(http://hl7.org/fhir/ValueSet/condition-ver-status|4.0.1) -> required(http://hl7.org/fhir/ValueSet/condition-ver-status)",
+      "type": "STRUCTURAL",
+      "sourcePath": "Condition.category",
+      "targetPath": "Condition.category",
+      "description": "category slicing added in target: US Core adds pattern-type discriminator slicing ($this) on category; AU Core has no slicing in its differential.",
       "severity": "INFO"
     },
     {
       "id": "rule-5",
-      "type": "EXTENSION",
-      "sourcePath": "Condition.verificationStatus.extension(http://hl7.org/fhir/StructureDefinition/obligation)",
-      "targetPath": "Condition.verificationStatus",
-      "description": "Obligation present only in source: SHALL:populate-if-known for AU Core Responder and SHALL:no-error for AU Core Requester",
+      "type": "STRUCTURAL",
+      "sourcePath": "Condition.category:us-core",
+      "targetPath": "Condition.category:us-core",
+      "description": "New mandatory MS category slice us-core[1..1 mustSupport=true] added in target with pattern patternCodeableConcept={coding:[{system:http://terminology.hl7.org/CodeSystem/condition-category, code:encounter-diagnosis}]}. Source AU Core has no equivalent named category slice.",
       "severity": "WARNING"
     },
     {
       "id": "rule-6",
-      "type": "EXTENSION",
-      "sourcePath": "Condition.verificationStatus",
-      "targetPath": "Condition.verificationStatus.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "USCDI requirement extension present only in target",
-      "severity": "WARNING"
+      "type": "STRUCTURAL",
+      "sourcePath": "Condition.severity",
+      "targetPath": "Condition.severity",
+      "description": "severity MustSupport removed on optional element: source mustSupport=true with extensible(http://hl7.org/fhir/ValueSet/condition-severity); target US Core does not constrain severity in its differential.",
+      "severity": "INFO"
     },
     {
       "id": "rule-7",
-      "type": "EXTENSION",
-      "sourcePath": "Condition.category.extension(http://hl7.org/fhir/StructureDefinition/obligation)",
-      "targetPath": "Condition.category",
-      "description": "Obligation present only in source: SHALL:populate-if-known for AU Core Responder and SHALL:no-error for AU Core Requester",
+      "type": "TERMINOLOGY",
+      "sourcePath": "Condition.severity",
+      "targetPath": "Condition.severity",
+      "description": "severity binding changed: source extensible(http://hl7.org/fhir/ValueSet/condition-severity) → target preferred(http://hl7.org/fhir/ValueSet/condition-severity). Binding strength weakened from extensible to preferred (US Core uses preferred on severity).",
       "severity": "WARNING"
     },
     {
       "id": "rule-8",
-      "type": "EXTENSION",
-      "sourcePath": "Condition.category",
-      "targetPath": "Condition.category.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "USCDI requirement extension present only in target",
+      "type": "TERMINOLOGY",
+      "sourcePath": "Condition.code",
+      "targetPath": "Condition.code",
+      "description": "code binding changed: source extensible(https://healthterminologies.gov.au/fhir/ValueSet/clinical-condition-1) [AU clinical condition VS] → target extensible(http://hl7.org/fhir/us/core/ValueSet/us-core-condition-code) [US Core condition code VS]. Same binding strength (extensible), different realm-specific value sets.",
       "severity": "WARNING"
     },
     {
       "id": "rule-9",
       "type": "STRUCTURAL",
-      "sourcePath": "Condition.category",
-      "targetPath": "Condition.category:us-core",
-      "description": "Mandatory target slice present only in target: category:us-core with required pattern Coding(system=http://terminology.hl7.org/CodeSystem/condition-category, code=encounter-diagnosis)",
+      "sourcePath": "Condition.bodySite",
+      "targetPath": "Condition.bodySite",
+      "description": "Source constraint au-core-cond-01(error) on bodySite removed in target: AU Core defines an error constraint requiring bodySite to be from a specific AU hierarchy when present; US Core has no bodySite constraint in its differential.",
       "severity": "WARNING"
     },
     {
       "id": "rule-10",
       "type": "TERMINOLOGY",
-      "sourcePath": "Condition.code",
-      "targetPath": "Condition.code",
-      "description": "Binding changed: extensible(https://healthterminologies.gov.au/fhir/ValueSet/clinical-condition-1) -> extensible(http://hl7.org/fhir/us/core/ValueSet/us-core-condition-code)",
+      "sourcePath": "Condition.bodySite",
+      "targetPath": "Condition.bodySite",
+      "description": "bodySite binding changed: source extensible(https://healthterminologies.gov.au/fhir/ValueSet/body-site-1) [AU body site VS] → target example(http://hl7.org/fhir/ValueSet/body-site) [R4 base VS]. Binding strength weakened from extensible to example and AU-specific VS replaced.",
       "severity": "WARNING"
     },
     {
       "id": "rule-11",
-      "type": "EXTENSION",
-      "sourcePath": "Condition.code.extension(http://hl7.org/fhir/StructureDefinition/obligation)",
-      "targetPath": "Condition.code",
-      "description": "Obligation present only in source: SHALL:populate-if-known for AU Core Responder and SHALL:no-error for AU Core Requester",
+      "type": "STRUCTURAL",
+      "sourcePath": "Condition.subject",
+      "targetPath": "Condition.subject",
+      "description": "subject reference target changed: source constrains to au-core-patient (http://hl7.org.au/fhir/core/StructureDefinition/au-core-patient) → target constrains to us-core-patient (http://hl7.org/fhir/us/core/StructureDefinition/us-core-patient). Different realm-specific patient profiles.",
       "severity": "WARNING"
     },
     {
       "id": "rule-12",
-      "type": "EXTENSION",
-      "sourcePath": "Condition.code",
-      "targetPath": "Condition.code.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "USCDI requirement extension present only in target",
+      "type": "STRUCTURAL",
+      "sourcePath": "Condition.encounter",
+      "targetPath": "Condition.encounter",
+      "description": "encounter MS added on optional element in target: target US Core adds encounter[mustSupport=true, ref→us-core-encounter]; source AU Core does not constrain encounter in its differential.",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-12b",
+      "type": "STRUCTURAL",
+      "sourcePath": "Condition.encounter",
+      "targetPath": "Condition.encounter",
+      "description": "encounter reference target added in target: US Core constrains to us-core-encounter; source AU Core does not constrain the reference target.",
       "severity": "WARNING"
     },
     {
       "id": "rule-13",
       "type": "STRUCTURAL",
-      "sourcePath": "Condition.severity",
-      "targetPath": "Condition.severity",
-      "description": "MustSupport present only in source",
+      "sourcePath": "Condition.onset[x]",
+      "targetPath": "Condition.onset[x]",
+      "description": "onset[x] type-level MS added in target: US Core adds mustSupport on the dateTime choice of onset[x]; source AU Core does not add type-level MS.",
       "severity": "INFO"
     },
     {
+      "id": "rule-13b",
+      "type": "STRUCTURAL",
+      "sourcePath": "Condition.onset[x]",
+      "targetPath": "Condition.onset[x]",
+      "description": "onset[x] types widened in target: source restricts types to [dateTime, Age, Period, Range] (excludes string); target US Core includes [dateTime, Age, Period, Range, string]. String type added in target, widening permitted types.",
+      "severity": "WARNING"
+    },
+    {
       "id": "rule-14",
-      "type": "TERMINOLOGY",
-      "sourcePath": "Condition.severity",
-      "targetPath": "Condition.severity",
-      "description": "Binding strength changed: extensible(http://hl7.org/fhir/ValueSet/condition-severity) -> preferred(http://hl7.org/fhir/ValueSet/condition-severity)",
+      "type": "STRUCTURAL",
+      "sourcePath": "Condition.abatement[x]",
+      "targetPath": "Condition.abatement[x]",
+      "description": "abatement[x] type-level MS added in target: US Core adds mustSupport on the dateTime choice of abatement[x]; source AU Core does not add type-level MS.",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-14b",
+      "type": "STRUCTURAL",
+      "sourcePath": "Condition.abatement[x]",
+      "targetPath": "Condition.abatement[x]",
+      "description": "abatement[x] types widened in target: source restricts types to [dateTime, Age, Period, Range] (excludes string); target US Core includes [dateTime, Age, Period, Range, string]. String type added in target, widening permitted types.",
       "severity": "WARNING"
     },
     {
       "id": "rule-15",
-      "type": "EXTENSION",
-      "sourcePath": "Condition.severity.extension(http://hl7.org/fhir/StructureDefinition/obligation)",
-      "targetPath": "Condition.severity",
-      "description": "Obligation present only in source: SHALL:populate-if-known for AU Core Responder and SHALL:no-error for AU Core Requester",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-16",
-      "type": "TERMINOLOGY",
-      "sourcePath": "Condition.bodySite",
-      "targetPath": "Condition.bodySite",
-      "description": "Binding changed: extensible(https://healthterminologies.gov.au/fhir/ValueSet/body-site-1) -> example(http://hl7.org/fhir/ValueSet/body-site)",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-17",
-      "type": "STRUCTURAL",
-      "sourcePath": "Condition.bodySite",
-      "targetPath": "Condition.bodySite",
-      "description": "Constraint present only in source: au-core-cond-01 requires at least one SNOMED CT coding when a coded body site is provided",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-18",
-      "type": "STRUCTURAL",
-      "sourcePath": "Condition.subject",
-      "targetPath": "Condition.subject",
-      "description": "Reference target profile changed: [http://hl7.org.au/fhir/core/StructureDefinition/au-core-patient] -> [http://hl7.org/fhir/us/core/StructureDefinition/us-core-patient]",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-19",
-      "type": "EXTENSION",
-      "sourcePath": "Condition.subject.extension(http://hl7.org/fhir/StructureDefinition/obligation)",
-      "targetPath": "Condition.subject",
-      "description": "Obligation present only in source: SHALL:populate-if-known for AU Core Responder and SHALL:no-error for AU Core Requester",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-20",
-      "type": "EXTENSION",
-      "sourcePath": "Condition.subject",
-      "targetPath": "Condition.subject.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "USCDI requirement extension present only in target",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-21",
-      "type": "STRUCTURAL",
-      "sourcePath": "Condition.encounter",
-      "targetPath": "Condition.encounter",
-      "description": "MustSupport present only in target",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-22",
-      "type": "STRUCTURAL",
-      "sourcePath": "Condition.encounter",
-      "targetPath": "Condition.encounter",
-      "description": "Reference target profile changed: [http://hl7.org/fhir/StructureDefinition/Encounter] -> [http://hl7.org/fhir/us/core/StructureDefinition/us-core-encounter]",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-23",
-      "type": "EXTENSION",
-      "sourcePath": "Condition.encounter",
-      "targetPath": "Condition.encounter.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "USCDI requirement extension present only in target",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-24",
-      "type": "STRUCTURAL",
-      "sourcePath": "Condition.recordedDate",
-      "targetPath": "Condition.recordedDate",
-      "description": "MustSupport present only in target",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-25",
-      "type": "EXTENSION",
-      "sourcePath": "Condition.recordedDate",
-      "targetPath": "Condition.recordedDate.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "USCDI requirement extension present only in target",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-26",
-      "type": "EXTENSION",
-      "sourcePath": "Condition.extension",
-      "targetPath": "Condition.extension:assertedDate",
-      "description": "Extension slice present only in target: assertedDate (profile=http://hl7.org/fhir/StructureDefinition/condition-assertedDate, type=dateTime, max=1, mustSupport=true)",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-27",
-      "type": "STRUCTURAL",
-      "sourcePath": "Condition.onset[x]",
-      "targetPath": "Condition.onset[x]",
-      "description": "Type-level MustSupport present only in target for the dateTime choice",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-28",
-      "type": "STRUCTURAL",
-      "sourcePath": "Condition.onset[x]",
-      "targetPath": "Condition.onset[x]",
-      "description": "Type changed: [dateTime, Age, Period, Range] -> [dateTime, Age, Period, Range, string]",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-29",
-      "type": "EXTENSION",
-      "sourcePath": "Condition.onset[x].extension(http://hl7.org/fhir/StructureDefinition/obligation)",
-      "targetPath": "Condition.onset[x]",
-      "description": "Obligation present only in source: SHALL:populate-if-known for AU Core Responder and SHALL:no-error for AU Core Requester",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-30",
-      "type": "EXTENSION",
-      "sourcePath": "Condition.onset[x]",
-      "targetPath": "Condition.onset[x].extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "USCDI requirement extension present only in target",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-31",
-      "type": "STRUCTURAL",
-      "sourcePath": "Condition.abatement[x]",
-      "targetPath": "Condition.abatement[x]",
-      "description": "Type-level MustSupport present only in target for the dateTime choice",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-32",
-      "type": "STRUCTURAL",
-      "sourcePath": "Condition.abatement[x]",
-      "targetPath": "Condition.abatement[x]",
-      "description": "Type changed: [dateTime, Age, Period, Range] -> [dateTime, Age, Period, Range, string]",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-33",
-      "type": "EXTENSION",
-      "sourcePath": "Condition.abatement[x].extension(http://hl7.org/fhir/StructureDefinition/obligation)",
-      "targetPath": "Condition.abatement[x]",
-      "description": "Obligation present only in source: SHALL:populate-if-known for AU Core Responder and SHALL:no-error for AU Core Requester",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-34",
-      "type": "EXTENSION",
-      "sourcePath": "Condition.abatement[x]",
-      "targetPath": "Condition.abatement[x].extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "USCDI requirement extension present only in target",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-35",
-      "type": "TERMINOLOGY",
-      "sourcePath": "Condition.evidence.code",
-      "targetPath": "Condition.evidence.code",
-      "description": "Binding changed: preferred(https://healthterminologies.gov.au/fhir/ValueSet/clinical-finding-1) -> example(http://hl7.org/fhir/ValueSet/manifestation-or-symptom)",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-36",
       "type": "STRUCTURAL",
       "sourcePath": "Condition.note",
       "targetPath": "Condition.note",
-      "description": "MustSupport present only in source",
+      "description": "note MustSupport removed on optional element: source mustSupport=true; target US Core does not constrain note in its differential.",
       "severity": "INFO"
     },
     {
-      "id": "rule-37",
-      "type": "EXTENSION",
-      "sourcePath": "Condition.note.extension(http://hl7.org/fhir/StructureDefinition/obligation)",
-      "targetPath": "Condition.note",
-      "description": "Obligation present only in source: SHALL:populate-if-known for AU Core Responder and SHALL:no-error for AU Core Requester",
+      "id": "rule-16",
+      "type": "STRUCTURAL",
+      "sourcePath": "Condition.recordedDate",
+      "targetPath": "Condition.recordedDate",
+      "description": "recordedDate MS added on optional element in target: target US Core adds recordedDate[mustSupport=true]; source AU Core does not constrain recordedDate in its differential.",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-17",
+      "type": "TERMINOLOGY",
+      "sourcePath": "Condition.evidence.code",
+      "targetPath": "Condition.evidence.code",
+      "description": "evidence.code binding changed: source preferred(https://healthterminologies.gov.au/fhir/ValueSet/clinical-finding-1) [AU clinical finding VS] → target example(http://hl7.org/fhir/ValueSet/manifestation-or-symptom) [R4 base VS]. Binding strength weakened from preferred to example and AU-specific VS replaced.",
       "severity": "WARNING"
     }
   ]

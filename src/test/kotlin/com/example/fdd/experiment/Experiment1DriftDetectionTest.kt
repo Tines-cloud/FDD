@@ -2,8 +2,14 @@ package com.example.fdd.experiment
 
 import com.example.fdd.api.dto.ProfileInput
 import com.example.fdd.service.DriftOrchestrationService
-import org.junit.jupiter.api.*
+import org.junit.jupiter.api.AfterAll
+import org.junit.jupiter.api.Assertions
+import org.junit.jupiter.api.DisplayName
+import org.junit.jupiter.api.DynamicTest
 import org.junit.jupiter.api.DynamicTest.dynamicTest
+import org.junit.jupiter.api.Tag
+import org.junit.jupiter.api.TestFactory
+import org.junit.jupiter.api.TestInstance
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
@@ -26,6 +32,7 @@ import java.time.format.DateTimeFormatter
 @SpringBootTest
 @ActiveProfiles("experiment")
 @Tag("integration")
+@Tag("experiment1")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class Experiment1DriftDetectionTest {
 
@@ -49,8 +56,10 @@ class Experiment1DriftDetectionTest {
             return emptyList()
         }
 
-        // Support selective pair execution via system property
-        val selectedIds = System.getProperty("fdd.pairs")?.split(",")?.map { it.trim() }?.filter { it.isNotEmpty() }
+        // Support selective pair execution via system property OR env var FDD_PAIRS
+        val selectedIds = (System.getProperty("fdd.pairs")?.takeIf { it.isNotBlank() }
+            ?: System.getenv("FDD_PAIRS")?.takeIf { it.isNotBlank() })
+            ?.split(",")?.map { it.trim() }?.filter { it.isNotEmpty() }
         val goldPairs = if (!selectedIds.isNullOrEmpty()) {
             val filtered = allGoldPairs.filter { it.pairId in selectedIds }
             log.info("Running selected pairs: {} (matched {}/{})", selectedIds, filtered.size, selectedIds.size)
@@ -84,7 +93,11 @@ class Experiment1DriftDetectionTest {
                     metrics.truePositives, metrics.falsePositives, metrics.falseNegatives
                 )
 
-                Assertions.assertTrue(metrics.f1 >= 0.0, "F1 must be non-negative for ${gold.pairId}")
+                // Assert metrics are finite (system returned valid numbers, not NaN/Infinity)
+                Assertions.assertTrue(
+                    !metrics.precision.isNaN() && !metrics.recall.isNaN() && !metrics.f1.isNaN(),
+                    "Precision/Recall/F1 must be finite numbers for ${gold.pairId}"
+                )
             }
         }
     }

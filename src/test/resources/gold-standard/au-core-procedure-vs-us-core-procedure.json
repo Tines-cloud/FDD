@@ -2,205 +2,126 @@
   "pairId": "au-core-procedure-vs-us-core-procedure",
   "sourceClasspath": "standard-profiles/au-core/StructureDefinition-au-core-procedure.json",
   "targetClasspath": "standard-profiles/us-core/StructureDefinition-us-core-procedure.json",
+  "_notes": "Source: AU Core Procedure (Australian realm). Target: US Core Procedure (US realm). Both make status[MS], code[min=1 MS], subject[MS], performed[x][MS] common. Key differences: US Core adds root error constraint us-core-7 and constrains basedOn reference targets; AU Core uses AU procedure VS binding on code while US Core uses US procedure code VS; AU Core constrains subject/encounter/reasonReference to AU realm profiles; US Core constrains subject to us-core-patient; AU Core marks encounter/reasonCode/reasonReference/bodySite as MS which US Core does not; US Core narrows performed[x] types by excluding Timing; AU Core adds bodySite with AU-specific binding and error constraint.",
   "drifts": [
+    {
+      "id": "rule-0a",
+      "type": "EXTENSION",
+      "sourcePath": "Procedure.extension:targetBodyStructure",
+      "targetPath": "",
+      "description": "Extension targetBodyStructure removed in target: AU Core defines Procedure.extension:targetBodyStructure (optional, non-MS); US Core Procedure has no targetBodyStructure extension slice.",
+      "severity": "INFO"
+    },
     {
       "id": "rule-1",
       "type": "STRUCTURAL",
       "sourcePath": "Procedure",
       "targetPath": "Procedure",
-      "description": "Constraint present only in target: us-core-7 requires performed[x] when status is completed or in-progress",
-      "severity": "WARNING"
+      "description": "New root error constraint us-core-7(error) added in target: US Core adds an error-level constraint on Procedure; source AU Core has no root-level constraint.",
+      "severity": "ERROR"
     },
     {
       "id": "rule-2",
-      "type": "EXTENSION",
-      "sourcePath": "Procedure.extension:targetBodyStructure",
-      "targetPath": "",
-      "description": "Extension present only in source: Procedure.extension:targetBodyStructure (profile=http://hl7.org/fhir/StructureDefinition/procedure-targetBodyStructure)",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-3",
       "type": "STRUCTURAL",
       "sourcePath": "Procedure.basedOn",
       "targetPath": "Procedure.basedOn",
-      "description": "Reference target profile changed: [http://hl7.org/fhir/StructureDefinition/CarePlan, http://hl7.org/fhir/StructureDefinition/ServiceRequest] -> [http://hl7.org/fhir/us/core/StructureDefinition/us-core-careplan, http://hl7.org/fhir/us/core/StructureDefinition/us-core-servicerequest]",
+      "description": "basedOn reference target constraint added on optional element in target: US Core constrains basedOn to Reference(us-core-careplan|us-core-servicerequest) with no mustSupport; source AU Core does not constrain basedOn. New non-MS reference target constraint added on optional element.",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-3",
+      "type": "TERMINOLOGY",
+      "sourcePath": "Procedure.status",
+      "targetPath": "Procedure.status",
+      "description": "status binding explicitly added in target: US Core adds required(http://hl7.org/fhir/ValueSet/event-status); source AU Core does not declare a binding on status in its differential (inherits R4 required binding). Binding explicitly re-declared/tightened in target.",
       "severity": "WARNING"
     },
     {
       "id": "rule-4",
-      "type": "EXTENSION",
-      "sourcePath": "Procedure.basedOn",
-      "targetPath": "Procedure.basedOn.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "Extension present only in target: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+      "type": "TERMINOLOGY",
+      "sourcePath": "Procedure.code",
+      "targetPath": "Procedure.code",
+      "description": "code binding changed: source extensible(https://healthterminologies.gov.au/fhir/ValueSet/procedure-1) [AU procedure VS] → target extensible(http://hl7.org/fhir/us/core/ValueSet/us-core-procedure-code) [US procedure codes VS]. Same binding strength (extensible), different realm-specific value sets.",
       "severity": "WARNING"
     },
     {
       "id": "rule-5",
-      "type": "EXTENSION",
-      "sourcePath": "Procedure.status",
-      "targetPath": "Procedure.status.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "Extension present only in target: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+      "type": "STRUCTURAL",
+      "sourcePath": "Procedure.subject",
+      "targetPath": "Procedure.subject",
+      "description": "subject reference target changed: source constrains to au-core-patient (http://hl7.org.au/fhir/core/StructureDefinition/au-core-patient) → target constrains to us-core-patient (http://hl7.org/fhir/us/core/StructureDefinition/us-core-patient). Different realm-specific patient profiles.",
       "severity": "WARNING"
     },
     {
       "id": "rule-6",
-      "type": "EXTENSION",
-      "sourcePath": "Procedure.status.extension(http://hl7.org/fhir/StructureDefinition/obligation)",
-      "targetPath": "Procedure.status",
-      "description": "Obligation present only in source: SHALL:populate-if-known for AU Core Responder and SHALL:no-error for AU Core Requester",
-      "severity": "WARNING"
+      "type": "STRUCTURAL",
+      "sourcePath": "Procedure.encounter",
+      "targetPath": "Procedure.encounter",
+      "description": "encounter MustSupport removed on optional element: source AU Core marks encounter[mustSupport=true]; US Core does not constrain encounter in its differential. MS removed on optional element.",
+      "severity": "INFO"
     },
     {
       "id": "rule-7",
-      "type": "TERMINOLOGY",
-      "sourcePath": "Procedure.code",
-      "targetPath": "Procedure.code",
-      "description": "Binding changed: extensible(https://healthterminologies.gov.au/fhir/ValueSet/procedure-1) -> extensible(http://hl7.org/fhir/us/core/ValueSet/us-core-procedure-code)",
+      "type": "STRUCTURAL",
+      "sourcePath": "Procedure.encounter",
+      "targetPath": "Procedure.encounter",
+      "description": "encounter AU reference target removed: source constrains encounter to au-core-encounter; target US Core does not constrain encounter at all. AU realm-specific reference profile removed.",
       "severity": "WARNING"
     },
     {
       "id": "rule-8",
-      "type": "EXTENSION",
-      "sourcePath": "Procedure.code",
-      "targetPath": "Procedure.code.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "Extension present only in target: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+      "type": "STRUCTURAL",
+      "sourcePath": "Procedure.performed[x]",
+      "targetPath": "Procedure.performed[x]",
+      "description": "performed[x] types narrowed in target: target US Core restricts to [dateTime, Period, string, Age, Range] excluding Timing; source AU Core marks performed[x] as MS with no type restriction (inherits R4 base which includes Timing). Timing type removed in target.",
       "severity": "WARNING"
     },
     {
+      "id": "rule-8b",
+      "type": "STRUCTURAL",
+      "sourcePath": "Procedure.performed[x]",
+      "targetPath": "Procedure.performed[x]",
+      "description": "performed[x] type-level MustSupport added in target for the dateTime choice: US Core marks Procedure.performed[x]:performedDateTime as mustSupport=true; source AU Core only marks the base performed[x] element as MS without type-level MS differentiation.",
+      "severity": "INFO"
+    },
+    {
       "id": "rule-9",
-      "type": "EXTENSION",
-      "sourcePath": "Procedure.code.extension(http://hl7.org/fhir/StructureDefinition/obligation)",
-      "targetPath": "Procedure.code",
-      "description": "Obligation present only in source: SHALL:populate-if-known for AU Core Responder and SHALL:no-error for AU Core Requester",
-      "severity": "WARNING"
+      "type": "STRUCTURAL",
+      "sourcePath": "Procedure.reasonCode",
+      "targetPath": "Procedure.reasonCode",
+      "description": "reasonCode MustSupport removed on optional element: source AU Core marks reasonCode[mustSupport=true]; US Core does not constrain reasonCode in its differential. MS removed on optional element.",
+      "severity": "INFO"
     },
     {
       "id": "rule-10",
       "type": "STRUCTURAL",
-      "sourcePath": "Procedure.subject",
-      "targetPath": "Procedure.subject",
-      "description": "Reference target profile changed: [http://hl7.org.au/fhir/core/StructureDefinition/au-core-patient] -> [http://hl7.org/fhir/us/core/StructureDefinition/us-core-patient]",
-      "severity": "WARNING"
+      "sourcePath": "Procedure.reasonReference",
+      "targetPath": "Procedure.reasonReference",
+      "description": "reasonReference MustSupport removed on optional element: source AU Core marks reasonReference[mustSupport=true]; US Core does not constrain reasonReference. MS removed on optional element.",
+      "severity": "INFO"
     },
     {
       "id": "rule-11",
-      "type": "EXTENSION",
-      "sourcePath": "Procedure.subject",
-      "targetPath": "Procedure.subject.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "Extension present only in target: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+      "type": "STRUCTURAL",
+      "sourcePath": "Procedure.reasonReference",
+      "targetPath": "Procedure.reasonReference",
+      "description": "reasonReference AU reference targets removed: source constrains to [au-core-condition, Observation, au-core-procedure, DocumentReference]; target US Core does not constrain reasonReference at all. AU realm-specific profile references removed.",
       "severity": "WARNING"
     },
     {
       "id": "rule-12",
-      "type": "EXTENSION",
-      "sourcePath": "Procedure.subject.extension(http://hl7.org/fhir/StructureDefinition/obligation)",
-      "targetPath": "Procedure.subject",
-      "description": "Obligation present only in source: SHALL:populate-if-known for AU Core Responder and SHALL:no-error for AU Core Requester",
+      "type": "STRUCTURAL",
+      "sourcePath": "Procedure.bodySite",
+      "targetPath": "Procedure.bodySite",
+      "description": "Source constraint au-core-pro-01(error) on bodySite removed in target: AU Core defines an error constraint on bodySite requiring codes from a specific AU hierarchy; US Core does not constrain bodySite.",
       "severity": "WARNING"
     },
     {
       "id": "rule-13",
-      "type": "STRUCTURAL",
-      "sourcePath": "Procedure.encounter",
-      "targetPath": "Procedure.encounter",
-      "description": "Reference target profile changed: [http://hl7.org.au/fhir/core/StructureDefinition/au-core-encounter] -> [http://hl7.org/fhir/StructureDefinition/Encounter]",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-14",
-      "type": "STRUCTURAL",
-      "sourcePath": "Procedure.encounter",
-      "targetPath": "Procedure.encounter",
-      "description": "MustSupport removed in target",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-15",
-      "type": "EXTENSION",
-      "sourcePath": "Procedure.encounter.extension(http://hl7.org/fhir/StructureDefinition/obligation)",
-      "targetPath": "Procedure.encounter",
-      "description": "Obligation present only in source: SHALL:populate-if-known for AU Core Responder and SHALL:no-error for AU Core Requester",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-16",
-      "type": "STRUCTURAL",
-      "sourcePath": "Procedure.performed[x]",
-      "targetPath": "Procedure.performed[x]",
-      "description": "Type-level MustSupport added in target for the dateTime choice",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-17",
-      "type": "EXTENSION",
-      "sourcePath": "Procedure.performed[x]",
-      "targetPath": "Procedure.performed[x].extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "Extension present only in target: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-18",
-      "type": "EXTENSION",
-      "sourcePath": "Procedure.performed[x].extension(http://hl7.org/fhir/StructureDefinition/obligation)",
-      "targetPath": "Procedure.performed[x]",
-      "description": "Obligation present only in source: SHALL:populate-if-known for AU Core Responder and SHALL:no-error for AU Core Requester",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-19",
-      "type": "STRUCTURAL",
-      "sourcePath": "Procedure.reasonCode",
-      "targetPath": "Procedure.reasonCode",
-      "description": "MustSupport removed in target",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-20",
-      "type": "EXTENSION",
-      "sourcePath": "Procedure.reasonCode.extension(http://hl7.org/fhir/StructureDefinition/obligation)",
-      "targetPath": "Procedure.reasonCode",
-      "description": "Obligation present only in source: SHALL:populate-if-known for AU Core Responder and SHALL:no-error for AU Core Requester",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-21",
-      "type": "STRUCTURAL",
-      "sourcePath": "Procedure.reasonReference",
-      "targetPath": "Procedure.reasonReference",
-      "description": "Reference target profile changed: [http://hl7.org.au/fhir/core/StructureDefinition/au-core-condition, http://hl7.org.au/fhir/core/StructureDefinition/au-core-procedure, http://hl7.org/fhir/StructureDefinition/DocumentReference, http://hl7.org/fhir/StructureDefinition/Observation] -> [http://hl7.org/fhir/StructureDefinition/Condition, http://hl7.org/fhir/StructureDefinition/Observation, http://hl7.org/fhir/StructureDefinition/Procedure, http://hl7.org/fhir/StructureDefinition/DiagnosticReport, http://hl7.org/fhir/StructureDefinition/DocumentReference]",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-22",
-      "type": "STRUCTURAL",
-      "sourcePath": "Procedure.reasonReference",
-      "targetPath": "Procedure.reasonReference",
-      "description": "MustSupport removed in target",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-23",
-      "type": "EXTENSION",
-      "sourcePath": "Procedure.reasonReference.extension(http://hl7.org/fhir/StructureDefinition/obligation)",
-      "targetPath": "Procedure.reasonReference",
-      "description": "Obligation present only in source: SHALL:populate-if-known for AU Core Responder and SHALL:no-error for AU Core Requester",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-24",
       "type": "TERMINOLOGY",
       "sourcePath": "Procedure.bodySite",
       "targetPath": "Procedure.bodySite",
-      "description": "Binding changed: extensible(https://healthterminologies.gov.au/fhir/ValueSet/body-site-1) -> example(http://hl7.org/fhir/ValueSet/body-site)",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-25",
-      "type": "STRUCTURAL",
-      "sourcePath": "Procedure.bodySite",
-      "targetPath": "Procedure.bodySite",
-      "description": "Constraint present only in source: au-core-pro-01 requires at least one SNOMED CT coding when a coded body site is provided",
+      "description": "bodySite binding changed: source extensible(https://healthterminologies.gov.au/fhir/ValueSet/body-site-1) [AU body site VS] → target example(http://hl7.org/fhir/ValueSet/body-site) [R4 base VS]. Binding strength weakened from extensible to example, AU-specific VS replaced by R4 base VS.",
       "severity": "WARNING"
     }
   ]

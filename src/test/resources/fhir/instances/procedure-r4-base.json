@@ -1,32 +1,95 @@
-{
+﻿{
   "resourceType": "Procedure",
   "id": "r4-procedure-001",
   "meta": {
+    "lastUpdated": "2026-05-01T12:00:00+00:00",
     "profile": [
       "http://hl7.org/fhir/StructureDefinition/Procedure"
     ]
   },
+  "text": {
+    "status": "generated",
+    "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\"><p><b>Fasting blood glucose measurement</b> (SNOMED 271062006). Completed 2025-11-20. Patient: James Robert Williams. Performed by: Dr. Emily Chen, Springfield General Hospital.</p></div>"
+  },
+  "identifier": [
+    {
+      "use": "official",
+      "system": "http://hospital.example.org/procedures",
+      "value": "PROC-2025-110001"
+    }
+  ],
+  "instantiatesCanonical": [
+    "http://example.org/fhir/PlanDefinition/diabetes-monitoring-protocol"
+  ],
+  "instantiatesUri": [
+    "https://www.diabetes.org/clinical-guidelines/blood-glucose-monitoring"
+  ],
+  "basedOn": [
+    {
+      "reference": "ServiceRequest/r4-servicerequest-001",
+      "display": "Fasting blood glucose order"
+    }
+  ],
+  "partOf": [
+    {
+      "reference": "Procedure/r4-procedure-parent-001",
+      "display": "Annual Diabetes Review"
+    }
+  ],
   "status": "completed",
+  "statusReason": {
+    "coding": [
+      {
+        "system": "http://snomed.info/sct",
+        "code": "182992009",
+        "display": "Treatment completed"
+      }
+    ]
+  },
+  "category": {
+    "coding": [
+      {
+        "system": "http://snomed.info/sct",
+        "code": "103693007",
+        "display": "Diagnostic procedure"
+      }
+    ],
+    "text": "Laboratory diagnostic procedure"
+  },
   "code": {
     "coding": [
       {
         "system": "http://snomed.info/sct",
-        "code": "80146002",
-        "display": "Appendectomy"
+        "code": "271062006",
+        "display": "Fasting blood glucose measurement"
+      },
+      {
+        "system": "http://loinc.org",
+        "code": "1558-6",
+        "display": "Fasting glucose [Mass/volume] in Serum or Plasma"
       }
     ],
-    "text": "Appendectomy"
+    "text": "Fasting blood glucose measurement"
   },
   "subject": {
     "reference": "Patient/r4-patient-001",
-    "display": "James Williams"
+    "display": "James Robert Williams"
   },
   "encounter": {
-    "reference": "Encounter/r4-encounter-001"
+    "reference": "Encounter/r4-encounter-001",
+    "display": "Outpatient Consultation 2025-11-20"
   },
   "performedPeriod": {
-    "start": "2025-08-10T14:00:00+00:00",
-    "end": "2025-08-10T15:30:00+00:00"
+    "start": "2025-11-20T08:25:00+00:00",
+    "end": "2025-11-20T08:35:00+00:00"
+  },
+  "recorder": {
+    "reference": "Practitioner/r4-practitioner-001",
+    "display": "Dr. Emily Chen"
+  },
+  "asserter": {
+    "reference": "Practitioner/r4-practitioner-001",
+    "display": "Dr. Emily Chen"
   },
   "performer": [
     {
@@ -34,15 +97,41 @@
         "coding": [
           {
             "system": "http://snomed.info/sct",
-            "code": "304292004",
-            "display": "Surgeon"
+            "code": "223366009",
+            "display": "Healthcare professional"
           }
         ]
       },
       "actor": {
         "reference": "Practitioner/r4-practitioner-001",
         "display": "Dr. Emily Chen"
+      },
+      "onBehalfOf": {
+        "reference": "Organization/r4-organization-001",
+        "display": "Springfield General Hospital"
       }
+    }
+  ],
+  "location": {
+    "reference": "Location/r4-location-001",
+    "display": "General Practice Clinic - Room 3"
+  },
+  "reasonCode": [
+    {
+      "coding": [
+        {
+          "system": "http://snomed.info/sct",
+          "code": "44054006",
+          "display": "Type 2 diabetes mellitus"
+        }
+      ],
+      "text": "Diabetes monitoring"
+    }
+  ],
+  "reasonReference": [
+    {
+      "reference": "Condition/r4-condition-001",
+      "display": "Type 2 diabetes mellitus"
     }
   ],
   "bodySite": [
@@ -50,10 +139,11 @@
       "coding": [
         {
           "system": "http://snomed.info/sct",
-          "code": "66754008",
-          "display": "Appendix structure"
+          "code": "368209003",
+          "display": "Right arm"
         }
-      ]
+      ],
+      "text": "Right antecubital fossa (venepuncture)"
     }
   ],
   "outcome": {
@@ -63,6 +153,92 @@
         "code": "385669000",
         "display": "Successful"
       }
-    ]
-  }
+    ],
+    "text": "Procedure completed successfully. Sample collected without complications."
+  },
+  "report": [
+    {
+      "reference": "DiagnosticReport/r4-diagnosticreport-001",
+      "display": "Complete Blood Count Report"
+    }
+  ],
+  "complication": [
+    {
+      "coding": [
+        {
+          "system": "http://snomed.info/sct",
+          "code": "260413007",
+          "display": "None"
+        }
+      ],
+      "text": "No complications"
+    }
+  ],
+  "complicationDetail": [
+    {
+      "reference": "Condition/r4-condition-nocomplication-001",
+      "display": "No post-procedure complications noted"
+    }
+  ],
+  "followUp": [
+    {
+      "coding": [
+        {
+          "system": "http://snomed.info/sct",
+          "code": "306019007",
+          "display": "Follow up"
+        }
+      ],
+      "text": "Repeat fasting blood glucose in 3 months"
+    }
+  ],
+  "note": [
+    {
+      "authorReference": {
+        "reference": "Practitioner/r4-practitioner-001",
+        "display": "Dr. Emily Chen"
+      },
+      "time": "2025-11-20",
+      "text": "Venepuncture performed right antecubital fossa. Sample collected into grey-top tube (sodium fluoride/potassium oxalate). Patient fasted for 10 hours prior. No adverse events."
+    }
+  ],
+  "focalDevice": [
+    {
+      "action": {
+        "coding": [
+          {
+            "system": "http://snomed.info/sct",
+            "code": "129319008",
+            "display": "Venepuncture"
+          }
+        ]
+      },
+      "manipulated": {
+        "reference": "Device/r4-device-needle-001",
+        "display": "21G venepuncture needle"
+      }
+    }
+  ],
+  "usedReference": [
+    {
+      "reference": "Device/r4-device-needle-001",
+      "display": "21G venepuncture needle"
+    },
+    {
+      "reference": "Device/r4-device-greytube-001",
+      "display": "Grey-top collection tube"
+    }
+  ],
+  "usedCode": [
+    {
+      "coding": [
+        {
+          "system": "http://snomed.info/sct",
+          "code": "79068005",
+          "display": "Needle, device"
+        }
+      ],
+      "text": "Venepuncture needle"
+    }
+  ]
 }

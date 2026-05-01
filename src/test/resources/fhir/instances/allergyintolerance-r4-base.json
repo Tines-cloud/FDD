@@ -1,4 +1,4 @@
-{
+﻿{
   "resourceType": "AllergyIntolerance",
   "id": "r4-allergy-001",
   "meta": {
@@ -6,6 +6,17 @@
       "http://hl7.org/fhir/StructureDefinition/AllergyIntolerance"
     ]
   },
+  "text": {
+    "status": "generated",
+    "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\"><p><b>Penicillin Allergy</b> - HIGH criticality, confirmed active. Reaction: Anaphylaxis + Urticaria (severe, oral route, 2010-03-15). Patient: James Robert Williams.</p></div>"
+  },
+  "identifier": [
+    {
+      "use": "official",
+      "system": "http://hospital.example.org/allergies",
+      "value": "ALG-2026-0001"
+    }
+  ],
   "clinicalStatus": {
     "coding": [
       {
@@ -13,7 +24,8 @@
         "code": "active",
         "display": "Active"
       }
-    ]
+    ],
+    "text": "Active"
   },
   "verificationStatus": {
     "coding": [
@@ -22,7 +34,8 @@
         "code": "confirmed",
         "display": "Confirmed"
       }
-    ]
+    ],
+    "text": "Confirmed"
   },
   "type": "allergy",
   "category": [
@@ -31,6 +44,11 @@
   "criticality": "high",
   "code": {
     "coding": [
+      {
+        "system": "http://www.nlm.nih.gov/research/umls/rxnorm",
+        "code": "7980",
+        "display": "Penicillin"
+      },
       {
         "system": "http://snomed.info/sct",
         "code": "91936005",
@@ -41,20 +59,44 @@
   },
   "patient": {
     "reference": "Patient/r4-patient-001",
-    "display": "James Williams"
+    "display": "James Robert Williams"
+  },
+  "encounter": {
+    "reference": "Encounter/r4-encounter-001",
+    "display": "Outpatient Consultation 2025-11-20"
   },
   "onsetDateTime": "2010-03-15",
   "recordedDate": "2015-06-20",
+  "recorder": {
+    "reference": "Practitioner/r4-practitioner-001",
+    "display": "Dr. Emily Chen"
+  },
+  "asserter": {
+    "reference": "Patient/r4-patient-001",
+    "display": "James Robert Williams"
+  },
+  "lastOccurrence": "2010-03-15",
+  "note": [
+    {
+      "authorReference": {
+        "reference": "Practitioner/r4-practitioner-001",
+        "display": "Dr. Emily Chen"
+      },
+      "time": "2015-06-20",
+      "text": "Patient reported severe anaphylactic reaction requiring emergency treatment after oral penicillin in 2010. All penicillin-class antibiotics are contraindicated. Patient wears a medical alert bracelet."
+    }
+  ],
   "reaction": [
     {
       "substance": {
         "coding": [
           {
-            "system": "http://snomed.info/sct",
-            "code": "764146007",
+            "system": "http://www.nlm.nih.gov/research/umls/rxnorm",
+            "code": "7980",
             "display": "Penicillin"
           }
-        ]
+        ],
+        "text": "Penicillin"
       },
       "manifestation": [
         {
@@ -64,10 +106,38 @@
               "code": "39579001",
               "display": "Anaphylaxis"
             }
-          ]
+          ],
+          "text": "Anaphylaxis"
+        },
+        {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "271807003",
+              "display": "Eruption of skin"
+            }
+          ],
+          "text": "Urticaria"
         }
       ],
-      "severity": "severe"
+      "description": "Anaphylactic reaction with generalised urticaria and hypotension approximately 30 minutes after first oral dose.",
+      "onset": "2010-03-15",
+      "severity": "severe",
+      "exposureRoute": {
+        "coding": [
+          {
+            "system": "http://snomed.info/sct",
+            "code": "26643006",
+            "display": "Oral route"
+          }
+        ],
+        "text": "Oral route"
+      },
+      "note": [
+        {
+          "text": "Required epinephrine administration. Patient hospitalised for 24 hours post-reaction."
+        }
+      ]
     }
   ]
 }

@@ -1,46 +1,123 @@
-{
+﻿{
   "resourceType": "Location",
   "id": "r4-location-001",
   "meta": {
+    "lastUpdated": "2026-05-01T12:00:00+00:00",
     "profile": [
       "http://hl7.org/fhir/StructureDefinition/Location"
     ]
   },
+  "text": {
+    "status": "generated",
+    "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\"><p><b>General Practice Clinic - Room 3</b>. Status: active. Springfield General Hospital, 100 Hospital Drive, Springfield, IL 62701. Phone: +1-555-200-3000.</p></div>"
+  },
+  "identifier": [
+    {
+      "use": "official",
+      "system": "http://hospital.example.org/locations",
+      "value": "LOC-GP-ROOM-003"
+    }
+  ],
   "status": "active",
-  "name": "General Practice Clinic",
-  "description": "Outpatient general practice clinic on the first floor",
+  "operationalStatus": {
+    "system": "http://terminology.hl7.org/CodeSystem/v2-0116",
+    "code": "O",
+    "display": "Occupied"
+  },
+  "name": "General Practice Clinic - Room 3",
+  "alias": [
+    "GP Clinic Room 3",
+    "Room 3 - Outpatients"
+  ],
+  "description": "Outpatient general practice consulting room. Equipped for standard consultations, minor procedures, and point-of-care testing.",
   "mode": "instance",
   "type": [
     {
       "coding": [
         {
           "system": "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
-          "code": "OF",
-          "display": "Outpatient facility"
+          "code": "GIM",
+          "display": "General internal medicine clinic"
         }
-      ]
+      ],
+      "text": "General Practice Consulting Room"
     }
   ],
   "telecom": [
     {
       "system": "phone",
-      "value": "555-234-5678",
-      "use": "work"
+      "value": "+1-555-200-3000",
+      "use": "work",
+      "rank": 1
+    },
+    {
+      "system": "fax",
+      "value": "+1-555-200-3001",
+      "use": "work",
+      "rank": 2
+    },
+    {
+      "system": "email",
+      "value": "gp-clinic@hospital.example.org",
+      "use": "work",
+      "rank": 3
     }
   ],
   "address": {
     "use": "work",
+    "type": "physical",
+    "text": "100 Hospital Drive, Room 3, Springfield, IL 62701, US",
     "line": [
-      "200 Hospital Drive",
-      "Floor 1"
+      "100 Hospital Drive",
+      "Room 3"
     ],
     "city": "Springfield",
     "state": "IL",
-    "postalCode": "62702",
+    "postalCode": "62701",
     "country": "US"
+  },
+  "physicalType": {
+    "coding": [
+      {
+        "system": "http://terminology.hl7.org/CodeSystem/location-physical-type",
+        "code": "ro",
+        "display": "Room"
+      }
+    ],
+    "text": "Consulting Room"
+  },
+  "position": {
+    "longitude": -89.6501,
+    "latitude": 39.7817,
+    "altitude": 180.0
   },
   "managingOrganization": {
     "reference": "Organization/r4-organization-001",
     "display": "Springfield General Hospital"
-  }
+  },
+  "partOf": {
+    "reference": "Location/r4-location-building-001",
+    "display": "Springfield General Hospital - Main Building"
+  },
+  "hoursOfOperation": [
+    {
+      "daysOfWeek": [
+        "mon",
+        "tue",
+        "wed",
+        "thu",
+        "fri"
+      ],
+      "allDay": false,
+      "openingTime": "08:00:00",
+      "closingTime": "17:00:00"
+    }
+  ],
+  "availabilityExceptions": "Closed on public holidays. Emergency access via ED only.",
+  "endpoint": [
+    {
+      "reference": "Endpoint/r4-endpoint-001",
+      "display": "HL7v2 ADT endpoint for Room 3"
+    }
+  ]
 }

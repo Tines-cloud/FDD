@@ -1,454 +1,232 @@
 {
-  "pairId" : "iit-proj-patient-vs-hemas-patient",
-  "sourceClasspath" : "custom-profiles/iit-proj/iit-proj-patient.json",
-  "targetClasspath" : "custom-profiles/hemas/hemas-patient.json",
-  "drifts" : [ {
-    "id" : "rule-1",
-    "type" : "STRUCTURAL",
-    "sourcePath" : "Patient",
-    "targetPath" : "Patient",
-    "description" : "Constraints added in target: [hemas-pat-1, hemas-pat-2]",
-    "severity" : "WARNING"
-  }, {
-    "id" : "rule-2",
-    "type" : "STRUCTURAL",
-    "sourcePath" : "Patient",
-    "targetPath" : "Patient",
-    "description" : "Constraints removed in target: [iit-pat-1, iit-pat-2]",
-    "severity" : "WARNING"
-  }, {
-    "id" : "rule-3",
-    "type" : "TERMINOLOGY",
-    "sourcePath" : "Patient.identifier.type",
-    "targetPath" : "Patient.identifier.type",
-    "description" : "Pattern value changed: 'org.hl7.fhir.r4.model.CodeableConcept@2db58afe' -> 'org.hl7.fhir.r4.model.CodeableConcept@76770fa5'",
-    "severity" : "WARNING"
-  }, {
-    "id" : "rule-4",
-    "type" : "TERMINOLOGY",
-    "sourcePath" : "Patient.identifier.system",
-    "targetPath" : "Patient.identifier.system",
-    "description" : "Fixed value changed: 'none' -> 'https://hemas.example.com/fhir/sid/nic'",
-    "severity" : "ERROR"
-  }, {
-    "id" : "rule-5",
-    "type" : "CARDINALITY",
-    "sourcePath" : "Patient.name",
-    "targetPath" : "Patient.name",
-    "description" : "Cardinality changed: [0..0] -> [1..*]",
-    "severity" : "ERROR"
-  }, {
-    "id" : "rule-6",
-    "type" : "STRUCTURAL",
-    "sourcePath" : "Patient.name",
-    "targetPath" : "Patient.name",
-    "description" : "MustSupport added in target",
-    "severity" : "INFO"
-  }, {
-    "id" : "rule-7",
-    "type" : "CARDINALITY",
-    "sourcePath" : "Patient.telecom",
-    "targetPath" : "Patient.telecom",
-    "description" : "Cardinality changed: [0..*] -> [1..*]",
-    "severity" : "ERROR"
-  }, {
-    "id" : "rule-8",
-    "type" : "STRUCTURAL",
-    "sourcePath" : "Patient.telecom",
-    "targetPath" : "Patient.telecom",
-    "description" : "MustSupport added in target",
-    "severity" : "INFO"
-  }, {
-    "id" : "rule-9",
-    "type" : "STRUCTURAL",
-    "sourcePath" : "Patient.deceased[x]",
-    "targetPath" : "Patient.deceased[x]",
-    "description" : "MustSupport removed in target",
-    "severity" : "INFO"
-  }, {
-    "id" : "rule-10",
-    "type" : "CARDINALITY",
-    "sourcePath" : "Patient.address",
-    "targetPath" : "Patient.address",
-    "description" : "Cardinality changed: [0..0] -> [1..*]",
-    "severity" : "ERROR"
-  }, {
-    "id" : "rule-11",
-    "type" : "STRUCTURAL",
-    "sourcePath" : "Patient.address",
-    "targetPath" : "Patient.address",
-    "description" : "MustSupport added in target",
-    "severity" : "INFO"
-  }, {
-    "id" : "rule-12",
-    "type" : "STRUCTURAL",
-    "sourcePath" : "Patient.maritalStatus",
-    "targetPath" : "Patient.maritalStatus",
-    "description" : "MustSupport added in target",
-    "severity" : "INFO"
-  }, {
-    "id" : "rule-13",
-    "type" : "CARDINALITY",
-    "sourcePath" : "Patient.photo",
-    "targetPath" : "Patient.photo",
-    "description" : "Cardinality changed: [0..0] -> [0..*]",
-    "severity" : "INFO"
-  }, {
-    "id" : "rule-14",
-    "type" : "STRUCTURAL",
-    "sourcePath" : "Patient.contact",
-    "targetPath" : "Patient.contact",
-    "description" : "MustSupport added in target",
-    "severity" : "INFO"
-  }, {
-    "id" : "rule-15",
-    "type" : "CARDINALITY",
-    "sourcePath" : "Patient.contact.relationship",
-    "targetPath" : "Patient.contact.relationship",
-    "description" : "Cardinality changed: [0..*] -> [1..*]",
-    "severity" : "ERROR"
-  }, {
-    "id" : "rule-16",
-    "type" : "STRUCTURAL",
-    "sourcePath" : "Patient.contact.relationship",
-    "targetPath" : "Patient.contact.relationship",
-    "description" : "MustSupport added in target",
-    "severity" : "INFO"
-  }, {
-    "id" : "rule-17",
-    "type" : "CARDINALITY",
-    "sourcePath" : "Patient.contact.name",
-    "targetPath" : "Patient.contact.name",
-    "description" : "Cardinality changed: [0..1] -> [1..1]",
-    "severity" : "ERROR"
-  }, {
-    "id" : "rule-18",
-    "type" : "STRUCTURAL",
-    "sourcePath" : "Patient.contact.name",
-    "targetPath" : "Patient.contact.name",
-    "description" : "MustSupport added in target",
-    "severity" : "INFO"
-  }, {
-    "id" : "rule-19",
-    "type" : "CARDINALITY",
-    "sourcePath" : "Patient.contact.telecom",
-    "targetPath" : "Patient.contact.telecom",
-    "description" : "Cardinality changed: [0..*] -> [1..*]",
-    "severity" : "ERROR"
-  }, {
-    "id" : "rule-20",
-    "type" : "STRUCTURAL",
-    "sourcePath" : "Patient.contact.telecom",
-    "targetPath" : "Patient.contact.telecom",
-    "description" : "MustSupport added in target",
-    "severity" : "INFO"
-  }, {
-    "id" : "rule-21",
-    "type" : "CARDINALITY",
-    "sourcePath" : "Patient.generalPractitioner",
-    "targetPath" : "Patient.generalPractitioner",
-    "description" : "Cardinality changed: [0..0] -> [0..*]",
-    "severity" : "INFO"
-  }, {
-    "id" : "rule-22",
-    "type" : "STRUCTURAL",
-    "sourcePath" : "Patient.generalPractitioner",
-    "targetPath" : "Patient.generalPractitioner",
-    "description" : "Reference target profile changed: [http://hl7.org/fhir/StructureDefinition/Organization, http://hl7.org/fhir/StructureDefinition/Practitioner, http://hl7.org/fhir/StructureDefinition/PractitionerRole] -> [https://hemas.example.com/fhir/StructureDefinition/Practitioner]",
-    "severity" : "WARNING"
-  }, {
-    "id" : "rule-23",
-    "type" : "STRUCTURAL",
-    "sourcePath" : "Patient.generalPractitioner",
-    "targetPath" : "Patient.generalPractitioner",
-    "description" : "MustSupport added in target",
-    "severity" : "INFO"
-  }, {
-    "id" : "rule-24",
-    "type" : "CARDINALITY",
-    "sourcePath" : "Patient.managingOrganization",
-    "targetPath" : "Patient.managingOrganization",
-    "description" : "Cardinality changed: [0..1] -> [1..1]",
-    "severity" : "ERROR"
-  }, {
-    "id" : "rule-25",
-    "type" : "STRUCTURAL",
-    "sourcePath" : "Patient.managingOrganization",
-    "targetPath" : "Patient.managingOrganization",
-    "description" : "Reference target profile changed: [https://iit-proj.example.com/fhir/StructureDefinition/Organization] -> [https://hemas.example.com/fhir/StructureDefinition/Organization]",
-    "severity" : "WARNING"
-  }, {
-    "id" : "rule-26",
-    "type" : "EXTENSION",
-    "sourcePath" : "",
-    "targetPath" : "Patient.extension:registrationDate",
-    "description" : "Extension added in target profile: Patient.extension:registrationDate",
-    "severity" : "WARNING"
-  }, {
-    "id" : "rule-27",
-    "type" : "EXTENSION",
-    "sourcePath" : "",
-    "targetPath" : "Patient.extension:vipStatus",
-    "description" : "Extension added in target profile: Patient.extension:vipStatus",
-    "severity" : "WARNING"
-  }, {
-    "id" : "rule-28",
-    "type" : "EXTENSION",
-    "sourcePath" : "",
-    "targetPath" : "Patient.extension:insuranceProvider",
-    "description" : "Extension added in target profile: Patient.extension:insuranceProvider",
-    "severity" : "WARNING"
-  }, {
-    "id" : "rule-29",
-    "type" : "STRUCTURAL",
-    "sourcePath" : "",
-    "targetPath" : "Patient.identifier:hospitalId",
-    "description" : "New slice 'hospitalId' added in target profile",
-    "severity" : "ERROR"
-  }, {
-    "id" : "rule-30",
-    "type" : "STRUCTURAL",
-    "sourcePath" : "",
-    "targetPath" : "Patient.identifier:nic",
-    "description" : "New slice 'nic' added in target profile",
-    "severity" : "INFO"
-  }, {
-    "id" : "rule-31",
-    "type" : "STRUCTURAL",
-    "sourcePath" : "",
-    "targetPath" : "Patient.name.id",
-    "description" : "Element added in target profile: Patient.name.id",
-    "severity" : "INFO"
-  }, {
-    "id" : "rule-32",
-    "type" : "STRUCTURAL",
-    "sourcePath" : "",
-    "targetPath" : "Patient.name.extension",
-    "description" : "Element added in target profile: Patient.name.extension",
-    "severity" : "INFO"
-  }, {
-    "id" : "rule-33",
-    "type" : "STRUCTURAL",
-    "sourcePath" : "",
-    "targetPath" : "Patient.name.use",
-    "description" : "Element added in target profile: Patient.name.use",
-    "severity" : "INFO"
-  }, {
-    "id" : "rule-34",
-    "type" : "STRUCTURAL",
-    "sourcePath" : "",
-    "targetPath" : "Patient.name.text",
-    "description" : "Element added in target profile: Patient.name.text",
-    "severity" : "INFO"
-  }, {
-    "id" : "rule-35",
-    "type" : "STRUCTURAL",
-    "sourcePath" : "",
-    "targetPath" : "Patient.name.family",
-    "description" : "Element added in target profile: Patient.name.family",
-    "severity" : "ERROR"
-  }, {
-    "id" : "rule-36",
-    "type" : "STRUCTURAL",
-    "sourcePath" : "",
-    "targetPath" : "Patient.name.given",
-    "description" : "Element added in target profile: Patient.name.given",
-    "severity" : "ERROR"
-  }, {
-    "id" : "rule-37",
-    "type" : "STRUCTURAL",
-    "sourcePath" : "",
-    "targetPath" : "Patient.name.prefix",
-    "description" : "Element added in target profile: Patient.name.prefix",
-    "severity" : "INFO"
-  }, {
-    "id" : "rule-38",
-    "type" : "STRUCTURAL",
-    "sourcePath" : "",
-    "targetPath" : "Patient.name.suffix",
-    "description" : "Element added in target profile: Patient.name.suffix",
-    "severity" : "INFO"
-  }, {
-    "id" : "rule-39",
-    "type" : "STRUCTURAL",
-    "sourcePath" : "",
-    "targetPath" : "Patient.name.period",
-    "description" : "Element added in target profile: Patient.name.period",
-    "severity" : "INFO"
-  }, {
-    "id" : "rule-40",
-    "type" : "STRUCTURAL",
-    "sourcePath" : "",
-    "targetPath" : "Patient.telecom.id",
-    "description" : "Element added in target profile: Patient.telecom.id",
-    "severity" : "INFO"
-  }, {
-    "id" : "rule-41",
-    "type" : "STRUCTURAL",
-    "sourcePath" : "",
-    "targetPath" : "Patient.telecom.extension",
-    "description" : "Element added in target profile: Patient.telecom.extension",
-    "severity" : "INFO"
-  }, {
-    "id" : "rule-42",
-    "type" : "STRUCTURAL",
-    "sourcePath" : "",
-    "targetPath" : "Patient.telecom.system",
-    "description" : "Element added in target profile: Patient.telecom.system",
-    "severity" : "ERROR"
-  }, {
-    "id" : "rule-43",
-    "type" : "STRUCTURAL",
-    "sourcePath" : "",
-    "targetPath" : "Patient.telecom.value",
-    "description" : "Element added in target profile: Patient.telecom.value",
-    "severity" : "ERROR"
-  }, {
-    "id" : "rule-44",
-    "type" : "STRUCTURAL",
-    "sourcePath" : "",
-    "targetPath" : "Patient.telecom.use",
-    "description" : "Element added in target profile: Patient.telecom.use",
-    "severity" : "INFO"
-  }, {
-    "id" : "rule-45",
-    "type" : "STRUCTURAL",
-    "sourcePath" : "",
-    "targetPath" : "Patient.telecom.rank",
-    "description" : "Element added in target profile: Patient.telecom.rank",
-    "severity" : "INFO"
-  }, {
-    "id" : "rule-46",
-    "type" : "STRUCTURAL",
-    "sourcePath" : "",
-    "targetPath" : "Patient.telecom.period",
-    "description" : "Element added in target profile: Patient.telecom.period",
-    "severity" : "INFO"
-  }, {
-    "id" : "rule-47",
-    "type" : "STRUCTURAL",
-    "sourcePath" : "",
-    "targetPath" : "Patient.address.id",
-    "description" : "Element added in target profile: Patient.address.id",
-    "severity" : "INFO"
-  }, {
-    "id" : "rule-48",
-    "type" : "STRUCTURAL",
-    "sourcePath" : "",
-    "targetPath" : "Patient.address.extension",
-    "description" : "Element added in target profile: Patient.address.extension",
-    "severity" : "INFO"
-  }, {
-    "id" : "rule-49",
-    "type" : "STRUCTURAL",
-    "sourcePath" : "",
-    "targetPath" : "Patient.address.use",
-    "description" : "Element added in target profile: Patient.address.use",
-    "severity" : "INFO"
-  }, {
-    "id" : "rule-50",
-    "type" : "STRUCTURAL",
-    "sourcePath" : "",
-    "targetPath" : "Patient.address.type",
-    "description" : "Element added in target profile: Patient.address.type",
-    "severity" : "INFO"
-  }, {
-    "id" : "rule-51",
-    "type" : "STRUCTURAL",
-    "sourcePath" : "",
-    "targetPath" : "Patient.address.text",
-    "description" : "Element added in target profile: Patient.address.text",
-    "severity" : "INFO"
-  }, {
-    "id" : "rule-52",
-    "type" : "STRUCTURAL",
-    "sourcePath" : "",
-    "targetPath" : "Patient.address.line",
-    "description" : "Element added in target profile: Patient.address.line",
-    "severity" : "ERROR"
-  }, {
-    "id" : "rule-53",
-    "type" : "STRUCTURAL",
-    "sourcePath" : "",
-    "targetPath" : "Patient.address.city",
-    "description" : "Element added in target profile: Patient.address.city",
-    "severity" : "ERROR"
-  }, {
-    "id" : "rule-54",
-    "type" : "STRUCTURAL",
-    "sourcePath" : "",
-    "targetPath" : "Patient.address.district",
-    "description" : "Element added in target profile: Patient.address.district",
-    "severity" : "INFO"
-  }, {
-    "id" : "rule-55",
-    "type" : "STRUCTURAL",
-    "sourcePath" : "",
-    "targetPath" : "Patient.address.state",
-    "description" : "Element added in target profile: Patient.address.state",
-    "severity" : "INFO"
-  }, {
-    "id" : "rule-56",
-    "type" : "STRUCTURAL",
-    "sourcePath" : "",
-    "targetPath" : "Patient.address.postalCode",
-    "description" : "Element added in target profile: Patient.address.postalCode",
-    "severity" : "INFO"
-  }, {
-    "id" : "rule-57",
-    "type" : "STRUCTURAL",
-    "sourcePath" : "",
-    "targetPath" : "Patient.address.country",
-    "description" : "Element added in target profile: Patient.address.country",
-    "severity" : "ERROR"
-  }, {
-    "id" : "rule-58",
-    "type" : "STRUCTURAL",
-    "sourcePath" : "",
-    "targetPath" : "Patient.address.period",
-    "description" : "Element added in target profile: Patient.address.period",
-    "severity" : "INFO"
-  }, {
-    "id" : "rule-59",
-    "type" : "EXTENSION",
-    "sourcePath" : "Patient.extension:studyEnrollmentDate",
-    "targetPath" : "",
-    "description" : "Extension removed in target profile: Patient.extension:studyEnrollmentDate (was required)",
-    "severity" : "WARNING"
-  }, {
-    "id" : "rule-60",
-    "type" : "EXTENSION",
-    "sourcePath" : "Patient.extension:consentStatus",
-    "targetPath" : "",
-    "description" : "Extension removed in target profile: Patient.extension:consentStatus (was required)",
-    "severity" : "WARNING"
-  }, {
-    "id" : "rule-61",
-    "type" : "EXTENSION",
-    "sourcePath" : "Patient.extension:studyArm",
-    "targetPath" : "",
-    "description" : "Extension removed in target profile: Patient.extension:studyArm (was mustSupport)",
-    "severity" : "WARNING"
-  }, {
-    "id" : "rule-62",
-    "type" : "EXTENSION",
-    "sourcePath" : "Patient.extension:dataUseRestriction",
-    "targetPath" : "",
-    "description" : "Extension removed in target profile: Patient.extension:dataUseRestriction (was mustSupport)",
-    "severity" : "WARNING"
-  }, {
-    "id" : "rule-63",
-    "type" : "STRUCTURAL",
-    "sourcePath" : "Patient.identifier:studyId",
-    "targetPath" : "",
-    "description" : "Slice 'studyId' removed in target profile",
-    "severity" : "WARNING"
-  }, {
-    "id" : "rule-64",
-    "type" : "STRUCTURAL",
-    "sourcePath" : "Patient.identifier:siteId",
-    "targetPath" : "",
-    "description" : "Slice 'siteId' removed in target profile",
-    "severity" : "WARNING"
-  } ]
+  "pairId": "iit-proj-patient-vs-hemas-patient",
+  "sourceClasspath": "custom-profiles/iit-proj/iit-proj-patient.json",
+  "targetClasspath": "custom-profiles/hemas/hemas-patient.json",
+  "_notes": "Source: iit-proj-patient (clinical research, de-identified). Target: hemas-patient (clinical enterprise). Source bans name, address, generalPractitioner for de-identification. Target requires name, address, telecom, and managingOrganization. Completely different extension sets and identifier slicing schemes.",
+  "drifts": [
+    {
+      "id": "rule-1",
+      "type": "STRUCTURAL",
+      "sourcePath": "Patient",
+      "targetPath": "Patient",
+      "description": "Source constraints removed: [iit-pat-1 (error: Research patient must have a study identifier), iit-pat-2 (warning: Deceased patients should have a deceased date)]. Not present in target.",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-2",
+      "type": "STRUCTURAL",
+      "sourcePath": "Patient",
+      "targetPath": "Patient",
+      "description": "New error constraint added in target: hemas-pat-1 (error: Patient must have at least one identifier with a system). Not in source.",
+      "severity": "ERROR"
+    },
+    {
+      "id": "rule-3",
+      "type": "STRUCTURAL",
+      "sourcePath": "Patient",
+      "targetPath": "Patient",
+      "description": "New warning constraint added in target: hemas-pat-2 (warning: Patient should have an emergency contact). Not in source.",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-4",
+      "type": "EXTENSION",
+      "sourcePath": "Patient.extension:studyEnrollmentDate",
+      "targetPath": "Patient.extension:studyEnrollmentDate",
+      "description": "Mandatory extension studyEnrollmentDate[1..1 mustSupport=true] present in source is removed in target.",
+      "severity": "ERROR"
+    },
+    {
+      "id": "rule-5",
+      "type": "EXTENSION",
+      "sourcePath": "Patient.extension:consentStatus",
+      "targetPath": "Patient.extension:consentStatus",
+      "description": "Mandatory extension consentStatus[1..1 mustSupport=true] present in source is removed in target.",
+      "severity": "ERROR"
+    },
+    {
+      "id": "rule-6",
+      "type": "EXTENSION",
+      "sourcePath": "Patient.extension:studyArm",
+      "targetPath": "Patient.extension:studyArm",
+      "description": "Optional extension studyArm[0..1 mustSupport=true] present in source is removed in target.",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-7",
+      "type": "EXTENSION",
+      "sourcePath": "Patient.extension:dataUseRestriction",
+      "targetPath": "Patient.extension:dataUseRestriction",
+      "description": "Optional extension dataUseRestriction[0..* mustSupport=true] present in source is removed in target.",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-8",
+      "type": "EXTENSION",
+      "sourcePath": "Patient.extension:registrationDate",
+      "targetPath": "Patient.extension:registrationDate",
+      "description": "New optional extension registrationDate[0..1 mustSupport=true] added in target. Source does not define this extension.",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-9",
+      "type": "EXTENSION",
+      "sourcePath": "Patient.extension:vipStatus",
+      "targetPath": "Patient.extension:vipStatus",
+      "description": "New optional extension vipStatus[0..1 mustSupport=true] added in target. Source does not define this extension.",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-10",
+      "type": "EXTENSION",
+      "sourcePath": "Patient.extension:insuranceProvider",
+      "targetPath": "Patient.extension:insuranceProvider",
+      "description": "New optional extension insuranceProvider[0..* mustSupport=true] added in target. Source does not define this extension.",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-11",
+      "type": "STRUCTURAL",
+      "sourcePath": "Patient.identifier",
+      "targetPath": "Patient.identifier",
+      "description": "Identifier slicing scheme changed: source defines slices [studyId[1..1], siteId[0..1]]; target defines slices [hospitalId[1..1], nic[0..1]]. Discriminators and slice names differ entirely.",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-11b",
+      "type": "TERMINOLOGY",
+      "sourcePath": "Patient.identifier.type",
+      "targetPath": "Patient.identifier.type",
+      "description": "identifier.type pattern value changed: source uses iit-proj study identifier type pattern → target uses hemas NIC patient identifier type pattern (different CodeableConcept patterns in different slice schemes).",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-11c",
+      "type": "TERMINOLOGY",
+      "sourcePath": "Patient.identifier.system",
+      "targetPath": "Patient.identifier.system",
+      "description": "identifier.system fixed value added in target: source has no fixed value on identifier.system (no fixed value in iit-proj identifier slices); target adds fixed value 'https://hemas.example.com/fhir/sid/nic' on the nic slice.",
+      "severity": "ERROR"
+    },
+    {
+      "id": "rule-12",
+      "type": "STRUCTURAL",
+      "sourcePath": "Patient.identifier:studyId",
+      "targetPath": "Patient.identifier:studyId",
+      "description": "Source mandatory slice studyId[1..1 mustSupport=true] removed in target. No equivalent slice in hemas-patient.",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-13",
+      "type": "STRUCTURAL",
+      "sourcePath": "Patient.identifier:siteId",
+      "targetPath": "Patient.identifier:siteId",
+      "description": "Source optional slice siteId[0..1 mustSupport=true] removed in target. No equivalent slice in hemas-patient.",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-14",
+      "type": "CARDINALITY",
+      "sourcePath": "Patient.identifier",
+      "targetPath": "Patient.identifier:hospitalId",
+      "description": "New mandatory slice hospitalId[1..1 mustSupport=true] added in target. Source has no hospitalId slice.",
+      "severity": "ERROR"
+    },
+    {
+      "id": "rule-15",
+      "type": "STRUCTURAL",
+      "sourcePath": "Patient.identifier",
+      "targetPath": "Patient.identifier:nic",
+      "description": "New optional slice nic[0..1 mustSupport=true] added in target. Source has no nic slice.",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-16",
+      "type": "CARDINALITY",
+      "sourcePath": "Patient.name",
+      "targetPath": "Patient.name",
+      "description": "name cardinality changed: source [0..0] (completely banned) → target [1..* mustSupport=true]. Name is required in hemas but prohibited in iit-proj for de-identification. Fundamental incompatibility.",
+      "severity": "ERROR"
+    },
+    {
+      "id": "rule-17",
+      "type": "CARDINALITY",
+      "sourcePath": "Patient.telecom",
+      "targetPath": "Patient.telecom",
+      "description": "telecom: source inherits R4 base [0..* mustSupport=false] (not constrained in iit-proj) → target [1..* mustSupport=true]. New mandatory requirement in hemas.",
+      "severity": "ERROR"
+    },
+    {
+      "id": "rule-18",
+      "type": "STRUCTURAL",
+      "sourcePath": "Patient.deceased[x]",
+      "targetPath": "Patient.deceased[x]",
+      "description": "deceased[x] MustSupport removed (source mustSupport=true; target inherits R4 base, not constrained in hemas differential).",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-19",
+      "type": "CARDINALITY",
+      "sourcePath": "Patient.address",
+      "targetPath": "Patient.address",
+      "description": "address cardinality changed: source [0..0] (completely banned) → target [1..* mustSupport=true]. Address required in hemas but prohibited in iit-proj for de-identification. Fundamental incompatibility.",
+      "severity": "ERROR"
+    },
+    {
+      "id": "rule-20",
+      "type": "STRUCTURAL",
+      "sourcePath": "Patient.maritalStatus",
+      "targetPath": "Patient.maritalStatus",
+      "description": "MustSupport added on maritalStatus in target (source not constrained; target mustSupport=true extensible:http://hl7.org/fhir/ValueSet/marital-status). Optional element; same binding as R4 base.",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-21",
+      "type": "CARDINALITY",
+      "sourcePath": "Patient.photo",
+      "targetPath": "Patient.photo",
+      "description": "photo cardinality relaxed: source [0..0] (banned) → target [0..*] (hemas does not constrain photo, inherits R4 base). Ban removed.",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-22",
+      "type": "STRUCTURAL",
+      "sourcePath": "Patient.contact",
+      "targetPath": "Patient.contact",
+      "description": "contact MustSupport added and sub-elements constrained in target (source not constrained in differential). When contact is present: relationship[1..* ms=true extensible:patient-contactrelationship], name[1..1 ms=true], telecom[1..* ms=true] required in hemas.",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-23",
+      "type": "CARDINALITY",
+      "sourcePath": "Patient.generalPractitioner",
+      "targetPath": "Patient.generalPractitioner",
+      "description": "generalPractitioner cardinality relaxed: source [0..0] (banned) → target [0..* mustSupport=true] (hemas allows generalPractitioner). Ban removed; also MS added in target.",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-24",
+      "type": "STRUCTURAL",
+      "sourcePath": "Patient.generalPractitioner",
+      "targetPath": "Patient.generalPractitioner",
+      "description": "Reference target added in target: source has no generalPractitioner constraint (banned); target constrains to hemas/Practitioner.",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-25",
+      "type": "CARDINALITY",
+      "sourcePath": "Patient.managingOrganization",
+      "targetPath": "Patient.managingOrganization",
+      "description": "managingOrganization cardinality changed: source [0..1 mustSupport=true] → target [1..1 mustSupport=true]. Becomes mandatory in hemas.",
+      "severity": "ERROR"
+    },
+    {
+      "id": "rule-26",
+      "type": "STRUCTURAL",
+      "sourcePath": "Patient.managingOrganization",
+      "targetPath": "Patient.managingOrganization",
+      "description": "Reference target changed: source constrains to iit-proj/Organization; target constrains to hemas/Organization.",
+      "severity": "WARNING"
+    }
+  ]
 }

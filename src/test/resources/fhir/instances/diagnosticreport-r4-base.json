@@ -1,21 +1,45 @@
-{
+﻿{
   "resourceType": "DiagnosticReport",
   "id": "r4-diagnosticreport-001",
   "meta": {
     "profile": [
-      "http://hl7.org/fhir/StructureDefinition/DiagnosticReport"
+      "http://hl7.org/fhir/StructureDefinition/DiagnosticReport",
+      "http://hl7.org/fhir/us/core/StructureDefinition/us-core-diagnosticreport-lab"
     ]
   },
+  "text": {
+    "status": "generated",
+    "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\"><p><b>Complete Blood Count (CBC)</b> - LOINC 58410-2. Final. Date: 2025-11-20. Performer: Springfield General Hospital Lab. Conclusion: All CBC values within normal limits.</p></div>"
+  },
+  "identifier": [
+    {
+      "use": "official",
+      "system": "http://hospital.example.org/reports",
+      "value": "RPT-2025-11200001"
+    }
+  ],
+  "basedOn": [
+    {
+      "reference": "ServiceRequest/r4-servicerequest-001",
+      "display": "CBC with differential - ServiceRequest"
+    }
+  ],
   "status": "final",
   "category": [
     {
       "coding": [
         {
           "system": "http://terminology.hl7.org/CodeSystem/v2-0074",
+          "code": "HM",
+          "display": "Hematology"
+        },
+        {
+          "system": "http://terminology.hl7.org/CodeSystem/v2-0074",
           "code": "LAB",
           "display": "Laboratory"
         }
-      ]
+      ],
+      "text": "Hematology"
     }
   ],
   "code": {
@@ -30,24 +54,85 @@
   },
   "subject": {
     "reference": "Patient/r4-patient-001",
-    "display": "James Williams"
+    "display": "James Robert Williams"
   },
   "encounter": {
-    "reference": "Encounter/r4-encounter-001"
+    "reference": "Encounter/r4-encounter-001",
+    "display": "Outpatient Consultation 2025-11-20"
   },
   "effectiveDateTime": "2025-11-20T08:30:00+00:00",
   "issued": "2025-11-20T10:00:00+00:00",
   "performer": [
     {
       "reference": "Organization/r4-organization-001",
-      "display": "Springfield General Hospital Lab"
+      "display": "Springfield General Hospital Laboratory"
+    },
+    {
+      "reference": "Practitioner/r4-practitioner-001",
+      "display": "Dr. Emily Chen"
+    }
+  ],
+  "resultsInterpreter": [
+    {
+      "reference": "Practitioner/r4-practitioner-001",
+      "display": "Dr. Emily Chen"
+    }
+  ],
+  "specimen": [
+    {
+      "reference": "Specimen/r4-specimen-001",
+      "display": "Venous blood specimen"
     }
   ],
   "result": [
     {
       "reference": "Observation/r4-observation-001",
-      "display": "Blood Glucose"
+      "display": "Blood Glucose (Fasting)"
+    },
+    {
+      "reference": "Observation/r4-observation-hgb-001",
+      "display": "Haemoglobin [Mass/volume] in Blood"
+    },
+    {
+      "reference": "Observation/r4-observation-wbc-001",
+      "display": "White blood cell count"
+    },
+    {
+      "reference": "Observation/r4-observation-plt-001",
+      "display": "Platelet count"
     }
   ],
-  "conclusion": "All values within normal limits."
+  "media": [
+    {
+      "comment": "Blood smear image for manual differential",
+      "link": {
+        "reference": "Media/r4-media-bloodsmear-001",
+        "display": "Blood smear - peripheral blood film"
+      }
+    }
+  ],
+  "conclusion": "Complete blood count within normal limits. No anaemia, leukocytosis, or thrombocytopenia identified.",
+  "conclusionCode": [
+    {
+      "coding": [
+        {
+          "system": "http://snomed.info/sct",
+          "code": "281309003",
+          "display": "Normal blood count"
+        }
+      ],
+      "text": "Normal CBC"
+    }
+  ],
+  "presentedForm": [
+    {
+      "contentType": "application/pdf",
+      "language": "en",
+      "url": "http://hospital.example.org/reports/RPT-2025-11200001.pdf",
+      "size": 48210,
+      "hash": "QWxsQ0JDdmFsdWVzd2l0aGlubm9ybWFsbGltaXRz",
+      "title": "CBC Report - James R. Williams - 2025-11-20",
+      "creation": "2025-11-20T10:00:00+00:00"
+    }
+  ]
 }

@@ -2,8 +2,13 @@ package com.example.fdd.experiment
 
 import com.example.fdd.api.dto.ProfileInput
 import com.example.fdd.service.DriftOrchestrationService
-import org.junit.jupiter.api.*
+import org.junit.jupiter.api.AfterAll
+import org.junit.jupiter.api.DisplayName
+import org.junit.jupiter.api.DynamicTest
 import org.junit.jupiter.api.DynamicTest.dynamicTest
+import org.junit.jupiter.api.Tag
+import org.junit.jupiter.api.TestFactory
+import org.junit.jupiter.api.TestInstance
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
@@ -26,6 +31,7 @@ import java.time.format.DateTimeFormatter
 @SpringBootTest
 @ActiveProfiles("experiment")
 @Tag("integration")
+@Tag("experiment2")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class Experiment2SyntacticValidityTest {
 
@@ -49,8 +55,10 @@ class Experiment2SyntacticValidityTest {
             return emptyList()
         }
 
-        // Support selective pair execution via system property
-        val selectedIds = System.getProperty("fdd.pairs")?.split(",")?.map { it.trim() }?.filter { it.isNotEmpty() }
+        // Support selective pair execution via system property OR env var FDD_PAIRS
+        val selectedIds = (System.getProperty("fdd.pairs")?.takeIf { it.isNotBlank() }
+            ?: System.getenv("FDD_PAIRS")?.takeIf { it.isNotBlank() })
+            ?.split(",")?.map { it.trim() }?.filter { it.isNotEmpty() }
         val goldPairs = if (!selectedIds.isNullOrEmpty()) {
             val filtered = allGoldPairs.filter { it.pairId in selectedIds }
             log.info("Running selected pairs: {} (matched {}/{})", selectedIds, filtered.size, selectedIds.size)
@@ -76,7 +84,9 @@ class Experiment2SyntacticValidityTest {
                         messages = mapResult.validationMessages,
                         driftItemCount = driftReport.totalDrifts,
                         dataShareabilityPercent = coverageReport.dataShareabilityPercent,
-                        repairCycles = mapResult.validationMessages.size
+                        repairCycles = mapResult.validationMessages
+                            .mapNotNull { Regex("""\[Cycle (\d+)\]""").find(it)?.groupValues?.get(1)?.toIntOrNull() }
+                            .maxOrNull() ?: 1
                     )
                 } catch (ex: Exception) {
                     log.error("Failed for pair {}: {}", gold.pairId, ex.message)

@@ -6,59 +6,109 @@ HAPI-FHIR's compiler in a **Trust-but-Verify** reflexion loop.
 
 ---
 
-## Research Context
+## Current Implementation Status
 
-**Aim:** Design, develop, and evaluate a hybrid AI-assisted system for detecting, repairing, and validating profile-level semantic drift between FHIR profiles.
+The drift-detection pipeline uses a **hybrid AI + deterministic** architecture:
+the LLM is the primary semantic detector, the rule-based detector is a
+safety-net seed generator whose unmatched items are backfilled into the final
+report.
 
-**Research Objectives:**
+### Merge strategy (3-source provenance)
 
-| # | Objective |
-|---|-----------|
-| RO1 | Design a software architecture that combines AI reasoning with formal validation for use in the healthcare domain |
-| RO2 | Develop AI prompting methods that allow accurate analysis of FHIR profiles |
-| RO3 | Develop a working FDD system that performs profile resolution, hybrid drift analysis, StructureMap generation, "Trust but Verify" validation, and deterministic coverage analysis |
-| RO4 | Create a labelled dataset of FHIR semantic drift examples, each clearly labelled with the correct answer |
-| RO5 | Evaluate the system using accuracy metrics, qualitative analysis, and controlled end-to-end testing in a test FHIR server environment |
+| `source` tag | Meaning                                                                   |
+|--------------|---------------------------------------------------------------------------|
+| `"ai"`       | LLM discovered this drift; no matching rule seed                          |
+| `"hybrid"`   | LLM confirmed a rule seed (both agreed on the same Triple)                |
+| `"rule"`     | Rule detector found it; LLM did not mention it - backfilled as safety net |
 
-**Research Questions:**
+### Rule-based detector - hardened rules
 
-| # | Question |
-|---|----------|
-| RQ1 | How accurately can the system detect profile-level semantic drift between FHIR profiles across all five drift types? |
-| RQ2 | Can the system generate FHIR StructureMaps that compile successfully and provide repair logic for detected profile-level drifts? |
-| RQ3 | Do the generated transformations preserve meaning and support controlled end-to-end data exchange in a test FHIR server environment? |
-| RQ4 | Can the system correctly classify drift types and provide human-understandable explanations? |
+30+ deterministic rules across 14 drift dimensions:
+CARDINALITY, BINDING/TERMINOLOGY, fixed/pattern/default values, type-code,
+type-profiles, target-profiles, mustSupport, isModifier, slicing, constraints,
+contentReference, element-level extensions/modifier-extensions,
+added/removed elements and slices, VERSION mismatch.
 
-**Evaluation:**
+Additional noise fixes applied to match real-world IG profiling:
 
-| Experiment | Metric | Dataset |
-|-----------|--------|---------|
-| 1. Drift Detection Accuracy | Precision, Recall, F1 | 60 gold-standard profile pairs (8 categories) |
-| 2. Syntactic Validity Rate | % FML maps passing HAPI compilation | 60 pairs, full pipeline |
-| 3. End-to-End Semantic Correctness | % successful transformations | 25 test cases, Testcontainers HAPI server |
+- **MustSupport cascade suppression** - when a parent element's mustSupport
+  changes, only the parent item is emitted (not one item per leaf child).
+  Prevents 20–30 noise items for US Core profiles that flag every leaf element.
+- **USCDI marker filtering** - `uscdi-1`, `uscdi-2` … conformance markers are
+  excluded from constraint drift. They are US Core metadata markers, not
+  semantic data-transformation drift.
+
+### Trust-but-Verify reflexion loop - hardened
+
+- **`collectAllErrors()`** - strips bad lines iteratively to collect ALL
+  compilation errors in one pass (not just the first error HAPI surfaces).
+- **`sanitizeFml()`** - rewrites known LLM anti-patterns before the first
+  validation: `.where()` FHIRPath, multi-level dotted paths, markdown fences,
+  `alias` in `uses` declarations.
+- **`autoFixRuleNames()`** - fixes "Complex rules must have an explicit name"
+  errors deterministically, zero LLM cost.
+- **Hard oscillation guard** - if cycle N produces the identical error set as
+  cycle N-1, the loop aborts immediately instead of burning all 5 cycles.
+- **Temperature escalation** - `0.5` when oscillating or regressing, `0.7`
+  when both conditions hold, `0.1` otherwise - forces the LLM out of local
+  minima.
+
+### Other pipeline facts
+
+- `DriftItem.source ∈ {"ai", "rule", "hybrid"}` on every item.
+- Gold-standard files may serialise `sourcePath`/`targetPath` as `null`
+  (one-sided drifts); `@JsonSetter(nulls = Nulls.AS_EMPTY)` coerces them
+  to `""` so the model stays non-nullable.
+- `GoldStandardLoader.loadAll()` uses the glob `classpath*:gold-standard*/*.json` to load
+  from `gold-standard/`.
+  (`classpath*:` is required - `classpath:` only searches the first classpath root.)
+- Coverage analyzer - 6-status taxonomy: `MAPPED`, `COVERED_BY_PARENT`,
+  `NO_RULE_NEEDED`, `SOURCE_DATA_LOSS`, `UNMAPPABLE_NO_SOURCE`,
+  `UNMAPPABLE_REQUIRED`. Generates `// ACTION REQUIRED` stubs for critical
+  unmappable fields.
+- Experiment 3 - in-process `StructureMapUtilities.transform` bypasses the
+  HAPI JPA `$transform` limitation; JPA path kept as fallback.
+
+All **134 unit tests** pass.
+
+---
 
 ## Research Context
 
 **Title:** "Trust but Verify: Automated Semantic Drift Detection and StructureMap Generation for FHIR Interoperability"
 
-**Research Aim:** To design, develop, and evaluate a hybrid AI-assisted system for detecting, repairing, and validating profile-level semantic drift between FHIR profiles in order to improve the reliability and maintainability of FHIR-based interoperability.
-
-**Research Questions:**
-- **RQ1** — How accurately can the system detect profile-level semantic drift between FHIR profiles across all five drift types?
-- **RQ2** — Can the system generate FHIR StructureMaps that compile successfully and provide repair logic for detected profile-level drifts?
-- **RQ3** — Do the generated transformations preserve meaning and support controlled end-to-end data exchange in a test FHIR server environment?
-- **RQ4** — Can the system correctly classify drift types and provide human-understandable explanations?
+**Research Aim:** To design, develop, and evaluate a hybrid AI-assisted system for detecting, repairing, and validating
+profile-level semantic drift between FHIR profiles in order to improve the reliability and maintainability of FHIR-based
+interoperability.
 
 **Research Objectives:**
-- **RO1** — Design a software architecture that combines AI reasoning with formal validation for use in the healthcare domain.
-- **RO2** — Develop AI prompting methods that allow accurate analysis of FHIR profiles.
-- **RO3** — Develop a working FDD system that performs profile resolution, hybrid drift analysis, StructureMap generation, "Trust but Verify" validation, and deterministic coverage analysis.
-- **RO4** — Create a labelled dataset of FHIR semantic drift examples, each clearly labelled with the correct answer.
-- **RO5** — Evaluate the system using accuracy metrics, qualitative analysis, and controlled end-to-end testing in a test FHIR server environment.
+
+| #   | Objective                                                                                                                                                                         |
+|-----|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| RO1 | Design a software architecture that combines AI reasoning with formal validation for use in the healthcare domain                                                                 |
+| RO2 | Develop AI prompting methods that allow accurate analysis of FHIR profiles                                                                                                        |
+| RO3 | Develop a working FDD system that performs profile resolution, hybrid drift analysis, StructureMap generation, "Trust but Verify" validation, and deterministic coverage analysis |
+| RO4 | Create a labelled dataset of FHIR semantic drift examples, each clearly labelled with the correct answer                                                                          |
+| RO5 | Evaluate the system using accuracy metrics, qualitative analysis, and controlled end-to-end testing in a test FHIR server environment                                             |
+
+**Research Questions:**
+
+| #   | Question                                                                                                                             |
+|-----|--------------------------------------------------------------------------------------------------------------------------------------|
+| RQ1 | How accurately can the system detect profile-level semantic drift between FHIR profiles across all five drift types?                 |
+| RQ2 | Can the system generate FHIR StructureMaps that compile successfully and provide repair logic for detected profile-level drifts?     |
+| RQ3 | Do the generated transformations preserve meaning and support controlled end-to-end data exchange in a test FHIR server environment? |
+| RQ4 | Can the system correctly classify drift types and provide human-understandable explanations?                                         |
 
 **Five Drift Categories:** Terminology · Extension · Structural · Cardinality · Version
 
-**Evaluation:** Three controlled experiments measure drift detection accuracy (Precision/Recall/F1), syntactic validity rate (SVR), and end-to-end semantic correctness rate (SCR) across 60 gold-standard profile pairs and 25 transformation test cases.
+**Evaluation:**
+
+| Experiment                         | Metric                              | Dataset                                       |
+|------------------------------------|-------------------------------------|-----------------------------------------------|
+| 1. Drift Detection Accuracy        | Precision, Recall, F1               | 60 gold-standard profile pairs (8 categories) |
+| 2. Syntactic Validity Rate         | % FML maps passing HAPI compilation | 60 pairs, full pipeline                       |
+| 3. End-to-End Semantic Correctness | % successful transformations        | 25 test cases, Testcontainers HAPI server     |
 
 ---
 
@@ -74,14 +124,14 @@ HAPI-FHIR's compiler in a **Trust-but-Verify** reflexion loop.
                               │                    │                        │
                      ┌--------┴--------┐    ┌------┴----------┐    ┌-------┴--------┐
                      │ Rule-based      │    │ autoFixRuleNames │    │ Cross-reference │
-                     │ detector (20+)  │    │ (zero LLM cost)  │    │ drift vs FML   │
-                     └-----------------┘    ├------------------┤    │ 5 categories   │
-                     │ LLM analysis   │    │ collectAllErrors │    │ + shareability │
-                     │ + merge        │    │ (batch scanning)  │    └----------------┘
-                     └-----------------┘    ├------------------┤
-                                            │ Anti-oscillation │
-                                            │ + regression det │
-                                            │ + temp boost     │
+                     │ detector (30+   │    │ (zero LLM cost)  │    │ drift vs FML   │
+                     │ rules, 14 dims) │    ├------------------┤    │ 6 statuses     │
+                     └-----------------┘    │ collectAllErrors │    │ + shareability │
+                     │ LLM analysis   │    │ (batch scanning)  │    └----------------┘
+                     │ + 3-source     │    ├------------------┤
+                     │ merge:         │    │ Hard oscillation │
+                     │ ai/hybrid/rule │    │ + regression det │
+                     └-----------------┘    │ + temp boost     │
                                             └------------------┘
 ```
 
@@ -118,17 +168,17 @@ automatically detected and validated using the R5 pipeline.
 
 ## Tech Stack
 
-| Layer         | Technology                                                    |
-|---------------|---------------------------------------------------------------|
-| Runtime       | Java 21, Kotlin 2.x                                           |
-| Framework     | Spring Boot 4.x, Spring Framework 7.x                         |
+| Layer         | Technology                                                           |
+|---------------|----------------------------------------------------------------------|
+| Runtime       | Java 21, Kotlin 2.x                                                  |
+| Framework     | Spring Boot 4.x, Spring Framework 7.x                                |
 | AI            | Spring AI 2.0 (OpenRouter, OpenAI, Anthropic, Gemini, Mistral, Groq) |
-| FHIR          | HAPI FHIR 7.6.0 (R4 + R5 dual context, StructureMapUtilities) |
-| Serialisation | Jackson 3.x (tools.jackson namespace)                         |
-| Metrics       | Micrometer + Prometheus endpoint                              |
-| API Docs      | SpringDoc OpenAPI (Swagger UI)                                |
-| Build         | Gradle 9.x (Kotlin DSL)                                       |
-| Testing       | JUnit 5, Mockito-Kotlin, Testcontainers                       |
+| FHIR          | HAPI FHIR 7.6.0 (R4 + R5 dual context, StructureMapUtilities)        |
+| Serialisation | Jackson 3.x (tools.jackson namespace)                                |
+| Metrics       | Micrometer + Prometheus endpoint                                     |
+| API Docs      | SpringDoc OpenAPI (Swagger UI)                                       |
+| Build         | Gradle 9.x (Kotlin DSL)                                              |
+| Testing       | JUnit 5, Mockito-Kotlin, Testcontainers                              |
 
 ---
 
@@ -137,7 +187,7 @@ automatically detected and validated using the R5 pipeline.
 - **JDK 21+** - required by Spring Boot 4.
 - **Gradle 9.x** - the included `gradlew` wrapper handles this automatically.
 - **LLM API key** - at least one of: OpenRouter, OpenAI, Gemini, Anthropic, Mistral, or Groq.
-  OpenRouter is the recommended default — one API key gives access to all models.
+  OpenRouter is the recommended default - one API key gives access to all models.
 
 ---
 
@@ -724,7 +774,7 @@ fdd:
 
 All providers except Anthropic use the **OpenAI-compatible** chat API, configured via
 custom `base-url` properties. No special SDK is needed. OpenRouter acts as a unified
-gateway — one API key gives access to Gemini, Claude, GPT-4o, Llama, Mistral, and
+gateway - one API key gives access to Gemini, Claude, GPT-4o, Llama, Mistral, and
 hundreds of other models by changing only the `model` field.
 
 ---
@@ -788,10 +838,19 @@ to a Dockerized HAPI FHIR server -> uploads the generated StructureMap -> attemp
 **Results output:** Each experiment writes a timestamped JSON report to
 `output/experiment-results/` with per-pair/per-case metrics.
 
-Run experiments (requires a valid LLM API key and Docker):
+Run experiments (requires a valid LLM API key, Experiment 3 also requires Docker):
 
 ```bash
+# Run individual experiments:
+./gradlew experiment1    # Experiment 1: Drift detection accuracy (Precision/Recall/F1)
+./gradlew experiment2    # Experiment 2: Syntactic validity rate (no Docker)
+./gradlew experiment3    # Experiment 3: Semantic correctness (requires Docker)
+
+# Run all integration tests (experiments 1 + 2 + 3):
 ./gradlew integrationTest
+
+# Run a subset of pairs (comma-separated pairId values):
+FDD_PAIRS="r4-vs-us-core-patient,r4-diagnosticreport-vs-us-core-diagnosticreport-lab" ./gradlew experiment2
 ```
 
 ---
@@ -816,8 +875,8 @@ profiles but very large IGs may need truncation.
 as the default model. This gives you:
 - **One API key** to access Gemini, Claude, GPT-4o, Llama, Mistral, and 200+ models
 - **One bill** instead of multiple provider accounts
-- **Easy model switching** — just change the `model` field in `application.yaml`
-- **No API difference** — OpenRouter proxies requests identically to direct API calls
+- **Easy model switching** - just change the `model` field in `application.yaml`
+- **No API difference** - OpenRouter proxies requests identically to direct API calls
 
 To try a different model via OpenRouter, simply change `fdd.ai.openrouter.model`:
 ```yaml

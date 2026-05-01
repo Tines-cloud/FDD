@@ -1,188 +1,136 @@
 {
-  "pairId" : "hemas-immunization-vs-us-core-immunization",
-  "sourceClasspath" : "custom-profiles/hemas/hemas-immunization.json",
-  "targetClasspath" : "standard-profiles/us-core/StructureDefinition-us-core-immunization.json",
-  "drifts" : [ {
-    "id" : "rule-1",
-    "type" : "STRUCTURAL",
-    "sourcePath" : "Immunization",
-    "targetPath" : "Immunization",
-    "description" : "Constraints added in target: [us-core-5]",
-    "severity" : "WARNING"
-  }, {
-    "id" : "rule-2",
-    "type" : "STRUCTURAL",
-    "sourcePath" : "Immunization.extension",
-    "targetPath" : "Immunization.extension",
-    "description" : "Slicing changed: rules=open, discriminators=[value:url] -> none",
-    "severity" : "WARNING"
-  }, {
-    "id" : "rule-3",
-    "type" : "TERMINOLOGY",
-    "sourcePath" : "Immunization.status",
-    "targetPath" : "Immunization.status",
-    "description" : "Binding changed: required(http://hl7.org/fhir/ValueSet/immunization-status|4.0.1) -> required(http://hl7.org/fhir/ValueSet/immunization-status)",
-    "severity" : "ERROR"
-  }, {
-    "id" : "rule-4",
-    "type" : "EXTENSION",
-    "sourcePath" : "Immunization.status",
-    "targetPath" : "Immunization.status.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-    "description" : "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
-    "severity" : "WARNING"
-  }, {
-    "id" : "rule-5",
-    "type" : "STRUCTURAL",
-    "sourcePath" : "Immunization.statusReason",
-    "targetPath" : "Immunization.statusReason",
-    "description" : "MustSupport added in target",
-    "severity" : "INFO"
-  }, {
-    "id" : "rule-6",
-    "type" : "EXTENSION",
-    "sourcePath" : "Immunization.statusReason",
-    "targetPath" : "Immunization.statusReason.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-    "description" : "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
-    "severity" : "WARNING"
-  }, {
-    "id" : "rule-7",
-    "type" : "TERMINOLOGY",
-    "sourcePath" : "Immunization.vaccineCode",
-    "targetPath" : "Immunization.vaccineCode",
-    "description" : "Binding changed: example(http://hl7.org/fhir/ValueSet/vaccine-code) -> extensible(http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1010.6)",
-    "severity" : "WARNING"
-  }, {
-    "id" : "rule-8",
-    "type" : "EXTENSION",
-    "sourcePath" : "Immunization.vaccineCode",
-    "targetPath" : "Immunization.vaccineCode.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-    "description" : "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
-    "severity" : "WARNING"
-  }, {
-    "id" : "rule-9",
-    "type" : "STRUCTURAL",
-    "sourcePath" : "Immunization.patient",
-    "targetPath" : "Immunization.patient",
-    "description" : "Reference target profile changed: [https://hemas.example.com/fhir/StructureDefinition/Patient] -> [http://hl7.org/fhir/us/core/StructureDefinition/us-core-patient]",
-    "severity" : "WARNING"
-  }, {
-    "id" : "rule-10",
-    "type" : "EXTENSION",
-    "sourcePath" : "Immunization.patient",
-    "targetPath" : "Immunization.patient.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-    "description" : "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
-    "severity" : "WARNING"
-  }, {
-    "id" : "rule-11",
-    "type" : "CARDINALITY",
-    "sourcePath" : "Immunization.encounter",
-    "targetPath" : "Immunization.encounter",
-    "description" : "Cardinality changed: [1..1] -> [0..1]",
-    "severity" : "INFO"
-  }, {
-    "id" : "rule-12",
-    "type" : "STRUCTURAL",
-    "sourcePath" : "Immunization.encounter",
-    "targetPath" : "Immunization.encounter",
-    "description" : "Reference target profile changed: [https://hemas.example.com/fhir/StructureDefinition/Encounter] -> [http://hl7.org/fhir/StructureDefinition/Encounter]",
-    "severity" : "WARNING"
-  }, {
-    "id" : "rule-13",
-    "type" : "STRUCTURAL",
-    "sourcePath" : "Immunization.encounter",
-    "targetPath" : "Immunization.encounter",
-    "description" : "MustSupport removed in target",
-    "severity" : "INFO"
-  }, {
-    "id" : "rule-14",
-    "type" : "EXTENSION",
-    "sourcePath" : "Immunization.occurrence[x]",
-    "targetPath" : "Immunization.occurrence[x].extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-    "description" : "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
-    "severity" : "WARNING"
-  }, {
-    "id" : "rule-15",
-    "type" : "STRUCTURAL",
-    "sourcePath" : "Immunization.primarySource",
-    "targetPath" : "Immunization.primarySource",
-    "description" : "MustSupport added in target",
-    "severity" : "INFO"
-  }, {
-    "id" : "rule-16",
-    "type" : "EXTENSION",
-    "sourcePath" : "Immunization.primarySource",
-    "targetPath" : "Immunization.primarySource.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-    "description" : "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
-    "severity" : "WARNING"
-  }, {
-    "id" : "rule-17",
-    "type" : "STRUCTURAL",
-    "sourcePath" : "Immunization.lotNumber",
-    "targetPath" : "Immunization.lotNumber",
-    "description" : "MustSupport removed in target",
-    "severity" : "INFO"
-  }, {
-    "id" : "rule-18",
-    "type" : "STRUCTURAL",
-    "sourcePath" : "Immunization.site",
-    "targetPath" : "Immunization.site",
-    "description" : "MustSupport removed in target",
-    "severity" : "INFO"
-  }, {
-    "id" : "rule-19",
-    "type" : "STRUCTURAL",
-    "sourcePath" : "Immunization.route",
-    "targetPath" : "Immunization.route",
-    "description" : "MustSupport removed in target",
-    "severity" : "INFO"
-  }, {
-    "id" : "rule-20",
-    "type" : "CARDINALITY",
-    "sourcePath" : "Immunization.performer",
-    "targetPath" : "Immunization.performer",
-    "description" : "Cardinality changed: [0..1] -> [0..*]",
-    "severity" : "INFO"
-  }, {
-    "id" : "rule-21",
-    "type" : "STRUCTURAL",
-    "sourcePath" : "Immunization.performer",
-    "targetPath" : "Immunization.performer",
-    "description" : "MustSupport removed in target",
-    "severity" : "INFO"
-  }, {
-    "id" : "rule-22",
-    "type" : "STRUCTURAL",
-    "sourcePath" : "Immunization.performer.actor",
-    "targetPath" : "Immunization.performer.actor",
-    "description" : "Reference target profile changed: [https://hemas.example.com/fhir/StructureDefinition/Practitioner] -> [http://hl7.org/fhir/StructureDefinition/Organization, http://hl7.org/fhir/StructureDefinition/Practitioner, http://hl7.org/fhir/StructureDefinition/PractitionerRole]",
-    "severity" : "WARNING"
-  }, {
-    "id" : "rule-23",
-    "type" : "STRUCTURAL",
-    "sourcePath" : "Immunization.performer.actor",
-    "targetPath" : "Immunization.performer.actor",
-    "description" : "MustSupport removed in target",
-    "severity" : "INFO"
-  }, {
-    "id" : "rule-24",
-    "type" : "STRUCTURAL",
-    "sourcePath" : "Immunization.protocolApplied",
-    "targetPath" : "Immunization.protocolApplied",
-    "description" : "MustSupport removed in target",
-    "severity" : "INFO"
-  }, {
-    "id" : "rule-25",
-    "type" : "EXTENSION",
-    "sourcePath" : "Immunization.extension:vaccineProgram",
-    "targetPath" : "",
-    "description" : "Extension removed in target profile: Immunization.extension:vaccineProgram (was mustSupport)",
-    "severity" : "WARNING"
-  }, {
-    "id" : "rule-26",
-    "type" : "EXTENSION",
-    "sourcePath" : "Immunization.extension:administeredBy",
-    "targetPath" : "",
-    "description" : "Extension removed in target profile: Immunization.extension:administeredBy (was mustSupport)",
-    "severity" : "WARNING"
-  } ]
+  "pairId": "hemas-immunization-vs-us-core-immunization",
+  "sourceClasspath": "custom-profiles/hemas/hemas-immunization.json",
+  "targetClasspath": "standard-profiles/us-core/StructureDefinition-us-core-immunization.json",
+  "_notes": "Source: hemas-immunization (hospital). Target: US Core Immunization. Source mandates encounter, constrains performer to max=1 and actor to hemas/Practitioner, and has hospital-specific extensions. Target adds statusReason MS, tightens vaccineCode binding (CVX extensible), constrains patient to us-core-patient, adds primarySource MS, and removes encounter constraint. Different extension sets.",
+  "drifts": [
+    {
+      "id": "rule-1",
+      "type": "STRUCTURAL",
+      "sourcePath": "Immunization",
+      "targetPath": "Immunization",
+      "description": "New warning constraint added in target: us-core-5 (warning: SHOULD have a translation to the NDC value set). Source has no root-level constraints.",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-2",
+      "type": "EXTENSION",
+      "sourcePath": "Immunization.extension:vaccineProgram",
+      "targetPath": "Immunization.extension:vaccineProgram",
+      "description": "Optional extension vaccineProgram[0..1 mustSupport=true] present in source is removed in target.",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-3",
+      "type": "EXTENSION",
+      "sourcePath": "Immunization.extension:administeredBy",
+      "targetPath": "Immunization.extension:administeredBy",
+      "description": "Optional extension administeredBy[0..1 mustSupport=true] present in source is removed in target.",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-4",
+      "type": "STRUCTURAL",
+      "sourcePath": "Immunization.extension",
+      "targetPath": "Immunization.extension",
+      "description": "Source extension slicing removed in target: source defines slices [vaccineProgram, administeredBy]; US Core Immunization has no extension slicing.",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-5",
+      "type": "STRUCTURAL",
+      "sourcePath": "Immunization.statusReason",
+      "targetPath": "Immunization.statusReason",
+      "description": "statusReason MustSupport added in target (US Core mustSupport=true example:immunization-status-reason); source does not constrain statusReason. MS added on optional element.",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-6",
+      "type": "TERMINOLOGY",
+      "sourcePath": "Immunization.vaccineCode",
+      "targetPath": "Immunization.vaccineCode",
+      "description": "vaccineCode binding changed: source has no binding (inherits R4 base example:vaccine-code); target adds extensible(http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1010.6) CVX value set. New extensible binding added; source had example binding from R4 base.",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-7",
+      "type": "STRUCTURAL",
+      "sourcePath": "Immunization.patient",
+      "targetPath": "Immunization.patient",
+      "description": "patient reference target changed: source constrains to hemas/Patient; target constrains to us-core-patient. Different profile targets.",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-8",
+      "type": "CARDINALITY",
+      "sourcePath": "Immunization.encounter",
+      "targetPath": "Immunization.encounter",
+      "description": "encounter cardinality relaxed and MustSupport removed from required element: source [1..1 mustSupport=true →hemas/Encounter] → target [0..1 mustSupport=false] (US Core does not constrain encounter at all). Min decreased and MS removed.",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-9",
+      "type": "STRUCTURAL",
+      "sourcePath": "Immunization.occurrence[x]",
+      "targetPath": "Immunization.occurrence[x]",
+      "description": "occurrence[x] types in target explicitly declared as [dateTime, string] (mustSupport=true); source inherits R4 base [dateTime, string mustSupport=false] without explicit type constraint. MustSupport added.",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-10",
+      "type": "STRUCTURAL",
+      "sourcePath": "Immunization.primarySource",
+      "targetPath": "Immunization.primarySource",
+      "description": "primarySource MustSupport added in target (US Core mustSupport=true); source does not constrain primarySource. MS added on optional element.",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-11",
+      "type": "CARDINALITY",
+      "sourcePath": "Immunization.performer",
+      "targetPath": "Immunization.performer",
+      "description": "performer max cardinality relaxed: source [0..1 mustSupport=true] → target [0..* mustSupport=false] (US Core does not constrain performer at the backbone level). Max increased and MS removed.",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-12",
+      "type": "STRUCTURAL",
+      "sourcePath": "Immunization.performer.actor",
+      "targetPath": "Immunization.performer.actor",
+      "description": "performer.actor reference target widened and MustSupport removed: source [0..1 mustSupport=true →hemas/Practitioner]; US Core does not constrain performer.actor (inherits R4 base generic Reference). Target widened; MS removed.",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-13",
+      "type": "STRUCTURAL",
+      "sourcePath": "Immunization.lotNumber",
+      "targetPath": "Immunization.lotNumber",
+      "description": "lotNumber MustSupport removed: source mustSupport=true; US Core does not constrain lotNumber. MS removed from optional element.",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-14",
+      "type": "STRUCTURAL",
+      "sourcePath": "Immunization.site",
+      "targetPath": "Immunization.site",
+      "description": "site MustSupport removed: source mustSupport=true; US Core does not constrain site. MS removed from optional element.",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-15",
+      "type": "STRUCTURAL",
+      "sourcePath": "Immunization.route",
+      "targetPath": "Immunization.route",
+      "description": "route MustSupport removed: source mustSupport=true; US Core does not constrain route. MS removed from optional element.",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-16",
+      "type": "STRUCTURAL",
+      "sourcePath": "Immunization.protocolApplied",
+      "targetPath": "Immunization.protocolApplied",
+      "description": "protocolApplied MustSupport removed: source mustSupport=true; US Core does not constrain protocolApplied. MS removed from optional element.",
+      "severity": "INFO"
+    }
+  ]
 }

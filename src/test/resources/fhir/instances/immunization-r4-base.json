@@ -1,33 +1,69 @@
-{
+﻿{
   "resourceType": "Immunization",
   "id": "r4-immunization-001",
   "meta": {
+    "lastUpdated": "2026-05-01T12:00:00+00:00",
     "profile": [
       "http://hl7.org/fhir/StructureDefinition/Immunization"
     ]
   },
+  "text": {
+    "status": "generated",
+    "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\"><p><b>Influenza Vaccine (IIV)</b> - administered 2025-10-01. Patient: James Robert Williams. Lot: LOT-2025-FLU-001. Primary source: true.</p></div>"
+  },
+  "identifier": [
+    {
+      "use": "official",
+      "system": "http://hospital.example.org/immunizations",
+      "value": "IMM-2025-1001"
+    }
+  ],
   "status": "completed",
   "vaccineCode": {
     "coding": [
       {
         "system": "http://hl7.org/fhir/sid/cvx",
-        "code": "208",
-        "display": "SARS-COV-2 (COVID-19) vaccine, mRNA, spike protein, LNP, preservative free, 30 mcg/0.3mL dose"
+        "code": "141",
+        "display": "Influenza, seasonal, injectable"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "1181000221105",
+        "display": "Inactivated influenza vaccine"
       }
     ],
-    "text": "COVID-19 mRNA Vaccine"
+    "text": "Influenza Vaccine (IIV) Quadrivalent"
   },
   "patient": {
     "reference": "Patient/r4-patient-001",
-    "display": "James Williams"
+    "display": "James Robert Williams"
   },
-  "occurrenceDateTime": "2025-09-15",
+  "encounter": {
+    "reference": "Encounter/r4-encounter-001",
+    "display": "Outpatient Consultation 2025-11-20"
+  },
+  "occurrenceDateTime": "2025-10-01T10:30:00+00:00",
+  "recorded": "2025-10-01T11:00:00+00:00",
   "primarySource": true,
+  "reportOrigin": {
+    "coding": [
+      {
+        "system": "http://terminology.hl7.org/CodeSystem/immunization-origin",
+        "code": "provider",
+        "display": "Other Provider"
+      }
+    ]
+  },
   "location": {
     "reference": "Location/r4-location-001",
-    "display": "General Practice Clinic"
+    "display": "General Practice Clinic - Room 3"
   },
-  "lotNumber": "EW0182",
+  "manufacturer": {
+    "reference": "Organization/r4-org-manufacturer-001",
+    "display": "Sanofi Pasteur"
+  },
+  "lotNumber": "LOT-2025-FLU-001",
+  "expirationDate": "2026-03-31",
   "site": {
     "coding": [
       {
@@ -35,24 +71,41 @@
         "code": "LA",
         "display": "Left arm"
       }
-    ]
+    ],
+    "text": "Left deltoid"
   },
   "route": {
     "coding": [
       {
         "system": "http://terminology.hl7.org/CodeSystem/v3-RouteOfAdministration",
         "code": "IM",
-        "display": "Injection, intramuscular"
+        "display": "Intramuscular injection"
       }
-    ]
+    ],
+    "text": "Intramuscular"
   },
   "doseQuantity": {
-    "value": 0.3,
+    "value": 0.5,
     "unit": "mL",
     "system": "http://unitsofmeasure.org",
     "code": "mL"
   },
   "performer": [
+    {
+      "function": {
+        "coding": [
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v2-0443",
+            "code": "OP",
+            "display": "Ordering Provider"
+          }
+        ]
+      },
+      "actor": {
+        "reference": "Practitioner/r4-practitioner-001",
+        "display": "Dr. Emily Chen"
+      }
+    },
     {
       "function": {
         "coding": [
@@ -64,9 +117,98 @@
         ]
       },
       "actor": {
+        "reference": "Practitioner/r4-practitioner-nurse-001",
+        "display": "Nurse Maria Santos"
+      }
+    }
+  ],
+  "note": [
+    {
+      "authorReference": {
         "reference": "Practitioner/r4-practitioner-001",
         "display": "Dr. Emily Chen"
+      },
+      "time": "2025-10-01",
+      "text": "Annual influenza vaccine administered. Patient tolerated injection well. No immediate adverse reactions. Observed for 15 minutes post-vaccination."
+    }
+  ],
+  "reasonCode": [
+    {
+      "coding": [
+        {
+          "system": "http://snomed.info/sct",
+          "code": "281657006",
+          "display": "Influenza vaccination"
+        }
+      ],
+      "text": "Annual influenza immunisation"
+    }
+  ],
+  "reasonReference": [
+    {
+      "reference": "Condition/r4-condition-001",
+      "display": "Type 2 diabetes mellitus - high-risk group"
+    }
+  ],
+  "isSubpotent": false,
+  "education": [
+    {
+      "documentType": "Influenza-VIS-2025",
+      "reference": "https://www.cdc.gov/vaccines/hcp/vis/vis-statements/flu.html",
+      "publicationDate": "2025-08-01",
+      "presentationDate": "2025-10-01"
+    }
+  ],
+  "programEligibility": [
+    {
+      "coding": [
+        {
+          "system": "http://terminology.hl7.org/CodeSystem/immunization-program-eligibility",
+          "code": "ineligible",
+          "display": "Not Eligible"
+        }
+      ]
+    }
+  ],
+  "fundingSource": {
+    "coding": [
+      {
+        "system": "http://terminology.hl7.org/CodeSystem/immunization-funding-source",
+        "code": "private",
+        "display": "Private"
       }
+    ]
+  },
+  "reaction": [
+    {
+      "date": "2025-10-01",
+      "detail": {
+        "reference": "Observation/r4-observation-reaction-001",
+        "display": "Local injection site reaction"
+      },
+      "reported": false
+    }
+  ],
+  "protocolApplied": [
+    {
+      "series": "Annual Flu Vaccination",
+      "authority": {
+        "reference": "Organization/r4-organization-001",
+        "display": "Springfield General Hospital"
+      },
+      "targetDisease": [
+        {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "6142004",
+              "display": "Influenza"
+            }
+          ]
+        }
+      ],
+      "doseNumberPositiveInt": 1,
+      "seriesDosesPositiveInt": 1
     }
   ]
 }

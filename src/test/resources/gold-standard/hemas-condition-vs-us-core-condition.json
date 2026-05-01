@@ -2,45 +2,46 @@
   "pairId": "hemas-condition-vs-us-core-condition",
   "sourceClasspath": "custom-profiles/hemas/hemas-condition.json",
   "targetClasspath": "standard-profiles/us-core/StructureDefinition-us-core-condition-encounter-diagnosis.json",
+  "_notes": "Source: hemas-condition (hospital-specific). Target: US Core Condition Encounter Diagnosis. Source is heavily constrained with hospital-specific extensions, mandatory ICD-10 code coding slice, mandatory clinicalStatus/encounter/recordedDate, hemas-specific category slices, and hemas VS bindings. Target adds assertedDate extension (MS) but is otherwise more relaxed: no mandatory coding slices, us-core-condition-code VS, us-core category slice, wider onset/abatement types, and us-core patient/encounter references.",
   "drifts": [
     {
       "id": "rule-1",
       "type": "STRUCTURAL",
       "sourcePath": "Condition",
       "targetPath": "Condition",
-      "description": "Constraint removed in target: hemas-con-2 requires onset when verificationStatus is confirmed",
+      "description": "Source root constraints hemas-con-1(error) and hemas-con-2(warning) removed in target: hemas-condition defines error and warning constraints on Condition; US Core Condition Encounter Diagnosis has no root-level constraints.",
       "severity": "WARNING"
     },
     {
       "id": "rule-2",
       "type": "EXTENSION",
       "sourcePath": "Condition.extension:hospitalDepartment",
-      "targetPath": "",
-      "description": "Extension present only in source: Condition.extension:hospitalDepartment (profile=https://hemas.example.com/fhir/StructureDefinition/hospital-department, max=1, mustSupport=true)",
+      "targetPath": "Condition.extension:hospitalDepartment",
+      "description": "Optional extension hospitalDepartment[0..1 mustSupport=true] present in source is absent in target.",
       "severity": "WARNING"
     },
     {
       "id": "rule-3",
       "type": "EXTENSION",
       "sourcePath": "Condition.extension:icdBlock",
-      "targetPath": "",
-      "description": "Extension present only in source: Condition.extension:icdBlock (profile=https://hemas.example.com/fhir/StructureDefinition/icd-block, max=1, mustSupport=true)",
+      "targetPath": "Condition.extension:icdBlock",
+      "description": "Optional extension icdBlock[0..1 mustSupport=true] present in source is absent in target.",
       "severity": "WARNING"
     },
     {
       "id": "rule-4",
       "type": "EXTENSION",
       "sourcePath": "Condition.extension:chronicity",
-      "targetPath": "",
-      "description": "Extension present only in source: Condition.extension:chronicity (profile=https://hemas.example.com/fhir/StructureDefinition/chronicity, max=1, mustSupport=true)",
+      "targetPath": "Condition.extension:chronicity",
+      "description": "Optional extension chronicity[0..1 mustSupport=true] present in source is absent in target.",
       "severity": "WARNING"
     },
     {
       "id": "rule-5",
       "type": "EXTENSION",
-      "sourcePath": "",
+      "sourcePath": "Condition.extension:assertedDate",
       "targetPath": "Condition.extension:assertedDate",
-      "description": "Extension present only in target: Condition.extension:assertedDate (profile=http://hl7.org/fhir/StructureDefinition/condition-assertedDate, max=1, mustSupport=true)",
+      "description": "New optional extension assertedDate[max=1 mustSupport=true] added in target (http://hl7.org/fhir/StructureDefinition/condition-assertedDate); source hemas-condition has no assertedDate extension.",
       "severity": "WARNING"
     },
     {
@@ -48,271 +49,215 @@
       "type": "CARDINALITY",
       "sourcePath": "Condition.clinicalStatus",
       "targetPath": "Condition.clinicalStatus",
-      "description": "Cardinality changed: [1..1] -> [0..1]",
+      "description": "clinicalStatus cardinality relaxed from required element: source [min=1, mustSupport=true, required:condition-clinical] → target [no min, mustSupport=true, required:condition-clinical]. Min decreased from 1 to 0 on a required element. Binding and MustSupport preserved.",
       "severity": "WARNING"
     },
     {
       "id": "rule-7",
-      "type": "EXTENSION",
-      "sourcePath": "Condition.clinicalStatus",
-      "targetPath": "Condition.clinicalStatus.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+      "type": "STRUCTURAL",
+      "sourcePath": "Condition.category",
+      "targetPath": "Condition.category",
+      "description": "category slicing changed: source has hemas-specific slices (admissionDiagnosis, dischargeDiagnosis); target has only us-core slice. Source category slices removed and replaced by different target slice.",
       "severity": "WARNING"
     },
     {
       "id": "rule-8",
-      "type": "EXTENSION",
-      "sourcePath": "Condition.verificationStatus",
-      "targetPath": "Condition.verificationStatus.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+      "type": "STRUCTURAL",
+      "sourcePath": "Condition.category:admissionDiagnosis",
+      "targetPath": "Condition.category:admissionDiagnosis",
+      "description": "category:admissionDiagnosis MS slice [0..1, mustSupport=true] removed in target: US Core has no admissionDiagnosis category slice.",
       "severity": "WARNING"
     },
     {
       "id": "rule-9",
-      "type": "EXTENSION",
-      "sourcePath": "Condition.category",
-      "targetPath": "Condition.category.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+      "type": "STRUCTURAL",
+      "sourcePath": "Condition.category:dischargeDiagnosis",
+      "targetPath": "Condition.category:dischargeDiagnosis",
+      "description": "category:dischargeDiagnosis MS slice [0..1, mustSupport=true, hemas CodeSystem pattern] removed in target: US Core has no dischargeDiagnosis category slice.",
       "severity": "WARNING"
     },
     {
       "id": "rule-10",
-      "type": "CARDINALITY",
-      "sourcePath": "Condition.category:admissionDiagnosis",
+      "type": "STRUCTURAL",
+      "sourcePath": "Condition.category:us-core",
       "targetPath": "Condition.category:us-core",
-      "description": "Encounter-diagnosis category slice cardinality changed: [0..1] -> [1..1]",
+      "description": "New mandatory MS category slice us-core[min=1, max=1, mustSupport=true] added in target with patternCodeableConcept encoding encounter-diagnosis from http://terminology.hl7.org/CodeSystem/condition-category; source has no us-core category slice.",
       "severity": "WARNING"
     },
     {
       "id": "rule-11",
       "type": "STRUCTURAL",
-      "sourcePath": "Condition.category:dischargeDiagnosis",
-      "targetPath": "",
-      "description": "Slice present only in source: Condition.category:dischargeDiagnosis with pattern Coding(system=https://hemas.example.com/fhir/CodeSystem/condition-category, code=discharge-diagnosis), max=1, mustSupport=true",
-      "severity": "WARNING"
+      "sourcePath": "Condition.severity",
+      "targetPath": "Condition.severity",
+      "description": "severity MustSupport removed on optional element: source mustSupport=true with extensible(http://hl7.org/fhir/ValueSet/condition-severity); target US Core does not constrain severity. MS removed on optional element.",
+      "severity": "INFO"
     },
     {
       "id": "rule-12",
       "type": "TERMINOLOGY",
       "sourcePath": "Condition.severity",
       "targetPath": "Condition.severity",
-      "description": "Binding changed: extensible(http://hl7.org/fhir/ValueSet/condition-severity) -> preferred(http://hl7.org/fhir/ValueSet/condition-severity)",
+      "description": "severity binding changed: source extensible(http://hl7.org/fhir/ValueSet/condition-severity) → target preferred(http://hl7.org/fhir/ValueSet/condition-severity). Binding strength weakened from extensible to preferred.",
       "severity": "WARNING"
     },
     {
       "id": "rule-13",
-      "type": "STRUCTURAL",
-      "sourcePath": "Condition.severity",
-      "targetPath": "Condition.severity",
-      "description": "MustSupport removed in target",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-14",
       "type": "TERMINOLOGY",
       "sourcePath": "Condition.code",
       "targetPath": "Condition.code",
-      "description": "Binding changed: extensible(https://hemas.example.com/fhir/ValueSet/condition-code) -> extensible(http://hl7.org/fhir/us/core/ValueSet/us-core-condition-code)",
+      "description": "code binding changed: source extensible(https://hemas.example.com/fhir/ValueSet/condition-code) [hemas-specific VS] → target extensible(http://hl7.org/fhir/us/core/ValueSet/us-core-condition-code) [US Core condition codes VS]. Same binding strength (extensible), different value sets.",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-14",
+      "type": "CARDINALITY",
+      "sourcePath": "Condition.code.coding",
+      "targetPath": "Condition.code.coding",
+      "description": "code.coding cardinality relaxed from required element: source [1..*] → target [0..*]. Min decreased from 1 to 0 on a required element.",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-14b",
+      "type": "STRUCTURAL",
+      "sourcePath": "Condition.code.coding",
+      "targetPath": "Condition.code.coding",
+      "description": "code.coding slicing removed in target: source defines pattern:$this slicing on code.coding with icd10 and snomed named slices; target US Core does not constrain code.coding sub-elements.",
       "severity": "WARNING"
     },
     {
       "id": "rule-15",
-      "type": "EXTENSION",
-      "sourcePath": "Condition.code",
-      "targetPath": "Condition.code.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+      "type": "STRUCTURAL",
+      "sourcePath": "Condition.code.coding:icd10",
+      "targetPath": "Condition.code.coding:icd10",
+      "description": "Mandatory code.coding:icd10 slice [min=1, max=1, mustSupport=true] removed in target: source requires at least one ICD-10 coding; target has no coding slice constraints. Mandatory coding requirement removed.",
       "severity": "WARNING"
     },
     {
       "id": "rule-16",
-      "type": "CARDINALITY",
-      "sourcePath": "Condition.code.coding",
-      "targetPath": "Condition.code.coding",
-      "description": "Cardinality changed: [1..*] -> [0..*]",
-      "severity": "WARNING"
+      "type": "STRUCTURAL",
+      "sourcePath": "Condition.code.coding:snomed",
+      "targetPath": "Condition.code.coding:snomed",
+      "description": "Optional code.coding:snomed slice [0..1, mustSupport=true] removed in target: MS removed on optional slice element.",
+      "severity": "INFO"
     },
     {
       "id": "rule-17",
       "type": "STRUCTURAL",
-      "sourcePath": "Condition.code.coding",
-      "targetPath": "Condition.code.coding",
-      "description": "Slicing removed in target: source slices coding with rules=open and discriminator=[pattern:$this]",
-      "severity": "WARNING"
+      "sourcePath": "Condition.code.text",
+      "targetPath": "Condition.code.text",
+      "description": "code.text MustSupport removed on optional element: source mustSupport=true; target does not constrain code.text. MS removed on optional element.",
+      "severity": "INFO"
     },
     {
       "id": "rule-18",
       "type": "STRUCTURAL",
-      "sourcePath": "Condition.code.coding:icd10",
-      "targetPath": "",
-      "description": "Slice present only in source: Condition.code.coding:icd10 with pattern Coding(system=http://hl7.org/fhir/sid/icd-10), cardinality [1..1], mustSupport=true",
-      "severity": "WARNING"
+      "sourcePath": "Condition.bodySite",
+      "targetPath": "Condition.bodySite",
+      "description": "bodySite MustSupport removed on optional element: source mustSupport=true with extensible(http://hl7.org/fhir/ValueSet/body-site); target does not constrain bodySite. MS removed on optional element.",
+      "severity": "INFO"
     },
     {
       "id": "rule-19",
-      "type": "STRUCTURAL",
-      "sourcePath": "Condition.code.coding:snomed",
-      "targetPath": "",
-      "description": "Slice present only in source: Condition.code.coding:snomed with pattern Coding(system=http://snomed.info/sct), max=1, mustSupport=true",
+      "type": "TERMINOLOGY",
+      "sourcePath": "Condition.bodySite",
+      "targetPath": "Condition.bodySite",
+      "description": "bodySite binding changed: source extensible(http://hl7.org/fhir/ValueSet/body-site) → target example(http://hl7.org/fhir/ValueSet/body-site). Binding strength weakened from extensible to example.",
       "severity": "WARNING"
     },
     {
       "id": "rule-20",
       "type": "STRUCTURAL",
-      "sourcePath": "Condition.code.text",
-      "targetPath": "Condition.code.text",
-      "description": "MustSupport removed in target",
-      "severity": "INFO"
+      "sourcePath": "Condition.subject",
+      "targetPath": "Condition.subject",
+      "description": "subject reference target changed: source constrains to hemas/Patient (https://hemas.example.com/fhir/StructureDefinition/Patient) → target constrains to us-core-patient (http://hl7.org/fhir/us/core/StructureDefinition/us-core-patient). Different profile targets.",
+      "severity": "WARNING"
     },
     {
       "id": "rule-21",
-      "type": "TERMINOLOGY",
-      "sourcePath": "Condition.bodySite",
-      "targetPath": "Condition.bodySite",
-      "description": "Binding changed: extensible(http://hl7.org/fhir/ValueSet/body-site) -> example(http://hl7.org/fhir/ValueSet/body-site)",
+      "type": "CARDINALITY",
+      "sourcePath": "Condition.encounter",
+      "targetPath": "Condition.encounter",
+      "description": "encounter cardinality relaxed from required element: source [min=1, mustSupport=true] → target [no min, mustSupport=true]. Min decreased from 1 to 0 on a required element. MustSupport preserved.",
       "severity": "WARNING"
     },
     {
       "id": "rule-22",
       "type": "STRUCTURAL",
-      "sourcePath": "Condition.bodySite",
-      "targetPath": "Condition.bodySite",
-      "description": "MustSupport removed in target",
-      "severity": "INFO"
+      "sourcePath": "Condition.encounter",
+      "targetPath": "Condition.encounter",
+      "description": "encounter reference target changed: source constrains to hemas/Encounter (https://hemas.example.com/fhir/StructureDefinition/Encounter) → target constrains to us-core-encounter (http://hl7.org/fhir/us/core/StructureDefinition/us-core-encounter). Different profile targets.",
+      "severity": "WARNING"
     },
     {
       "id": "rule-23",
       "type": "STRUCTURAL",
-      "sourcePath": "Condition.subject",
-      "targetPath": "Condition.subject",
-      "description": "Reference target profile changed: [https://hemas.example.com/fhir/StructureDefinition/Patient] -> [http://hl7.org/fhir/us/core/StructureDefinition/us-core-patient]",
+      "sourcePath": "Condition.onset[x]",
+      "targetPath": "Condition.onset[x]",
+      "description": "onset[x] types widened in target: source restricts types to [dateTime, Period]; target allows [dateTime, Age, Period, Range, string]. Types Age, Range, and string added in target, widening permitted types.",
       "severity": "WARNING"
     },
     {
+      "id": "rule-23b",
+      "type": "STRUCTURAL",
+      "sourcePath": "Condition.onset[x]",
+      "targetPath": "Condition.onset[x]",
+      "description": "onset[x] type-level MS added in target: US Core adds mustSupport on the dateTime choice of onset[x]; source hemas-condition does not add type-level MS.",
+      "severity": "INFO"
+    },
+    {
       "id": "rule-24",
-      "type": "EXTENSION",
-      "sourcePath": "Condition.subject",
-      "targetPath": "Condition.subject.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+      "type": "STRUCTURAL",
+      "sourcePath": "Condition.abatement[x]",
+      "targetPath": "Condition.abatement[x]",
+      "description": "abatement[x] types widened in target: source restricts types to [dateTime, Period]; target allows [dateTime, Age, Period, Range, string]. Types Age, Range, and string added in target, widening permitted types.",
       "severity": "WARNING"
+    },
+    {
+      "id": "rule-24b",
+      "type": "STRUCTURAL",
+      "sourcePath": "Condition.abatement[x]",
+      "targetPath": "Condition.abatement[x]",
+      "description": "abatement[x] type-level MS added in target: US Core adds mustSupport on the dateTime choice of abatement[x]; source hemas-condition does not add type-level MS.",
+      "severity": "INFO"
     },
     {
       "id": "rule-25",
       "type": "CARDINALITY",
-      "sourcePath": "Condition.encounter",
-      "targetPath": "Condition.encounter",
-      "description": "Cardinality changed: [1..1] -> [0..1]",
-      "severity": "WARNING"
+      "sourcePath": "Condition.recordedDate",
+      "targetPath": "Condition.recordedDate",
+      "description": "recordedDate cardinality relaxed: source [min=1, mustSupport=true] → target [no min, mustSupport=true]. Min decreased from 1 to 0. MustSupport preserved.",
+      "severity": "INFO"
     },
     {
       "id": "rule-26",
       "type": "STRUCTURAL",
-      "sourcePath": "Condition.encounter",
-      "targetPath": "Condition.encounter",
-      "description": "Reference target profile changed: [https://hemas.example.com/fhir/StructureDefinition/Encounter] -> [http://hl7.org/fhir/us/core/StructureDefinition/us-core-encounter]",
-      "severity": "WARNING"
+      "sourcePath": "Condition.recorder",
+      "targetPath": "Condition.recorder",
+      "description": "recorder MustSupport removed on optional element: source mustSupport=true; target does not constrain recorder. MS removed on optional element.",
+      "severity": "INFO"
     },
     {
       "id": "rule-27",
-      "type": "EXTENSION",
-      "sourcePath": "Condition.encounter",
-      "targetPath": "Condition.encounter.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
-      "severity": "WARNING"
+      "type": "STRUCTURAL",
+      "sourcePath": "Condition.stage",
+      "targetPath": "Condition.stage",
+      "description": "stage MustSupport removed on optional element: source mustSupport=true; target does not constrain stage. MS removed on optional element.",
+      "severity": "INFO"
     },
     {
       "id": "rule-28",
       "type": "STRUCTURAL",
-      "sourcePath": "Condition.onset[x]",
-      "targetPath": "Condition.onset[x]",
-      "description": "Type choice changed: [dateTime, Period] -> [dateTime, Age, Period, Range, string]",
-      "severity": "WARNING"
+      "sourcePath": "Condition.stage.summary",
+      "targetPath": "Condition.stage.summary",
+      "description": "stage.summary MustSupport removed on optional element: source mustSupport=true; target does not constrain stage.summary. MS removed on optional element.",
+      "severity": "INFO"
     },
     {
       "id": "rule-29",
       "type": "STRUCTURAL",
-      "sourcePath": "Condition.onset[x]",
-      "targetPath": "Condition.onset[x]",
-      "description": "Type-level MustSupport added in target for the dateTime choice",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-30",
-      "type": "EXTENSION",
-      "sourcePath": "Condition.onset[x]",
-      "targetPath": "Condition.onset[x].extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-31",
-      "type": "STRUCTURAL",
-      "sourcePath": "Condition.abatement[x]",
-      "targetPath": "Condition.abatement[x]",
-      "description": "Type choice changed: [dateTime, Period] -> [dateTime, Age, Period, Range, string]",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-32",
-      "type": "STRUCTURAL",
-      "sourcePath": "Condition.abatement[x]",
-      "targetPath": "Condition.abatement[x]",
-      "description": "Type-level MustSupport added in target for the dateTime choice",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-33",
-      "type": "EXTENSION",
-      "sourcePath": "Condition.abatement[x]",
-      "targetPath": "Condition.abatement[x].extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-34",
-      "type": "CARDINALITY",
-      "sourcePath": "Condition.recordedDate",
-      "targetPath": "Condition.recordedDate",
-      "description": "Cardinality changed: [1..1] -> [0..1]",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-35",
-      "type": "EXTENSION",
-      "sourcePath": "Condition.recordedDate",
-      "targetPath": "Condition.recordedDate.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-36",
-      "type": "STRUCTURAL",
-      "sourcePath": "Condition.recorder",
-      "targetPath": "Condition.recorder",
-      "description": "MustSupport removed in target",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-37",
-      "type": "STRUCTURAL",
-      "sourcePath": "Condition.stage",
-      "targetPath": "Condition.stage",
-      "description": "MustSupport removed in target",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-38",
-      "type": "STRUCTURAL",
-      "sourcePath": "Condition.stage.summary",
-      "targetPath": "Condition.stage.summary",
-      "description": "MustSupport removed in target",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-39",
-      "type": "STRUCTURAL",
       "sourcePath": "Condition.note",
       "targetPath": "Condition.note",
-      "description": "MustSupport removed in target",
+      "description": "note MustSupport removed on optional element: source mustSupport=true; target does not constrain note. MS removed on optional element.",
       "severity": "INFO"
     }
   ]

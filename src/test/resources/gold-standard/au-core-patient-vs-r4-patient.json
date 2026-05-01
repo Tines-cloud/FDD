@@ -2,446 +2,335 @@
   "pairId": "au-core-patient-vs-r4-patient",
   "sourceClasspath": "standard-profiles/au-core/StructureDefinition-au-core-patient.json",
   "targetClasspath": "standard-profiles/r4/patient.profile.json",
+  "_notes": "Source: AU Core Patient (Australian realm). Target: R4 base Patient. AU Core is significantly more constrained: root error constraints, AU-specific extensions, mandatory identifier slicing with AU identifier types (IHI/Medicare/DVA), mandatory name with error constraint and sub-element MS, mandatory gender, mandatory birthDate, and various MS elements. Going source→target (R4 base), all AU-specific constraints relax or disappear.",
   "drifts": [
     {
       "id": "rule-1",
       "type": "STRUCTURAL",
       "sourcePath": "Patient",
       "targetPath": "Patient",
-      "description": "Constraint present only in source: au-core-pat-01 requires at least one valid patient identifier or a Data Absent Reason extension",
+      "description": "Source root constraints removed in target: AU Core defines au-core-pat-01(error), au-core-pat-02(error), and inv-pat-0 through inv-pat-5 constraints; R4 base Patient has no equivalent root constraints.",
       "severity": "WARNING"
     },
     {
+      "id": "rule-1b",
+      "type": "EXTENSION",
+      "sourcePath": "Patient.extension:birthPlace",
+      "targetPath": "",
+      "description": "Extension birthPlace removed in target: AU Core defines Patient.extension:birthPlace (optional, non-MS); R4 base defines no extension slices.",
+      "severity": "INFO"
+    },
+    {
       "id": "rule-2",
-      "type": "STRUCTURAL",
-      "sourcePath": "Patient",
-      "targetPath": "Patient",
-      "description": "Constraint present only in source: au-core-pat-02 requires at least one patient name with a family name or a Data Absent Reason extension",
+      "type": "EXTENSION",
+      "sourcePath": "Patient.extension:indigenousStatus",
+      "targetPath": "Patient.extension:indigenousStatus",
+      "description": "Optional AU extension indigenousStatus[mustSupport=true] removed in target: R4 base defines no AU-specific extensions. MS removed on optional element.",
       "severity": "WARNING"
     },
     {
       "id": "rule-3",
       "type": "EXTENSION",
-      "sourcePath": "Patient.extension:birthPlace",
-      "targetPath": "",
-      "description": "Extension present only in source: Patient.extension:birthPlace (profile=http://hl7.org/fhir/StructureDefinition/patient-birthPlace, max=1)",
+      "sourcePath": "Patient.extension:genderIdentity",
+      "targetPath": "Patient.extension:genderIdentity",
+      "description": "Optional AU extension genderIdentity[mustSupport=true] removed in target: R4 base defines no extensions in its differential. MS removed on optional element.",
       "severity": "WARNING"
     },
     {
       "id": "rule-4",
       "type": "EXTENSION",
-      "sourcePath": "Patient.extension:indigenousStatus",
-      "targetPath": "",
-      "description": "Extension present only in source: Patient.extension:indigenousStatus (profile=http://hl7.org.au/fhir/StructureDefinition/indigenous-status, max=1, mustSupport=true, with AU obligations)",
+      "sourcePath": "Patient.extension:individualPronouns",
+      "targetPath": "Patient.extension:individualPronouns",
+      "description": "Optional AU extension individualPronouns[mustSupport=true] removed in target: R4 base defines no extensions in its differential. MS removed on optional element.",
       "severity": "WARNING"
     },
     {
-      "id": "rule-5",
+      "id": "rule-4b",
       "type": "EXTENSION",
       "sourcePath": "Patient.extension:veteranStatus",
       "targetPath": "",
-      "description": "Extension present only in source: Patient.extension:veteranStatus (profile=http://hl7.org.au/fhir/StructureDefinition/veteran-status)",
+      "description": "Extension veteranStatus removed in target: AU Core defines Patient.extension:veteranStatus (optional, non-MS); R4 base defines no extension slices.",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-4c",
+      "type": "EXTENSION",
+      "sourcePath": "Patient.extension:closingTheGapRegistration",
+      "targetPath": "",
+      "description": "Extension closingTheGapRegistration removed in target: AU Core defines Patient.extension:closingTheGapRegistration (optional, non-MS); R4 base defines no extension slices.",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-4d",
+      "type": "EXTENSION",
+      "sourcePath": "Patient.extension:mothersMaidenName",
+      "targetPath": "",
+      "description": "Extension mothersMaidenName removed in target: AU Core defines Patient.extension:mothersMaidenName (optional, non-MS); R4 base defines no extension slices.",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-4e",
+      "type": "EXTENSION",
+      "sourcePath": "Patient.extension:interpreterRequired",
+      "targetPath": "",
+      "description": "Extension interpreterRequired removed in target: AU Core defines Patient.extension:interpreterRequired (optional, non-MS); R4 base defines no extension slices.",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-4f",
+      "type": "EXTENSION",
+      "sourcePath": "Patient.extension:dateOfArrival",
+      "targetPath": "",
+      "description": "Extension dateOfArrival removed in target: AU Core defines Patient.extension:dateOfArrival (optional, non-MS); R4 base defines no extension slices.",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-4g",
+      "type": "EXTENSION",
+      "sourcePath": "Patient.extension:recordedSexOrGender",
+      "targetPath": "",
+      "description": "Extension recordedSexOrGender removed in target: AU Core defines Patient.extension:recordedSexOrGender (optional, non-MS); R4 base defines no extension slices.",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-5",
+      "type": "STRUCTURAL",
+      "sourcePath": "Patient.identifier",
+      "targetPath": "Patient.identifier",
+      "description": "identifier slicing removed in target: source AU Core defines pattern:type discriminator slicing on identifier; R4 base has no slicing on identifier.",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-5b",
+      "type": "STRUCTURAL",
+      "sourcePath": "Patient.identifier",
+      "targetPath": "Patient.identifier",
+      "description": "identifier type profile changed: source AU Core allows AU-specific identifier profiles (au-ihi, au-medicarecardnumber, au-dvanumber, au-healthcarecardnumber, au-pensionerconcessioncardnumber, au-cwlthseniorshealthcardnumber, au-medicalrecordnumber, au-insurancemembernumber) in addition to base Identifier; target R4 base uses base Identifier only.",
       "severity": "WARNING"
     },
     {
       "id": "rule-6",
-      "type": "EXTENSION",
-      "sourcePath": "Patient.extension:closingTheGapRegistration",
-      "targetPath": "",
-      "description": "Extension present only in source: Patient.extension:closingTheGapRegistration (profile=http://hl7.org.au/fhir/StructureDefinition/closing-the-gap-registration, max=1)",
+      "type": "STRUCTURAL",
+      "sourcePath": "Patient.identifier:ihi",
+      "targetPath": "Patient.identifier:ihi",
+      "description": "identifier:ihi AU slice [max=1, mustSupport=true, types=Identifier[au-ihi]] removed in target: R4 base has no identifier slicing.",
       "severity": "WARNING"
     },
     {
       "id": "rule-7",
-      "type": "EXTENSION",
-      "sourcePath": "Patient.extension:mothersMaidenName",
-      "targetPath": "",
-      "description": "Extension present only in source: Patient.extension:mothersMaidenName (profile=http://hl7.org/fhir/StructureDefinition/patient-mothersMaidenName, max=1)",
+      "type": "STRUCTURAL",
+      "sourcePath": "Patient.identifier:medicare",
+      "targetPath": "Patient.identifier:medicare",
+      "description": "identifier:medicare AU slice [max=1, mustSupport=true, types=Identifier[au-medicarecardnumber]] removed in target: R4 base has no identifier slicing.",
       "severity": "WARNING"
     },
     {
       "id": "rule-8",
-      "type": "EXTENSION",
-      "sourcePath": "Patient.extension:interpreterRequired",
-      "targetPath": "",
-      "description": "Extension present only in source: Patient.extension:interpreterRequired (profile=http://hl7.org/fhir/StructureDefinition/patient-interpreterRequired, max=1)",
+      "type": "STRUCTURAL",
+      "sourcePath": "Patient.identifier:dva",
+      "targetPath": "Patient.identifier:dva",
+      "description": "identifier:dva AU slice [max=1, mustSupport=true, types=Identifier[au-dvanumber]] removed in target: R4 base has no identifier slicing.",
       "severity": "WARNING"
     },
     {
       "id": "rule-9",
-      "type": "EXTENSION",
-      "sourcePath": "Patient.extension:dateOfArrival",
-      "targetPath": "",
-      "description": "Extension present only in source: Patient.extension:dateOfArrival (profile=http://hl7.org.au/fhir/StructureDefinition/date-of-arrival, max=1)",
-      "severity": "WARNING"
+      "type": "CARDINALITY",
+      "sourcePath": "Patient.identifier",
+      "targetPath": "Patient.identifier",
+      "description": "identifier cardinality relaxed: source [min=1, mustSupport=true] → target [min=0]. Min decreased from 1 to 0.",
+      "severity": "INFO"
     },
     {
       "id": "rule-10",
-      "type": "EXTENSION",
-      "sourcePath": "Patient.extension:genderIdentity",
-      "targetPath": "",
-      "description": "Extension present only in source: Patient.extension:genderIdentity (profile=http://hl7.org/fhir/StructureDefinition/individual-genderIdentity, mustSupport=true, with AU obligations)",
+      "type": "STRUCTURAL",
+      "sourcePath": "Patient.identifier",
+      "targetPath": "Patient.identifier",
+      "description": "identifier MustSupport removed on a previously required (min=1) element: source mustSupport=true; R4 base has no mustSupport on identifier.",
       "severity": "WARNING"
     },
     {
       "id": "rule-11",
-      "type": "EXTENSION",
-      "sourcePath": "Patient.extension:individualPronouns",
-      "targetPath": "",
-      "description": "Extension present only in source: Patient.extension:individualPronouns (profile=http://hl7.org/fhir/StructureDefinition/individual-pronouns, mustSupport=true, with AU obligations)",
+      "type": "STRUCTURAL",
+      "sourcePath": "Patient.name",
+      "targetPath": "Patient.name",
+      "description": "Source constraint au-core-pat-03(error) on name removed in target: AU Core defines an error constraint requiring name to contain at least one of family or given when present; R4 base has no constraint on name.",
       "severity": "WARNING"
     },
     {
       "id": "rule-12",
-      "type": "EXTENSION",
-      "sourcePath": "Patient.extension:recordedSexOrGender",
-      "targetPath": "",
-      "description": "Extension present only in source: Patient.extension:recordedSexOrGender (profile=http://hl7.org/fhir/StructureDefinition/individual-recordedSexOrGender)",
-      "severity": "WARNING"
+      "type": "CARDINALITY",
+      "sourcePath": "Patient.name",
+      "targetPath": "Patient.name",
+      "description": "name cardinality relaxed: source [min=1, mustSupport=true] → target [min=0]. Min decreased from 1 to 0.",
+      "severity": "INFO"
     },
     {
       "id": "rule-13",
-      "type": "CARDINALITY",
-      "sourcePath": "Patient.identifier",
-      "targetPath": "Patient.identifier",
-      "description": "Cardinality changed: [1..*] -> [0..*]",
-      "severity": "INFO"
+      "type": "STRUCTURAL",
+      "sourcePath": "Patient.name",
+      "targetPath": "Patient.name",
+      "description": "name MustSupport removed on a previously required (min=1) element: source mustSupport=true; R4 base has no mustSupport on name.",
+      "severity": "WARNING"
     },
     {
       "id": "rule-14",
       "type": "STRUCTURAL",
-      "sourcePath": "Patient.identifier",
-      "targetPath": "Patient.identifier",
-      "description": "Type profile constraint changed: source allows AU-specific identifier profiles (au-ihi, au-medicarecardnumber, au-dvanumber, au-healthcarecardnumber, au-pensionerconcessioncardnumber, au-cwlthseniorshealthcardnumber, au-medicalrecordnumber, au-insurancemembernumber) in addition to base Identifier, while target uses base Identifier only",
-      "severity": "WARNING"
+      "sourcePath": "Patient.name.use",
+      "targetPath": "Patient.name.use",
+      "description": "name.use MustSupport removed on optional element: source mustSupport=true; R4 base has no mustSupport on name.use.",
+      "severity": "INFO"
     },
     {
       "id": "rule-15",
       "type": "STRUCTURAL",
-      "sourcePath": "Patient.identifier",
-      "targetPath": "Patient.identifier",
-      "description": "MustSupport removed in target",
+      "sourcePath": "Patient.name.text",
+      "targetPath": "Patient.name.text",
+      "description": "name.text MustSupport removed on optional element: source mustSupport=true; R4 base has no mustSupport on name.text.",
       "severity": "INFO"
     },
     {
       "id": "rule-16",
       "type": "STRUCTURAL",
-      "sourcePath": "Patient.identifier",
-      "targetPath": "Patient.identifier",
-      "description": "Slicing changed: rules=open, discriminators=[pattern:type] -> none",
-      "severity": "WARNING"
+      "sourcePath": "Patient.name.family",
+      "targetPath": "Patient.name.family",
+      "description": "name.family MustSupport removed on optional element: source mustSupport=true; R4 base has no mustSupport on name.family.",
+      "severity": "INFO"
     },
     {
       "id": "rule-17",
-      "type": "EXTENSION",
-      "sourcePath": "Patient.identifier.extension(http://hl7.org/fhir/StructureDefinition/obligation)",
-      "targetPath": "Patient.identifier",
-      "description": "Extension removed in target element: http://hl7.org/fhir/StructureDefinition/obligation",
-      "severity": "WARNING"
+      "type": "STRUCTURAL",
+      "sourcePath": "Patient.name.given",
+      "targetPath": "Patient.name.given",
+      "description": "name.given MustSupport removed on optional element: source mustSupport=true; R4 base has no mustSupport on name.given.",
+      "severity": "INFO"
     },
     {
       "id": "rule-18",
       "type": "STRUCTURAL",
-      "sourcePath": "Patient.identifier:ihi",
-      "targetPath": "",
-      "description": "Slice removed in target profile: Patient.identifier:ihi (max=1, profile=http://hl7.org.au/fhir/StructureDefinition/au-ihi, mustSupport=true, with AU obligations)",
-      "severity": "WARNING"
+      "sourcePath": "Patient.telecom",
+      "targetPath": "Patient.telecom",
+      "description": "telecom MustSupport removed on optional element: source mustSupport=true; R4 base has no mustSupport on telecom.",
+      "severity": "INFO"
     },
     {
       "id": "rule-19",
-      "type": "STRUCTURAL",
-      "sourcePath": "Patient.identifier:medicare",
-      "targetPath": "",
-      "description": "Slice removed in target profile: Patient.identifier:medicare (max=1, profile=http://hl7.org.au/fhir/StructureDefinition/au-medicarecardnumber, mustSupport=true, with AU obligations)",
-      "severity": "WARNING"
+      "type": "CARDINALITY",
+      "sourcePath": "Patient.gender",
+      "targetPath": "Patient.gender",
+      "description": "gender cardinality relaxed: source [min=1, mustSupport=true] → target [min=0]. Min decreased from 1 to 0.",
+      "severity": "INFO"
     },
     {
       "id": "rule-20",
       "type": "STRUCTURAL",
-      "sourcePath": "Patient.identifier:dva",
-      "targetPath": "",
-      "description": "Slice removed in target profile: Patient.identifier:dva (max=1, profile=http://hl7.org.au/fhir/StructureDefinition/au-dvanumber, mustSupport=true, with AU obligations)",
+      "sourcePath": "Patient.gender",
+      "targetPath": "Patient.gender",
+      "description": "gender MustSupport removed on a previously required (min=1) element: source mustSupport=true; R4 base has no mustSupport on gender.",
       "severity": "WARNING"
     },
     {
       "id": "rule-21",
       "type": "CARDINALITY",
-      "sourcePath": "Patient.name",
-      "targetPath": "Patient.name",
-      "description": "Cardinality changed: [1..*] -> [0..*]",
+      "sourcePath": "Patient.birthDate",
+      "targetPath": "Patient.birthDate",
+      "description": "birthDate cardinality relaxed: source [min=1, mustSupport=true] → target [min=0]. Min decreased from 1 to 0.",
       "severity": "INFO"
     },
     {
       "id": "rule-22",
       "type": "STRUCTURAL",
-      "sourcePath": "Patient.name",
-      "targetPath": "Patient.name",
-      "description": "MustSupport removed in target",
-      "severity": "INFO"
+      "sourcePath": "Patient.birthDate",
+      "targetPath": "Patient.birthDate",
+      "description": "birthDate MustSupport removed on a previously required (min=1) element: source mustSupport=true; R4 base has no mustSupport on birthDate.",
+      "severity": "WARNING"
     },
     {
       "id": "rule-23",
       "type": "STRUCTURAL",
-      "sourcePath": "Patient.name",
-      "targetPath": "Patient.name",
-      "description": "Constraint present only in source: au-core-pat-03 requires at least text, family, or given, or a Data Absent Reason extension",
+      "sourcePath": "Patient.address",
+      "targetPath": "Patient.address",
+      "description": "address MustSupport removed on optional element: source mustSupport=true; R4 base has no mustSupport on address.",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-23b",
+      "type": "STRUCTURAL",
+      "sourcePath": "Patient.address",
+      "targetPath": "Patient.address",
+      "description": "address type profile changed: source AU Core uses au-address profile (http://hl7.org.au/fhir/StructureDefinition/au-address) on address; target R4 base uses base Address only.",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-23c",
+      "type": "TERMINOLOGY",
+      "sourcePath": "Patient.contact.relationship",
+      "targetPath": "Patient.contact.relationship",
+      "description": "contact.relationship binding changed: source extensible(https://healthterminologies.gov.au/fhir/ValueSet/contact-relationship-type-3) [AU contact relationship type VS] → target extensible(http://hl7.org/fhir/ValueSet/patient-contactrelationship) [R4 base VS]. Same binding strength, AU-specific VS replaced by R4 base VS.",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-23d",
+      "type": "STRUCTURAL",
+      "sourcePath": "Patient.contact.address",
+      "targetPath": "Patient.contact.address",
+      "description": "contact.address type profile changed: source AU Core uses au-address profile (http://hl7.org.au/fhir/StructureDefinition/au-address) on contact.address; target R4 base uses base Address only.",
       "severity": "WARNING"
     },
     {
       "id": "rule-24",
-      "type": "EXTENSION",
-      "sourcePath": "Patient.name.extension(http://hl7.org/fhir/StructureDefinition/obligation)",
-      "targetPath": "Patient.name",
-      "description": "Extension removed in target element: http://hl7.org/fhir/StructureDefinition/obligation",
-      "severity": "WARNING"
+      "type": "STRUCTURAL",
+      "sourcePath": "Patient.communication",
+      "targetPath": "Patient.communication",
+      "description": "communication MustSupport removed on optional element: source mustSupport=true; R4 base has no mustSupport on communication.",
+      "severity": "INFO"
     },
     {
       "id": "rule-25",
       "type": "STRUCTURAL",
-      "sourcePath": "Patient.name.use",
-      "targetPath": "Patient.name.use",
-      "description": "MustSupport removed in target",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-26",
-      "type": "EXTENSION",
-      "sourcePath": "Patient.name.use.extension(http://hl7.org/fhir/StructureDefinition/obligation)",
-      "targetPath": "Patient.name.use",
-      "description": "Extension removed in target element: http://hl7.org/fhir/StructureDefinition/obligation",
+      "sourcePath": "Patient.communication.language",
+      "targetPath": "Patient.communication.language",
+      "description": "communication.language MustSupport removed on a required element (R4 base defines min=1 on communication.language): source mustSupport=true; R4 base has no mustSupport on communication.language.",
       "severity": "WARNING"
     },
     {
-      "id": "rule-27",
+      "id": "rule-25b",
+      "type": "TERMINOLOGY",
+      "sourcePath": "Patient.communication.language",
+      "targetPath": "Patient.communication.language",
+      "description": "communication.language binding changed: source AU Core has extensible(https://healthterminologies.gov.au/fhir/ValueSet/common-languages-australia-2) [AU common languages VS] → target R4 base has preferred(http://hl7.org/fhir/ValueSet/languages) [R4 languages VS]. Binding strength changed from extensible to preferred, and AU-specific VS replaced by R4 base VS.",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-26",
       "type": "STRUCTURAL",
-      "sourcePath": "Patient.name.text",
-      "targetPath": "Patient.name.text",
-      "description": "MustSupport removed in target",
+      "sourcePath": "Patient.communication.preferred",
+      "targetPath": "Patient.communication.preferred",
+      "description": "communication.preferred MustSupport removed on optional element: source mustSupport=true; R4 base has no mustSupport on communication.preferred.",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-27",
+      "type": "EXTENSION",
+      "sourcePath": "Patient.birthDate.extension:accuracyIndicator",
+      "targetPath": "",
+      "description": "birthDate sub-extension accuracyIndicator removed in target: AU Core defines Patient.birthDate.extension:accuracyIndicator (au-date-accuracy-indicator profile, optional, non-MS); R4 base has no such sub-extension.",
       "severity": "INFO"
     },
     {
       "id": "rule-28",
       "type": "EXTENSION",
-      "sourcePath": "Patient.name.text.extension(http://hl7.org/fhir/StructureDefinition/obligation)",
-      "targetPath": "Patient.name.text",
-      "description": "Extension removed in target element: http://hl7.org/fhir/StructureDefinition/obligation",
-      "severity": "WARNING"
+      "sourcePath": "Patient.birthDate.extension:birthTime",
+      "targetPath": "",
+      "description": "birthDate sub-extension birthTime removed in target: AU Core defines Patient.birthDate.extension:birthTime (patient-birthTime profile, optional, non-MS); R4 base has no birthTime sub-extension.",
+      "severity": "INFO"
     },
     {
       "id": "rule-29",
-      "type": "STRUCTURAL",
-      "sourcePath": "Patient.name.family",
-      "targetPath": "Patient.name.family",
-      "description": "MustSupport removed in target",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-30",
-      "type": "EXTENSION",
-      "sourcePath": "Patient.name.family.extension(http://hl7.org/fhir/StructureDefinition/obligation)",
-      "targetPath": "Patient.name.family",
-      "description": "Extension removed in target element: http://hl7.org/fhir/StructureDefinition/obligation",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-31",
-      "type": "STRUCTURAL",
-      "sourcePath": "Patient.name.given",
-      "targetPath": "Patient.name.given",
-      "description": "MustSupport removed in target",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-32",
-      "type": "EXTENSION",
-      "sourcePath": "Patient.name.given.extension(http://hl7.org/fhir/StructureDefinition/obligation)",
-      "targetPath": "Patient.name.given",
-      "description": "Extension removed in target element: http://hl7.org/fhir/StructureDefinition/obligation",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-33",
-      "type": "STRUCTURAL",
-      "sourcePath": "Patient.telecom",
-      "targetPath": "Patient.telecom",
-      "description": "MustSupport removed in target",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-34",
-      "type": "EXTENSION",
-      "sourcePath": "Patient.telecom.extension(http://hl7.org/fhir/StructureDefinition/obligation)",
-      "targetPath": "Patient.telecom",
-      "description": "Extension removed in target element: http://hl7.org/fhir/StructureDefinition/obligation",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-35",
-      "type": "CARDINALITY",
-      "sourcePath": "Patient.gender",
-      "targetPath": "Patient.gender",
-      "description": "Cardinality changed: [1..1] -> [0..1]",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-36",
-      "type": "STRUCTURAL",
-      "sourcePath": "Patient.gender",
-      "targetPath": "Patient.gender",
-      "description": "MustSupport removed in target",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-37",
-      "type": "EXTENSION",
-      "sourcePath": "Patient.gender.extension(http://hl7.org/fhir/StructureDefinition/obligation)",
-      "targetPath": "Patient.gender",
-      "description": "Extension removed in target element: http://hl7.org/fhir/StructureDefinition/obligation",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-38",
-      "type": "CARDINALITY",
-      "sourcePath": "Patient.birthDate",
-      "targetPath": "Patient.birthDate",
-      "description": "Cardinality changed: [1..1] -> [0..1]",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-39",
-      "type": "STRUCTURAL",
-      "sourcePath": "Patient.birthDate",
-      "targetPath": "Patient.birthDate",
-      "description": "MustSupport removed in target",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-40",
-      "type": "EXTENSION",
-      "sourcePath": "Patient.birthDate.extension(http://hl7.org/fhir/StructureDefinition/obligation)",
-      "targetPath": "Patient.birthDate",
-      "description": "Extension removed in target element: http://hl7.org/fhir/StructureDefinition/obligation",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-41",
-      "type": "EXTENSION",
-      "sourcePath": "Patient.birthDate.extension:accuracyIndicator",
-      "targetPath": "",
-      "description": "Extension present only in source: Patient.birthDate.extension:accuracyIndicator (profile=http://hl7.org.au/fhir/StructureDefinition/date-accuracy-indicator, max=1)",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-42",
-      "type": "EXTENSION",
-      "sourcePath": "Patient.birthDate.extension:birthTime",
-      "targetPath": "",
-      "description": "Extension present only in source: Patient.birthDate.extension:birthTime (profile=http://hl7.org/fhir/StructureDefinition/patient-birthTime, max=1)",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-43",
       "type": "EXTENSION",
       "sourcePath": "Patient.deceased[x]:deceasedDateTime.extension:accuracyIndicator",
       "targetPath": "",
-      "description": "Extension present only in source: Patient.deceased[x]:deceasedDateTime.extension:accuracyIndicator (profile=http://hl7.org.au/fhir/StructureDefinition/date-accuracy-indicator, max=1)",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-44",
-      "type": "STRUCTURAL",
-      "sourcePath": "Patient.address",
-      "targetPath": "Patient.address",
-      "description": "Type profile constraint changed: source uses Address with AU profile http://hl7.org.au/fhir/StructureDefinition/au-address, while target uses base Address only",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-45",
-      "type": "STRUCTURAL",
-      "sourcePath": "Patient.address",
-      "targetPath": "Patient.address",
-      "description": "MustSupport removed in target",
+      "description": "deceased sub-extension accuracyIndicator removed in target: AU Core defines Patient.deceased[x]:deceasedDateTime.extension:accuracyIndicator (au-date-accuracy-indicator profile, optional, non-MS); R4 base has no such sub-extension.",
       "severity": "INFO"
-    },
-    {
-      "id": "rule-46",
-      "type": "EXTENSION",
-      "sourcePath": "Patient.address.extension(http://hl7.org/fhir/StructureDefinition/obligation)",
-      "targetPath": "Patient.address",
-      "description": "Extension removed in target element: http://hl7.org/fhir/StructureDefinition/obligation",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-47",
-      "type": "TERMINOLOGY",
-      "sourcePath": "Patient.contact.relationship",
-      "targetPath": "Patient.contact.relationship",
-      "description": "Binding changed: extensible(https://healthterminologies.gov.au/fhir/ValueSet/contact-relationship-type-3) -> extensible(http://hl7.org/fhir/ValueSet/patient-contactrelationship)",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-48",
-      "type": "STRUCTURAL",
-      "sourcePath": "Patient.contact.address",
-      "targetPath": "Patient.contact.address",
-      "description": "Type profile constraint changed: source uses Address with AU profile http://hl7.org.au/fhir/StructureDefinition/au-address, while target uses base Address only",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-49",
-      "type": "STRUCTURAL",
-      "sourcePath": "Patient.communication",
-      "targetPath": "Patient.communication",
-      "description": "MustSupport removed in target",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-50",
-      "type": "EXTENSION",
-      "sourcePath": "Patient.communication.extension(http://hl7.org/fhir/StructureDefinition/obligation)",
-      "targetPath": "Patient.communication",
-      "description": "Extension removed in target element: http://hl7.org/fhir/StructureDefinition/obligation",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-51",
-      "type": "TERMINOLOGY",
-      "sourcePath": "Patient.communication.language",
-      "targetPath": "Patient.communication.language",
-      "description": "Binding changed: extensible(https://healthterminologies.gov.au/fhir/ValueSet/common-languages-australia-2) -> preferred(http://hl7.org/fhir/ValueSet/languages)",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-52",
-      "type": "STRUCTURAL",
-      "sourcePath": "Patient.communication.language",
-      "targetPath": "Patient.communication.language",
-      "description": "MustSupport removed in target",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-53",
-      "type": "EXTENSION",
-      "sourcePath": "Patient.communication.language.extension(http://hl7.org/fhir/StructureDefinition/obligation)",
-      "targetPath": "Patient.communication.language",
-      "description": "Extension removed in target element: http://hl7.org/fhir/StructureDefinition/obligation",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-54",
-      "type": "STRUCTURAL",
-      "sourcePath": "Patient.communication.preferred",
-      "targetPath": "Patient.communication.preferred",
-      "description": "MustSupport removed in target",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-55",
-      "type": "EXTENSION",
-      "sourcePath": "Patient.communication.preferred.extension(http://hl7.org/fhir/StructureDefinition/obligation)",
-      "targetPath": "Patient.communication.preferred",
-      "description": "Extension removed in target element: http://hl7.org/fhir/StructureDefinition/obligation",
-      "severity": "WARNING"
     }
   ]
 }

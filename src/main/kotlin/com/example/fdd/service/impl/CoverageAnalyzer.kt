@@ -59,8 +59,8 @@ class CoverageAnalyzer : ICoverageAnalyzer {
 
         log.info(
             "Coverage analysis: {} total, {} mapped, {} by-parent, {} metadata, {} source-loss, {} unmappable ({} critical), {}% shareable",
-            items.size, mapped, coveredByParent, noRuleNeeded, sourceDataLoss + unmappable,
-            criticalUnmappable, "%.1f".format(roundedPercent)
+            items.size, mapped, coveredByParent, noRuleNeeded, sourceDataLoss,
+            unmappable + criticalUnmappable, criticalUnmappable, "%.1f".format(roundedPercent)
         )
         if (criticalUnmappable > 0) {
             log.warn(
@@ -120,7 +120,10 @@ class CoverageAnalyzer : ICoverageAnalyzer {
         // 2. Source-only elements (removed in target)
         if (tgt.isBlank()) {
             val fmlHandling = when {
-                desc.contains("extension removed") -> "Source-only extension - FML correctly omits it (no target to map to)"
+                // Matches both "Extension removed in target element" and "Extension slice removed in target profile"
+                desc.contains("extension") && desc.contains("removed") && !desc.contains("modifier") ->
+                    "Source-only extension - FML correctly omits it (no target to map to)"
+
                 desc.contains("slice") && desc.contains("removed") -> {
                     val parentPath = parentFhirPath(src)
                     val group = parentPath?.let { findGroupForPath(it, fmlGroups) }
@@ -139,7 +142,8 @@ class CoverageAnalyzer : ICoverageAnalyzer {
         }
 
         // 3. Target-only extensions with no source data
-        if (src.isBlank() && desc.contains("extension added in target")) {
+        // Matches both "Extension added in target element" and "Extension slice added in target profile"
+        if (src.isBlank() && desc.contains("extension") && desc.contains("added in target") && !desc.contains("modifier")) {
             val (tgtMin, _) = getTargetElementInfo(targetSd, tgt)
             return if (tgtMin >= 1) {
                 item.toCoverage(
@@ -237,9 +241,9 @@ class CoverageAnalyzer : ICoverageAnalyzer {
 
         // 9. Last resort: no match at all
         return item.toCoverage(
-            CoverageStatus.MAPPED,
-            "Drift is between two corresponding elements - handled by the overall transformation",
-            "Covered by general mapping structure"
+            CoverageStatus.SOURCE_DATA_LOSS,
+            "No FML rule found that maps this drift - source data not carried to target",
+            "Not covered by any FML rule or parent group"
         )
     }
 
@@ -343,6 +347,14 @@ class CoverageAnalyzer : ICoverageAnalyzer {
     private fun isProfileMetadata(description: String, targetPath: String): Boolean {
         if (description.contains("mustsupport removed") || description.contains("mustsupport added")) return true
         if (description.contains("constraints removed") || description.contains("constraints added")) return true
+        // AI-generated drift items that are explicitly labelled as having no data impact:
+        if (description.contains("profile metadata")) return true
+        if (description.contains("no instance data impact")) return true
+        if (description.contains("no direct mapping impact")) return true
+        if (description.contains("value-set version pin")) return true
+        if (description.contains("short description changed")) return true
+        if (description.contains("binding strength unchanged")) return true
+        if (description.contains("conformance annotation")) return true
         return profileMetadataExtensions.any { ext ->
             targetPath.contains(ext, ignoreCase = true) || description.contains(ext, ignoreCase = true)
         }

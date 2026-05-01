@@ -1,12 +1,33 @@
-{
+﻿{
   "resourceType": "MedicationRequest",
   "id": "r4-medicationrequest-001",
   "meta": {
+    "lastUpdated": "2026-05-01T12:00:00+00:00",
     "profile": [
       "http://hl7.org/fhir/StructureDefinition/MedicationRequest"
     ]
   },
+  "text": {
+    "status": "generated",
+    "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\"><p><b>Metformin 500 mg</b> oral tablet, twice daily. Patient: James Robert Williams. Requester: Dr. Emily Chen. Authored: 2025-11-20. Status: active.</p></div>"
+  },
+  "identifier": [
+    {
+      "use": "official",
+      "system": "http://hospital.example.org/prescriptions",
+      "value": "RX-2025-0042-001"
+    }
+  ],
   "status": "active",
+  "statusReason": {
+    "coding": [
+      {
+        "system": "http://terminology.hl7.org/CodeSystem/medicationrequest-status-reason",
+        "code": "altchoice",
+        "display": "Try another treatment first"
+      }
+    ]
+  },
   "intent": "order",
   "category": [
     {
@@ -19,38 +40,159 @@
       ]
     }
   ],
+  "priority": "routine",
+  "doNotPerform": false,
+  "reportedBoolean": false,
   "medicationCodeableConcept": {
     "coding": [
       {
         "system": "http://www.nlm.nih.gov/research/umls/rxnorm",
-        "code": "860975",
+        "code": "861007",
         "display": "Metformin hydrochloride 500 MG Oral Tablet"
       }
     ],
-    "text": "Metformin 500mg"
+    "text": "Metformin 500 mg oral tablet"
   },
   "subject": {
     "reference": "Patient/r4-patient-001",
-    "display": "James Williams"
+    "display": "James Robert Williams"
   },
   "encounter": {
-    "reference": "Encounter/r4-encounter-001"
+    "reference": "Encounter/r4-encounter-001",
+    "display": "Outpatient Consultation 2025-11-20"
   },
-  "authoredOn": "2025-11-20",
+  "supportingInformation": [
+    {
+      "reference": "Condition/r4-condition-001",
+      "display": "Type 2 diabetes mellitus"
+    }
+  ],
+  "authoredOn": "2025-11-20T09:30:00+00:00",
   "requester": {
     "reference": "Practitioner/r4-practitioner-001",
     "display": "Dr. Emily Chen"
   },
+  "performer": {
+    "reference": "Practitioner/r4-practitioner-001",
+    "display": "Dr. Emily Chen"
+  },
+  "performerType": {
+    "coding": [
+      {
+        "system": "http://snomed.info/sct",
+        "code": "309343006",
+        "display": "Physician"
+      }
+    ]
+  },
+  "recorder": {
+    "reference": "Practitioner/r4-practitioner-001",
+    "display": "Dr. Emily Chen"
+  },
+  "reasonCode": [
+    {
+      "coding": [
+        {
+          "system": "http://snomed.info/sct",
+          "code": "44054006",
+          "display": "Type 2 diabetes mellitus"
+        }
+      ],
+      "text": "T2DM glycaemic management"
+    }
+  ],
+  "reasonReference": [
+    {
+      "reference": "Condition/r4-condition-001",
+      "display": "Type 2 diabetes mellitus"
+    }
+  ],
+  "instantiatesCanonical": [
+    "http://example.org/fhir/PlanDefinition/diabetes-management-protocol"
+  ],
+  "instantiatesUri": [
+    "https://www.diabetes.org/clinical-guidelines/standards-of-medical-care"
+  ],
+  "basedOn": [
+    {
+      "reference": "CarePlan/r4-careplan-001",
+      "display": "Diabetes Management Plan"
+    }
+  ],
+  "groupIdentifier": {
+    "system": "http://hospital.example.org/prescription-groups",
+    "value": "GRP-2025-0042"
+  },
+  "courseOfTherapyType": {
+    "coding": [
+      {
+        "system": "http://terminology.hl7.org/CodeSystem/medicationrequest-course-of-therapy",
+        "code": "continuous",
+        "display": "Continuous long term therapy"
+      }
+    ]
+  },
+  "insurance": [
+    {
+      "reference": "Coverage/r4-coverage-001",
+      "display": "Patient Health Insurance"
+    }
+  ],
+  "note": [
+    {
+      "authorReference": {
+        "reference": "Practitioner/r4-practitioner-001",
+        "display": "Dr. Emily Chen"
+      },
+      "time": "2025-11-20",
+      "text": "Start metformin 500 mg twice daily with meals. Titrate to 1000 mg twice daily after 2 weeks if tolerated. Monitor renal function (eGFR) at 3 months."
+    }
+  ],
   "dosageInstruction": [
     {
       "sequence": 1,
-      "text": "Take 1 tablet by mouth twice daily with meals",
+      "text": "Take 1 tablet (500 mg) orally twice daily with meals",
+      "additionalInstruction": [
+        {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "311504000",
+              "display": "With or after food"
+            }
+          ]
+        }
+      ],
+      "patientInstruction": "Take one tablet with your morning and evening meals. Do not crush or chew.",
       "timing": {
         "repeat": {
           "frequency": 2,
           "period": 1,
-          "periodUnit": "d"
+          "periodUnit": "d",
+          "boundsPeriod": {
+            "start": "2025-11-20",
+            "end": "2026-05-20"
+          }
+        },
+        "code": {
+          "coding": [
+            {
+              "system": "http://terminology.hl7.org/CodeSystem/v3-GTSAbbreviation",
+              "code": "BID",
+              "display": "BID"
+            }
+          ]
         }
+      },
+      "asNeededBoolean": false,
+      "site": {
+        "coding": [
+          {
+            "system": "http://snomed.info/sct",
+            "code": "738956005",
+            "display": "Oral"
+          }
+        ]
       },
       "route": {
         "coding": [
@@ -58,6 +200,15 @@
             "system": "http://snomed.info/sct",
             "code": "26643006",
             "display": "Oral route"
+          }
+        ]
+      },
+      "method": {
+        "coding": [
+          {
+            "system": "http://snomed.info/sct",
+            "code": "421521009",
+            "display": "Swallow"
           }
         ]
       },
@@ -79,7 +230,92 @@
             "code": "mg"
           }
         }
+      ],
+      "maxDosePerPeriod": {
+        "numerator": {
+          "value": 1000,
+          "unit": "mg",
+          "system": "http://unitsofmeasure.org",
+          "code": "mg"
+        },
+        "denominator": {
+          "value": 1,
+          "unit": "day",
+          "system": "http://unitsofmeasure.org",
+          "code": "d"
+        }
+      }
+    }
+  ],
+  "dispenseRequest": {
+    "initialFill": {
+      "quantity": {
+        "value": 60,
+        "unit": "tablet",
+        "system": "http://unitsofmeasure.org",
+        "code": "{tablet}"
+      },
+      "duration": {
+        "value": 30,
+        "unit": "days",
+        "system": "http://unitsofmeasure.org",
+        "code": "d"
+      }
+    },
+    "dispenseInterval": {
+      "value": 30,
+      "unit": "days",
+      "system": "http://unitsofmeasure.org",
+      "code": "d"
+    },
+    "validityPeriod": {
+      "start": "2025-11-20",
+      "end": "2026-11-20"
+    },
+    "numberOfRepeatsAllowed": 5,
+    "quantity": {
+      "value": 60,
+      "unit": "tablet",
+      "system": "http://unitsofmeasure.org",
+      "code": "{tablet}"
+    },
+    "expectedSupplyDuration": {
+      "value": 30,
+      "unit": "days",
+      "system": "http://unitsofmeasure.org",
+      "code": "d"
+    },
+    "performer": {
+      "reference": "Organization/r4-organization-pharmacy-001",
+      "display": "Springfield General Hospital Pharmacy"
+    }
+  },
+  "substitution": {
+    "allowedBoolean": true,
+    "reason": {
+      "coding": [
+        {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+          "code": "FP",
+          "display": "Formulary policy"
+        }
       ]
+    }
+  },
+  "priorPrescription": {
+    "reference": "MedicationRequest/r4-medicationrequest-prev-001",
+    "display": "Previous Metformin prescription"
+  },
+  "detectedIssue": [
+    {
+      "reference": "DetectedIssue/r4-detectedissue-001",
+      "display": "Renal function monitoring advisory"
+    }
+  ],
+  "eventHistory": [
+    {
+      "reference": "Provenance/r4-provenance-001",
+      "display": "Prescription creation event"
     }
   ]
 }

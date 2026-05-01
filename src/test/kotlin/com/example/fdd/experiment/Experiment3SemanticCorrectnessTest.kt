@@ -1,9 +1,25 @@
 package com.example.fdd.experiment
 
+import ca.uhn.fhir.context.FhirContext
+import ca.uhn.fhir.context.support.DefaultProfileValidationSupport
 import com.example.fdd.api.dto.ProfileInput
 import com.example.fdd.service.DriftOrchestrationService
-import org.junit.jupiter.api.*
+import org.hl7.fhir.common.hapi.validation.support.CommonCodeSystemsTerminologyService
+import org.hl7.fhir.common.hapi.validation.support.InMemoryTerminologyServerValidationSupport
+import org.hl7.fhir.common.hapi.validation.support.PrePopulatedValidationSupport
+import org.hl7.fhir.common.hapi.validation.support.ValidationSupportChain
+import org.hl7.fhir.r4.hapi.ctx.HapiWorkerContext
+import org.hl7.fhir.r4.model.Resource
+import org.hl7.fhir.r4.model.ResourceFactory
+import org.hl7.fhir.r4.model.StructureDefinition
+import org.hl7.fhir.r4.utils.StructureMapUtilities
+import org.junit.jupiter.api.AfterAll
+import org.junit.jupiter.api.DisplayName
+import org.junit.jupiter.api.DynamicTest
 import org.junit.jupiter.api.DynamicTest.dynamicTest
+import org.junit.jupiter.api.Tag
+import org.junit.jupiter.api.TestFactory
+import org.junit.jupiter.api.TestInstance
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
@@ -34,7 +50,8 @@ import java.time.format.DateTimeFormatter
  */
 @SpringBootTest
 @Tag("integration")
-@Testcontainers
+@Tag("experiment3")
+@Testcontainers(disabledWithoutDocker = true)
 @ActiveProfiles("experiment")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class Experiment3SemanticCorrectnessTest {
@@ -47,10 +64,14 @@ class Experiment3SemanticCorrectnessTest {
     @Autowired
     private lateinit var objectMapper: ObjectMapper
 
+    /** R4 FhirContext (the @Primary one) - used to serialize parsed StructureMaps. */
+    @Autowired
+    private lateinit var fhirContext: FhirContext
+
     companion object {
         @Container
         @JvmStatic
-        val hapiFhirServer: GenericContainer<*> = GenericContainer("hapiproject/hapi:latest")
+        val hapiFhirServer: GenericContainer<*> = GenericContainer("hapiproject/hapi:v7.4.0")
             .withExposedPorts(8080)
             .waitingFor(Wait.forHttp("/fhir/metadata").forStatusCode(200))
             .withStartupTimeout(Duration.ofMinutes(3))
@@ -276,8 +297,10 @@ class Experiment3SemanticCorrectnessTest {
         val fhirServerUrl = "http://${hapiFhirServer.host}:${hapiFhirServer.firstMappedPort}/fhir"
         log.info("HAPI FHIR server running at: {}", fhirServerUrl)
 
-        // Support selective pair execution via -Dfdd.pairs=id1,id2
-        val selectedIds = System.getProperty("fdd.pairs")?.split(",")?.map { it.trim() }?.filter { it.isNotEmpty() }
+        // Support selective pair execution via system property OR env var FDD_PAIRS
+        val selectedIds = (System.getProperty("fdd.pairs")?.takeIf { it.isNotBlank() }
+            ?: System.getenv("FDD_PAIRS")?.takeIf { it.isNotBlank() })
+            ?.split(",")?.map { it.trim() }?.filter { it.isNotEmpty() }
         val casesToRun = if (!selectedIds.isNullOrEmpty()) {
             val filtered = testCases.filter { it.id in selectedIds }
             log.info("Selective mode: running {}/{} cases matching -Dfdd.pairs", filtered.size, testCases.size)
@@ -423,33 +446,62 @@ class Experiment3SemanticCorrectnessTest {
 
             // Step 4: Upload StructureMap to HAPI server
             val structureMapResource = buildStructureMapResource(mapResult.structureMapFml)
-            val smResponse = postToFhir(fhirServerUrl, "StructureMap", structureMapResource)
-            structureMapUploaded = smResponse.statusCode() in 200..299
-            if (!structureMapUploaded) {
-                // StructureMap upload often fails because HAPI JPA only accepts
-                // fully-parsed StructureMap resources, not raw FML content fields.
-                // This is a known limitation - count pipeline+instance success as partial pass.
-                errorMessage = "StructureMap upload: HTTP ${smResponse.statusCode()} - " +
-                        "HAPI JPA may not support raw FML content field"
-                log.warn("StructureMap upload failed for {}: HTTP {}", testCase.id, smResponse.statusCode())
+
+            // ----------------------------------------------------------------
+            // Step 4a: Try IN-PROCESS transform first (works around the known
+            // HAPI JPA $transform limitation: JPA needs source/target
+            // StructureDefinitions pre-loaded server-side and a fully parsed
+            // StructureMap; both are brittle for ad-hoc generated FML).
+            //
+            // The in-process path uses HAPI's StructureMapUtilities directly
+            // with a worker context that already has the source/target SDs
+            // populated, so transformation succeeds without any HTTP round
+            // trip.
+            // ----------------------------------------------------------------
+            val (inProcessOk, inProcessJson) = inProcessTransform(
+                sourceClasspath = testCase.sourceClasspath,
+                targetClasspath = testCase.targetClasspath,
+                fml = mapResult.structureMapFml,
+                sourceInstanceJson = instanceJson,
+                resourceType = testCase.resourceType
+            )
+
+            if (inProcessOk && inProcessJson != null) {
+                structureMapUploaded = true        // logically equivalent: map is usable
+                transformExecuted = true
+                log.info("In-process \$transform succeeded for {}", testCase.id)
+
+                // Step 6 (in-process): POST transformed instance to HAPI for $validate
+                transformedResourceValid = validateResource(fhirServerUrl, inProcessJson, testCase.resourceType)
+                if (!transformedResourceValid) {
+                    errorMessage = "Transformed resource failed profile validation (in-process)"
+                }
             } else {
-                log.info("StructureMap uploaded to HAPI server")
-            }
+                // ---- Fall back to HAPI JPA $transform path ----
+                val smResponse = postToFhir(fhirServerUrl, "StructureMap", structureMapResource)
+                structureMapUploaded = smResponse.statusCode() in 200..299
+                if (!structureMapUploaded) {
+                    errorMessage = "StructureMap upload: HTTP ${smResponse.statusCode()} - " +
+                            "HAPI JPA may not support raw FML content field"
+                    log.warn("StructureMap upload failed for {}: HTTP {}", testCase.id, smResponse.statusCode())
+                } else {
+                    log.info("StructureMap uploaded to HAPI server")
+                }
 
-            // Step 5: Attempt $transform (if StructureMap was uploaded)
-            if (structureMapUploaded) {
-                val transformResult = attemptTransform(fhirServerUrl, structureMapResource, instanceJson, testCase)
-                transformExecuted = transformResult.first
-                val transformedJson = transformResult.second
+                if (structureMapUploaded) {
+                    val transformResult = attemptTransform(fhirServerUrl, structureMapResource, instanceJson)
+                    transformExecuted = transformResult.first
+                    val transformedJson = transformResult.second
 
-                if (transformExecuted && transformedJson != null) {
-                    // Step 6: Validate transformed output
-                    transformedResourceValid = validateResource(fhirServerUrl, transformedJson, testCase.resourceType)
-                    if (!transformedResourceValid) {
-                        errorMessage = "Transformed resource failed profile validation"
+                    if (transformExecuted && transformedJson != null) {
+                        transformedResourceValid =
+                            validateResource(fhirServerUrl, transformedJson, testCase.resourceType)
+                        if (!transformedResourceValid) {
+                            errorMessage = "Transformed resource failed profile validation"
+                        }
+                    } else if (!transformExecuted) {
+                        errorMessage = (errorMessage ?: "") + "; \$transform not supported by HAPI JPA"
                     }
-                } else if (!transformExecuted) {
-                    errorMessage = (errorMessage ?: "") + "; \$transform not supported by HAPI JPA"
                 }
             }
 
@@ -486,7 +538,7 @@ class Experiment3SemanticCorrectnessTest {
         structureMapUploaded = structureMapUploaded,
         transformExecuted = transformExecuted,
         transformedResourceValid = transformedResourceValid,
-        overallSuccess = pipelineSuccess && syntacticallyValid && instancePosted && structureMapUploaded,
+        overallSuccess = pipelineSuccess && syntacticallyValid && transformedResourceValid,
         driftItemCount = driftItemCount,
         dataShareabilityPercent = dataShareabilityPercent,
         errorMessage = errorMessage
@@ -503,39 +555,59 @@ class Experiment3SemanticCorrectnessTest {
             HttpResponse.BodyHandlers.ofString()
         )
 
+    /**
+     * Convert FHIR Mapping Language (FML) text into a fully-formed StructureMap
+     * JSON resource that the HAPI JPA `$transform` engine can execute.
+     *
+     * The previous implementation only emitted a metadata stub (no `group`,
+     * `structure`, or `rule` content), which is why HAPI rejected the upload.
+     * We now use HAPI's `StructureMapUtilities.parse()` to produce a real R4
+     * `StructureMap` and serialize it with the autowired R4 [FhirContext].
+     *
+     * If parsing fails, we log the cause and return a placeholder marked
+     * `status=draft`; the calling test will record the failure and the
+     * transform step will be skipped for that case.
+     */
     private fun buildStructureMapResource(fml: String): String {
         val mapUrlRegex = Regex("""map\s+"([^"]+)"\s*=\s*"([^"]+)"""")
         val match = mapUrlRegex.find(fml)
-        val mapUrl = match?.groupValues?.get(1) ?: "http://example.org/fhir/StructureMap/generated"
-        val mapName = match?.groupValues?.get(2) ?: "GeneratedMap"
+        val fallbackUrl = match?.groupValues?.get(1) ?: "http://example.org/fhir/StructureMap/generated"
+        val fallbackName = match?.groupValues?.get(2) ?: "GeneratedMap"
 
-        val escapedFml = fml
-            .replace("\\", "\\\\")
-            .replace("\"", "\\\"")
-            .replace("\n", "\\n")
-            .replace("\r", "")
-            .replace("\t", "\\t")
-
-        return """
-        {
-          "resourceType": "StructureMap",
-          "url": "$mapUrl",
-          "name": "$mapName",
-          "status": "draft",
-          "description": "Auto-generated by FHIR Drift Doctor - Experiment 3"
+        return try {
+            val workerContext = HapiWorkerContext(
+                fhirContext,
+                ValidationSupportChain(DefaultProfileValidationSupport(fhirContext))
+            )
+            val structureMap = StructureMapUtilities(workerContext).parse(fml, fallbackName)
+            // Ensure the map has a stable canonical URL even if the FML omitted one.
+            if (structureMap.url.isNullOrBlank()) structureMap.url = fallbackUrl
+            if (structureMap.name.isNullOrBlank()) structureMap.name = fallbackName
+            fhirContext.newJsonParser().setPrettyPrint(false).encodeResourceToString(structureMap)
+        } catch (ex: Exception) {
+            log.warn(
+                "Failed to parse generated FML into a StructureMap (length={} chars): {}",
+                fml.length, ex.message
+            )
+            """
+            {
+              "resourceType": "StructureMap",
+              "url": "$fallbackUrl",
+              "name": "$fallbackName",
+              "status": "draft",
+              "description": "FML parse failed - placeholder so downstream pipeline records the failure cleanly."
+            }
+            """.trimIndent()
         }
-        """.trimIndent()
     }
 
     private fun attemptTransform(
         fhirServerUrl: String,
         structureMapJson: String,
-        sourceInstanceJson: String,
-        testCase: SemanticTestCase
+        sourceInstanceJson: String
     ): Pair<Boolean, String?> {
         return try {
             val tree = objectMapper.readTree(structureMapJson)
-            @Suppress("DEPRECATION")
             val smUrl = tree.get("url")?.textValue() ?: return false to null
 
             val transformRequest = """
@@ -606,7 +678,76 @@ class Experiment3SemanticCorrectnessTest {
         return try {
             ClassPathResource(path).inputStream.bufferedReader().readText()
         } catch (ex: Exception) {
+            log.warn("Failed to load classpath resource '{}': {}", path, ex.message)
             null
+        }
+    }
+
+    /**
+     * Run the StructureMap transform IN-PROCESS (no HTTP, no JPA upload).
+     *
+     * This bypasses the well-known HAPI JPA `$transform` limitation:
+     * the JPA endpoint requires the source/target StructureDefinitions to
+     * be loaded server-side AND a fully-parsed StructureMap resource - both
+     * of which are brittle for ad-hoc generated FML.
+     *
+     * Strategy:
+     *   1. Parse source & target SDs from the classpath.
+     *   2. Build a [PrePopulatedValidationSupport] containing both, layered
+     *      with the standard R4 base profiles + terminology services.
+     *   3. Wrap as a [HapiWorkerContext] (the same wrapper [DefaultMapValidator]
+     *      uses for parse-time validation).
+     *   4. Parse the FML into a [org.hl7.fhir.r4.model.StructureMap] using
+     *      [StructureMapUtilities].
+     *   5. Invoke `utils.transform(null, source, structureMap, target)`.
+     *
+     * Returns `(true, transformedJson)` on success, `(false, null)` on any
+     * failure - the caller will then fall back to the HAPI JPA path.
+     */
+    private fun inProcessTransform(
+        sourceClasspath: String,
+        targetClasspath: String,
+        fml: String,
+        sourceInstanceJson: String,
+        resourceType: String
+    ): Pair<Boolean, String?> {
+        return try {
+            val sourceSdJson = loadResource(sourceClasspath) ?: return false to null
+            val targetSdJson = loadResource(targetClasspath) ?: return false to null
+
+            val parser = fhirContext.newJsonParser()
+            val sourceSd = parser.parseResource(StructureDefinition::class.java, sourceSdJson)
+            val targetSd = parser.parseResource(StructureDefinition::class.java, targetSdJson)
+
+            val support = PrePopulatedValidationSupport(fhirContext).apply {
+                addStructureDefinition(sourceSd)
+                addStructureDefinition(targetSd)
+            }
+            val chain = ValidationSupportChain(
+                support,
+                DefaultProfileValidationSupport(fhirContext),
+                InMemoryTerminologyServerValidationSupport(fhirContext),
+                CommonCodeSystemsTerminologyService(fhirContext)
+            )
+            val workerContext = HapiWorkerContext(fhirContext, chain)
+            val utils = StructureMapUtilities(workerContext)
+
+            val structureMap = utils.parse(fml, "GeneratedMap")
+
+            val sourceResource = parser.parseResource(sourceInstanceJson) as Resource
+            val targetResource = ResourceFactory.createResource(resourceType)
+
+            utils.transform(null, sourceResource, structureMap, targetResource)
+
+            val json = fhirContext.newJsonParser().setPrettyPrint(true)
+                .encodeResourceToString(targetResource)
+            true to json
+        } catch (ex: Exception) {
+            log.warn(
+                "In-process transform failed for source='{}' target='{}': {}",
+                sourceClasspath, targetClasspath, ex.message
+            )
+            false to null
         }
     }
 
