@@ -34,4 +34,4 @@ even if rewriting it in a different FML construct.
 6. Every rule must end with a semicolon (after the quoted name).
 7. All braces and parentheses must be balanced.
 8. Do NOT use unsupported keywords (`default`, `alias` in `uses` clauses, nested `{}` inside rules).
-9. Output ONLY the corrected FML code - no markdown, no explanations.
+9. Output ONLY the corrected FML code - start your response with the `map "` line, no markdown, no explanations, no prose before or after the FML.

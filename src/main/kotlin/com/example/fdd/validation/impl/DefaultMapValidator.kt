@@ -63,12 +63,15 @@ class DefaultMapValidator(
         for (cycle in 1..maxAttempts) {
             log.info("Repair cycle {}/{}: scanning FML for ALL errors (no LLM cost)", cycle, maxAttempts)
 
-            // Auto-fix "Complex rules must have an explicit name" errors (free, no LLM cost)
-            currentFml = autoFixRuleNames(currentFml)
-
             // Auto-fix syntax-level errors deterministically - missing semicolons, unquoted rule
             // names, unicode quotes, etc.  These never need AI.
+            // MUST run BEFORE autoFixRuleNames: if a rule is missing both its semicolon AND its
+            // quoted name, autoFixRuleNames exits early (line doesn't end with ";"). Running
+            // autoFixSyntaxErrors first adds the semicolon, then autoFixRuleNames can add the name.
             currentFml = autoFixSyntaxErrors(currentFml)
+
+            // Auto-fix "Complex rules must have an explicit name" errors (free, no LLM cost)
+            currentFml = autoFixRuleNames(currentFml)
 
             // -- Scan for ALL errors (free, no LLM cost) --
             val errors = collectAllErrors(currentFml)
@@ -158,7 +161,7 @@ class DefaultMapValidator(
                 errorsByCycle.toList(),
                 regressions
             )
-            // apply anti-pattern sanitization: the AI can reintroduce the same bad patterns
+            // Re-apply anti-pattern sanitization: the AI can reintroduce the same bad patterns
             // (multi-line then, not() wrapping, etc.) that were fixed before the loop started.
             currentFml = sanitizeFml(currentFml)
             // Save this cycle's errors so the next follow-up can warn the LLM not to revert
@@ -362,8 +365,7 @@ class DefaultMapValidator(
         // Anti-pattern 4: remove 'alias' from uses declarations
         // INVALID:  uses "url" alias SomeName as source
         // VALID:    uses "url" as source
-        val aliasPattern =
-            Regex("""^(\s*uses\s+"[^"]+")(\s+alias\s+\w+)(\s+as\s+(?:source|target)\s*)$""", RegexOption.MULTILINE)
+        val aliasPattern = Regex("""^(\s*uses\s+"[^"]+")(\s+alias\s+\w+)(\s+as\s+(?:source|target)\s*)$""", RegexOption.MULTILINE)
         var aliasFixes = 0
         result = aliasPattern.replace(result) { m ->
             aliasFixes++
@@ -385,19 +387,35 @@ class DefaultMapValidator(
 
         // Anti-pattern 6a: multi-line rule where a continuation line starts with "."
         // Handles both  ".path = value "rule";"  and  ".path as a -> tgt.path "rule";"
-        // Excludes lines ending with "," or ")" - those are group/uses header continuations
-        // and merging them with a dot-prefixed next line would corrupt the group declaration.
+        // Excludes lines ending with "," - those are multi-parameter group call continuations.
+        // Lines ending with ")" are allowed UNLESS the line is a group/uses declaration
+        // (FHIRPath where-clause expressions end with ")" and their dot continuation
+        // must be merged; group headers ending with ")" must NOT be merged).
         val multiLineDot = Regex(
-            """^([ \t]*)(.*[^\s{};/,)])\r?\n[ \t]+(\.[^\r\n]+)$""",
+            """^([ \t]*)(.*[^\s{};/,])\r?\n[ \t]+(\.[^\r\n]+)$""",
             setOf(RegexOption.MULTILINE)
         )
+        val groupOrUsesDecl = Regex("""^\s*(group\s+\w+|uses\s+"|imports\s+")""")
+        // AP-19 inline: convert "identifier.where(cond) ->" → "identifier where cond ->"
+        // Applied only on lines that were just merged (dot continuation) so we never
+        // touch pre-existing valid FML that happens to have .where() in it.
+        val mergedInlineWhere = Regex("""(\w+)\.where\(([^)]+)\)(\s+(?:->|then\b))""")
         var dotChanged: Boolean
         do {
             dotChanged = false
             result = multiLineDot.replace(result) { m ->
-                rewrites++
-                dotChanged = true
-                "${m.groupValues[1]}${m.groupValues[2]}${m.groupValues[3]}"
+                val fullLine = "${m.groupValues[1]}${m.groupValues[2]}"
+                if (groupOrUsesDecl.containsMatchIn(fullLine)) {
+                    m.value  // don't merge group/uses declarations
+                } else {
+                    rewrites++
+                    dotChanged = true
+                    val merged = "${m.groupValues[1]}${m.groupValues[2]}${m.groupValues[3]}"
+                    // Apply AP-19 to the merged line only (not to the whole FML)
+                    mergedInlineWhere.replace(merged) { mw ->
+                        "${mw.groupValues[1]} where ${mw.groupValues[2]}${mw.groupValues[3]}"
+                    }
+                }
             }
         } while (dotChanged)
 
@@ -571,8 +589,8 @@ class DefaultMapValidator(
         )
         result = extensionShorthand.replace(result) { m ->
             rewrites++
-            val base = m.groupValues[1]
-            val url = m.groupValues[2]
+            val base  = m.groupValues[1]
+            val url   = m.groupValues[2]
             val alias = m.groupValues[3]
             "$base.extension as $alias where $alias.url = '$url'"
         }
@@ -591,6 +609,42 @@ class DefaultMapValidator(
                     "${m.groupValues[1]} ${m.groupValues[2]} :"
                 }
                 if (fixed != line) rewrites++
+                fixed
+            } else line
+        }
+
+        // Anti-pattern 18: FML rules written at the top level of the map (outside any group body).
+        // HAPI only accepts 'map', 'uses', 'imports', 'group' at depth 0.  The LLM sometimes
+        // generates rules ("src -> tgt ...") directly at depth 0 after a group closes.
+        // These cause "Found 'src' expecting 'group'" errors.  Comment them out so the rest
+        // compiles; the reflexion loop will see the comments and can re-emit them in the right place.
+        val topLevelDecl = Regex("""^\s*(map\s+["']|uses\s+["']|imports\s+["']|group\s+\w+|//|${'$'})""")
+        val looksLikeRule = Regex("""->""")
+        var apDepth18 = 0
+        result = result.lines().joinToString("\n") { line ->
+            val opened = line.count { it == '{' }
+            val closed = line.count { it == '}' }
+            val enteredAt = apDepth18
+            apDepth18 += opened - closed
+            if (enteredAt == 0 && !topLevelDecl.containsMatchIn(line) && looksLikeRule.containsMatchIn(line)) {
+                rewrites++
+                "// [fdd-sanitized] stray top-level rule moved here by LLM: $line"
+            } else {
+                line
+            }
+        }
+
+        // Anti-pattern 17: dotted type names in group parameter declarations.        // HAPI rejects "Patient.Communication" as a type in group params, producing
+        // "Found '.' expecting ')'".  Replace each "Outer.Inner" type with BackboneElement.
+        // INVALID:  group Foo(source src : Patient.Communication, target tgt : Encounter.Location)
+        // VALID:    group Foo(source src : BackboneElement, target tgt : BackboneElement)
+        val dottedGroupType = Regex("""((?:source|target)\s+\w+\s*:\s*)\w+(?:\.\w+)+""")
+        result = result.lines().joinToString("\n") { line ->
+            if (Regex("""^\s*group\s+\w+\s*\(""").containsMatchIn(line)) {
+                val fixed = dottedGroupType.replace(line) { m ->
+                    rewrites++
+                    "${m.groupValues[1]}BackboneElement"
+                }
                 fixed
             } else line
         }
@@ -685,9 +739,7 @@ class DefaultMapValidator(
         val nextGroup = "_SetFdd${nextSuffix}_"
         val firstSeg = segments[0]
         val rest = segments.drop(1)
-        val delegateRule = "  src -> ${parentAlias}.${firstSeg} as ${nextAlias} then ${nextGroup}(src, ${nextAlias}) ${
-            ruleName.dropLast(1)
-        }-mid\";"
+        val delegateRule = "  src -> ${parentAlias}.${firstSeg} as ${nextAlias} then ${nextGroup}(src, ${nextAlias}) ${ruleName.dropLast(1)}-mid\";"
         val innerGroupBody = buildDeepAssignGroup(nextAlias, rest, literal, ruleName, nextSuffix)
         return "group ${groupName}(source src : Resource, target ${parentAlias} : Element) {\n${delegateRule}\n}\n\n${innerGroupBody}"
     }
@@ -836,6 +888,32 @@ class DefaultMapValidator(
             }
         }
 
+        // Fix D: "Found '.' expecting ';'" on a line that itself starts with '.'.
+        // The sanitizer's multi-line dot merger should have handled this, but if the
+        // preceding line ended with a character excluded by the merge regex (e.g. a
+        // closing paren in a group declaration) the merge was skipped.
+        // Correct action: JOIN the dot line onto the preceding line, then immediately
+        // convert any "identifier.where(cond) ->" to "identifier where cond ->"
+        // (AP-19 transformation inline) so the merged line is directly compilable.
+        if (expectingSemi && lineNum != null && lineNum >= 2 && lineNum <= lines.size) {
+            val dotLine = lines[lineNum - 1]
+            if (dotLine.trimStart().startsWith(".")) {
+                val precedingIdx = lineNum - 2
+                val preceding = lines[precedingIdx].trimEnd()
+                val dotContent = dotLine.trim()
+                var merged = "$preceding$dotContent"
+                // Inline AP-19: convert "alias.where(cond) ->" → "alias where cond ->"
+                val apInlineWhere = Regex("""(\w+)\.where\(([^)]+)\)(\s+(?:->|then\b))""")
+                merged = apInlineWhere.replace(merged) { m ->
+                    "${m.groupValues[1]} where ${m.groupValues[2]}${m.groupValues[3]}"
+                }
+                lines[precedingIdx] = merged
+                lines.removeAt(lineNum - 1)
+                log.debug("autoFixSyntaxErrors: merged dot-continuation line {} onto line {}", lineNum, lineNum - 1)
+                return lines.joinToString("\n")
+            }
+        }
+
         // Fix B: Missing semicolon on the line BEFORE the error.
         // HAPI reports "Found X expecting ;" at the START of the next rule (line N).
         // The rule that ended before line N is missing its terminating ';'.
@@ -862,6 +940,7 @@ class DefaultMapValidator(
         if (expectingTokenName && lineNum != null && lineNum >= 1 && lineNum <= lines.size) {
             val line = lines[lineNum - 1]
             val trimmed = line.trimEnd()
+            // Case C1: line already ends with ; but is missing the quoted name
             if (trimmed.endsWith(";") && trimmed.contains("->") &&
                 !Regex(""""[^"]*"\s*;$""").containsMatchIn(trimmed)
             ) {
@@ -870,6 +949,28 @@ class DefaultMapValidator(
                 lines[lineNum - 1] = " ".repeat(indent) + trimmed.dropLast(1).trimEnd() + " \"$ruleName\";"
                 log.debug("autoFixSyntaxErrors: added generated rule name to line {}", lineNum)
                 return lines.joinToString("\n")
+            }
+            // Case C2: line ends with ) and contains -> - add rule name + semicolon.
+            // This covers "src -> tgt then GroupName(src, tgt)" which needs a name.
+            if (trimmed.endsWith(")") && trimmed.contains("->")) {
+                val indent = line.length - line.trimStart().length
+                val ruleName = "rule_line$lineNum"
+                lines[lineNum - 1] = " ".repeat(indent) + trimmed.trimStart() + " \"$ruleName\";"
+                log.debug("autoFixSyntaxErrors: added rule name + ; to ) line {}", lineNum)
+                return lines.joinToString("\n")
+            }
+            // Case C3: line is just a closing paren - merge onto the preceding line.
+            // This handles multi-line group calls where ) lands on its own line.
+            val trimmedFull = line.trim()
+            if ((trimmedFull == ")" || trimmedFull == ");" || trimmedFull.matches(Regex("""^\)\s*\{?$"""))) && lineNum >= 2) {
+                val precedingIdx = lineNum - 2
+                val preceding = lines[precedingIdx].trimEnd()
+                if (!preceding.endsWith(";") && !preceding.endsWith("{") && !preceding.endsWith("}")) {
+                    lines[precedingIdx] = "$preceding$trimmedFull"
+                    lines.removeAt(lineNum - 1)
+                    log.debug("autoFixSyntaxErrors: merged closing-paren-only line {} onto line {}", lineNum, lineNum - 1)
+                    return lines.joinToString("\n")
+                }
             }
         }
 
@@ -885,6 +986,145 @@ class DefaultMapValidator(
     }
 
     /* ---------- LLM Repair (Reflexion) ---------- */
+
+    /**
+     * Find the zero-based [start..end] line range of the FML `group` block that contains
+     * the given 1-based [targetLine].  Returns `null` when no enclosing group is found.
+     */
+    private fun extractGroupContaining(fml: String, targetLine: Int): IntRange? {
+        val lines = fml.lines()
+        val zeroTarget = targetLine - 1
+        val groupHeader = Regex("""^\s*group\s+\w+""")
+
+        var groupStart = -1
+        var braceDepth = 0
+
+        for (i in lines.indices) {
+            val line = lines[i]
+            if (groupHeader.containsMatchIn(line)) {
+                groupStart = i
+                braceDepth = 0
+            }
+            if (groupStart >= 0) {
+                braceDepth += line.count { it == '{' } - line.count { it == '}' }
+                if (braceDepth <= 0 && i > groupStart) {
+                    if (zeroTarget in groupStart..i) return groupStart..i
+                    groupStart = -1
+                }
+            }
+        }
+        return null
+    }
+
+    /**
+     * Extract the first `group Name(...) { ... }` block from an LLM response.
+     * Handles both code-fenced and plain-text responses.
+     */
+    private fun extractGroupBlock(response: String): String? {
+        val text = Regex("""```(?:fml|map|fhir)?\s*\n?([\s\S]*?)\n?```""")
+            .find(response.trim())?.groupValues?.get(1)?.trim()
+            ?: response.trim()
+
+        val groupMatch = Regex("""^group\s+""", RegexOption.MULTILINE).find(text) ?: return null
+        val fromGroup = text.substring(groupMatch.range.first)
+
+        var depth = 0
+        var endIdx = -1
+        for (i in fromGroup.indices) {
+            when (fromGroup[i]) {
+                '{' -> depth++
+                '}' -> { depth--; if (depth == 0) { endIdx = i; break } }
+            }
+        }
+        return if (endIdx >= 0) fromGroup.substring(0, endIdx + 1) else null
+    }
+
+    /**
+     * When the reflexion loop is stuck on a repeating error (oscillation), extract each
+     * FML group that contains a broken line and ask the LLM to fix ONLY that group via a
+     * fresh, focused `chat()` call (no conversation history).
+     *
+     * Returns the patched FML (with fixed groups spliced in), or `null` when surgical
+     * repair cannot be applied (no group found, or the LLM response cannot be parsed).
+     *
+     * Groups are processed bottom-up so that splicing earlier groups does not shift the
+     * line indices of later groups.
+     */
+    private fun surgicalRepairGroups(
+        fml: String,
+        oscillatingErrors: List<String>,
+        systemPrompt: String
+    ): String? {
+        val groupRanges = oscillatingErrors
+            .mapNotNull { extractLineNumber(it) }
+            .mapNotNull { ln -> extractGroupContaining(fml, ln) }
+            .distinctBy { it.first }
+            .sortedByDescending { it.first }
+
+        if (groupRanges.isEmpty()) return null
+
+        var result = fml
+        var anyRepaired = false
+
+        for (range in groupRanges) {
+            val fmlLines = result.lines()
+            val brokenGroup = fmlLines
+                .subList(range.first, minOf(range.last + 1, fmlLines.size))
+                .joinToString("\n")
+
+            val errorsInGroup = oscillatingErrors.filter { err ->
+                extractLineNumber(err)?.let { ln -> ln - 1 in range } == true
+            }
+            if (errorsInGroup.isEmpty()) continue
+
+            val errorList = errorsInGroup.mapIndexed { i, e -> "  ${i + 1}. $e" }.joinToString("\n")
+            val surgicalPrompt = buildString {
+                appendLine("Fix the compilation errors in this FML group.")
+                appendLine("Return ONLY the corrected group code starting with 'group'. No explanations, no other text.")
+                appendLine()
+                appendLine("ERRORS:")
+                appendLine(errorList)
+                appendLine()
+                appendLine("BROKEN GROUP:")
+                appendLine(brokenGroup)
+                appendLine()
+                appendLine("Rules:")
+                appendLine("- Fix every error listed above.")
+                appendLine("- NEVER use dotted type names (e.g. Patient.Contact) in group parameters - use BackboneElement.")
+                appendLine("- NEVER use [x] suffix on element names.")
+                appendLine("- NEVER use .ofType() or .as() as FHIRPath function calls in paths.")
+                appendLine("- NEVER write multi-level source paths (e.g. src.a.b) - use sub-groups instead.")
+                appendLine("- Every rule must have a unique quoted name before the semicolon.")
+                appendLine("- Return ONLY the fixed group starting with 'group' and ending with '}'.")
+            }
+
+            log.info(
+                "Surgical repair: sending group at lines {}-{} ({} lines, {} error(s)) to LLM",
+                range.first + 1, range.last + 1, range.last - range.first + 1, errorsInGroup.size
+            )
+            val rawResponse = llmClient.chat(systemPrompt, surgicalPrompt, 0.5)
+            log.info("Surgical repair: LLM response length: {}", rawResponse.length)
+
+            val fixedGroup = extractGroupBlock(rawResponse) ?: run {
+                log.warn("Surgical repair: could not extract group block from response - skipping this group")
+                continue
+            }
+
+            // Splice: remove old lines (bottom-up index is safe here since we sorted descending)
+            val lines = result.lines().toMutableList()
+            for (i in range.last downTo range.first) lines.removeAt(i)
+            fixedGroup.lines().forEachIndexed { i, line -> lines.add(range.first + i, line) }
+            result = lines.joinToString("\n")
+
+            anyRepaired = true
+            log.info(
+                "Surgical repair: replaced {} line(s) with {} line(s) at position {}",
+                range.last - range.first + 1, fixedGroup.lines().size, range.first + 1
+            )
+        }
+
+        return if (anyRepaired) result else null
+    }
 
     /**
      * Ask the LLM to fix the broken FML.
@@ -962,6 +1202,28 @@ class DefaultMapValidator(
                 isOscillating,
                 regressions.size
             )
+
+            // Oscillation: the LLM has already tried to fix these exact errors at least once
+            // and returned the same broken FML.  Switch to a surgical, group-scoped repair:
+            // extract ONLY the group(s) containing broken lines and ask the LLM to fix them
+            // in isolation - a much smaller, more focused task where it is far more likely to
+            // succeed than regenerating the entire 200-line FML from scratch.
+            if (isOscillating) {
+                log.info("Oscillation detected - attempting surgical group-level repair before full-FML fallback")
+                val surgicalResult = surgicalRepairGroups(fml, oscillatingErrors, systemPrompt)
+                if (surgicalResult != null) {
+                    log.info("Surgical repair succeeded - recording synthetic history turn and returning patched FML")
+                    conversationHistory.add(
+                        Pair(
+                            "Surgical repair: isolated and rewrote the broken FML group(s) directly.",
+                            "Surgical fix applied. Continuing verification."
+                        )
+                    )
+                    return surgicalResult
+                }
+                log.info("Surgical repair not applicable - proceeding with full-FML reflexion fallback")
+            }
+
             userMessage = buildFollowUpMessage(fml, errors, allPriorErrors, oscillatingErrors, regressions)
             rawResponse =
                 llmClient.chatWithHistory(systemPrompt, conversationHistory.toList(), userMessage, temperature)

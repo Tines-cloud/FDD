@@ -30,8 +30,22 @@ object FmlUtils {
     fun extractFml(response: String): String {
         var cleaned = response.trim()
 
+        // 1. Code-fence wins if present
         CODE_FENCE_PATTERN.find(cleaned)?.let {
-            cleaned = it.groupValues[1].trim()
+            return it.groupValues[1].trim()
+        }
+
+        // 2. No code fence - the LLM may have prefixed the FML with explanatory text
+        //    (e.g. "Here is the fixed FML:\n\nmap ...").  Find the first line that starts
+        //    the FML (the map declaration) and discard everything before it, BUT only when
+        //    the prefix is plain prose (not a partial/malformed code fence).
+        val lines = cleaned.lines()
+        val mapLineIdx = lines.indexOfFirst { it.trimStart().startsWith("map ") }
+        if (mapLineIdx > 0) {
+            val prefix = lines.take(mapLineIdx).joinToString("\n").trim()
+            if (!prefix.startsWith("```")) {
+                cleaned = lines.drop(mapLineIdx).joinToString("\n")
+            }
         }
 
         return cleaned

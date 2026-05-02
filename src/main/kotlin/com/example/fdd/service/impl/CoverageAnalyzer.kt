@@ -123,7 +123,6 @@ class CoverageAnalyzer : ICoverageAnalyzer {
                 // Matches both "Extension removed in target element" and "Extension slice removed in target profile"
                 desc.contains("extension") && desc.contains("removed") && !desc.contains("modifier") ->
                     "Source-only extension - FML correctly omits it (no target to map to)"
-
                 desc.contains("slice") && desc.contains("removed") -> {
                     val parentPath = parentFhirPath(src)
                     val group = parentPath?.let { findGroupForPath(it, fmlGroups) }
@@ -239,7 +238,8 @@ class CoverageAnalyzer : ICoverageAnalyzer {
             )
         }
 
-        // 9. Last resort: no match at all
+        // 9. Last resort: no match at all - classify honestly as source data loss.
+        // Returning MAPPED here would inflate dataShareabilityPercent with false positives.
         return item.toCoverage(
             CoverageStatus.SOURCE_DATA_LOSS,
             "No FML rule found that maps this drift - source data not carried to target",

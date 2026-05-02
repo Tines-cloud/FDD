@@ -111,7 +111,7 @@ tasks.named<org.springframework.boot.gradle.tasks.run.BootRun>("bootRun") {
 //   Only Exp 2:        .\gradlew.bat experiment2
 //   Only Exp 3:        .\gradlew.bat experiment3
 //
-//   Selective pairs (PowerShell - set env var before the task):
+//   Selective pairs (PowerShell — set env var before the task):
 //     $env:FDD_PAIRS="pair1,pair2"; .\gradlew.bat experiment2
 // ─────────────────────────────────────────────────────────────────────────────
 
@@ -146,27 +146,75 @@ tasks.register<Test>("integrationTest") {
     description = "Runs ALL experiment/integration tests"
     useJUnitPlatform { includeTags("integration") }
     configureIntegrationBase()
+    doFirst {
+        val tcProps = File("${System.getProperty("user.home")}/.testcontainers.properties")
+        if (tcProps.exists()) {
+            tcProps.delete()
+            logger.lifecycle("Cleared ~/.testcontainers.properties — Testcontainers will re-detect Docker strategy")
+        }
+    }
+    environment("TESTCONTAINERS_RYUK_DISABLED", "true")
+    systemProperty("TESTCONTAINERS_RYUK_DISABLED", "true")
+    val explicitDockerHost = System.getenv("DOCKER_HOST")?.takeIf { it.isNotBlank() }
+    if (explicitDockerHost != null) {
+        environment("DOCKER_HOST", explicitDockerHost)
+    }
 }
 
-// Experiment 1 only - Drift Detection Accuracy
+// Experiment 1 only — Drift Detection Accuracy
 tasks.register<Test>("experiment1") {
     description = "Experiment 1: Drift Detection Accuracy"
     useJUnitPlatform { includeTags("experiment1") }
     configureIntegrationBase()
+    doFirst {
+        val tcProps = File("${System.getProperty("user.home")}/.testcontainers.properties")
+        if (tcProps.exists()) tcProps.delete()
+    }
+    val explicitDockerHost = System.getenv("DOCKER_HOST")?.takeIf { it.isNotBlank() }
+    if (explicitDockerHost != null) environment("DOCKER_HOST", explicitDockerHost)
+    environment("TESTCONTAINERS_RYUK_DISABLED", "true")
+    systemProperty("TESTCONTAINERS_RYUK_DISABLED", "true")
 }
 
-// Experiment 2 only - Syntactic Validity Rate
+// Experiment 2 only — Syntactic Validity Rate
 tasks.register<Test>("experiment2") {
     description = "Experiment 2: Syntactic Validity Rate"
     useJUnitPlatform { includeTags("experiment2") }
     configureIntegrationBase()
+    doFirst {
+        val tcProps = File("${System.getProperty("user.home")}/.testcontainers.properties")
+        if (tcProps.exists()) tcProps.delete()
+    }
+    val explicitDockerHost = System.getenv("DOCKER_HOST")?.takeIf { it.isNotBlank() }
+    if (explicitDockerHost != null) environment("DOCKER_HOST", explicitDockerHost)
+    environment("TESTCONTAINERS_RYUK_DISABLED", "true")
+    systemProperty("TESTCONTAINERS_RYUK_DISABLED", "true")
 }
 
-// Experiment 3 only - Semantic Correctness (requires Docker)
+// Experiment 3 only — Semantic Correctness (requires Docker)
 tasks.register<Test>("experiment3") {
     description = "Experiment 3: Semantic Correctness (requires Docker)"
     useJUnitPlatform { includeTags("experiment3") }
     configureIntegrationBase()
+
+    doFirst {
+        val tcProps = File("${System.getProperty("user.home")}/.testcontainers.properties")
+        if (tcProps.exists()) {
+            tcProps.delete()
+            logger.lifecycle("Cleared ~/.testcontainers.properties — Testcontainers will re-detect Docker strategy")
+        }
+    }
+
+    val explicitDockerHost = System.getenv("DOCKER_HOST")?.takeIf { it.isNotBlank() }
+    if (explicitDockerHost != null) {
+        environment("DOCKER_HOST", explicitDockerHost)
+        logger.lifecycle("Experiment 3: DOCKER_HOST = $explicitDockerHost")
+    }
+
+    // Disable Ryuk (resource-reaper container) — avoids a second Docker pull
+    // and Windows privilege issues that sometimes prevent Ryuk from starting.
+    environment("TESTCONTAINERS_RYUK_DISABLED", "true")
+    systemProperty("TESTCONTAINERS_RYUK_DISABLED", "true")
 }
 
 

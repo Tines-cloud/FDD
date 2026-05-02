@@ -53,10 +53,33 @@ class DefaultMapGenerator(
         )
         val abbreviatedElementsJson = objectMapper.writeValueAsString(abbreviatedContext)
 
-        // 2. Serialise drift report (the primary input for repair generation)
+        // 2. Build PASS-THROUGH elements - required/mustSupport target fields that have
+        //    matching source paths but are NOT in the drift report (identical in both profiles).
+        //    These must be explicitly copied in the StructureMap or the transformed resource
+        //    will be missing fields required by the base FHIR spec and target profile.
+        val passThroughElements = profileContextBuilder.buildPassThroughElements(
+            source, target, driftReport.items
+        )
+        val passThroughJson = objectMapper.writeValueAsString(
+            passThroughElements.map { e ->
+                mapOf(
+                    "path" to e.path,
+                    "min" to (e.min ?: 0),
+                    "max" to e.max,
+                    "mustSupport" to e.mustSupport,
+                    "types" to e.types.map { t -> t.code }
+                )
+            }
+        )
+        log.info(
+            "Pass-through elements: {} required/mustSupport common element(s) for {} -> {}",
+            passThroughElements.size, sourceUrl, targetUrl
+        )
+
+        // 3. Serialise drift report (the primary input for repair generation)
         val driftReportJson = objectMapper.writeValueAsString(driftReport)
 
-        // 3. Compose prompts - drift report is the centerpiece
+        // 4. Compose prompts - drift report is the centerpiece
         val systemPrompt = promptTemplateService.loadTemplate("map-generation-system.txt")
         val userPrompt = promptTemplateService.loadTemplate(
             "map-generation-user.txt",
@@ -64,14 +87,15 @@ class DefaultMapGenerator(
                 "sourceCanonical" to sourceUrl,
                 "targetCanonical" to targetUrl,
                 "driftReport" to driftReportJson,
-                "abbreviatedElements" to abbreviatedElementsJson
+                "abbreviatedElements" to abbreviatedElementsJson,
+                "passThroughElements" to passThroughJson
             )
         )
 
-        // 4. LLM call
+        // 5. LLM call
         val response = llmClient.chat(systemPrompt, userPrompt, temperature = 0.15)
 
-        // 5. Clean FML output
+        // 6. Clean FML output
         val fml = FmlUtils.extractFml(response)
         log.info("StructureMap generated ({} chars)", fml.length)
 

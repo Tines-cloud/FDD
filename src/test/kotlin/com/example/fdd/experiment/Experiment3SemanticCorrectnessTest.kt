@@ -1,9 +1,9 @@
 package com.example.fdd.experiment
 
-import ca.uhn.fhir.context.FhirContext
-import ca.uhn.fhir.context.support.DefaultProfileValidationSupport
 import com.example.fdd.api.dto.ProfileInput
 import com.example.fdd.service.DriftOrchestrationService
+import ca.uhn.fhir.context.FhirContext
+import ca.uhn.fhir.context.support.DefaultProfileValidationSupport
 import org.hl7.fhir.common.hapi.validation.support.CommonCodeSystemsTerminologyService
 import org.hl7.fhir.common.hapi.validation.support.InMemoryTerminologyServerValidationSupport
 import org.hl7.fhir.common.hapi.validation.support.PrePopulatedValidationSupport
@@ -13,13 +13,8 @@ import org.hl7.fhir.r4.model.Resource
 import org.hl7.fhir.r4.model.ResourceFactory
 import org.hl7.fhir.r4.model.StructureDefinition
 import org.hl7.fhir.r4.utils.StructureMapUtilities
-import org.junit.jupiter.api.AfterAll
-import org.junit.jupiter.api.DisplayName
-import org.junit.jupiter.api.DynamicTest
+import org.junit.jupiter.api.*
 import org.junit.jupiter.api.DynamicTest.dynamicTest
-import org.junit.jupiter.api.Tag
-import org.junit.jupiter.api.TestFactory
-import org.junit.jupiter.api.TestInstance
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
@@ -27,8 +22,6 @@ import org.springframework.core.io.ClassPathResource
 import org.springframework.test.context.ActiveProfiles
 import org.testcontainers.containers.GenericContainer
 import org.testcontainers.containers.wait.strategy.Wait
-import org.testcontainers.junit.jupiter.Container
-import org.testcontainers.junit.jupiter.Testcontainers
 import tools.jackson.databind.ObjectMapper
 import java.net.URI
 import java.net.http.HttpClient
@@ -51,7 +44,6 @@ import java.time.format.DateTimeFormatter
 @SpringBootTest
 @Tag("integration")
 @Tag("experiment3")
-@Testcontainers(disabledWithoutDocker = true)
 @ActiveProfiles("experiment")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class Experiment3SemanticCorrectnessTest {
@@ -68,14 +60,7 @@ class Experiment3SemanticCorrectnessTest {
     @Autowired
     private lateinit var fhirContext: FhirContext
 
-    companion object {
-        @Container
-        @JvmStatic
-        val hapiFhirServer: GenericContainer<*> = GenericContainer("hapiproject/hapi:v7.4.0")
-            .withExposedPorts(8080)
-            .waitingFor(Wait.forHttp("/fhir/metadata").forStatusCode(200))
-            .withStartupTimeout(Duration.ofMinutes(3))
-    }
+    private var hapiFhirServer: GenericContainer<*>? = null
 
     private val httpClient: HttpClient = HttpClient.newBuilder()
         .connectTimeout(Duration.ofSeconds(30))
@@ -291,11 +276,68 @@ class Experiment3SemanticCorrectnessTest {
         )
     )
 
+    @BeforeAll
+    fun logDockerInfo() {
+        val dockerHost = System.getenv("DOCKER_HOST") ?: "(not set — Testcontainers auto-detect)"
+        val externalHapi = System.getenv("FDD_HAPI_BASE_URL")
+            ?: System.getProperty("fdd.hapi.base-url")
+        log.info("=================================================================")
+        log.info("  EXPERIMENT 3 starting — Docker host: {}", dockerHost)
+        log.info("  HAPI container image : hapiproject/hapi:v7.4.0")
+        log.info("  External HAPI URL    : {}", externalHapi ?: "(not set — will use Testcontainers)")
+        log.info("  Test cases           : {}", testCases.size)
+        log.info("=================================================================")
+    }
+
+    @AfterAll
+    fun stopContainerIfStarted() {
+        hapiFhirServer?.let {
+            runCatching { it.stop() }
+            hapiFhirServer = null
+        }
+    }
+
+    private fun resolveFhirServerUrl(): String {
+        val external = System.getenv("FDD_HAPI_BASE_URL")
+            ?.takeIf { it.isNotBlank() }
+            ?: System.getProperty("fdd.hapi.base-url")?.takeIf { it.isNotBlank() }
+
+        if (external != null) {
+            val normalized = external.trimEnd('/')
+            val metadataUrl = "$normalized/metadata"
+            val response = httpClient.send(
+                HttpRequest.newBuilder()
+                    .uri(URI.create(metadataUrl))
+                    .GET()
+                    .timeout(Duration.ofSeconds(20))
+                    .build(),
+                HttpResponse.BodyHandlers.ofString()
+            )
+            require(response.statusCode() in 200..299) {
+                "External HAPI server check failed at $metadataUrl (HTTP ${response.statusCode()})"
+            }
+            log.info("Using external HAPI FHIR server: {}", normalized)
+            return normalized
+        }
+
+        if (hapiFhirServer == null) {
+            hapiFhirServer = GenericContainer("hapiproject/hapi:v7.4.0")
+                .withExposedPorts(8080)
+                .waitingFor(Wait.forHttp("/fhir/metadata").forStatusCode(200))
+                .withStartupTimeout(Duration.ofMinutes(3))
+            hapiFhirServer!!.start()
+        }
+
+        val container = requireNotNull(hapiFhirServer)
+        val url = "http://${container.host}:${container.firstMappedPort}/fhir"
+        log.info("HAPI FHIR server running via Testcontainers at: {}", url)
+        return url
+    }
+
     @TestFactory
     @DisplayName("Semantic Correctness")
     fun evaluateSemanticCorrectness(): List<DynamicTest> {
-        val fhirServerUrl = "http://${hapiFhirServer.host}:${hapiFhirServer.firstMappedPort}/fhir"
-        log.info("HAPI FHIR server running at: {}", fhirServerUrl)
+        val fhirServerUrl = resolveFhirServerUrl()
 
         // Support selective pair execution via system property OR env var FDD_PAIRS
         val selectedIds = (System.getProperty("fdd.pairs")?.takeIf { it.isNotBlank() }
@@ -494,8 +536,7 @@ class Experiment3SemanticCorrectnessTest {
                     val transformedJson = transformResult.second
 
                     if (transformExecuted && transformedJson != null) {
-                        transformedResourceValid =
-                            validateResource(fhirServerUrl, transformedJson, testCase.resourceType)
+                        transformedResourceValid = validateResource(fhirServerUrl, transformedJson, testCase.resourceType)
                         if (!transformedResourceValid) {
                             errorMessage = "Transformed resource failed profile validation"
                         }

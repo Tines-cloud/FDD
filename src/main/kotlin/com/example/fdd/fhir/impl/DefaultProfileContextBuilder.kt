@@ -160,6 +160,39 @@ class DefaultProfileContextBuilder(
         )
     }
 
+    override fun buildPassThroughElements(
+        source: StructureDefinition,
+        target: StructureDefinition,
+        driftItems: List<DriftItem>
+    ): List<ElementSummary> {
+        // All paths already covered by the drift report (from either side)
+        val driftCoveredPaths = driftItems
+            .flatMap { listOfNotNull(it.sourcePath?.takeIf { p -> p.isNotBlank() }, it.targetPath?.takeIf { p -> p.isNotBlank() }) }
+            .toSet()
+
+        // All element paths present in the source snapshot
+        val srcPaths = resolveElements(ensureSnapshot(source)).mapNotNull { it.path }.filter { it.isNotEmpty() }.toSet()
+
+        // Root element path (e.g. "Patient") - never a mappable field
+        val rootPath = target.type?.takeIf { it.isNotEmpty() } ?: ""
+
+        return resolveElements(ensureSnapshot(target))
+            .filter { elem ->
+                val path = elem.path ?: return@filter false
+                if (path.isEmpty() || path == rootPath) return@filter false
+                if (path in driftCoveredPaths) return@filter false
+                if (path !in srcPaths) return@filter false
+                (elem.min ?: 0) >= 1 || elem.mustSupport
+            }
+            .map { it.toSummary() }
+            .also { list ->
+                log.debug(
+                    "buildPassThroughElements: {} required/mustSupport common element(s) not in drift for {} -> {}",
+                    list.size, source.url, target.url
+                )
+            }
+    }
+
     private fun summarise(sd: StructureDefinition): ProfileSummary {
         // Build the set of paths that are explicitly constrained in the differential.
         // snapshot-only elements (isDifferential=false) are inherited from the base profile unchanged.

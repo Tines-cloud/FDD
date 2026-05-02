@@ -15,14 +15,24 @@ Canonical: {{targetCanonical}}
 ## Abbreviated Profile Elements (reference only - limited to drift-affected paths)
 {{abbreviatedElements}}
 
+## Required Pass-Through Elements (MUST copy ALL of these)
+The following target elements are required (min >= 1) or mustSupport and have
+equivalent paths in the source profile, but are NOT listed in the drift report
+(they are identical in both profiles, so no drift was detected). You MUST generate
+copy rules for EVERY element in this list. A transformed resource missing any of
+these will fail FHIR validation.
+{{passThroughElements}}
+
 ## Instructions
 
 1. Generate a COMPLETE FML map that accounts for ALL drift items from the drift report.
 2. The drift report is your primary guide - each drift item describes a specific
    difference that must be resolved by the mapping rules.
-3. Use the abbreviated profile elements ONLY as a reference for correct FHIRPath
-   syntax, element types, and cardinality - do NOT invent rules for elements
-   that are not mentioned in the drift report.
+3. Use the abbreviated profile elements as a reference for correct FHIRPath syntax,
+   element types, and cardinality. Additionally, generate copy rules for EVERY element
+   in the "Required Pass-Through Elements" list above, even though they are not in the
+   drift report. These fields must be present in the output for the transformed resource
+   to pass FHIR validation.
 4. Use the correct FML constructs for each drift type:
    - CARDINALITY  -> copy, provide default values where required fields are missing.
    - TERMINOLOGY  -> use translate() or direct mapping for code conversions.
@@ -31,9 +41,9 @@ Canonical: {{targetCanonical}}
    - VERSION      -> handle element renames and restructuring across FHIR versions.
 5. IMPORTANT: Structure your mapping as follows:
    - One main group that iterates through drift items
-   - For simple 1:1 mappings, use inline rules: src.element as vs -> tgt.element = vs;
+   - For simple 1:1 mappings, use inline rules: src.element as vs -> tgt.element = vs "copy-element";
    - For complex transformations, create helper groups and invoke them with 'then'
-   - Example: src.complex as s -> tgt.complex as t then MapComplex(s, t);
+   - Example: src.complex as s -> tgt.complex as t then MapComplex(s, t) "map-complex";
 6. Ensure every rule ends with a semicolon.
 7. CRITICAL: Do NOT use nested braces {} within rules. All nested logic must be in separate groups.
 8. Ensure the map URL and name are valid strings.
@@ -47,4 +57,4 @@ Canonical: {{targetCanonical}}
    - Target-only extensions with no source data:
      add a comment like: // rule-50: Patient.extension:race - target-only, no source data available
    This ensures every drift item is traceable in the FML output.
-10. Output ONLY the FML code (with comments), nothing else.
+10. Output ONLY the FML code (with comments), starting with the `map "` line, nothing else.
