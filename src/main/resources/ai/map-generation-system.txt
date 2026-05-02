@@ -17,6 +17,12 @@ to write any of these, STOP and use the CORRECT alternative on the right.
 | 6 | where not(src.status = 'x')                             | where (src.status = 'x').not()   - not() takes ZERO params in FHIRPath |
 | 7 | src -> t.coding.system = "url", t.coding.code = "LAB" "n"; | use a sub-group for multi-field coded objects (see rule 13 below) |
 | 8 | src.el as v where COND then\n    src -> tgt.el as w ... "n"; | src.el as v where COND -> tgt.el as w ... "n";  (single line, use -> not then) |
+| 9 | src.medication[x] as m -> ...                                   | src.medication as m -> ... (no [x] suffix ever) |
+| 10 | src.extension("http://...") as e -> ...                        | src.extension as e where e.url = 'http://...' -> ... "rule"; |
+| 11 | tgt.field = copy(v) "rule";                                     | tgt.field = v "rule";  (no copy() wrapper in assignments) |
+| 12 | group Foo(source src : T, target tgt : T2,)                     | group Foo(source src : T, target tgt : T2)  (no trailing comma) |
+| 13 | group Foo(source src as srcVar : T, ...)                        | group Foo(source src : T, ...)  (no 'as alias' in params) |
+| 14 | uses "url" as input  /  uses "url" as output                    | uses "url" as source  /  uses "url" as target |
 
 NEVER write multi-level dotted source paths inside a group. ALWAYS introduce a
 sub-group when the path goes more than one level deep. Failure to do this is the
@@ -156,6 +162,31 @@ group MapAddress(source src : Address, target tgt : Address) {
   src.country as co -> tgt.country = co "set-country";
 }
 ```
+
+16. Rule names MUST be unique across the ENTIRE StructureMap (not just within a group).
+    Duplicate names cause silent incorrect behaviour. Prefix names with the group:
+    WRONG:    two rules both named "set-status" in different groups
+    CORRECT:  "patient-set-status" and "mapname-set-status"
+
+17. NEVER use [x] suffix on element names - use the plain base name:
+    WRONG:  src.medication[x] as m
+    CORRECT: src.medication as m
+
+18. NEVER use the compact extension("url") form - always use the where-clause form:
+    WRONG:   src.extension("http://example.org/ext") as e
+    CORRECT: src.extension as e where e.url = 'http://example.org/ext'
+
+19. NEVER wrap values in copy() - assign the variable directly:
+    WRONG:   tgt.field = copy(v) "rule";
+    CORRECT: tgt.field = v "rule";
+
+20. NEVER add an extra 'as alias' inside group parameter declarations:
+    WRONG:   group Foo(source src as s : Patient, target tgt as t : Patient)
+    CORRECT: group Foo(source src : Patient, target tgt : Patient)
+
+21. NEVER use .ofType() or .as() as path segment functions in FML expressions:
+    WRONG:   src.medication.ofType(CodeableConcept) as m
+    CORRECT: src.medication as m  (then use: where m.is(CodeableConcept) if needed)
 
 Do NOT use deprecated FML syntax. Ensure the output compiles with HAPI-FHIR StructureMapUtilities.
 Output ONLY valid FML code. Do NOT include markdown formatting, code blocks, or explanatory text.

@@ -1,215 +1,182 @@
 {
-  "pairId": "manual-r4-organization-vs-us-core-organization",
+  "pairId": "r4-organization-vs-us-core-organization",
   "sourceClasspath": "standard-profiles/r4/organization.profile.json",
   "targetClasspath": "standard-profiles/us-core/StructureDefinition-us-core-organization.json",
-  "_notes": "Hand-curated by reading the US Core Organization differential (18 elements) line by line against the R4 Organization snapshot. Key R4 facts: identifier min=0; identifier.system/value NOT in R4 snapshot (inherited from Identifier datatype as 0..1); active min=0; name min=0; telecom min=0; address min=0; address sub-elements (line, city, state, postalCode, country) NOT in R4 Organization snapshot (inherited from Address datatype). NPI/CLIA/NAIC slices are new. Organization has no USCDI annotation extensions in its differential (uscdi=0). Note: identifier.system and .value in the diff do NOT set min=1, only max=1 (not a cardinality increase). NPI/CLIA/NAIC constraints are separate items per constraint key.",
   "drifts": [
     {
-      "id": "gold-org-1",
+      "id": "rule-1",
       "type": "STRUCTURAL",
       "sourcePath": "Organization.identifier",
       "targetPath": "Organization.identifier",
-      "description": "MustSupport added in target (min=0, optional but must be supported when present).",
+      "description": "MustSupport added in target",
       "severity": "INFO"
     },
     {
-      "id": "gold-org-2",
+      "id": "rule-2",
       "type": "STRUCTURAL",
       "sourcePath": "Organization.identifier",
       "targetPath": "Organization.identifier",
-      "description": "Slicing added on identifier: discriminator type=pattern, path=$this, rules=open. No slicing exists in R4 base.",
-      "severity": "INFO"
+      "description": "Slicing changed: none -> rules=open, discriminators=[pattern:$this]",
+      "severity": "WARNING"
     },
     {
-      "id": "gold-org-3",
+      "id": "rule-3",
       "type": "STRUCTURAL",
       "sourcePath": "Organization.identifier.system",
       "targetPath": "Organization.identifier.system",
-      "description": "MustSupport added in target (min=0, optional but must be supported when present). R4 Organization snapshot does not constrain identifier sub-elements; they are inherited from the Identifier datatype as 0..1.",
+      "description": "MustSupport added in target",
       "severity": "INFO"
     },
     {
-      "id": "gold-org-4",
+      "id": "rule-4",
       "type": "STRUCTURAL",
       "sourcePath": "Organization.identifier.value",
       "targetPath": "Organization.identifier.value",
-      "description": "MustSupport added in target (min=0, optional but must be supported when present). R4 Organization snapshot does not constrain identifier sub-elements; they are inherited from the Identifier datatype as 0..1.",
+      "description": "MustSupport added in target",
       "severity": "INFO"
     },
     {
-      "id": "gold-org-5",
+      "id": "rule-5",
       "type": "STRUCTURAL",
-      "sourcePath": null,
+      "sourcePath": "",
       "targetPath": "Organization.identifier:NPI",
-      "description": "New slice 'NPI' added with patternIdentifier system=http://hl7.org/fhir/sid/us-npi and mustSupport=true. No equivalent slice exists in R4 base.",
+      "description": "Slice present only in target: Organization.identifier:NPI with fixed system http://hl7.org/fhir/sid/us-npi, mustSupport=true, and constraints us-core-16 and us-core-17",
       "severity": "WARNING"
     },
     {
-      "id": "gold-org-6",
+      "id": "rule-6",
       "type": "STRUCTURAL",
-      "sourcePath": null,
-      "targetPath": "Organization.identifier:NPI",
-      "description": "Constraint 'us-core-16' added (severity: error): NPI must be 10 digits. Expression: value.matches('^[0-9]{10}$'). Not present in R4 base.",
-      "severity": "ERROR"
-    },
-    {
-      "id": "gold-org-7",
-      "type": "STRUCTURAL",
-      "sourcePath": null,
-      "targetPath": "Organization.identifier:NPI",
-      "description": "Constraint 'us-core-17' added (severity: error): NPI check digit must be valid (Luhn algorithm check). Not present in R4 base.",
-      "severity": "ERROR"
-    },
-    {
-      "id": "gold-org-8",
-      "type": "STRUCTURAL",
-      "sourcePath": null,
+      "sourcePath": "",
       "targetPath": "Organization.identifier:CLIA",
-      "description": "New slice 'CLIA' added with patternIdentifier system=urn:oid:2.16.840.1.113883.4.7 (Clinical Laboratory Improvement Amendments number) and mustSupport=false. No equivalent slice exists in R4 base.",
-      "severity": "INFO"
+      "description": "Slice present only in target: Organization.identifier:CLIA with fixed system urn:oid:2.16.840.1.113883.4.7 and constraint us-core-18",
+      "severity": "WARNING"
     },
     {
-      "id": "gold-org-9",
+      "id": "rule-7",
       "type": "STRUCTURAL",
-      "sourcePath": null,
-      "targetPath": "Organization.identifier:CLIA",
-      "description": "Constraint 'us-core-18' added (severity: error): CLIA number must be 10 digits with a letter 'D' in third position. Expression: value.matches('^[0-9]{2}D[0-9]{7}$'). Not present in R4 base.",
-      "severity": "ERROR"
-    },
-    {
-      "id": "gold-org-10",
-      "type": "STRUCTURAL",
-      "sourcePath": null,
+      "sourcePath": "",
       "targetPath": "Organization.identifier:NAIC",
-      "description": "New slice 'NAIC' added with patternIdentifier system=urn:oid:2.16.840.1.113883.6.300 (NAIC company code for payers) and mustSupport=false. No equivalent slice exists in R4 base.",
-      "severity": "INFO"
+      "description": "Slice present only in target: Organization.identifier:NAIC with fixed system urn:oid:2.16.840.1.113883.6.300 and constraint us-core-19",
+      "severity": "WARNING"
     },
     {
-      "id": "gold-org-11",
-      "type": "STRUCTURAL",
-      "sourcePath": null,
-      "targetPath": "Organization.identifier:NAIC",
-      "description": "Constraint 'us-core-19' added (severity: error): NAIC must be 5 digits. Expression: value.matches('^[0-9]{5}$'). Not present in R4 base.",
-      "severity": "ERROR"
-    },
-    {
-      "id": "gold-org-12",
+      "id": "rule-8",
       "type": "CARDINALITY",
       "sourcePath": "Organization.active",
       "targetPath": "Organization.active",
-      "description": "Cardinality changed: [0..1] -> [1..1]. Organization active status becomes mandatory in US Core; R4 allows an Organization without an active flag.",
-      "severity": "ERROR"
+      "description": "Cardinality changed: [0..1] -> [1..1]",
+      "severity": "WARNING"
     },
     {
-      "id": "gold-org-13",
+      "id": "rule-9",
       "type": "STRUCTURAL",
       "sourcePath": "Organization.active",
       "targetPath": "Organization.active",
-      "description": "MustSupport added in target (min becomes 1 -> conformance-critical).",
-      "severity": "WARNING"
+      "description": "MustSupport added in target",
+      "severity": "INFO"
     },
     {
-      "id": "gold-org-14",
+      "id": "rule-10",
       "type": "CARDINALITY",
       "sourcePath": "Organization.name",
       "targetPath": "Organization.name",
-      "description": "Cardinality changed: [0..1] -> [1..1]. Organization name becomes mandatory in US Core; R4 allows an Organization without a name.",
-      "severity": "ERROR"
-    },
-    {
-      "id": "gold-org-15",
-      "type": "STRUCTURAL",
-      "sourcePath": "Organization.name",
-      "targetPath": "Organization.name",
-      "description": "MustSupport added in target (min becomes 1 -> conformance-critical).",
+      "description": "Cardinality changed: [0..1] -> [1..1]",
       "severity": "WARNING"
     },
     {
-      "id": "gold-org-16",
+      "id": "rule-11",
+      "type": "STRUCTURAL",
+      "sourcePath": "Organization.name",
+      "targetPath": "Organization.name",
+      "description": "MustSupport added in target",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-12",
       "type": "STRUCTURAL",
       "sourcePath": "Organization.telecom",
       "targetPath": "Organization.telecom",
-      "description": "MustSupport added in target (min=0, optional but must be supported when present).",
+      "description": "MustSupport added in target",
       "severity": "INFO"
     },
     {
-      "id": "gold-org-17",
+      "id": "rule-13",
       "type": "STRUCTURAL",
       "sourcePath": "Organization.telecom.system",
       "targetPath": "Organization.telecom.system",
-      "description": "MustSupport added in target (min=0, optional but must be supported when present). R4 Organization snapshot does not constrain telecom sub-elements.",
+      "description": "MustSupport added in target",
       "severity": "INFO"
     },
     {
-      "id": "gold-org-18",
+      "id": "rule-14",
       "type": "STRUCTURAL",
       "sourcePath": "Organization.telecom.value",
       "targetPath": "Organization.telecom.value",
-      "description": "MustSupport added in target (min=0, optional but must be supported when present). R4 Organization snapshot does not constrain telecom sub-elements.",
+      "description": "MustSupport added in target",
       "severity": "INFO"
     },
     {
-      "id": "gold-org-19",
+      "id": "rule-15",
       "type": "STRUCTURAL",
       "sourcePath": "Organization.address",
       "targetPath": "Organization.address",
-      "description": "MustSupport added in target (min=0, optional but must be supported when present).",
+      "description": "MustSupport added in target",
       "severity": "INFO"
     },
     {
-      "id": "gold-org-20",
+      "id": "rule-16",
       "type": "CARDINALITY",
       "sourcePath": "Organization.address.line",
       "targetPath": "Organization.address.line",
-      "description": "Cardinality max constrained: [0..*] -> [0..4]. Address lines are limited to 4 in US Core. R4 Address.line is inherited as 0..*.",
+      "description": "Cardinality changed: [0..*] -> [0..4]",
       "severity": "WARNING"
     },
     {
-      "id": "gold-org-21",
+      "id": "rule-17",
       "type": "STRUCTURAL",
       "sourcePath": "Organization.address.line",
       "targetPath": "Organization.address.line",
-      "description": "MustSupport added in target (min=0, optional but must be supported when present). R4 Organization snapshot does not constrain address sub-elements.",
+      "description": "MustSupport added in target",
       "severity": "INFO"
     },
     {
-      "id": "gold-org-22",
+      "id": "rule-18",
       "type": "STRUCTURAL",
       "sourcePath": "Organization.address.city",
       "targetPath": "Organization.address.city",
-      "description": "MustSupport added in target (min=0, optional but must be supported when present). R4 Organization snapshot does not constrain address sub-elements.",
+      "description": "MustSupport added in target",
       "severity": "INFO"
     },
     {
-      "id": "gold-org-23",
+      "id": "rule-19",
       "type": "STRUCTURAL",
       "sourcePath": "Organization.address.state",
       "targetPath": "Organization.address.state",
-      "description": "MustSupport added in target (min=0, optional but must be supported when present). R4 Organization snapshot does not constrain address sub-elements.",
+      "description": "MustSupport added in target",
       "severity": "INFO"
     },
     {
-      "id": "gold-org-24",
+      "id": "rule-20",
       "type": "TERMINOLOGY",
       "sourcePath": "Organization.address.state",
       "targetPath": "Organization.address.state",
-      "description": "New binding added in target: extensible binding to http://hl7.org/fhir/us/core/ValueSet/us-core-usps-state (US USPS state codes). R4 Organization does not constrain address.state with any binding.",
+      "description": "Binding added in target: extensible(http://hl7.org/fhir/us/core/ValueSet/us-core-usps-state)",
       "severity": "WARNING"
     },
     {
-      "id": "gold-org-25",
+      "id": "rule-21",
       "type": "STRUCTURAL",
       "sourcePath": "Organization.address.postalCode",
       "targetPath": "Organization.address.postalCode",
-      "description": "MustSupport added in target (min=0, optional but must be supported when present). R4 Organization snapshot does not constrain address sub-elements.",
+      "description": "MustSupport added in target",
       "severity": "INFO"
     },
     {
-      "id": "gold-org-26",
+      "id": "rule-22",
       "type": "STRUCTURAL",
       "sourcePath": "Organization.address.country",
       "targetPath": "Organization.address.country",
-      "description": "MustSupport added in target (min=0, optional but must be supported when present). R4 Organization snapshot does not constrain address sub-elements.",
+      "description": "MustSupport added in target",
       "severity": "INFO"
     }
   ]

@@ -111,6 +111,43 @@ from the catalogue below:
   WRONG (causes 3 "=" errors on one line):
     src -> tgt.coding.system = "http://...", tgt.coding.code = "LAB", tgt.coding.display = "Laboratory" "name";
 
+### J. Multi-line comma-chained transforms - NEVER valid FML
+  ERROR:    Found "tgt" expecting ";"  (on a line starting with the target variable)
+  CAUSE:    You split comma-separated transforms across multiple lines:
+              src.a as v -> tgt.fieldA = vA "rule-A",
+                            tgt.fieldB = vB "rule-B";
+            HAPI treats line 1 as complete, then finds "tgt" where it expects ";".
+            Comma-separated transforms MUST be on a SINGLE line, or split into
+            separate rules each ending with their own ';'.
+  CORRECT (split into separate rules):
+      src.a as v -> tgt.fieldA = vA "rule-A";
+      src.a as v -> tgt.fieldB = vB "rule-B";
+  CORRECT (single line, only if short):
+      src.a as v -> tgt.fieldA = vA "rule-A", tgt.fieldB = vB "rule-B";
+
+### K. Polymorphic element "[x]" notation and leading bracket annotations
+  ERROR:    Found "[" expecting ";"
+  CAUSE A:  You wrote  src.medication[x] as m  - HAPI does not support [x] subscript.
+  FIX A:    Use the base name without brackets:  src.medication as m
+            Then add a where clause if you need to discriminate by type:
+              src.medication as m where m.is(CodeableConcept) -> ... "rule";
+  CAUSE B:  You added a type annotation before a rule:  [ofType(CodeableConcept)] src.field ...
+  FIX B:    Remove the bracket annotation entirely.  Use a where clause instead.
+
+### L. copy() wrapper in assignment - not a valid HAPI FML transform
+  ERROR:    Various parse errors on the assignment line
+  CAUSE:    You wrote  tgt.field = copy(v) "rule";  - copy() is not a function in FML assignments.
+  FIX:      Assign the variable directly:  tgt.field = v "rule";
+
+### M. Invalid group parameter forms
+  ERROR:    Parse errors on the group declaration line
+  CAUSE A:  Trailing comma:  group Foo(source src : T, target tgt : T2,)
+  FIX A:    Remove the trailing comma:  group Foo(source src : T, target tgt : T2)
+  CAUSE B:  Extra 'as alias' in params:  group Foo(source src as s : T, target tgt as t : T2)
+  FIX B:    Remove the 'as alias' part:  group Foo(source src : T, target tgt : T2)
+  CAUSE C:  Dotted type name:  group Foo(source src : Patient.Contact, ...)
+  FIX C:    Use BackboneElement:  group Foo(source src : BackboneElement, target tgt : BackboneElement)
+
 ## CRITICAL: No oscillation or regression
 
 When you receive follow-up errors, it means your PREVIOUS fix attempt introduced

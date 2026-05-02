@@ -2,310 +2,421 @@
   "pairId": "iit-proj-observation-vs-r4-observation",
   "sourceClasspath": "custom-profiles/iit-proj/iit-proj-observation.json",
   "targetClasspath": "standard-profiles/r4/observation.profile.json",
-  "_notes": "Source: iit-proj-observation (clinical research). Target: R4 base observation (unconstrained). Source has mandatory study extensions, extensive slicing on category/code, banned performer, and constrained types. Target is the unconstrained R4 base: all research constraints removed, slicing removed, bans lifted.",
   "drifts": [
     {
       "id": "rule-1",
       "type": "STRUCTURAL",
       "sourcePath": "Observation",
       "targetPath": "Observation",
-      "description": "Source constraints removed: [iit-obs-1 (error: LOINC code required), iit-obs-2 (error: Final observations must have value or dataAbsentReason), iit-obs-3 (warning: Quantitative results should include units)]. R4 base has no custom differential constraints (obs-6 and obs-7 are base constraints inherited by both).",
+      "description": "Constraints removed in target: [iit-obs-1, iit-obs-2, iit-obs-3]",
       "severity": "WARNING"
     },
     {
       "id": "rule-2",
-      "type": "EXTENSION",
-      "sourcePath": "Observation.extension:studyTimepoint",
-      "targetPath": "Observation.extension:studyTimepoint",
-      "description": "Mandatory extension studyTimepoint[1..1 mustSupport=true] present in source is removed in target (R4 base has no extension constraints).",
-      "severity": "ERROR"
-    },
-    {
-      "id": "rule-3",
-      "type": "EXTENSION",
-      "sourcePath": "Observation.extension:dataQualityFlag",
-      "targetPath": "Observation.extension:dataQualityFlag",
-      "description": "Optional extension dataQualityFlag[0..1 mustSupport=true] present in source is removed in target.",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-4",
-      "type": "EXTENSION",
-      "sourcePath": "Observation.extension:queryStatus",
-      "targetPath": "Observation.extension:queryStatus",
-      "description": "Optional extension queryStatus[0..1 mustSupport=true] present in source is removed in target.",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-5",
       "type": "STRUCTURAL",
       "sourcePath": "Observation.extension",
       "targetPath": "Observation.extension",
-      "description": "Source extension slicing removed in target: source defines slices [studyTimepoint, dataQualityFlag, queryStatus]; R4 base has no extension slicing.",
+      "description": "Slicing changed: rules=open, discriminators=[value:url] -> none",
       "severity": "WARNING"
     },
     {
-      "id": "rule-6",
+      "id": "rule-3",
       "type": "CARDINALITY",
       "sourcePath": "Observation.identifier",
       "targetPath": "Observation.identifier",
-      "description": "identifier cardinality relaxed and MustSupport removed: source [1..* mustSupport=true] → target [0..* mustSupport=false] (R4 base). Min decreased.",
+      "description": "Cardinality changed: [1..*] -> [0..*]",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-4",
+      "type": "STRUCTURAL",
+      "sourcePath": "Observation.identifier",
+      "targetPath": "Observation.identifier",
+      "description": "MustSupport removed in target",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-5",
+      "type": "TERMINOLOGY",
+      "sourcePath": "Observation.status",
+      "targetPath": "Observation.status",
+      "description": "Binding changed: required(http://hl7.org/fhir/ValueSet/observation-status) -> required(http://hl7.org/fhir/ValueSet/observation-status|4.0.1)",
+      "severity": "ERROR"
+    },
+    {
+      "id": "rule-6",
+      "type": "STRUCTURAL",
+      "sourcePath": "Observation.status",
+      "targetPath": "Observation.status",
+      "description": "MustSupport removed in target",
       "severity": "INFO"
     },
     {
       "id": "rule-7",
       "type": "CARDINALITY",
-      "sourcePath": "Observation.identifier.system",
-      "targetPath": "Observation.identifier.system",
-      "description": "identifier.system cardinality relaxed and MustSupport removed: source [1..1 mustSupport=true] → target [0..1 mustSupport=false] (R4 base).",
+      "sourcePath": "Observation.category",
+      "targetPath": "Observation.category",
+      "description": "Cardinality changed: [1..*] -> [0..*]",
       "severity": "INFO"
     },
     {
       "id": "rule-8",
-      "type": "CARDINALITY",
-      "sourcePath": "Observation.identifier.value",
-      "targetPath": "Observation.identifier.value",
-      "description": "identifier.value cardinality relaxed and MustSupport removed: source [1..1 mustSupport=true] → target [0..1 mustSupport=false] (R4 base).",
+      "type": "STRUCTURAL",
+      "sourcePath": "Observation.category",
+      "targetPath": "Observation.category",
+      "description": "MustSupport removed in target",
       "severity": "INFO"
     },
     {
       "id": "rule-9",
-      "type": "TERMINOLOGY",
-      "sourcePath": "Observation.status",
-      "targetPath": "Observation.status",
-      "description": "status binding version pin added in target: source required:http://hl7.org/fhir/ValueSet/observation-status (no version) → target required:http://hl7.org/fhir/ValueSet/observation-status|4.0.1. Same value set with version pin added.",
+      "type": "STRUCTURAL",
+      "sourcePath": "Observation.category",
+      "targetPath": "Observation.category",
+      "description": "Slicing changed: rules=open, discriminators=[pattern:$this] -> none",
       "severity": "WARNING"
     },
     {
       "id": "rule-10",
       "type": "STRUCTURAL",
-      "sourcePath": "Observation.status",
-      "targetPath": "Observation.status",
-      "description": "status MustSupport removed: source mustSupport=true; target mustSupport=false. Both min=1 (mandatory element).",
+      "sourcePath": "Observation.code",
+      "targetPath": "Observation.code",
+      "description": "MustSupport removed in target",
       "severity": "INFO"
     },
     {
       "id": "rule-11",
       "type": "CARDINALITY",
-      "sourcePath": "Observation.category",
-      "targetPath": "Observation.category",
-      "description": "category cardinality relaxed and MustSupport removed: source [1..* mustSupport=true] → target [0..* mustSupport=false preferred:observation-category] (R4 base). Min decreased.",
+      "sourcePath": "Observation.subject",
+      "targetPath": "Observation.subject",
+      "description": "Cardinality changed: [1..1] -> [0..1]",
       "severity": "INFO"
     },
     {
       "id": "rule-12",
       "type": "STRUCTURAL",
-      "sourcePath": "Observation.category",
-      "targetPath": "Observation.category",
-      "description": "category slicing removed: source has slices [laboratory[0..1 mustSupport=true], vitalSigns[0..1 mustSupport=true], studyEndpoint[0..1 mustSupport=true]] with discriminator=pattern $this; R4 base has no category slicing.",
+      "sourcePath": "Observation.subject",
+      "targetPath": "Observation.subject",
+      "description": "Reference target profile changed: [https://iit-proj.example.com/fhir/StructureDefinition/Patient] -> [http://hl7.org/fhir/StructureDefinition/Device, http://hl7.org/fhir/StructureDefinition/Group, http://hl7.org/fhir/StructureDefinition/Location, http://hl7.org/fhir/StructureDefinition/Patient]",
       "severity": "WARNING"
     },
     {
       "id": "rule-13",
       "type": "STRUCTURAL",
-      "sourcePath": "Observation.category:laboratory",
-      "targetPath": "Observation.category:laboratory",
-      "description": "Source category slice laboratory[0..1 mustSupport=true] removed in target.",
-      "severity": "WARNING"
+      "sourcePath": "Observation.subject",
+      "targetPath": "Observation.subject",
+      "description": "MustSupport removed in target",
+      "severity": "INFO"
     },
     {
       "id": "rule-14",
-      "type": "STRUCTURAL",
-      "sourcePath": "Observation.category:vitalSigns",
-      "targetPath": "Observation.category:vitalSigns",
-      "description": "Source category slice vitalSigns[0..1 mustSupport=true] removed in target.",
+      "type": "EXTENSION",
+      "sourcePath": "Observation.focus",
+      "targetPath": "Observation.focus.extension(http://hl7.org/fhir/StructureDefinition/structuredefinition-standards-status)",
+      "description": "Extension added in target element: http://hl7.org/fhir/StructureDefinition/structuredefinition-standards-status",
       "severity": "WARNING"
     },
     {
       "id": "rule-15",
       "type": "STRUCTURAL",
-      "sourcePath": "Observation.category:studyEndpoint",
-      "targetPath": "Observation.category:studyEndpoint",
-      "description": "Source category slice studyEndpoint[0..1 mustSupport=true] removed in target.",
+      "sourcePath": "Observation.encounter",
+      "targetPath": "Observation.encounter",
+      "description": "Reference target profile changed: [https://iit-proj.example.com/fhir/StructureDefinition/Encounter] -> [http://hl7.org/fhir/StructureDefinition/Encounter]",
       "severity": "WARNING"
     },
     {
       "id": "rule-16",
-      "type": "CARDINALITY",
-      "sourcePath": "Observation.code.coding",
-      "targetPath": "Observation.code.coding",
-      "description": "code.coding cardinality relaxed and MustSupport removed: source [1..* mustSupport=true sliced] → target [0..1 mustSupport=false] (R4 base has no code.coding constraint in differential).",
+      "type": "STRUCTURAL",
+      "sourcePath": "Observation.encounter",
+      "targetPath": "Observation.encounter",
+      "description": "MustSupport removed in target",
       "severity": "INFO"
     },
     {
       "id": "rule-17",
-      "type": "STRUCTURAL",
-      "sourcePath": "Observation.code.coding",
-      "targetPath": "Observation.code.coding",
-      "description": "code.coding slicing removed: source has loinc slice [coding:loinc[1..1 mustSupport=true patternCoding(system=http://loinc.org)]] with discriminator=pattern $this; R4 base has no code.coding slicing.",
-      "severity": "WARNING"
+      "type": "CARDINALITY",
+      "sourcePath": "Observation.effective[x]",
+      "targetPath": "Observation.effective[x]",
+      "description": "Cardinality changed: [1..1] -> [0..1]",
+      "severity": "INFO"
     },
     {
       "id": "rule-18",
       "type": "STRUCTURAL",
-      "sourcePath": "Observation.code.coding:loinc",
-      "targetPath": "Observation.code.coding:loinc",
-      "description": "Source mandatory slice code.coding:loinc[1..1 mustSupport=true patternCoding(system=http://loinc.org)] removed in target. LOINC requirement enforced by source is entirely absent from R4 base.",
+      "sourcePath": "Observation.effective[x]",
+      "targetPath": "Observation.effective[x]",
+      "description": "Type changed: [Period, dateTime] -> [Period, Timing, dateTime, instant]",
       "severity": "WARNING"
     },
     {
       "id": "rule-19",
       "type": "STRUCTURAL",
-      "sourcePath": "Observation.code",
-      "targetPath": "Observation.code",
-      "description": "code MustSupport removed (source mustSupport=true; target mustSupport=false). Both have min=1 (required element).",
-      "severity": "WARNING"
+      "sourcePath": "Observation.effective[x]",
+      "targetPath": "Observation.effective[x]",
+      "description": "MustSupport removed in target",
+      "severity": "INFO"
     },
     {
       "id": "rule-20",
       "type": "CARDINALITY",
-      "sourcePath": "Observation.subject",
-      "targetPath": "Observation.subject",
-      "description": "subject cardinality relaxed and MustSupport removed: source [1..1 mustSupport=true] → target [0..1 mustSupport=false] (R4 base). Min decreased.",
+      "sourcePath": "Observation.performer",
+      "targetPath": "Observation.performer",
+      "description": "Cardinality changed: [0..0] -> [0..*]",
       "severity": "INFO"
     },
     {
       "id": "rule-21",
       "type": "STRUCTURAL",
-      "sourcePath": "Observation.subject",
-      "targetPath": "Observation.subject",
-      "description": "Reference target changed: source constrains to iit-proj/Patient; R4 base target is [Patient, Group, Device, Location]. Target types widened to generic R4 base targets.",
+      "sourcePath": "Observation.value[x]",
+      "targetPath": "Observation.value[x]",
+      "description": "Type changed: [CodeableConcept, Quantity, boolean, integer, string] -> [CodeableConcept, Period, Quantity, Range, Ratio, SampledData, boolean, dateTime, integer, string, time]",
       "severity": "WARNING"
     },
     {
       "id": "rule-22",
       "type": "STRUCTURAL",
-      "sourcePath": "Observation.encounter",
-      "targetPath": "Observation.encounter",
-      "description": "encounter MustSupport removed (source mustSupport=true; R4 base mustSupport=false).",
+      "sourcePath": "Observation.value[x]",
+      "targetPath": "Observation.value[x]",
+      "description": "MustSupport removed in target",
       "severity": "INFO"
     },
     {
       "id": "rule-23",
       "type": "STRUCTURAL",
-      "sourcePath": "Observation.encounter",
-      "targetPath": "Observation.encounter",
-      "description": "encounter reference target removed: source constrains to iit-proj/Encounter; R4 base has no target profile constraint on encounter.",
-      "severity": "WARNING"
+      "sourcePath": "Observation.dataAbsentReason",
+      "targetPath": "Observation.dataAbsentReason",
+      "description": "MustSupport removed in target",
+      "severity": "INFO"
     },
     {
       "id": "rule-24",
-      "type": "CARDINALITY",
-      "sourcePath": "Observation.effective[x]",
-      "targetPath": "Observation.effective[x]",
-      "description": "effective[x] cardinality relaxed and MustSupport removed: source [1..1 mustSupport=true] → target [0..1 mustSupport=false] (R4 base). Min decreased.",
+      "type": "STRUCTURAL",
+      "sourcePath": "Observation.interpretation",
+      "targetPath": "Observation.interpretation",
+      "description": "MustSupport removed in target",
       "severity": "INFO"
     },
     {
       "id": "rule-25",
       "type": "STRUCTURAL",
-      "sourcePath": "Observation.effective[x]",
-      "targetPath": "Observation.effective[x]",
-      "description": "effective[x] types widened: source [dateTime, Period] (2 types) → target [dateTime, Period, Timing, instant] (4 types). Two additional types available in R4 base.",
-      "severity": "WARNING"
+      "sourcePath": "Observation.note",
+      "targetPath": "Observation.note",
+      "description": "MustSupport removed in target",
+      "severity": "INFO"
     },
     {
       "id": "rule-26",
-      "type": "CARDINALITY",
-      "sourcePath": "Observation.performer",
-      "targetPath": "Observation.performer",
-      "description": "performer ban lifted: source [0..0] (completely banned) → target [0..* mustSupport=false] (R4 base). Max relaxed from 0 to *; ban removed.",
+      "type": "STRUCTURAL",
+      "sourcePath": "Observation.referenceRange",
+      "targetPath": "Observation.referenceRange",
+      "description": "MustSupport removed in target",
       "severity": "INFO"
     },
     {
       "id": "rule-27",
       "type": "STRUCTURAL",
-      "sourcePath": "Observation.value[x]",
-      "targetPath": "Observation.value[x]",
-      "description": "value[x] types widened: source [Quantity, CodeableConcept, string, integer, boolean] (5 types) → target [Quantity, CodeableConcept, string, boolean, integer, Range, Ratio, SampledData, time, dateTime, Period] (11 types). Six additional types available in R4 base.",
-      "severity": "WARNING"
+      "sourcePath": "Observation.referenceRange.low",
+      "targetPath": "Observation.referenceRange.low",
+      "description": "MustSupport removed in target",
+      "severity": "INFO"
     },
     {
       "id": "rule-28",
       "type": "STRUCTURAL",
-      "sourcePath": "Observation.value[x]",
-      "targetPath": "Observation.value[x]",
-      "description": "value[x] MustSupport removed (source mustSupport=true; R4 base mustSupport=false).",
+      "sourcePath": "Observation.referenceRange.high",
+      "targetPath": "Observation.referenceRange.high",
+      "description": "MustSupport removed in target",
       "severity": "INFO"
     },
     {
       "id": "rule-29",
       "type": "STRUCTURAL",
-      "sourcePath": "Observation.dataAbsentReason",
-      "targetPath": "Observation.dataAbsentReason",
-      "description": "dataAbsentReason MustSupport removed (source mustSupport=true extensible:data-absent-reason; target mustSupport=false, same extensible:data-absent-reason binding).",
+      "sourcePath": "Observation.component",
+      "targetPath": "Observation.component",
+      "description": "MustSupport removed in target",
       "severity": "INFO"
     },
     {
       "id": "rule-30",
       "type": "STRUCTURAL",
-      "sourcePath": "Observation.interpretation",
-      "targetPath": "Observation.interpretation",
-      "description": "interpretation MustSupport removed (source mustSupport=true extensible:observation-interpretation; target mustSupport=false, same binding).",
+      "sourcePath": "Observation.component.code",
+      "targetPath": "Observation.component.code",
+      "description": "MustSupport removed in target",
       "severity": "INFO"
     },
     {
       "id": "rule-31",
       "type": "STRUCTURAL",
-      "sourcePath": "Observation.note",
-      "targetPath": "Observation.note",
-      "description": "note MustSupport removed (source mustSupport=true; R4 base mustSupport=false).",
-      "severity": "INFO"
+      "sourcePath": "Observation.component.value[x]",
+      "targetPath": "Observation.component.value[x]",
+      "description": "Type changed: [CodeableConcept, Quantity, string] -> [CodeableConcept, Period, Quantity, Range, Ratio, SampledData, boolean, dateTime, integer, string, time]",
+      "severity": "WARNING"
     },
     {
       "id": "rule-32",
       "type": "STRUCTURAL",
-      "sourcePath": "Observation.referenceRange",
-      "targetPath": "Observation.referenceRange",
-      "description": "referenceRange MustSupport removed (source mustSupport=true; R4 base mustSupport=false).",
+      "sourcePath": "Observation.component.value[x]",
+      "targetPath": "Observation.component.value[x]",
+      "description": "MustSupport removed in target",
       "severity": "INFO"
     },
     {
       "id": "rule-33",
       "type": "STRUCTURAL",
-      "sourcePath": "Observation.referenceRange.low",
-      "targetPath": "Observation.referenceRange.low",
-      "description": "referenceRange.low MustSupport removed (source mustSupport=true; R4 base mustSupport=false).",
-      "severity": "INFO"
+      "sourcePath": "Observation.component.referenceRange",
+      "targetPath": "Observation.component.referenceRange",
+      "description": "Content reference changed: 'http://hl7.org/fhir/StructureDefinition/Observation#Observation.referenceRange' -> '#Observation.referenceRange'",
+      "severity": "WARNING"
     },
     {
       "id": "rule-34",
-      "type": "STRUCTURAL",
-      "sourcePath": "Observation.referenceRange.high",
-      "targetPath": "Observation.referenceRange.high",
-      "description": "referenceRange.high MustSupport removed (source mustSupport=true; R4 base mustSupport=false).",
-      "severity": "INFO"
+      "type": "EXTENSION",
+      "sourcePath": "Observation.extension:studyTimepoint",
+      "targetPath": "",
+      "description": "Extension removed in target profile: Observation.extension:studyTimepoint (was required)",
+      "severity": "WARNING"
     },
     {
       "id": "rule-35",
-      "type": "STRUCTURAL",
-      "sourcePath": "Observation.component",
-      "targetPath": "Observation.component",
-      "description": "component MustSupport removed (source mustSupport=true; R4 base mustSupport=false).",
-      "severity": "INFO"
+      "type": "EXTENSION",
+      "sourcePath": "Observation.extension:dataQualityFlag",
+      "targetPath": "",
+      "description": "Extension removed in target profile: Observation.extension:dataQualityFlag (was mustSupport)",
+      "severity": "WARNING"
     },
     {
       "id": "rule-36",
-      "type": "STRUCTURAL",
-      "sourcePath": "Observation.component.code",
-      "targetPath": "Observation.component.code",
-      "description": "component.code MustSupport removed (source mustSupport=true; R4 base mustSupport=false). Both have min=1 (required element).",
-      "severity": "INFO"
+      "type": "EXTENSION",
+      "sourcePath": "Observation.extension:queryStatus",
+      "targetPath": "",
+      "description": "Extension removed in target profile: Observation.extension:queryStatus (was mustSupport)",
+      "severity": "WARNING"
     },
     {
       "id": "rule-37",
       "type": "STRUCTURAL",
-      "sourcePath": "Observation.component.value[x]",
-      "targetPath": "Observation.component.value[x]",
-      "description": "component.value[x] types widened: source [Quantity, CodeableConcept, string] (3 types) → target [Quantity, CodeableConcept, string, boolean, integer, Range, Ratio, SampledData, time, dateTime, Period] (11 types). Eight additional types available in R4 base.",
-      "severity": "WARNING"
+      "sourcePath": "Observation.identifier.id",
+      "targetPath": "",
+      "description": "Element removed in target profile: Observation.identifier.id",
+      "severity": "INFO"
     },
     {
       "id": "rule-38",
       "type": "STRUCTURAL",
-      "sourcePath": "Observation.component.value[x]",
-      "targetPath": "Observation.component.value[x]",
-      "description": "component.value[x] MustSupport removed (source mustSupport=true; R4 base mustSupport=false).",
+      "sourcePath": "Observation.identifier.extension",
+      "targetPath": "",
+      "description": "Element removed in target profile: Observation.identifier.extension",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-39",
+      "type": "STRUCTURAL",
+      "sourcePath": "Observation.identifier.use",
+      "targetPath": "",
+      "description": "Element removed in target profile: Observation.identifier.use",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-40",
+      "type": "STRUCTURAL",
+      "sourcePath": "Observation.identifier.type",
+      "targetPath": "",
+      "description": "Element removed in target profile: Observation.identifier.type",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-41",
+      "type": "STRUCTURAL",
+      "sourcePath": "Observation.identifier.system",
+      "targetPath": "",
+      "description": "Element removed in target profile: Observation.identifier.system (was required)",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-42",
+      "type": "STRUCTURAL",
+      "sourcePath": "Observation.identifier.value",
+      "targetPath": "",
+      "description": "Element removed in target profile: Observation.identifier.value (was required)",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-43",
+      "type": "STRUCTURAL",
+      "sourcePath": "Observation.identifier.period",
+      "targetPath": "",
+      "description": "Element removed in target profile: Observation.identifier.period",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-44",
+      "type": "STRUCTURAL",
+      "sourcePath": "Observation.identifier.assigner",
+      "targetPath": "",
+      "description": "Element removed in target profile: Observation.identifier.assigner",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-45",
+      "type": "STRUCTURAL",
+      "sourcePath": "Observation.category:laboratory",
+      "targetPath": "",
+      "description": "Slice 'laboratory' removed in target profile",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-46",
+      "type": "STRUCTURAL",
+      "sourcePath": "Observation.category:vitalSigns",
+      "targetPath": "",
+      "description": "Slice 'vitalSigns' removed in target profile",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-47",
+      "type": "STRUCTURAL",
+      "sourcePath": "Observation.category:studyEndpoint",
+      "targetPath": "",
+      "description": "Slice 'studyEndpoint' removed in target profile",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-48",
+      "type": "STRUCTURAL",
+      "sourcePath": "Observation.code.id",
+      "targetPath": "",
+      "description": "Element removed in target profile: Observation.code.id",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-49",
+      "type": "STRUCTURAL",
+      "sourcePath": "Observation.code.extension",
+      "targetPath": "",
+      "description": "Element removed in target profile: Observation.code.extension",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-50",
+      "type": "STRUCTURAL",
+      "sourcePath": "Observation.code.coding",
+      "targetPath": "",
+      "description": "Element removed in target profile: Observation.code.coding (was required)",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-51",
+      "type": "STRUCTURAL",
+      "sourcePath": "Observation.code.coding:loinc",
+      "targetPath": "",
+      "description": "Slice 'loinc' removed in target profile",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-52",
+      "type": "STRUCTURAL",
+      "sourcePath": "Observation.code.text",
+      "targetPath": "",
+      "description": "Element removed in target profile: Observation.code.text",
       "severity": "INFO"
     }
   ]

@@ -2,351 +2,398 @@
   "pairId": "hemas-encounter-vs-r4-encounter",
   "sourceClasspath": "custom-profiles/hemas/hemas-encounter.json",
   "targetClasspath": "standard-profiles/r4/encounter.profile.json",
-  "_notes": "Source: hemas-encounter (hospital-specific profile). Target: R4 base Encounter. Source is more constrained than R4: it has 3 custom error/warning constraints, 3 extensions, mandatory identifier slicing with admissionNumber slice, mandatory type/subject/participant/period/reasonCode/serviceProvider, and hemas-specific VS bindings. Going source→target (R4 base), all source-specific constraints are relaxed or removed. R4 adds no new constraints over source's explicit requirements.",
   "drifts": [
     {
       "id": "rule-1",
       "type": "STRUCTURAL",
       "sourcePath": "Encounter",
       "targetPath": "Encounter",
-      "description": "Source constraints removed: hemas-enc-1(error: finished status implies period.end required), hemas-enc-2(warning: emergency class implies priority required), hemas-enc-3(error: inpatient class implies location required). R4 base has no equivalent constraints.",
+      "description": "Constraint present only in source: hemas-enc-1 requires finished encounters to have period.end",
       "severity": "WARNING"
     },
     {
       "id": "rule-2",
-      "type": "EXTENSION",
-      "sourcePath": "Encounter.extension:bedNumber",
-      "targetPath": "Encounter.extension:bedNumber",
-      "description": "Optional extension bedNumber[0..1 mustSupport=true] present in source is absent in target (R4 base defines no extensions).",
+      "type": "STRUCTURAL",
+      "sourcePath": "Encounter",
+      "targetPath": "Encounter",
+      "description": "Constraint present only in source: hemas-enc-2 recommends priority when class.code is EMER",
       "severity": "WARNING"
     },
     {
       "id": "rule-3",
-      "type": "EXTENSION",
-      "sourcePath": "Encounter.extension:wardName",
-      "targetPath": "Encounter.extension:wardName",
-      "description": "Optional extension wardName[0..1 mustSupport=true] present in source is absent in target.",
+      "type": "STRUCTURAL",
+      "sourcePath": "Encounter",
+      "targetPath": "Encounter",
+      "description": "Constraint present only in source: hemas-enc-3 requires location for inpatient encounters where class.code is IMP",
       "severity": "WARNING"
     },
     {
       "id": "rule-4",
       "type": "EXTENSION",
-      "sourcePath": "Encounter.extension:attendingConsultant",
-      "targetPath": "Encounter.extension:attendingConsultant",
-      "description": "Optional extension attendingConsultant[0..1 mustSupport=true] present in source is absent in target.",
+      "sourcePath": "Encounter.extension:bedNumber",
+      "targetPath": "",
+      "description": "Extension present only in source: Encounter.extension:bedNumber (profile=https://hemas.example.com/fhir/StructureDefinition/bed-number, max=1, mustSupport=true)",
       "severity": "WARNING"
     },
     {
       "id": "rule-5",
-      "type": "STRUCTURAL",
-      "sourcePath": "Encounter.identifier",
-      "targetPath": "Encounter.identifier",
-      "description": "Source identifier slicing removed in target: source defines pattern-type discriminator slicing on identifier; R4 base has no slicing on identifier.",
+      "type": "EXTENSION",
+      "sourcePath": "Encounter.extension:wardName",
+      "targetPath": "",
+      "description": "Extension present only in source: Encounter.extension:wardName (profile=https://hemas.example.com/fhir/StructureDefinition/ward-name, max=1, mustSupport=true)",
       "severity": "WARNING"
     },
     {
       "id": "rule-6",
-      "type": "CARDINALITY",
-      "sourcePath": "Encounter.identifier",
-      "targetPath": "Encounter.identifier",
-      "description": "Identifier cardinality relaxed: source [1..*] → target [0..*]. Min decreased from 1 to 0.",
-      "severity": "INFO"
+      "type": "EXTENSION",
+      "sourcePath": "Encounter.extension:attendingConsultant",
+      "targetPath": "",
+      "description": "Extension present only in source: Encounter.extension:attendingConsultant (profile=https://hemas.example.com/fhir/StructureDefinition/attending-consultant, max=1, mustSupport=true)",
+      "severity": "WARNING"
     },
     {
       "id": "rule-7",
-      "type": "STRUCTURAL",
+      "type": "CARDINALITY",
       "sourcePath": "Encounter.identifier",
       "targetPath": "Encounter.identifier",
-      "description": "Identifier MustSupport removed on a previously required (min=1) element: source mustSupport=true; R4 base has no mustSupport.",
+      "description": "Cardinality changed: [1..*] -> [0..*]",
       "severity": "WARNING"
     },
     {
       "id": "rule-8",
       "type": "STRUCTURAL",
-      "sourcePath": "Encounter.identifier:admissionNumber",
-      "targetPath": "Encounter.identifier:admissionNumber",
-      "description": "Mandatory identifier slice admissionNumber[1..1 mustSupport=true] removed in target. Includes removal of sub-constraints: admissionNumber.type[min=1 MS pattern=CC(VN)], admissionNumber.system[min=1 MS fixed=https://hemas.example.com/fhir/sid/admission-number], admissionNumber.value[min=1 MS].",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-9",
-      "type": "CARDINALITY",
-      "sourcePath": "Encounter.type",
-      "targetPath": "Encounter.type",
-      "description": "Encounter.type cardinality relaxed: source [1..*] → target [0..*]. Min decreased from 1 to 0.",
+      "sourcePath": "Encounter.identifier",
+      "targetPath": "Encounter.identifier",
+      "description": "MustSupport removed in target",
       "severity": "INFO"
     },
     {
+      "id": "rule-9",
+      "type": "STRUCTURAL",
+      "sourcePath": "Encounter.identifier",
+      "targetPath": "Encounter.identifier",
+      "description": "Slicing changed: rules=open, discriminators=[pattern:type] -> none",
+      "severity": "WARNING"
+    },
+    {
       "id": "rule-10",
-      "type": "TERMINOLOGY",
-      "sourcePath": "Encounter.type",
-      "targetPath": "Encounter.type",
-      "description": "Encounter.type binding changed: source extensible(https://hemas.example.com/fhir/ValueSet/encounter-type) → target example(http://hl7.org/fhir/ValueSet/encounter-type). Different value sets and binding strength weakened from extensible to example.",
+      "type": "STRUCTURAL",
+      "sourcePath": "Encounter.identifier:admissionNumber",
+      "targetPath": "",
+      "description": "Slice present only in source: Encounter.identifier:admissionNumber with cardinality [1..1], mustSupport=true, type pattern VN, fixed system https://hemas.example.com/fhir/sid/admission-number, and value minimum 1",
       "severity": "WARNING"
     },
     {
       "id": "rule-11",
       "type": "STRUCTURAL",
-      "sourcePath": "Encounter.serviceType",
-      "targetPath": "Encounter.serviceType",
-      "description": "serviceType MustSupport removed on optional element: source mustSupport=true; R4 base has no mustSupport.",
+      "sourcePath": "Encounter.status",
+      "targetPath": "Encounter.status",
+      "description": "MustSupport removed in target",
       "severity": "INFO"
     },
     {
       "id": "rule-12",
-      "type": "TERMINOLOGY",
-      "sourcePath": "Encounter.serviceType",
-      "targetPath": "Encounter.serviceType",
-      "description": "serviceType binding changed: source extensible(https://hemas.example.com/fhir/ValueSet/service-type) → target example(http://hl7.org/fhir/ValueSet/service-type). Different value sets and binding strength weakened from extensible to example.",
-      "severity": "WARNING"
+      "type": "STRUCTURAL",
+      "sourcePath": "Encounter.class",
+      "targetPath": "Encounter.class",
+      "description": "MustSupport removed in target",
+      "severity": "INFO"
     },
     {
       "id": "rule-13",
-      "type": "STRUCTURAL",
-      "sourcePath": "Encounter.priority",
-      "targetPath": "Encounter.priority",
-      "description": "priority MustSupport removed on optional element: source mustSupport=true; R4 base has no mustSupport.",
-      "severity": "INFO"
+      "type": "CARDINALITY",
+      "sourcePath": "Encounter.type",
+      "targetPath": "Encounter.type",
+      "description": "Cardinality changed: [1..*] -> [0..*]",
+      "severity": "WARNING"
     },
     {
       "id": "rule-14",
       "type": "TERMINOLOGY",
-      "sourcePath": "Encounter.priority",
-      "targetPath": "Encounter.priority",
-      "description": "priority binding changed: source extensible(https://hemas.example.com/fhir/ValueSet/encounter-priority) → target example(http://terminology.hl7.org/ValueSet/v3-ActPriority). Different value sets and binding strength weakened from extensible to example.",
+      "sourcePath": "Encounter.type",
+      "targetPath": "Encounter.type",
+      "description": "Binding changed: extensible(https://hemas.example.com/fhir/ValueSet/encounter-type) -> example(http://hl7.org/fhir/ValueSet/encounter-type)",
       "severity": "WARNING"
     },
     {
       "id": "rule-15",
-      "type": "CARDINALITY",
-      "sourcePath": "Encounter.subject",
-      "targetPath": "Encounter.subject",
-      "description": "subject cardinality relaxed: source [1..1] → target [0..1]. Min decreased from 1 to 0.",
+      "type": "STRUCTURAL",
+      "sourcePath": "Encounter.type",
+      "targetPath": "Encounter.type",
+      "description": "MustSupport removed in target",
       "severity": "INFO"
     },
     {
       "id": "rule-16",
-      "type": "STRUCTURAL",
-      "sourcePath": "Encounter.subject",
-      "targetPath": "Encounter.subject",
-      "description": "subject reference target changed: source constrains to hemas/Patient profile; target R4 base allows Reference(Patient|Group). Different profile targets; target widens reference.",
+      "type": "TERMINOLOGY",
+      "sourcePath": "Encounter.serviceType",
+      "targetPath": "Encounter.serviceType",
+      "description": "Binding changed: extensible(https://hemas.example.com/fhir/ValueSet/service-type) -> example(http://hl7.org/fhir/ValueSet/service-type)",
       "severity": "WARNING"
     },
     {
       "id": "rule-17",
-      "type": "CARDINALITY",
-      "sourcePath": "Encounter.participant",
-      "targetPath": "Encounter.participant",
-      "description": "participant cardinality relaxed: source [1..*] → target [0..*]. Min decreased from 1 to 0.",
+      "type": "STRUCTURAL",
+      "sourcePath": "Encounter.serviceType",
+      "targetPath": "Encounter.serviceType",
+      "description": "MustSupport removed in target",
       "severity": "INFO"
     },
     {
       "id": "rule-18",
-      "type": "STRUCTURAL",
-      "sourcePath": "Encounter.participant",
-      "targetPath": "Encounter.participant",
-      "description": "participant MustSupport removed on a previously required (min=1) element: source mustSupport=true; R4 base has no mustSupport.",
+      "type": "TERMINOLOGY",
+      "sourcePath": "Encounter.priority",
+      "targetPath": "Encounter.priority",
+      "description": "Binding changed: extensible(https://hemas.example.com/fhir/ValueSet/encounter-priority) -> example(http://terminology.hl7.org/ValueSet/v3-ActPriority)",
       "severity": "WARNING"
     },
     {
       "id": "rule-19",
       "type": "STRUCTURAL",
-      "sourcePath": "Encounter.participant.type",
-      "targetPath": "Encounter.participant.type",
-      "description": "participant.type MustSupport removed on optional element: source mustSupport=true; R4 base has no mustSupport.",
+      "sourcePath": "Encounter.priority",
+      "targetPath": "Encounter.priority",
+      "description": "MustSupport removed in target",
       "severity": "INFO"
     },
     {
       "id": "rule-20",
-      "type": "STRUCTURAL",
-      "sourcePath": "Encounter.participant.individual",
-      "targetPath": "Encounter.participant.individual",
-      "description": "participant.individual MustSupport removed on optional element: source mustSupport=true; R4 base has no mustSupport.",
-      "severity": "INFO"
+      "type": "CARDINALITY",
+      "sourcePath": "Encounter.subject",
+      "targetPath": "Encounter.subject",
+      "description": "Cardinality changed: [1..1] -> [0..1]",
+      "severity": "WARNING"
     },
     {
       "id": "rule-21",
-      "type": "CARDINALITY",
-      "sourcePath": "Encounter.period",
-      "targetPath": "Encounter.period",
-      "description": "period cardinality relaxed: source [1..1] → target [0..1]. Min decreased from 1 to 0.",
-      "severity": "INFO"
+      "type": "STRUCTURAL",
+      "sourcePath": "Encounter.subject",
+      "targetPath": "Encounter.subject",
+      "description": "Reference target profile changed: [https://hemas.example.com/fhir/StructureDefinition/Patient] -> [http://hl7.org/fhir/StructureDefinition/Group, http://hl7.org/fhir/StructureDefinition/Patient]",
+      "severity": "WARNING"
     },
     {
       "id": "rule-22",
       "type": "STRUCTURAL",
-      "sourcePath": "Encounter.period",
-      "targetPath": "Encounter.period",
-      "description": "period MustSupport removed on a previously required (min=1) element: source mustSupport=true; R4 base has no mustSupport.",
-      "severity": "WARNING"
+      "sourcePath": "Encounter.subject",
+      "targetPath": "Encounter.subject",
+      "description": "MustSupport removed in target",
+      "severity": "INFO"
     },
     {
       "id": "rule-23",
       "type": "CARDINALITY",
-      "sourcePath": "Encounter.period.start",
-      "targetPath": "Encounter.period.start",
-      "description": "period.start cardinality relaxed: source [1..1] → target R4 base has no min constraint on period.start (effectively 0..1). Min decreased from 1 to 0.",
-      "severity": "INFO"
+      "sourcePath": "Encounter.participant",
+      "targetPath": "Encounter.participant",
+      "description": "Cardinality changed: [1..*] -> [0..*]",
+      "severity": "WARNING"
     },
     {
       "id": "rule-24",
       "type": "STRUCTURAL",
-      "sourcePath": "Encounter.period.start",
-      "targetPath": "Encounter.period.start",
-      "description": "period.start MustSupport removed on a previously required (min=1) element: source mustSupport=true; R4 base has no mustSupport.",
-      "severity": "WARNING"
+      "sourcePath": "Encounter.participant",
+      "targetPath": "Encounter.participant",
+      "description": "MustSupport removed in target",
+      "severity": "INFO"
     },
     {
       "id": "rule-25",
-      "type": "CARDINALITY",
-      "sourcePath": "Encounter.reasonCode",
-      "targetPath": "Encounter.reasonCode",
-      "description": "reasonCode cardinality relaxed: source [1..*] → target [0..*]. Min decreased from 1 to 0.",
+      "type": "STRUCTURAL",
+      "sourcePath": "Encounter.participant.type",
+      "targetPath": "Encounter.participant.type",
+      "description": "MustSupport removed in target",
       "severity": "INFO"
     },
     {
       "id": "rule-26",
       "type": "STRUCTURAL",
-      "sourcePath": "Encounter.reasonCode",
-      "targetPath": "Encounter.reasonCode",
-      "description": "reasonCode MustSupport removed on a previously required (min=1) element: source mustSupport=true; R4 base has no mustSupport.",
-      "severity": "WARNING"
+      "sourcePath": "Encounter.participant.individual",
+      "targetPath": "Encounter.participant.individual",
+      "description": "MustSupport removed in target",
+      "severity": "INFO"
     },
     {
       "id": "rule-27",
-      "type": "STRUCTURAL",
-      "sourcePath": "Encounter.diagnosis",
-      "targetPath": "Encounter.diagnosis",
-      "description": "diagnosis MustSupport removed on optional element: source mustSupport=true; R4 base has no mustSupport.",
-      "severity": "INFO"
+      "type": "CARDINALITY",
+      "sourcePath": "Encounter.period",
+      "targetPath": "Encounter.period",
+      "description": "Cardinality changed: [1..1] -> [0..1]",
+      "severity": "WARNING"
     },
     {
       "id": "rule-28",
       "type": "STRUCTURAL",
-      "sourcePath": "Encounter.diagnosis.condition",
-      "targetPath": "Encounter.diagnosis.condition",
-      "description": "diagnosis.condition MustSupport removed on required element (R4 defines min=1 on diagnosis.condition): source mustSupport=true; R4 base has no mustSupport.",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-29",
-      "type": "STRUCTURAL",
-      "sourcePath": "Encounter.diagnosis.use",
-      "targetPath": "Encounter.diagnosis.use",
-      "description": "diagnosis.use MustSupport removed on optional element: source mustSupport=true; R4 base has no mustSupport.",
+      "sourcePath": "Encounter.period",
+      "targetPath": "Encounter.period",
+      "description": "MustSupport removed in target",
       "severity": "INFO"
     },
     {
+      "id": "rule-29",
+      "type": "CARDINALITY",
+      "sourcePath": "Encounter.period.start",
+      "targetPath": "Encounter.period.start",
+      "description": "Cardinality changed: [1..1] -> [0..1]",
+      "severity": "WARNING"
+    },
+    {
       "id": "rule-30",
-      "type": "TERMINOLOGY",
-      "sourcePath": "Encounter.diagnosis.use",
-      "targetPath": "Encounter.diagnosis.use",
-      "description": "diagnosis.use binding strength weakened: source extensible(http://hl7.org/fhir/ValueSet/diagnosis-role) → target preferred(http://hl7.org/fhir/ValueSet/diagnosis-role). Same value set, binding strength weakened from extensible to preferred.",
+      "type": "STRUCTURAL",
+      "sourcePath": "Encounter.period.start",
+      "targetPath": "Encounter.period.start",
+      "description": "MustSupport removed in target",
       "severity": "INFO"
     },
     {
       "id": "rule-31",
-      "type": "STRUCTURAL",
-      "sourcePath": "Encounter.hospitalization",
-      "targetPath": "Encounter.hospitalization",
-      "description": "hospitalization MustSupport removed on optional element: source mustSupport=true; R4 base has no mustSupport.",
-      "severity": "INFO"
+      "type": "CARDINALITY",
+      "sourcePath": "Encounter.reasonCode",
+      "targetPath": "Encounter.reasonCode",
+      "description": "Cardinality changed: [1..*] -> [0..*]",
+      "severity": "WARNING"
     },
     {
       "id": "rule-32",
       "type": "STRUCTURAL",
-      "sourcePath": "Encounter.hospitalization.preAdmissionIdentifier",
-      "targetPath": "Encounter.hospitalization.preAdmissionIdentifier",
-      "description": "hospitalization.preAdmissionIdentifier MustSupport removed on optional element: source mustSupport=true; R4 base has no mustSupport.",
+      "sourcePath": "Encounter.reasonCode",
+      "targetPath": "Encounter.reasonCode",
+      "description": "MustSupport removed in target",
       "severity": "INFO"
     },
     {
       "id": "rule-33",
       "type": "STRUCTURAL",
-      "sourcePath": "Encounter.hospitalization.admitSource",
-      "targetPath": "Encounter.hospitalization.admitSource",
-      "description": "hospitalization.admitSource MustSupport removed on optional element: source mustSupport=true; R4 base has no mustSupport.",
+      "sourcePath": "Encounter.diagnosis",
+      "targetPath": "Encounter.diagnosis",
+      "description": "MustSupport removed in target",
       "severity": "INFO"
     },
     {
       "id": "rule-34",
-      "type": "TERMINOLOGY",
-      "sourcePath": "Encounter.hospitalization.admitSource",
-      "targetPath": "Encounter.hospitalization.admitSource",
-      "description": "hospitalization.admitSource binding changed: source extensible(https://hemas.example.com/fhir/ValueSet/admit-source) → target preferred(http://hl7.org/fhir/ValueSet/encounter-admit-source). Different value sets and binding strength weakened from extensible to preferred.",
-      "severity": "WARNING"
+      "type": "STRUCTURAL",
+      "sourcePath": "Encounter.diagnosis.condition",
+      "targetPath": "Encounter.diagnosis.condition",
+      "description": "MustSupport removed in target",
+      "severity": "INFO"
     },
     {
       "id": "rule-35",
-      "type": "STRUCTURAL",
-      "sourcePath": "Encounter.hospitalization.dietPreference",
-      "targetPath": "Encounter.hospitalization.dietPreference",
-      "description": "hospitalization.dietPreference MustSupport removed on optional element: source mustSupport=true; R4 base has no mustSupport.",
-      "severity": "INFO"
+      "type": "TERMINOLOGY",
+      "sourcePath": "Encounter.diagnosis.use",
+      "targetPath": "Encounter.diagnosis.use",
+      "description": "Binding changed: extensible(http://hl7.org/fhir/ValueSet/diagnosis-role) -> preferred(http://hl7.org/fhir/ValueSet/diagnosis-role)",
+      "severity": "WARNING"
     },
     {
       "id": "rule-36",
       "type": "STRUCTURAL",
-      "sourcePath": "Encounter.hospitalization.dischargeDisposition",
-      "targetPath": "Encounter.hospitalization.dischargeDisposition",
-      "description": "hospitalization.dischargeDisposition MustSupport removed on optional element: source mustSupport=true; R4 base has no mustSupport.",
+      "sourcePath": "Encounter.diagnosis.use",
+      "targetPath": "Encounter.diagnosis.use",
+      "description": "MustSupport removed in target",
       "severity": "INFO"
     },
     {
       "id": "rule-37",
-      "type": "TERMINOLOGY",
-      "sourcePath": "Encounter.hospitalization.dischargeDisposition",
-      "targetPath": "Encounter.hospitalization.dischargeDisposition",
-      "description": "hospitalization.dischargeDisposition binding changed: source extensible(https://hemas.example.com/fhir/ValueSet/discharge-disposition) → target example(http://hl7.org/fhir/ValueSet/encounter-discharge-disposition). Different value sets and binding strength weakened from extensible to example.",
-      "severity": "WARNING"
+      "type": "STRUCTURAL",
+      "sourcePath": "Encounter.hospitalization",
+      "targetPath": "Encounter.hospitalization",
+      "description": "MustSupport removed in target",
+      "severity": "INFO"
     },
     {
       "id": "rule-38",
       "type": "STRUCTURAL",
-      "sourcePath": "Encounter.location",
-      "targetPath": "Encounter.location",
-      "description": "location MustSupport removed on optional element: source mustSupport=true; R4 base has no mustSupport.",
+      "sourcePath": "Encounter.hospitalization.preAdmissionIdentifier",
+      "targetPath": "Encounter.hospitalization.preAdmissionIdentifier",
+      "description": "MustSupport removed in target",
       "severity": "INFO"
     },
     {
       "id": "rule-39",
-      "type": "STRUCTURAL",
-      "sourcePath": "Encounter.location.location",
-      "targetPath": "Encounter.location.location",
-      "description": "location.location MustSupport removed on required element (R4 defines min=1 on location.location): source mustSupport=true; R4 base has no mustSupport.",
+      "type": "TERMINOLOGY",
+      "sourcePath": "Encounter.hospitalization.admitSource",
+      "targetPath": "Encounter.hospitalization.admitSource",
+      "description": "Binding changed: extensible(https://hemas.example.com/fhir/ValueSet/admit-source) -> preferred(http://hl7.org/fhir/ValueSet/encounter-admit-source)",
       "severity": "WARNING"
     },
     {
       "id": "rule-40",
       "type": "STRUCTURAL",
-      "sourcePath": "Encounter.location.status",
-      "targetPath": "Encounter.location.status",
-      "description": "location.status MustSupport removed on optional element: source mustSupport=true; R4 base has no mustSupport.",
+      "sourcePath": "Encounter.hospitalization.admitSource",
+      "targetPath": "Encounter.hospitalization.admitSource",
+      "description": "MustSupport removed in target",
       "severity": "INFO"
     },
     {
       "id": "rule-41",
-      "type": "CARDINALITY",
-      "sourcePath": "Encounter.serviceProvider",
-      "targetPath": "Encounter.serviceProvider",
-      "description": "serviceProvider cardinality relaxed: source [1..1] → target [0..1]. Min decreased from 1 to 0.",
+      "type": "STRUCTURAL",
+      "sourcePath": "Encounter.hospitalization.dietPreference",
+      "targetPath": "Encounter.hospitalization.dietPreference",
+      "description": "MustSupport removed in target",
       "severity": "INFO"
     },
     {
       "id": "rule-42",
-      "type": "STRUCTURAL",
-      "sourcePath": "Encounter.serviceProvider",
-      "targetPath": "Encounter.serviceProvider",
-      "description": "serviceProvider MustSupport removed on a previously required (min=1) element: source mustSupport=true; R4 base has no mustSupport.",
+      "type": "TERMINOLOGY",
+      "sourcePath": "Encounter.hospitalization.dischargeDisposition",
+      "targetPath": "Encounter.hospitalization.dischargeDisposition",
+      "description": "Binding changed: extensible(https://hemas.example.com/fhir/ValueSet/discharge-disposition) -> example(http://hl7.org/fhir/ValueSet/encounter-discharge-disposition)",
       "severity": "WARNING"
     },
     {
       "id": "rule-43",
       "type": "STRUCTURAL",
+      "sourcePath": "Encounter.hospitalization.dischargeDisposition",
+      "targetPath": "Encounter.hospitalization.dischargeDisposition",
+      "description": "MustSupport removed in target",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-44",
+      "type": "STRUCTURAL",
+      "sourcePath": "Encounter.location",
+      "targetPath": "Encounter.location",
+      "description": "MustSupport removed in target",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-45",
+      "type": "STRUCTURAL",
+      "sourcePath": "Encounter.location.location",
+      "targetPath": "Encounter.location.location",
+      "description": "MustSupport removed in target",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-46",
+      "type": "STRUCTURAL",
+      "sourcePath": "Encounter.location.status",
+      "targetPath": "Encounter.location.status",
+      "description": "MustSupport removed in target",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-47",
+      "type": "CARDINALITY",
       "sourcePath": "Encounter.serviceProvider",
       "targetPath": "Encounter.serviceProvider",
-      "description": "serviceProvider reference target changed: source constrains to hemas/Organization profile; target R4 base allows Reference(Organization). Different profile targets; target widens reference.",
+      "description": "Cardinality changed: [1..1] -> [0..1]",
       "severity": "WARNING"
+    },
+    {
+      "id": "rule-48",
+      "type": "STRUCTURAL",
+      "sourcePath": "Encounter.serviceProvider",
+      "targetPath": "Encounter.serviceProvider",
+      "description": "Reference target profile changed: [https://hemas.example.com/fhir/StructureDefinition/Organization] -> [http://hl7.org/fhir/StructureDefinition/Organization]",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-49",
+      "type": "STRUCTURAL",
+      "sourcePath": "Encounter.serviceProvider",
+      "targetPath": "Encounter.serviceProvider",
+      "description": "MustSupport removed in target",
+      "severity": "INFO"
     }
   ]
 }

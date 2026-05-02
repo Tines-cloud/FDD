@@ -2,182 +2,413 @@
   "pairId": "au-core-encounter-vs-us-core-encounter",
   "sourceClasspath": "standard-profiles/au-core/StructureDefinition-au-core-encounter.json",
   "targetClasspath": "standard-profiles/us-core/StructureDefinition-us-core-encounter.json",
-  "_notes": "Source: AU Core Encounter (Australian realm). Target: US Core Encounter (US realm). Both mark status, class, subject(min=1), participant, participant.type, participant.individual, period, reasonCode, reasonReference, location, location.location, serviceProvider as MS. Key differences: US Core adds mandatory identifier with sub-element constraints (system/value min=1); US Core makes type mandatory (min=1) with us-core-encounter-type binding; AU Core has serviceType MS with preferred AU VS while US Core doesn't constrain serviceType; US Core adds participant.period MS absent in AU Core; participant.individual reference targets differ (AU vs US profiles); reasonReference targets differ; US Core adds hospitalization and hospitalization.dischargeDisposition MS; location.location AU profile constraint absent in US Core; serviceProvider references differ (au-core vs us-core).",
   "drifts": [
-    {
-      "id": "rule-0a",
-      "type": "EXTENSION",
-      "sourcePath": "Encounter.extension",
-      "targetPath": "Encounter.extension",
-      "description": "Extension slicing removed in target: source AU Core defines open slicing on Encounter.extension with named slice associatedHealthcareService; US Core Encounter has no extension slicing.",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-0b",
-      "type": "EXTENSION",
-      "sourcePath": "Encounter.extension:associatedHealthcareService",
-      "targetPath": "",
-      "description": "Extension associatedHealthcareService removed in target: AU Core defines Encounter.extension:associatedHealthcareService (optional, no MS); US Core Encounter has no such extension slice.",
-      "severity": "INFO"
-    },
     {
       "id": "rule-1",
       "type": "STRUCTURAL",
-      "sourcePath": "Encounter.identifier",
-      "targetPath": "Encounter.identifier",
-      "description": "identifier MustSupport added on optional element in target: US Core adds identifier[mustSupport=true]; source AU Core does not constrain identifier. MS added on optional element.",
-      "severity": "INFO"
+      "sourcePath": "Encounter.extension",
+      "targetPath": "Encounter.extension",
+      "description": "Slicing changed: rules=open, discriminators=[value:url] -> none",
+      "severity": "WARNING"
     },
     {
       "id": "rule-2",
-      "type": "CARDINALITY",
-      "sourcePath": "Encounter.identifier.system",
-      "targetPath": "Encounter.identifier.system",
-      "description": "identifier.system min cardinality strictly increased: target adds identifier.system[min=1, max=1, mustSupport=true]; source has no constraint on identifier.system (effective min=0). New mandatory constraint added in target.",
-      "severity": "ERROR"
+      "type": "EXTENSION",
+      "sourcePath": "Encounter.extension:associatedHealthcareService",
+      "targetPath": "",
+      "description": "Extension removed in target profile: Encounter.extension:associatedHealthcareService",
+      "severity": "WARNING"
     },
     {
       "id": "rule-3",
-      "type": "CARDINALITY",
-      "sourcePath": "Encounter.identifier.value",
-      "targetPath": "Encounter.identifier.value",
-      "description": "identifier.value min cardinality strictly increased: target adds identifier.value[min=1, max=1, mustSupport=true]; source has no constraint on identifier.value (effective min=0). New mandatory constraint added in target.",
-      "severity": "ERROR"
-    },
-    {
-      "id": "rule-6b",
-      "type": "TERMINOLOGY",
-      "sourcePath": "Encounter.class",
-      "targetPath": "Encounter.class",
-      "description": "class binding changed: source extensible(http://terminology.hl7.org.au/ValueSet/v3-ActEncounterCode-extended) [AU extended encounter code VS] → target extensible(http://terminology.hl7.org/ValueSet/v3-ActEncounterCode) [R4 base encounter code VS]. Same binding strength (extensible), AU-extended VS replaced by base VS.",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-4",
-      "type": "CARDINALITY",
-      "sourcePath": "Encounter.type",
-      "targetPath": "Encounter.type",
-      "description": "Encounter.type min cardinality strictly increased: target adds type[min=1, mustSupport=true]; source AU Core does not constrain type (effective min=0 from R4 base). Min increased 0→1.",
-      "severity": "ERROR"
-    },
-    {
-      "id": "rule-4b",
-      "type": "TERMINOLOGY",
-      "sourcePath": "Encounter.type",
-      "targetPath": "Encounter.type",
-      "description": "Encounter.type binding changed: source preferred(https://healthterminologies.gov.au/fhir/ValueSet/encounter-type-1) [AU encounter type VS] → target extensible(http://hl7.org/fhir/us/core/ValueSet/us-core-encounter-type) [US Core encounter type VS]. Binding strength weakened from preferred to extensible (AU base preferred → US extensible) and AU-specific VS replaced.",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-5",
-      "type": "TERMINOLOGY",
-      "sourcePath": "Encounter.type",
-      "targetPath": "Encounter.type",
-      "description": "Encounter.type binding added in target: US Core adds extensible(http://hl7.org/fhir/us/core/ValueSet/us-core-encounter-type); source AU Core has no binding on type in its differential (inherits R4 example binding). Binding tightened from R4 example to extensible with US realm-specific VS.",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-6",
       "type": "STRUCTURAL",
-      "sourcePath": "Encounter.serviceType",
-      "targetPath": "Encounter.serviceType",
-      "description": "serviceType MustSupport removed on optional element: source mustSupport=true; target US Core does not constrain serviceType. MS removed on optional element.",
+      "sourcePath": "Encounter.identifier",
+      "targetPath": "Encounter.identifier",
+      "description": "MustSupport added in target",
       "severity": "INFO"
     },
     {
+      "id": "rule-4",
+      "type": "STRUCTURAL",
+      "sourcePath": "Encounter.identifier.system",
+      "targetPath": "Encounter.identifier.system",
+      "description": "MustSupport added in target",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-5",
+      "type": "STRUCTURAL",
+      "sourcePath": "Encounter.identifier.value",
+      "targetPath": "Encounter.identifier.value",
+      "description": "MustSupport added in target",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-6",
+      "type": "EXTENSION",
+      "sourcePath": "Encounter.status.extension(http://hl7.org/fhir/StructureDefinition/obligation)",
+      "targetPath": "Encounter.status",
+      "description": "Extension removed in target element: http://hl7.org/fhir/StructureDefinition/obligation",
+      "severity": "WARNING"
+    },
+    {
       "id": "rule-7",
-      "type": "TERMINOLOGY",
-      "sourcePath": "Encounter.serviceType",
-      "targetPath": "Encounter.serviceType",
-      "description": "serviceType binding changed: source preferred(https://healthterminologies.gov.au/fhir/ValueSet/service-type-1) [AU service type VS] → target example(http://hl7.org/fhir/ValueSet/service-type) [R4 base VS]. Binding strength weakened from preferred to example and AU-specific VS replaced.",
+      "type": "EXTENSION",
+      "sourcePath": "Encounter.status",
+      "targetPath": "Encounter.status.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+      "description": "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
       "severity": "WARNING"
     },
     {
       "id": "rule-8",
-      "type": "STRUCTURAL",
-      "sourcePath": "Encounter.subject",
-      "targetPath": "Encounter.subject",
-      "description": "subject reference target changed: source constrains to au-core-patient (http://hl7.org.au/fhir/core/StructureDefinition/au-core-patient) → target constrains to us-core-patient (http://hl7.org/fhir/us/core/StructureDefinition/us-core-patient). Different realm-specific patient profiles.",
+      "type": "TERMINOLOGY",
+      "sourcePath": "Encounter.class",
+      "targetPath": "Encounter.class",
+      "description": "Binding changed: extensible(http://terminology.hl7.org.au/ValueSet/v3-ActEncounterCode-extended) -> extensible(http://terminology.hl7.org/ValueSet/v3-ActEncounterCode)",
       "severity": "WARNING"
     },
     {
       "id": "rule-9",
-      "type": "STRUCTURAL",
-      "sourcePath": "Encounter.participant.period",
-      "targetPath": "Encounter.participant.period",
-      "description": "participant.period MustSupport added on optional element in target: US Core adds participant.period[mustSupport=true]; source AU Core does not constrain participant.period. MS added on optional element.",
-      "severity": "INFO"
+      "type": "EXTENSION",
+      "sourcePath": "Encounter.class.extension(http://hl7.org/fhir/StructureDefinition/obligation)",
+      "targetPath": "Encounter.class",
+      "description": "Extension removed in target element: http://hl7.org/fhir/StructureDefinition/obligation",
+      "severity": "WARNING"
     },
     {
       "id": "rule-10",
-      "type": "STRUCTURAL",
-      "sourcePath": "Encounter.participant.individual",
-      "targetPath": "Encounter.participant.individual",
-      "description": "participant.individual reference targets changed: source [au-core-practitioner, au-core-practitionerrole, au-relatedperson] → target [us-core-practitioner, us-core-practitionerrole, us-core-relatedperson]. AU realm-specific profiles replaced by US realm-specific profiles.",
+      "type": "EXTENSION",
+      "sourcePath": "Encounter.class",
+      "targetPath": "Encounter.class.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+      "description": "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
       "severity": "WARNING"
-    },
-    {
-      "id": "rule-10b",
-      "type": "STRUCTURAL",
-      "sourcePath": "Encounter.participant.individual",
-      "targetPath": "Encounter.participant.individual",
-      "description": "participant.individual type-level MS added in target: US Core marks us-core-practitioner reference as type-level MustSupport.",
-      "severity": "INFO"
     },
     {
       "id": "rule-11",
-      "type": "STRUCTURAL",
-      "sourcePath": "Encounter.reasonReference",
-      "targetPath": "Encounter.reasonReference",
-      "description": "reasonReference reference targets changed: source [au-core-condition, Observation, au-core-procedure] → target [us-core-condition-problems-health-concerns, us-core-condition-encounter-diagnosis, us-core-procedure, Observation, ImmunizationRecommendation]. AU profiles replaced by US profiles; ImmunizationRecommendation added as new target in US Core.",
+      "type": "CARDINALITY",
+      "sourcePath": "Encounter.type",
+      "targetPath": "Encounter.type",
+      "description": "Cardinality changed: [0..*] -> [1..*]",
       "severity": "WARNING"
-    },
-    {
-      "id": "rule-11b",
-      "type": "STRUCTURAL",
-      "sourcePath": "Encounter.reasonReference",
-      "targetPath": "Encounter.reasonReference",
-      "description": "reasonReference type-level MS added in target: US Core marks us-core-condition-problems-health-concerns and us-core-condition-encounter-diagnosis references as type-level MustSupport.",
-      "severity": "INFO"
     },
     {
       "id": "rule-12",
       "type": "STRUCTURAL",
-      "sourcePath": "Encounter.hospitalization",
-      "targetPath": "Encounter.hospitalization",
-      "description": "hospitalization MustSupport added on optional element in target: US Core adds hospitalization[mustSupport=true]; source AU Core does not constrain hospitalization. MS added on optional element.",
+      "sourcePath": "Encounter.type",
+      "targetPath": "Encounter.type",
+      "description": "MustSupport added in target",
       "severity": "INFO"
     },
     {
       "id": "rule-13",
-      "type": "STRUCTURAL",
-      "sourcePath": "Encounter.hospitalization.dischargeDisposition",
-      "targetPath": "Encounter.hospitalization.dischargeDisposition",
-      "description": "hospitalization.dischargeDisposition MustSupport added on optional element in target: US Core adds dischargeDisposition[mustSupport=true]; source does not constrain this element. MS added on optional element.",
-      "severity": "INFO"
+      "type": "TERMINOLOGY",
+      "sourcePath": "Encounter.type",
+      "targetPath": "Encounter.type",
+      "description": "Binding changed: preferred(https://healthterminologies.gov.au/fhir/ValueSet/encounter-type-1) -> extensible(http://hl7.org/fhir/us/core/ValueSet/us-core-encounter-type)",
+      "severity": "WARNING"
     },
     {
       "id": "rule-14",
-      "type": "TERMINOLOGY",
-      "sourcePath": "Encounter.hospitalization.dischargeDisposition",
-      "targetPath": "Encounter.hospitalization.dischargeDisposition",
-      "description": "hospitalization.dischargeDisposition binding changed: source extensible(https://healthterminologies.gov.au/fhir/ValueSet/separation-mode-1) [AU separation mode VS] → target preferred(http://hl7.org/fhir/us/core/ValueSet/us-core-discharge-disposition) [US Core discharge disposition VS]. Binding strength changed from extensible to preferred and AU-specific VS replaced by US Core VS.",
+      "type": "EXTENSION",
+      "sourcePath": "Encounter.type",
+      "targetPath": "Encounter.type.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+      "description": "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
       "severity": "WARNING"
     },
     {
       "id": "rule-15",
-      "type": "STRUCTURAL",
-      "sourcePath": "Encounter.location.location",
-      "targetPath": "Encounter.location.location",
-      "description": "location.location AU profile constraint removed in target: source constrains to au-core-location (http://hl7.org.au/fhir/core/StructureDefinition/au-core-location); target has mustSupport=true but no profile constraint (allows base R4 Location). AU realm-specific profile reference removed.",
+      "type": "TERMINOLOGY",
+      "sourcePath": "Encounter.serviceType",
+      "targetPath": "Encounter.serviceType",
+      "description": "Binding changed: preferred(https://healthterminologies.gov.au/fhir/ValueSet/service-type-1) -> example(http://hl7.org/fhir/ValueSet/service-type)",
       "severity": "WARNING"
     },
     {
       "id": "rule-16",
       "type": "STRUCTURAL",
+      "sourcePath": "Encounter.serviceType",
+      "targetPath": "Encounter.serviceType",
+      "description": "MustSupport removed in target",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-17",
+      "type": "EXTENSION",
+      "sourcePath": "Encounter.serviceType.extension(http://hl7.org/fhir/StructureDefinition/obligation)",
+      "targetPath": "Encounter.serviceType",
+      "description": "Extension removed in target element: http://hl7.org/fhir/StructureDefinition/obligation",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-18",
+      "type": "STRUCTURAL",
+      "sourcePath": "Encounter.subject",
+      "targetPath": "Encounter.subject",
+      "description": "Reference target profile changed: [http://hl7.org.au/fhir/core/StructureDefinition/au-core-patient] -> [http://hl7.org/fhir/us/core/StructureDefinition/us-core-patient]",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-19",
+      "type": "EXTENSION",
+      "sourcePath": "Encounter.subject.extension(http://hl7.org/fhir/StructureDefinition/obligation)",
+      "targetPath": "Encounter.subject",
+      "description": "Extension removed in target element: http://hl7.org/fhir/StructureDefinition/obligation",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-20",
+      "type": "EXTENSION",
+      "sourcePath": "Encounter.subject",
+      "targetPath": "Encounter.subject.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+      "description": "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-21",
+      "type": "EXTENSION",
+      "sourcePath": "Encounter.participant.extension(http://hl7.org/fhir/StructureDefinition/obligation)",
+      "targetPath": "Encounter.participant",
+      "description": "Extension removed in target element: http://hl7.org/fhir/StructureDefinition/obligation",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-22",
+      "type": "EXTENSION",
+      "sourcePath": "Encounter.participant",
+      "targetPath": "Encounter.participant.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+      "description": "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-23",
+      "type": "EXTENSION",
+      "sourcePath": "Encounter.participant.type.extension(http://hl7.org/fhir/StructureDefinition/obligation)",
+      "targetPath": "Encounter.participant.type",
+      "description": "Extension removed in target element: http://hl7.org/fhir/StructureDefinition/obligation",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-24",
+      "type": "EXTENSION",
+      "sourcePath": "Encounter.participant.type",
+      "targetPath": "Encounter.participant.type.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+      "description": "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-25",
+      "type": "STRUCTURAL",
+      "sourcePath": "Encounter.participant.period",
+      "targetPath": "Encounter.participant.period",
+      "description": "MustSupport added in target",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-26",
+      "type": "EXTENSION",
+      "sourcePath": "Encounter.participant.period",
+      "targetPath": "Encounter.participant.period.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+      "description": "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-27",
+      "type": "STRUCTURAL",
+      "sourcePath": "Encounter.participant.individual",
+      "targetPath": "Encounter.participant.individual",
+      "description": "Reference target profile changed: [http://hl7.org.au/fhir/core/StructureDefinition/au-core-practitioner, http://hl7.org.au/fhir/core/StructureDefinition/au-core-practitionerrole, http://hl7.org.au/fhir/StructureDefinition/au-relatedperson] -> [http://hl7.org/fhir/us/core/StructureDefinition/us-core-practitioner, http://hl7.org/fhir/us/core/StructureDefinition/us-core-practitionerrole, http://hl7.org/fhir/us/core/StructureDefinition/us-core-relatedperson]",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-28",
+      "type": "STRUCTURAL",
+      "sourcePath": "Encounter.participant.individual",
+      "targetPath": "Encounter.participant.individual",
+      "description": "Type target support changed: target marks us-core-practitioner reference as type-level MustSupport",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-29",
+      "type": "EXTENSION",
+      "sourcePath": "Encounter.participant.individual.extension(http://hl7.org/fhir/StructureDefinition/obligation)",
+      "targetPath": "Encounter.participant.individual",
+      "description": "Extension removed in target element: http://hl7.org/fhir/StructureDefinition/obligation",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-30",
+      "type": "EXTENSION",
+      "sourcePath": "Encounter.participant.individual",
+      "targetPath": "Encounter.participant.individual.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+      "description": "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-31",
+      "type": "EXTENSION",
+      "sourcePath": "Encounter.period.extension(http://hl7.org/fhir/StructureDefinition/obligation)",
+      "targetPath": "Encounter.period",
+      "description": "Extension removed in target element: http://hl7.org/fhir/StructureDefinition/obligation",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-32",
+      "type": "EXTENSION",
+      "sourcePath": "Encounter.period",
+      "targetPath": "Encounter.period.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+      "description": "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-33",
+      "type": "EXTENSION",
+      "sourcePath": "Encounter.reasonCode.extension(http://hl7.org/fhir/StructureDefinition/obligation)",
+      "targetPath": "Encounter.reasonCode",
+      "description": "Extension removed in target element: http://hl7.org/fhir/StructureDefinition/obligation",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-34",
+      "type": "EXTENSION",
+      "sourcePath": "Encounter.reasonCode",
+      "targetPath": "Encounter.reasonCode.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+      "description": "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-35",
+      "type": "STRUCTURAL",
+      "sourcePath": "Encounter.reasonReference",
+      "targetPath": "Encounter.reasonReference",
+      "description": "Reference target profile changed: [http://hl7.org.au/fhir/core/StructureDefinition/au-core-condition, http://hl7.org.au/fhir/core/StructureDefinition/au-core-procedure, http://hl7.org/fhir/StructureDefinition/Observation] -> [http://hl7.org/fhir/us/core/StructureDefinition/us-core-condition-problems-health-concerns, http://hl7.org/fhir/us/core/StructureDefinition/us-core-condition-encounter-diagnosis, http://hl7.org/fhir/us/core/StructureDefinition/us-core-procedure, http://hl7.org/fhir/StructureDefinition/Observation, http://hl7.org/fhir/StructureDefinition/ImmunizationRecommendation]",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-36",
+      "type": "STRUCTURAL",
+      "sourcePath": "Encounter.reasonReference",
+      "targetPath": "Encounter.reasonReference",
+      "description": "Type target support changed: target marks us-core-condition-problems-health-concerns and us-core-condition-encounter-diagnosis references as type-level MustSupport",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-37",
+      "type": "EXTENSION",
+      "sourcePath": "Encounter.reasonReference.extension(http://hl7.org/fhir/StructureDefinition/obligation)",
+      "targetPath": "Encounter.reasonReference",
+      "description": "Extension removed in target element: http://hl7.org/fhir/StructureDefinition/obligation",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-38",
+      "type": "EXTENSION",
+      "sourcePath": "Encounter.reasonReference",
+      "targetPath": "Encounter.reasonReference.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+      "description": "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-39",
+      "type": "STRUCTURAL",
+      "sourcePath": "Encounter.hospitalization",
+      "targetPath": "Encounter.hospitalization",
+      "description": "MustSupport added in target",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-40",
+      "type": "EXTENSION",
+      "sourcePath": "Encounter.hospitalization",
+      "targetPath": "Encounter.hospitalization.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+      "description": "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-41",
+      "type": "TERMINOLOGY",
+      "sourcePath": "Encounter.hospitalization.dischargeDisposition",
+      "targetPath": "Encounter.hospitalization.dischargeDisposition",
+      "description": "Binding changed: extensible(https://healthterminologies.gov.au/fhir/ValueSet/separation-mode-1) -> preferred(http://hl7.org/fhir/us/core/ValueSet/us-core-discharge-disposition)",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-42",
+      "type": "STRUCTURAL",
+      "sourcePath": "Encounter.hospitalization.dischargeDisposition",
+      "targetPath": "Encounter.hospitalization.dischargeDisposition",
+      "description": "MustSupport added in target",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-43",
+      "type": "EXTENSION",
+      "sourcePath": "Encounter.hospitalization.dischargeDisposition",
+      "targetPath": "Encounter.hospitalization.dischargeDisposition.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+      "description": "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-44",
+      "type": "EXTENSION",
+      "sourcePath": "Encounter.location.extension(http://hl7.org/fhir/StructureDefinition/obligation)",
+      "targetPath": "Encounter.location",
+      "description": "Extension removed in target element: http://hl7.org/fhir/StructureDefinition/obligation",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-45",
+      "type": "EXTENSION",
+      "sourcePath": "Encounter.location",
+      "targetPath": "Encounter.location.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+      "description": "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-46",
+      "type": "STRUCTURAL",
+      "sourcePath": "Encounter.location.location",
+      "targetPath": "Encounter.location.location",
+      "description": "Reference target profile changed: [http://hl7.org.au/fhir/core/StructureDefinition/au-core-location] -> [http://hl7.org/fhir/StructureDefinition/Location]",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-47",
+      "type": "EXTENSION",
+      "sourcePath": "Encounter.location.location.extension(http://hl7.org/fhir/StructureDefinition/obligation)",
+      "targetPath": "Encounter.location.location",
+      "description": "Extension removed in target element: http://hl7.org/fhir/StructureDefinition/obligation",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-48",
+      "type": "EXTENSION",
+      "sourcePath": "Encounter.location.location",
+      "targetPath": "Encounter.location.location.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+      "description": "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-49",
+      "type": "STRUCTURAL",
       "sourcePath": "Encounter.serviceProvider",
       "targetPath": "Encounter.serviceProvider",
-      "description": "serviceProvider reference target changed: source constrains to au-core-organization (http://hl7.org.au/fhir/core/StructureDefinition/au-core-organization) → target constrains to us-core-organization (http://hl7.org/fhir/us/core/StructureDefinition/us-core-organization). Different realm-specific organization profiles.",
+      "description": "Reference target profile changed: [http://hl7.org.au/fhir/core/StructureDefinition/au-core-organization] -> [http://hl7.org/fhir/us/core/StructureDefinition/us-core-organization]",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-50",
+      "type": "EXTENSION",
+      "sourcePath": "Encounter.serviceProvider.extension(http://hl7.org/fhir/StructureDefinition/obligation)",
+      "targetPath": "Encounter.serviceProvider",
+      "description": "Extension removed in target element: http://hl7.org/fhir/StructureDefinition/obligation",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-51",
+      "type": "EXTENSION",
+      "sourcePath": "Encounter.serviceProvider",
+      "targetPath": "Encounter.serviceProvider.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+      "description": "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
       "severity": "WARNING"
     }
   ]

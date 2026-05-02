@@ -385,8 +385,10 @@ class DefaultMapValidator(
 
         // Anti-pattern 6a: multi-line rule where a continuation line starts with "."
         // Handles both  ".path = value "rule";"  and  ".path as a -> tgt.path "rule";"
+        // Excludes lines ending with "," or ")" - those are group/uses header continuations
+        // and merging them with a dot-prefixed next line would corrupt the group declaration.
         val multiLineDot = Regex(
-            """^([ \t]*)(.*[^\s{};/])\r?\n[ \t]+(\.[^\r\n]+)$""",
+            """^([ \t]*)(.*[^\s{};/,)])\r?\n[ \t]+(\.[^\r\n]+)$""",
             setOf(RegexOption.MULTILINE)
         )
         var dotChanged: Boolean
@@ -398,6 +400,37 @@ class DefaultMapValidator(
                 "${m.groupValues[1]}${m.groupValues[2]}${m.groupValues[3]}"
             }
         } while (dotChanged)
+
+        // Anti-pattern 6b: multi-line rule where a continuation line starts with "=" -
+        // the LLM splits  src -> tgt.field = "value" "rule";  across two lines, putting
+        // the "= value" part on the next line (indented).  HAPI sees the first line as a
+        // complete statement and then finds "=" where it expects ";".
+        // Also covers split rules like:  src.field as v\n   = copy() "rule";
+        // Excludes lines ending with "," or ")" for the same reason as 6a.
+        val multiLineEquals = Regex(
+            """^([ \t]*)(.*[^\s{};/,)])\r?\n[ \t]+(=[^\r\n]+)$""",
+            setOf(RegexOption.MULTILINE)
+        )
+        var eqChanged: Boolean
+        do {
+            eqChanged = false
+            result = multiLineEquals.replace(result) { m ->
+                rewrites++
+                eqChanged = true
+                "${m.groupValues[1]}${m.groupValues[2]} ${m.groupValues[3]}"
+            }
+        } while (eqChanged)
+
+        // Anti-pattern 6c: "Unknown StructureMapInputMode code '.'" - the LLM prefixes
+        // the mode keyword with a dot in uses declarations or group parameters.
+        // INVALID:  uses "url" as .source   /  uses "url" as .target
+        // INVALID:  group X(source src : T, .target tgt : T2)
+        // VALID:    uses "url" as source    /  group X(source src : T, target tgt : T2)
+        val dotMode = Regex("""\bas\s+\.(source|target|independent)\b""")
+        result = dotMode.replace(result) { m ->
+            rewrites++
+            "as ${m.groupValues[1]}"
+        }
 
         // Anti-pattern 6: deep target paths in constant assignment rules.
         val fixed6 = fixDeepTargetPaths(result)
@@ -437,6 +470,129 @@ class DefaultMapValidator(
         result = emptyAlias.replace(result) { m ->
             rewrites++
             "${m.groupValues[1]} as ${m.groupValues[1]}"
+        }
+
+        // Anti-pattern 9: multi-line comma-chained transforms.
+        // HAPI only supports single-line comma-separated transforms.  The LLM formats
+        // them with each extra target on its own indented continuation line, e.g.:
+        //   src.a as v -> tgt.fieldA = vA "rule-A",
+        //                 tgt.fieldB = vB "rule-B";
+        // HAPI sees line 1 as a complete statement and then finds "tgt" expecting ";".
+        // Fix: merge each continuation line that follows a comma-terminated rule line.
+        // Only merge when the continuation starts with an identifier+dot (variable.field)
+        // and is NOT a FML keyword continuation (group/source/target/map/uses).
+        val multiLineCommaTransform = Regex(
+            """^([ \t]*.+,)[ \t]*\r?\n([ \t]+(?!group\b|map\b|uses\b|source\b|target\b|imports\b|//)\w+\..+)$""",
+            setOf(RegexOption.MULTILINE)
+        )
+        var commaChanged: Boolean
+        do {
+            commaChanged = false
+            result = multiLineCommaTransform.replace(result) { m ->
+                rewrites++
+                commaChanged = true
+                "${m.groupValues[1]} ${m.groupValues[2].trimStart()}"
+            }
+        } while (commaChanged)
+
+        // Anti-pattern 10a: polymorphic element subscript "[x]" or "[X]" in source/target paths.
+        // INVALID:  src.medication[x] as m -> ...
+        // VALID:    src.medication as m -> ...
+        result = result.replace(Regex("""(\w+)\[x]""", RegexOption.IGNORE_CASE)) { m ->
+            rewrites++
+            m.groupValues[1]
+        }
+
+        // Anti-pattern 10b: leading "[...]" annotation on a rule line - LLM adds type-filter
+        // annotations such as "[medication.ofType(CodeableConcept)]" before the rule source.
+        // These have no meaning in FML and cause "Found '[' expecting ';'" at col 3.
+        val leadingBracket = Regex("""^([ \t]*)\[[^\]]*][ \t]+(.+)$""", RegexOption.MULTILINE)
+        result = leadingBracket.replace(result) { m ->
+            rewrites++
+            "${m.groupValues[1]}${m.groupValues[2]}"
+        }
+
+        // Anti-pattern 11: copy(varName) wrapping - LLM writes "tgt.field = copy(v)" but
+        // HAPI FML has no copy() function in assignments.  Strip the wrapper: "= v".
+        // "copy()" with no args is valid (pass-through rule body) and is NOT touched here.
+        val copyWrap = Regex("""=\s*copy\((\w+)\)""")
+        result = copyWrap.replace(result) { m ->
+            rewrites++
+            "= ${m.groupValues[1]}"
+        }
+
+        // Anti-pattern 12: invalid 'uses' mode keywords.
+        // HAPI only accepts 'source' and 'target'. The LLM sometimes writes 'input',
+        // 'output', 'conceptMapUrl', 'producer', 'consumer', or 'model'.
+        val invalidUsesMode = Regex(
+            """^([ \t]*uses[ \t]+"[^"]+"[ \t]+as[ \t]+)(input|output|conceptMapUrl|producer|consumer|model|abstract)[ \t]*$""",
+            RegexOption.MULTILINE
+        )
+        result = invalidUsesMode.replace(result) { m ->
+            rewrites++
+            val mode = m.groupValues[2]
+            when (mode) {
+                "input", "producer", "model" -> "${m.groupValues[1]}source"
+                "output", "consumer", "abstract" -> "${m.groupValues[1]}target"
+                else -> "// [fdd-sanitized] invalid uses '${mode}' removed"
+            }
+        }
+
+        // Anti-pattern 13: trailing comma inside group parameter list.
+        // INVALID:  group Foo(source src : T, target tgt : T2,)
+        // VALID:    group Foo(source src : T, target tgt : T2)
+        result = result.lines().joinToString("\n") { line ->
+            if (Regex("""^\s*group\s+\w+\s*\(""").containsMatchIn(line) &&
+                Regex(""",\s*\)""").containsMatchIn(line)
+            ) {
+                rewrites++
+                Regex(""",\s*\)""").replace(line, ")")
+            } else line
+        }
+
+        // Anti-pattern 14: .ofType(TypeName) in source/target paths - FHIRPath function
+        // that HAPI FML does not support in mapping expressions.
+        // INVALID:  src.medication.ofType(CodeableConcept) as m -> ...
+        // VALID:    src.medication as m -> ...
+        // Strips the suffix; a where clause can be added manually if type filtering is needed.
+        val ofTypeInPath = Regex("""\.(ofType|as)\(\w+\)""")
+        result = ofTypeInPath.replace(result) { m ->
+            // Only strip .ofType() / .as() - not plain method calls with full paths
+            rewrites++
+            ""
+        }
+
+        // Anti-pattern 15: extension("url") FHIRPath shorthand in source expressions.
+        // HAPI FML does not support the compact extension("url") function call.
+        // INVALID:  src.extension("http://example.org/ext") as e -> ...
+        // VALID:    src.extension as e where e.url = 'http://example.org/ext' -> ...
+        val extensionShorthand = Regex(
+            """(\w+)\.extension\(\s*["']([^"']+)["']\s*\)\s+as\s+(\w+)"""
+        )
+        result = extensionShorthand.replace(result) { m ->
+            rewrites++
+            val base = m.groupValues[1]
+            val url = m.groupValues[2]
+            val alias = m.groupValues[3]
+            "$base.extension as $alias where $alias.url = '$url'"
+        }
+
+        // Anti-pattern 16: extra "as alias" inside group parameter declarations.
+        // HAPI FML group params have the form: (source|target) name : Type
+        // The LLM sometimes adds an alias: (source src as srcAlias : Type)
+        // INVALID:  group Foo(source src as srcAlias : Patient, target tgt as tgtAlias : Patient)
+        // VALID:    group Foo(source src : Patient, target tgt : Patient)
+        val groupParamAliasPattern = Regex("""\b(source|target)\s+(\w+)\s+as\s+\w+\s*:""")
+        result = result.lines().joinToString("\n") { line ->
+            if (Regex("""^\s*group\s+""").containsMatchIn(line) &&
+                groupParamAliasPattern.containsMatchIn(line)
+            ) {
+                val fixed = groupParamAliasPattern.replace(line) { m ->
+                    "${m.groupValues[1]} ${m.groupValues[2]} :"
+                }
+                if (fixed != line) rewrites++
+                fixed
+            } else line
         }
 
         if (rewrites > 0) {

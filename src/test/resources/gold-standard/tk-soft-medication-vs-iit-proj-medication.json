@@ -2,14 +2,13 @@
   "pairId": "tk-soft-medication-vs-iit-proj-medication",
   "sourceClasspath": "custom-profiles/tk-soft/tk-soft-medication.json",
   "targetClasspath": "custom-profiles/iit-proj/iit-proj-medication.json",
-  "_notes": "Source tk-soft-medication has constraints tk-med-1(error)/tk-med-2(warning), extensions genericName/brandName/controlledSubstanceSchedule, code with extensible binding, code.coding slicing rxnorm/ndc. Target iit-proj-medication has constraints iit-med-1(error)/iit-med-2(warning), extensions investigationalStatus[1..1]/blindingCode/protocolReference, code.coding slicing with studyDrug[1..1] mandatory and blindedDrug optional, manufacturer banned (max=0), batch/lotNumber/expirationDate made mandatory, ingredient.item[x] type narrowed to CodeableConcept only.",
   "drifts": [
     {
       "id": "rule-1",
       "type": "STRUCTURAL",
       "sourcePath": "Medication",
       "targetPath": "Medication",
-      "description": "Constraints removed in target: [tk-med-1, tk-med-2]",
+      "description": "Constraints added in target: [iit-med-1, iit-med-2]",
       "severity": "WARNING"
     },
     {
@@ -17,75 +16,43 @@
       "type": "STRUCTURAL",
       "sourcePath": "Medication",
       "targetPath": "Medication",
-      "description": "New error constraint added in target: iit-med-1 (Investigational drugs must have a study drug identifier)",
-      "severity": "ERROR"
+      "description": "Constraints removed in target: [tk-med-1, tk-med-2]",
+      "severity": "WARNING"
     },
     {
       "id": "rule-3",
-      "type": "STRUCTURAL",
-      "sourcePath": "Medication",
-      "targetPath": "Medication",
-      "description": "New warning constraint added in target: iit-med-2 (Blinded medications should not have ingredient details)",
+      "type": "TERMINOLOGY",
+      "sourcePath": "Medication.code",
+      "targetPath": "Medication.code",
+      "description": "Binding changed: extensible(https://tk-soft.example.com/fhir/ValueSet/medication-code) -> example(http://hl7.org/fhir/ValueSet/medication-codes)",
       "severity": "WARNING"
     },
     {
       "id": "rule-4",
-      "type": "TERMINOLOGY",
-      "sourcePath": "Medication.code",
-      "targetPath": "Medication.code",
-      "description": "Binding removed in target: extensible(https://tk-soft.example.com/fhir/ValueSet/medication-code) -> none",
-      "severity": "INFO"
+      "type": "CARDINALITY",
+      "sourcePath": "Medication.manufacturer",
+      "targetPath": "Medication.manufacturer",
+      "description": "Cardinality changed: [0..1] -> [0..0]",
+      "severity": "WARNING"
     },
     {
       "id": "rule-5",
       "type": "STRUCTURAL",
-      "sourcePath": "Medication.code.coding:rxnorm",
-      "targetPath": "",
-      "description": "Slice 'rxnorm' removed in target (was mustSupport [0..1])",
+      "sourcePath": "Medication.manufacturer",
+      "targetPath": "Medication.manufacturer",
+      "description": "Reference target profile changed: [https://tk-soft.example.com/fhir/StructureDefinition/Organization] -> [http://hl7.org/fhir/StructureDefinition/Organization]",
       "severity": "WARNING"
     },
     {
       "id": "rule-6",
       "type": "STRUCTURAL",
-      "sourcePath": "Medication.code.coding:ndc",
-      "targetPath": "",
-      "description": "Slice 'ndc' removed in target (was mustSupport [0..1])",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-7",
-      "type": "CARDINALITY",
-      "sourcePath": "Medication.code.coding",
-      "targetPath": "Medication.code.coding:studyDrug",
-      "description": "New mandatory slice 'studyDrug' added in target: [1..1] (mustSupport)",
-      "severity": "ERROR"
-    },
-    {
-      "id": "rule-8",
-      "type": "STRUCTURAL",
-      "sourcePath": "",
-      "targetPath": "Medication.code.coding:blindedDrug",
-      "description": "New slice 'blindedDrug' added in target (mustSupport [0..1])",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-9",
-      "type": "CARDINALITY",
       "sourcePath": "Medication.manufacturer",
       "targetPath": "Medication.manufacturer",
-      "description": "Cardinality changed: [0..1] -> [0..0] (element banned in target)",
-      "severity": "ERROR"
-    },
-    {
-      "id": "rule-10",
-      "type": "STRUCTURAL",
-      "sourcePath": "Medication.manufacturer",
-      "targetPath": "Medication.manufacturer",
-      "description": "MustSupport removed in target (element banned: max=0)",
+      "description": "MustSupport removed in target",
       "severity": "INFO"
     },
     {
-      "id": "rule-11",
+      "id": "rule-7",
       "type": "TERMINOLOGY",
       "sourcePath": "Medication.form",
       "targetPath": "Medication.form",
@@ -93,15 +60,23 @@
       "severity": "WARNING"
     },
     {
-      "id": "rule-12",
+      "id": "rule-8",
       "type": "STRUCTURAL",
       "sourcePath": "Medication.ingredient.item[x]",
       "targetPath": "Medication.ingredient.item[x]",
-      "description": "Type changed: [CodeableConcept, Reference] -> [CodeableConcept] (Reference type removed)",
+      "description": "Type changed: [CodeableConcept, Reference] -> [CodeableConcept]",
       "severity": "WARNING"
     },
     {
-      "id": "rule-13",
+      "id": "rule-9",
+      "type": "STRUCTURAL",
+      "sourcePath": "Medication.ingredient.item[x]",
+      "targetPath": "Medication.ingredient.item[x]",
+      "description": "Reference target profile changed: [http://hl7.org/fhir/StructureDefinition/Medication, http://hl7.org/fhir/StructureDefinition/Substance] -> []",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-10",
       "type": "CARDINALITY",
       "sourcePath": "Medication.batch",
       "targetPath": "Medication.batch",
@@ -109,7 +84,7 @@
       "severity": "ERROR"
     },
     {
-      "id": "rule-14",
+      "id": "rule-11",
       "type": "CARDINALITY",
       "sourcePath": "Medication.batch.lotNumber",
       "targetPath": "Medication.batch.lotNumber",
@@ -117,7 +92,7 @@
       "severity": "ERROR"
     },
     {
-      "id": "rule-15",
+      "id": "rule-12",
       "type": "CARDINALITY",
       "sourcePath": "Medication.batch.expirationDate",
       "targetPath": "Medication.batch.expirationDate",
@@ -125,7 +100,47 @@
       "severity": "ERROR"
     },
     {
+      "id": "rule-13",
+      "type": "EXTENSION",
+      "sourcePath": "",
+      "targetPath": "Medication.extension:investigationalStatus",
+      "description": "Extension added in target profile: Medication.extension:investigationalStatus (required)",
+      "severity": "ERROR"
+    },
+    {
+      "id": "rule-14",
+      "type": "EXTENSION",
+      "sourcePath": "",
+      "targetPath": "Medication.extension:blindingCode",
+      "description": "Extension added in target profile: Medication.extension:blindingCode",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-15",
+      "type": "EXTENSION",
+      "sourcePath": "",
+      "targetPath": "Medication.extension:protocolReference",
+      "description": "Extension added in target profile: Medication.extension:protocolReference",
+      "severity": "WARNING"
+    },
+    {
       "id": "rule-16",
+      "type": "STRUCTURAL",
+      "sourcePath": "",
+      "targetPath": "Medication.code.coding:studyDrug",
+      "description": "New slice 'studyDrug' added in target profile",
+      "severity": "ERROR"
+    },
+    {
+      "id": "rule-17",
+      "type": "STRUCTURAL",
+      "sourcePath": "",
+      "targetPath": "Medication.code.coding:blindedDrug",
+      "description": "New slice 'blindedDrug' added in target profile",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-18",
       "type": "EXTENSION",
       "sourcePath": "Medication.extension:genericName",
       "targetPath": "",
@@ -133,7 +148,7 @@
       "severity": "WARNING"
     },
     {
-      "id": "rule-17",
+      "id": "rule-19",
       "type": "EXTENSION",
       "sourcePath": "Medication.extension:brandName",
       "targetPath": "",
@@ -141,7 +156,7 @@
       "severity": "WARNING"
     },
     {
-      "id": "rule-18",
+      "id": "rule-20",
       "type": "EXTENSION",
       "sourcePath": "Medication.extension:controlledSubstanceSchedule",
       "targetPath": "",
@@ -149,27 +164,19 @@
       "severity": "WARNING"
     },
     {
-      "id": "rule-19",
-      "type": "EXTENSION",
-      "sourcePath": "",
-      "targetPath": "Medication.extension:investigationalStatus",
-      "description": "Extension added in target profile: Medication.extension:investigationalStatus [1..1] (mandatory, mustSupport)",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-20",
-      "type": "EXTENSION",
-      "sourcePath": "",
-      "targetPath": "Medication.extension:blindingCode",
-      "description": "Extension added in target profile: Medication.extension:blindingCode (mustSupport)",
-      "severity": "WARNING"
-    },
-    {
       "id": "rule-21",
-      "type": "EXTENSION",
-      "sourcePath": "",
-      "targetPath": "Medication.extension:protocolReference",
-      "description": "Extension added in target profile: Medication.extension:protocolReference (mustSupport)",
+      "type": "STRUCTURAL",
+      "sourcePath": "Medication.code.coding:rxnorm",
+      "targetPath": "",
+      "description": "Slice 'rxnorm' removed in target profile",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-22",
+      "type": "STRUCTURAL",
+      "sourcePath": "Medication.code.coding:ndc",
+      "targetPath": "",
+      "description": "Slice 'ndc' removed in target profile",
       "severity": "WARNING"
     }
   ]

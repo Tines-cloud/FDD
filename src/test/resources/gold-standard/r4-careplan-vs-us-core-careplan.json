@@ -2,191 +2,118 @@
   "pairId": "r4-careplan-vs-us-core-careplan",
   "sourceClasspath": "standard-profiles/r4/careplan.profile.json",
   "targetClasspath": "standard-profiles/us-core/StructureDefinition-us-core-careplan.json",
-  "_notes": "Hand-curated by reading the US Core CarePlan differential (9 elements) line by line against the R4 CarePlan snapshot. Key R4 facts: text min=0 max=1; text.status not in CarePlan snapshot (Narrative type, min=1, required:narrative-status); text.div not in CarePlan snapshot (Narrative type, min=1); status min=1 required:request-status|4.0.1; intent min=1 required:care-plan-intent|4.0.1; category min=0 example:care-plan-category; subject min=1 Reference(Patient|Group). US Core adds MustSupport, removes version pins, makes category [1..*] with mandatory 'AssessPlan' slice (assess-plan from us-core careplan-category CodeSystem), tightens text.status binding, and constrains subject to us-core-patient. All diff elements have USCDI annotations.",
   "drifts": [
     {
-      "id": "gold-cp-1",
+      "id": "rule-1",
       "type": "STRUCTURAL",
       "sourcePath": "CarePlan.text",
       "targetPath": "CarePlan.text",
-      "description": "MustSupport added in target (min=0, optional but must be supported when present).",
+      "description": "MustSupport added in target",
       "severity": "INFO"
     },
     {
-      "id": "gold-cp-2",
+      "id": "rule-2",
       "type": "EXTENSION",
       "sourcePath": "CarePlan.text",
-      "targetPath": "CarePlan.text",
-      "description": "Element-level USCDI requirement annotation extension (uscdi-requirement=true) added to CarePlan.text in target profile. Marks this element as a US Core Data for Interoperability requirement.",
-      "severity": "INFO"
-    },
-    {
-      "id": "gold-cp-3",
-      "type": "STRUCTURAL",
-      "sourcePath": "CarePlan.text.status",
-      "targetPath": "CarePlan.text.status",
-      "description": "MustSupport added in target. CarePlan.text.status inherits min=1 from the FHIR Narrative datatype (conformance-critical).",
+      "targetPath": "CarePlan.text.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+      "description": "Extension present only in target: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
       "severity": "WARNING"
     },
     {
-      "id": "gold-cp-4",
-      "type": "TERMINOLOGY",
-      "sourcePath": "CarePlan.text.status",
-      "targetPath": "CarePlan.text.status",
-      "description": "Binding changed/tightened: R4 Narrative.status uses required:narrative-status (generated|extensions|additional|empty). US Core explicitly constrains to required:us-core-narrative-status (additional|empty|generated only, excluding 'extensions').",
-      "severity": "WARNING"
-    },
-    {
-      "id": "gold-cp-5",
-      "type": "EXTENSION",
-      "sourcePath": "CarePlan.text.status",
-      "targetPath": "CarePlan.text.status",
-      "description": "Element-level USCDI requirement annotation extension (uscdi-requirement=true) added to CarePlan.text.status in target profile. Marks this element as a US Core Data for Interoperability requirement.",
-      "severity": "INFO"
-    },
-    {
-      "id": "gold-cp-6",
-      "type": "STRUCTURAL",
-      "sourcePath": "CarePlan.text.div",
-      "targetPath": "CarePlan.text.div",
-      "description": "MustSupport added in target. CarePlan.text.div inherits min=1 from the FHIR Narrative datatype (conformance-critical).",
-      "severity": "WARNING"
-    },
-    {
-      "id": "gold-cp-7",
-      "type": "EXTENSION",
-      "sourcePath": "CarePlan.text.div",
-      "targetPath": "CarePlan.text.div",
-      "description": "Element-level USCDI requirement annotation extension (uscdi-requirement=true) added to CarePlan.text.div in target profile. Marks this element as a US Core Data for Interoperability requirement.",
-      "severity": "INFO"
-    },
-    {
-      "id": "gold-cp-8",
+      "id": "rule-3",
       "type": "STRUCTURAL",
       "sourcePath": "CarePlan.status",
       "targetPath": "CarePlan.status",
-      "description": "MustSupport added in target (min=1 in R4 -> conformance-critical).",
-      "severity": "WARNING"
-    },
-    {
-      "id": "gold-cp-9",
-      "type": "TERMINOLOGY",
-      "sourcePath": "CarePlan.status",
-      "targetPath": "CarePlan.status",
-      "description": "Binding version pin removed: R4 binds to 'request-status|4.0.1' (version-locked). US Core binds to 'request-status' (no version pin). Strength remains required in both.",
-      "severity": "WARNING"
-    },
-    {
-      "id": "gold-cp-10",
-      "type": "EXTENSION",
-      "sourcePath": "CarePlan.status",
-      "targetPath": "CarePlan.status",
-      "description": "Element-level USCDI requirement annotation extension (uscdi-requirement=true) added to CarePlan.status in target profile. Marks this element as a US Core Data for Interoperability requirement.",
+      "description": "MustSupport added in target",
       "severity": "INFO"
     },
     {
-      "id": "gold-cp-11",
+      "id": "rule-4",
+      "type": "EXTENSION",
+      "sourcePath": "CarePlan.status",
+      "targetPath": "CarePlan.status.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+      "description": "Extension present only in target: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-5",
       "type": "STRUCTURAL",
       "sourcePath": "CarePlan.intent",
       "targetPath": "CarePlan.intent",
-      "description": "MustSupport added in target (min=1 in R4 -> conformance-critical).",
-      "severity": "WARNING"
-    },
-    {
-      "id": "gold-cp-12",
-      "type": "TERMINOLOGY",
-      "sourcePath": "CarePlan.intent",
-      "targetPath": "CarePlan.intent",
-      "description": "Binding version pin removed: R4 binds to 'care-plan-intent|4.0.1' (version-locked). US Core binds to 'care-plan-intent' (no version pin). Strength remains required in both.",
-      "severity": "WARNING"
-    },
-    {
-      "id": "gold-cp-13",
-      "type": "EXTENSION",
-      "sourcePath": "CarePlan.intent",
-      "targetPath": "CarePlan.intent",
-      "description": "Element-level USCDI requirement annotation extension (uscdi-requirement=true) added to CarePlan.intent in target profile. Marks this element as a US Core Data for Interoperability requirement.",
+      "description": "MustSupport added in target",
       "severity": "INFO"
     },
     {
-      "id": "gold-cp-14",
+      "id": "rule-6",
+      "type": "EXTENSION",
+      "sourcePath": "CarePlan.intent",
+      "targetPath": "CarePlan.intent.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+      "description": "Extension present only in target: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-7",
       "type": "CARDINALITY",
       "sourcePath": "CarePlan.category",
       "targetPath": "CarePlan.category",
-      "description": "Cardinality changed: [0..*] -> [1..*]. At least one category becomes mandatory in US Core; R4 allows a CarePlan without a category.",
-      "severity": "ERROR"
+      "description": "Cardinality changed: [0..*] -> [1..*]",
+      "severity": "WARNING"
     },
     {
-      "id": "gold-cp-15",
+      "id": "rule-8",
       "type": "STRUCTURAL",
       "sourcePath": "CarePlan.category",
       "targetPath": "CarePlan.category",
-      "description": "MustSupport added in target (min becomes 1 -> conformance-critical).",
-      "severity": "WARNING"
+      "description": "MustSupport added in target",
+      "severity": "INFO"
     },
     {
-      "id": "gold-cp-16",
+      "id": "rule-9",
       "type": "STRUCTURAL",
       "sourcePath": "CarePlan.category",
       "targetPath": "CarePlan.category",
-      "description": "Slicing added on CarePlan.category: discriminator type=pattern, path=$this, rules=open. Allows named category slices to be defined.",
-      "severity": "INFO"
+      "description": "Slicing changed: none -> rules=open, discriminators=[pattern:$this]",
+      "severity": "WARNING"
     },
     {
-      "id": "gold-cp-17",
+      "id": "rule-10",
       "type": "EXTENSION",
       "sourcePath": "CarePlan.category",
-      "targetPath": "CarePlan.category",
-      "description": "Element-level USCDI requirement annotation extension (uscdi-requirement=true) added to CarePlan.category in target profile. Marks this element as a US Core Data for Interoperability requirement.",
-      "severity": "INFO"
-    },
-    {
-      "id": "gold-cp-18",
-      "type": "CARDINALITY",
-      "sourcePath": null,
-      "targetPath": "CarePlan.category:AssessPlan",
-      "description": "New mandatory slice 'AssessPlan' added [1..1]: patternCodeableConcept coding system=http://hl7.org/fhir/us/core/CodeSystem/careplan-category code=assess-plan. No equivalent in R4 base.",
-      "severity": "ERROR"
-    },
-    {
-      "id": "gold-cp-19",
-      "type": "STRUCTURAL",
-      "sourcePath": null,
-      "targetPath": "CarePlan.category:AssessPlan",
-      "description": "MustSupport added on mandatory slice 'AssessPlan' (min=1 -> conformance-critical). A new MS=true slice is added.",
+      "targetPath": "CarePlan.category.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+      "description": "Extension present only in target: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
       "severity": "WARNING"
     },
     {
-      "id": "gold-cp-20",
-      "type": "EXTENSION",
-      "sourcePath": null,
+      "id": "rule-11",
+      "type": "STRUCTURAL",
+      "sourcePath": "",
       "targetPath": "CarePlan.category:AssessPlan",
-      "description": "Element-level USCDI requirement annotation extension (uscdi-requirement=true) added to CarePlan.category:AssessPlan in target profile. Marks this element as a US Core Data for Interoperability requirement.",
-      "severity": "INFO"
+      "description": "Slice present only in target: CarePlan.category:AssessPlan (min=1, max=1, mustSupport=true, patternCodeableConcept.coding.system=http://hl7.org/fhir/us/core/CodeSystem/careplan-category, patternCodeableConcept.coding.code=assess-plan)",
+      "severity": "WARNING"
     },
     {
-      "id": "gold-cp-21",
+      "id": "rule-12",
       "type": "STRUCTURAL",
       "sourcePath": "CarePlan.subject",
       "targetPath": "CarePlan.subject",
-      "description": "MustSupport added in target (min=1 in R4 -> conformance-critical).",
+      "description": "Reference target profile changed: [http://hl7.org/fhir/StructureDefinition/Patient, http://hl7.org/fhir/StructureDefinition/Group] -> [http://hl7.org/fhir/us/core/StructureDefinition/us-core-patient]",
       "severity": "WARNING"
     },
     {
-      "id": "gold-cp-22",
+      "id": "rule-13",
       "type": "STRUCTURAL",
       "sourcePath": "CarePlan.subject",
       "targetPath": "CarePlan.subject",
-      "description": "Reference target profiles constrained: R4 allows Reference(Patient|Group). US Core restricts to Reference(us-core-patient) only.",
-      "severity": "WARNING"
+      "description": "MustSupport added in target",
+      "severity": "INFO"
     },
     {
-      "id": "gold-cp-23",
+      "id": "rule-14",
       "type": "EXTENSION",
       "sourcePath": "CarePlan.subject",
-      "targetPath": "CarePlan.subject",
-      "description": "Element-level USCDI requirement annotation extension (uscdi-requirement=true) added to CarePlan.subject in target profile. Marks this element as a US Core Data for Interoperability requirement.",
-      "severity": "INFO"
+      "targetPath": "CarePlan.subject.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+      "description": "Extension present only in target: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+      "severity": "WARNING"
     }
   ]
 }

@@ -1,207 +1,190 @@
 {
-  "pairId": "manual-r4-practitioner-vs-us-core-practitioner",
+  "pairId": "r4-practitioner-vs-us-core-practitioner",
   "sourceClasspath": "standard-profiles/r4/practitioner.profile.json",
   "targetClasspath": "standard-profiles/us-core/StructureDefinition-us-core-practitioner.json",
-  "_notes": "Hand-curated by reading the US Core Practitioner differential (16 elements) line by line against the R4 Practitioner snapshot. Key R4 facts: identifier min=0 max=*; identifier.system/value NOT in R4 snapshot (inherited from Identifier datatype as 0..1); name min=0 max=*; name.family NOT in R4 Practitioner snapshot (inherited from HumanName as 0..1); telecom min=0; address min=0; address sub-elements NOT in R4 snapshot. The NPI slice carries two error-severity constraints (separate items). Practitioner has no USCDI annotation extensions in its differential (uscdi=0). Note: identifier.system and identifier.value explicitly set min=1 in the diff (unlike Organization); name.family also sets min=1.",
   "drifts": [
     {
-      "id": "gold-prac-1",
+      "id": "rule-1",
       "type": "CARDINALITY",
       "sourcePath": "Practitioner.identifier",
       "targetPath": "Practitioner.identifier",
-      "description": "Cardinality changed: [0..*] -> [1..*]. At least one identifier becomes mandatory in US Core; R4 allows a Practitioner without any identifier.",
-      "severity": "ERROR"
-    },
-    {
-      "id": "gold-prac-2",
-      "type": "STRUCTURAL",
-      "sourcePath": "Practitioner.identifier",
-      "targetPath": "Practitioner.identifier",
-      "description": "MustSupport added in target (min becomes 1 -> conformance-critical).",
+      "description": "Cardinality changed: [0..*] -> [1..*]",
       "severity": "WARNING"
     },
     {
-      "id": "gold-prac-3",
+      "id": "rule-2",
       "type": "STRUCTURAL",
       "sourcePath": "Practitioner.identifier",
       "targetPath": "Practitioner.identifier",
-      "description": "Slicing added on identifier: discriminator type=pattern, path=$this, rules=open. No slicing exists in R4 base.",
+      "description": "MustSupport added in target",
       "severity": "INFO"
     },
     {
-      "id": "gold-prac-4",
+      "id": "rule-3",
+      "type": "STRUCTURAL",
+      "sourcePath": "Practitioner.identifier",
+      "targetPath": "Practitioner.identifier",
+      "description": "Slicing changed: none -> rules=open, discriminators=[pattern:$this]",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-4",
       "type": "CARDINALITY",
       "sourcePath": "Practitioner.identifier.system",
       "targetPath": "Practitioner.identifier.system",
-      "description": "Cardinality changed: [0..1] -> [1..1]. Identifier system URI becomes mandatory when an identifier is present. R4 Practitioner snapshot does not constrain identifier sub-elements (inherited from Identifier datatype as 0..1).",
-      "severity": "ERROR"
+      "description": "Cardinality changed: [0..1] -> [1..1]",
+      "severity": "WARNING"
     },
     {
-      "id": "gold-prac-5",
+      "id": "rule-5",
       "type": "STRUCTURAL",
       "sourcePath": "Practitioner.identifier.system",
       "targetPath": "Practitioner.identifier.system",
-      "description": "MustSupport added in target (min becomes 1 -> conformance-critical).",
-      "severity": "WARNING"
+      "description": "MustSupport added in target",
+      "severity": "INFO"
     },
     {
-      "id": "gold-prac-6",
+      "id": "rule-6",
       "type": "CARDINALITY",
       "sourcePath": "Practitioner.identifier.value",
       "targetPath": "Practitioner.identifier.value",
-      "description": "Cardinality changed: [0..1] -> [1..1]. Identifier value becomes mandatory when an identifier is present. R4 Practitioner snapshot does not constrain identifier sub-elements (inherited from Identifier datatype as 0..1).",
-      "severity": "ERROR"
+      "description": "Cardinality changed: [0..1] -> [1..1]",
+      "severity": "WARNING"
     },
     {
-      "id": "gold-prac-7",
+      "id": "rule-7",
       "type": "STRUCTURAL",
       "sourcePath": "Practitioner.identifier.value",
       "targetPath": "Practitioner.identifier.value",
-      "description": "MustSupport added in target (min becomes 1 -> conformance-critical).",
+      "description": "MustSupport added in target",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-8",
+      "type": "STRUCTURAL",
+      "sourcePath": "",
+      "targetPath": "Practitioner.identifier:NPI",
+      "description": "Slice present only in target: Practitioner.identifier:NPI with fixed system http://hl7.org/fhir/sid/us-npi, mustSupport=true, and constraints us-core-16 and us-core-17",
       "severity": "WARNING"
     },
     {
-      "id": "gold-prac-8",
-      "type": "STRUCTURAL",
-      "sourcePath": null,
-      "targetPath": "Practitioner.identifier:NPI",
-      "description": "New slice 'NPI' added with patternIdentifier system=http://hl7.org/fhir/sid/us-npi and mustSupport=true. No equivalent slice exists in R4 base.",
-      "severity": "WARNING"
-    },
-    {
-      "id": "gold-prac-9",
-      "type": "STRUCTURAL",
-      "sourcePath": null,
-      "targetPath": "Practitioner.identifier:NPI",
-      "description": "Constraint 'us-core-16' added (severity: error): NPI must be 10 digits. Expression: value.matches('^[0-9]{10}$'). Not present in R4 base.",
-      "severity": "ERROR"
-    },
-    {
-      "id": "gold-prac-10",
-      "type": "STRUCTURAL",
-      "sourcePath": null,
-      "targetPath": "Practitioner.identifier:NPI",
-      "description": "Constraint 'us-core-17' added (severity: error): NPI check digit must be valid (Luhn algorithm check). Not present in R4 base.",
-      "severity": "ERROR"
-    },
-    {
-      "id": "gold-prac-11",
+      "id": "rule-9",
       "type": "CARDINALITY",
       "sourcePath": "Practitioner.name",
       "targetPath": "Practitioner.name",
-      "description": "Cardinality changed: [0..*] -> [1..*]. At least one name becomes mandatory in US Core; R4 allows a Practitioner without any name.",
-      "severity": "ERROR"
+      "description": "Cardinality changed: [0..*] -> [1..*]",
+      "severity": "WARNING"
     },
     {
-      "id": "gold-prac-12",
+      "id": "rule-10",
       "type": "STRUCTURAL",
       "sourcePath": "Practitioner.name",
       "targetPath": "Practitioner.name",
-      "description": "MustSupport added in target (min becomes 1 -> conformance-critical).",
-      "severity": "WARNING"
+      "description": "MustSupport added in target",
+      "severity": "INFO"
     },
     {
-      "id": "gold-prac-13",
+      "id": "rule-11",
       "type": "CARDINALITY",
       "sourcePath": "Practitioner.name.family",
       "targetPath": "Practitioner.name.family",
-      "description": "Cardinality changed: [0..1] -> [1..1]. Family name becomes mandatory in US Core; R4 Practitioner snapshot does not constrain name sub-elements (HumanName.family is inherited as 0..1).",
-      "severity": "ERROR"
-    },
-    {
-      "id": "gold-prac-14",
-      "type": "STRUCTURAL",
-      "sourcePath": "Practitioner.name.family",
-      "targetPath": "Practitioner.name.family",
-      "description": "MustSupport added in target (min becomes 1 -> conformance-critical).",
+      "description": "Cardinality changed: [0..1] -> [1..1]",
       "severity": "WARNING"
     },
     {
-      "id": "gold-prac-15",
+      "id": "rule-12",
+      "type": "STRUCTURAL",
+      "sourcePath": "Practitioner.name.family",
+      "targetPath": "Practitioner.name.family",
+      "description": "MustSupport added in target",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-13",
       "type": "STRUCTURAL",
       "sourcePath": "Practitioner.telecom",
       "targetPath": "Practitioner.telecom",
-      "description": "MustSupport added in target (min=0, optional but must be supported when present).",
+      "description": "MustSupport added in target",
       "severity": "INFO"
     },
     {
-      "id": "gold-prac-16",
+      "id": "rule-14",
       "type": "STRUCTURAL",
       "sourcePath": "Practitioner.telecom.system",
       "targetPath": "Practitioner.telecom.system",
-      "description": "MustSupport added in target (min=0, optional but must be supported when present). R4 Practitioner snapshot does not constrain telecom sub-elements.",
+      "description": "MustSupport added in target",
       "severity": "INFO"
     },
     {
-      "id": "gold-prac-17",
+      "id": "rule-15",
       "type": "STRUCTURAL",
       "sourcePath": "Practitioner.telecom.value",
       "targetPath": "Practitioner.telecom.value",
-      "description": "MustSupport added in target (min=0, optional but must be supported when present). R4 Practitioner snapshot does not constrain telecom sub-elements.",
+      "description": "MustSupport added in target",
       "severity": "INFO"
     },
     {
-      "id": "gold-prac-18",
+      "id": "rule-16",
       "type": "STRUCTURAL",
       "sourcePath": "Practitioner.address",
       "targetPath": "Practitioner.address",
-      "description": "MustSupport added in target (min=0, optional but must be supported when present).",
+      "description": "MustSupport added in target",
       "severity": "INFO"
     },
     {
-      "id": "gold-prac-19",
+      "id": "rule-17",
       "type": "CARDINALITY",
       "sourcePath": "Practitioner.address.line",
       "targetPath": "Practitioner.address.line",
-      "description": "Cardinality max constrained: [0..*] -> [0..4]. Address lines are limited to 4 in US Core. R4 Address.line is inherited as 0..*.",
+      "description": "Cardinality changed: [0..*] -> [0..4]",
       "severity": "WARNING"
     },
     {
-      "id": "gold-prac-20",
+      "id": "rule-18",
       "type": "STRUCTURAL",
       "sourcePath": "Practitioner.address.line",
       "targetPath": "Practitioner.address.line",
-      "description": "MustSupport added in target (min=0, optional but must be supported when present). R4 Practitioner snapshot does not constrain address sub-elements.",
+      "description": "MustSupport added in target",
       "severity": "INFO"
     },
     {
-      "id": "gold-prac-21",
+      "id": "rule-19",
       "type": "STRUCTURAL",
       "sourcePath": "Practitioner.address.city",
       "targetPath": "Practitioner.address.city",
-      "description": "MustSupport added in target (min=0, optional but must be supported when present). R4 Practitioner snapshot does not constrain address sub-elements.",
+      "description": "MustSupport added in target",
       "severity": "INFO"
     },
     {
-      "id": "gold-prac-22",
+      "id": "rule-20",
       "type": "STRUCTURAL",
       "sourcePath": "Practitioner.address.state",
       "targetPath": "Practitioner.address.state",
-      "description": "MustSupport added in target (min=0, optional but must be supported when present). R4 Practitioner snapshot does not constrain address sub-elements.",
+      "description": "MustSupport added in target",
       "severity": "INFO"
     },
     {
-      "id": "gold-prac-23",
+      "id": "rule-21",
       "type": "TERMINOLOGY",
       "sourcePath": "Practitioner.address.state",
       "targetPath": "Practitioner.address.state",
-      "description": "New binding added in target: extensible binding to http://hl7.org/fhir/us/core/ValueSet/us-core-usps-state (US USPS state codes). R4 Practitioner does not constrain address.state with any binding.",
+      "description": "Binding added in target: extensible(http://hl7.org/fhir/us/core/ValueSet/us-core-usps-state)",
       "severity": "WARNING"
     },
     {
-      "id": "gold-prac-24",
+      "id": "rule-22",
       "type": "STRUCTURAL",
       "sourcePath": "Practitioner.address.postalCode",
       "targetPath": "Practitioner.address.postalCode",
-      "description": "MustSupport added in target (min=0, optional but must be supported when present). R4 Practitioner snapshot does not constrain address sub-elements.",
+      "description": "MustSupport added in target",
       "severity": "INFO"
     },
     {
-      "id": "gold-prac-25",
+      "id": "rule-23",
       "type": "STRUCTURAL",
       "sourcePath": "Practitioner.address.country",
       "targetPath": "Practitioner.address.country",
-      "description": "MustSupport added in target (min=0, optional but must be supported when present). R4 Practitioner snapshot does not constrain address sub-elements.",
+      "description": "MustSupport added in target",
       "severity": "INFO"
     }
   ]

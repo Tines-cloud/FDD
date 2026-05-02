@@ -2,14 +2,13 @@
   "pairId": "iit-proj-condition-vs-hemas-condition",
   "sourceClasspath": "custom-profiles/iit-proj/iit-proj-condition.json",
   "targetClasspath": "custom-profiles/hemas/hemas-condition.json",
-  "_notes": "Source: iit-proj-condition (clinical research, eligibility/AE tracking). Target: hemas-condition (hospital diagnosis). Source requires verificationStatus[1..1], mandatory LOINC onset, bans recorder, and uses research-specific category slices. Target relaxes verificationStatus min, makes encounter mandatory, lifts recorder ban, and uses hospital-specific category slices (admissionDiagnosis, dischargeDiagnosis). ICD-10 coding goes from optional to mandatory.",
   "drifts": [
     {
       "id": "rule-1",
       "type": "STRUCTURAL",
       "sourcePath": "Condition",
       "targetPath": "Condition",
-      "description": "Source constraints removed: [iit-con-1 (error: ICD-10 or SNOMED code required), iit-con-2 (error: inclusion-criteria category implies confirmed verificationStatus)]. Not present in hemas-condition.",
+      "description": "Constraints added in target: [hemas-con-1, hemas-con-2]",
       "severity": "WARNING"
     },
     {
@@ -17,208 +16,240 @@
       "type": "STRUCTURAL",
       "sourcePath": "Condition",
       "targetPath": "Condition",
-      "description": "New error constraint added in target: hemas-con-1 (error: code.coding must exist). Source has no equivalent root constraint.",
-      "severity": "ERROR"
-    },
-    {
-      "id": "rule-3",
-      "type": "STRUCTURAL",
-      "sourcePath": "Condition",
-      "targetPath": "Condition",
-      "description": "New warning constraint added in target: hemas-con-2 (warning: confirmed verificationStatus implies onset must exist). Source has no equivalent constraint.",
+      "description": "Constraints removed in target: [iit-con-1, iit-con-2]",
       "severity": "WARNING"
     },
     {
+      "id": "rule-3",
+      "type": "CARDINALITY",
+      "sourcePath": "Condition.verificationStatus",
+      "targetPath": "Condition.verificationStatus",
+      "description": "Cardinality changed: [1..1] -> [0..1]",
+      "severity": "INFO"
+    },
+    {
       "id": "rule-4",
-      "type": "EXTENSION",
-      "sourcePath": "Condition.extension:studyRelevance",
-      "targetPath": "Condition.extension:studyRelevance",
-      "description": "Optional extension studyRelevance[0..1 mustSupport=true] present in source is removed in target.",
+      "type": "TERMINOLOGY",
+      "sourcePath": "Condition.code",
+      "targetPath": "Condition.code",
+      "description": "Binding changed: example(http://hl7.org/fhir/ValueSet/condition-code) -> extensible(https://hemas.example.com/fhir/ValueSet/condition-code)",
       "severity": "WARNING"
     },
     {
       "id": "rule-5",
-      "type": "EXTENSION",
-      "sourcePath": "Condition.extension:protocolCriterion",
-      "targetPath": "Condition.extension:protocolCriterion",
-      "description": "Optional extension protocolCriterion[0..1 mustSupport=true] present in source is removed in target.",
-      "severity": "WARNING"
+      "type": "CARDINALITY",
+      "sourcePath": "Condition.code.coding:icd10",
+      "targetPath": "Condition.code.coding:icd10",
+      "description": "Cardinality changed: [0..1] -> [1..1]",
+      "severity": "ERROR"
     },
     {
       "id": "rule-6",
-      "type": "EXTENSION",
-      "sourcePath": "Condition.extension:adverseEventLink",
-      "targetPath": "Condition.extension:adverseEventLink",
-      "description": "Optional extension adverseEventLink[0..1 mustSupport=true] present in source is removed in target.",
+      "type": "TERMINOLOGY",
+      "sourcePath": "Condition.code.coding:icd10",
+      "targetPath": "Condition.code.coding:icd10",
+      "description": "Pattern value changed: 'org.hl7.fhir.r4.model.Coding@4f5dcbef' -> 'org.hl7.fhir.r4.model.Coding@18e926bd'",
       "severity": "WARNING"
     },
     {
       "id": "rule-7",
-      "type": "EXTENSION",
-      "sourcePath": "Condition.extension:hospitalDepartment",
-      "targetPath": "Condition.extension:hospitalDepartment",
-      "description": "New optional extension hospitalDepartment[0..1 mustSupport=true] added in target. Source does not define this extension.",
+      "type": "TERMINOLOGY",
+      "sourcePath": "Condition.code.coding:snomed",
+      "targetPath": "Condition.code.coding:snomed",
+      "description": "Pattern value changed: 'org.hl7.fhir.r4.model.Coding@1929a41f' -> 'org.hl7.fhir.r4.model.Coding@62d69bb9'",
       "severity": "WARNING"
     },
     {
       "id": "rule-8",
-      "type": "EXTENSION",
-      "sourcePath": "Condition.extension:icdBlock",
-      "targetPath": "Condition.extension:icdBlock",
-      "description": "New optional extension icdBlock[0..1 mustSupport=true] added in target. Source does not define this extension.",
-      "severity": "WARNING"
+      "type": "STRUCTURAL",
+      "sourcePath": "Condition.code.text",
+      "targetPath": "Condition.code.text",
+      "description": "MustSupport added in target",
+      "severity": "INFO"
     },
     {
       "id": "rule-9",
-      "type": "EXTENSION",
-      "sourcePath": "Condition.extension:chronicity",
-      "targetPath": "Condition.extension:chronicity",
-      "description": "New optional extension chronicity[0..1 mustSupport=true] added in target. Source does not define this extension.",
+      "type": "TERMINOLOGY",
+      "sourcePath": "Condition.bodySite",
+      "targetPath": "Condition.bodySite",
+      "description": "Binding changed: example(http://hl7.org/fhir/ValueSet/body-site) -> extensible(http://hl7.org/fhir/ValueSet/body-site)",
       "severity": "WARNING"
     },
     {
       "id": "rule-10",
-      "type": "CARDINALITY",
-      "sourcePath": "Condition.verificationStatus",
-      "targetPath": "Condition.verificationStatus",
-      "description": "verificationStatus cardinality relaxed: source [1..1 mustSupport=true] → target [0..1 mustSupport=true] (hemas no explicit min, inherits R4 base [0..1]). Min decreased. MustSupport and binding preserved.",
-      "severity": "INFO"
+      "type": "STRUCTURAL",
+      "sourcePath": "Condition.subject",
+      "targetPath": "Condition.subject",
+      "description": "Reference target profile changed: [https://iit-proj.example.com/fhir/StructureDefinition/Patient] -> [https://hemas.example.com/fhir/StructureDefinition/Patient]",
+      "severity": "WARNING"
     },
     {
       "id": "rule-11",
-      "type": "STRUCTURAL",
-      "sourcePath": "Condition.category",
-      "targetPath": "Condition.category",
-      "description": "Source category slices removed in target: [inclusionCriteria[0..1 mustSupport=true], adverseEvent[0..1 mustSupport=true], comorbidity[0..1 mustSupport=true]] all use IIT-specific code systems and are absent from hemas-condition.",
-      "severity": "WARNING"
+      "type": "CARDINALITY",
+      "sourcePath": "Condition.encounter",
+      "targetPath": "Condition.encounter",
+      "description": "Cardinality changed: [0..1] -> [1..1]",
+      "severity": "ERROR"
     },
     {
       "id": "rule-12",
       "type": "STRUCTURAL",
-      "sourcePath": "Condition.category",
-      "targetPath": "Condition.category",
-      "description": "New mustSupport=true category slices added in target: [admissionDiagnosis[0..1 mustSupport=true patternCC(encounter-diagnosis)], dischargeDiagnosis[0..1 mustSupport=true patternCC(hemas-discharge-diagnosis)]]. Source has no equivalent slices.",
+      "sourcePath": "Condition.encounter",
+      "targetPath": "Condition.encounter",
+      "description": "Reference target profile changed: [https://iit-proj.example.com/fhir/StructureDefinition/Encounter] -> [https://hemas.example.com/fhir/StructureDefinition/Encounter]",
       "severity": "WARNING"
     },
     {
       "id": "rule-13",
-      "type": "TERMINOLOGY",
-      "sourcePath": "Condition.code",
-      "targetPath": "Condition.code",
-      "description": "New binding added on Condition.code in target: extensible(https://hemas.example.com/fhir/ValueSet/condition-code). Source has no binding on the code element itself.",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-13b",
-      "type": "STRUCTURAL",
-      "sourcePath": "Condition.subject",
-      "targetPath": "Condition.subject",
-      "description": "Reference target profile changed: source constrains subject to [iit-proj/Patient] → target constrains to [hemas/Patient]. Both are mandatory MS references but pointing to different hospital profiles.",
-      "severity": "WARNING"
+      "type": "CARDINALITY",
+      "sourcePath": "Condition.onset[x]",
+      "targetPath": "Condition.onset[x]",
+      "description": "Cardinality changed: [1..1] -> [0..1]",
+      "severity": "INFO"
     },
     {
       "id": "rule-14",
-      "type": "CARDINALITY",
-      "sourcePath": "Condition.code.coding:icd10",
-      "targetPath": "Condition.code.coding:icd10",
-      "description": "code.coding:icd10 min cardinality strictly increased: source [0..1 mustSupport=true] → target [1..1 mustSupport=true]. ICD-10 coding is now mandatory in hemas.",
-      "severity": "ERROR"
-    },
-    {
-      "id": "rule-14b",
-      "type": "TERMINOLOGY",
-      "sourcePath": "Condition.code.coding:icd10",
-      "targetPath": "Condition.code.coding:icd10",
-      "description": "code.coding:icd10 pattern value changed: source uses iit-proj ICD-10 system pattern → target uses hemas ICD-10 system pattern (different system URIs for the same concept).",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-14c",
-      "type": "TERMINOLOGY",
-      "sourcePath": "Condition.code.coding:snomed",
-      "targetPath": "Condition.code.coding:snomed",
-      "description": "code.coding:snomed pattern value changed: source uses iit-proj SNOMED system pattern → target uses hemas SNOMED system pattern (different system URIs for the same concept).",
+      "type": "STRUCTURAL",
+      "sourcePath": "Condition.onset[x]",
+      "targetPath": "Condition.onset[x]",
+      "description": "Type changed: [Age, Period, dateTime] -> [Period, dateTime]",
       "severity": "WARNING"
     },
     {
       "id": "rule-15",
       "type": "STRUCTURAL",
-      "sourcePath": "Condition.code.coding:meddra",
-      "targetPath": "Condition.code.coding:meddra",
-      "description": "Source code.coding:meddra[0..1 mustSupport=true patternCoding(system=http://www.meddra.org)] slice removed in target. Hemas condition does not define a MedDRA coding slice.",
+      "sourcePath": "Condition.abatement[x]",
+      "targetPath": "Condition.abatement[x]",
+      "description": "Type changed: [Age, Period, dateTime] -> [Period, dateTime]",
       "severity": "WARNING"
     },
     {
       "id": "rule-16",
-      "type": "STRUCTURAL",
-      "sourcePath": "Condition.code.text",
-      "targetPath": "Condition.code.text",
-      "description": "New code.text[mustSupport=true] added in target. Source does not constrain code.text. Optional element in R4 base; MS added.",
+      "type": "CARDINALITY",
+      "sourcePath": "Condition.recorder",
+      "targetPath": "Condition.recorder",
+      "description": "Cardinality changed: [0..0] -> [0..1]",
       "severity": "INFO"
     },
     {
       "id": "rule-17",
-      "type": "TERMINOLOGY",
-      "sourcePath": "Condition.bodySite",
-      "targetPath": "Condition.bodySite",
-      "description": "New binding added on bodySite in target: extensible(http://hl7.org/fhir/ValueSet/body-site). Source has bodySite[mustSupport=true] with no binding. New binding added in target.",
-      "severity": "WARNING"
+      "type": "STRUCTURAL",
+      "sourcePath": "Condition.recorder",
+      "targetPath": "Condition.recorder",
+      "description": "MustSupport added in target",
+      "severity": "INFO"
     },
     {
       "id": "rule-18",
-      "type": "CARDINALITY",
-      "sourcePath": "Condition.encounter",
-      "targetPath": "Condition.encounter",
-      "description": "encounter min cardinality strictly increased: source [0..1 mustSupport=true] (R4 base min=0, no explicit min in source differential) → target [1..1 mustSupport=true]. Encounter is now mandatory in hemas condition.",
-      "severity": "ERROR"
-    },
-    {
-      "id": "rule-18b",
       "type": "STRUCTURAL",
-      "sourcePath": "Condition.encounter",
-      "targetPath": "Condition.encounter",
-      "description": "Reference target profile changed: source constrains encounter to [iit-proj/Encounter] → target constrains to [hemas/Encounter]. Both are mandatory MS references but pointing to different hospital profiles.",
-      "severity": "WARNING"
+      "sourcePath": "Condition.stage",
+      "targetPath": "Condition.stage",
+      "description": "MustSupport added in target",
+      "severity": "INFO"
     },
     {
       "id": "rule-19",
-      "type": "CARDINALITY",
-      "sourcePath": "Condition.onset[x]",
-      "targetPath": "Condition.onset[x]",
-      "description": "onset[x] cardinality relaxed: source [1..1 mustSupport=true] → target [0..1 mustSupport=true] (hemas no explicit min, inherits R4 base [0..1]). Min decreased.",
+      "type": "STRUCTURAL",
+      "sourcePath": "Condition.stage.summary",
+      "targetPath": "Condition.stage.summary",
+      "description": "MustSupport added in target",
       "severity": "INFO"
     },
     {
       "id": "rule-20",
-      "type": "STRUCTURAL",
-      "sourcePath": "Condition.onset[x]",
-      "targetPath": "Condition.onset[x]",
-      "description": "onset[x] types narrowed: source [dateTime, Age, Period] → target [dateTime, Period]. 'Age' type removed in hemas-condition.",
+      "type": "EXTENSION",
+      "sourcePath": "",
+      "targetPath": "Condition.extension:hospitalDepartment",
+      "description": "Extension added in target profile: Condition.extension:hospitalDepartment",
       "severity": "WARNING"
     },
     {
       "id": "rule-21",
-      "type": "STRUCTURAL",
-      "sourcePath": "Condition.abatement[x]",
-      "targetPath": "Condition.abatement[x]",
-      "description": "abatement[x] types narrowed: source [dateTime, Age, Period] → target [dateTime, Period]. 'Age' type removed in hemas-condition.",
+      "type": "EXTENSION",
+      "sourcePath": "",
+      "targetPath": "Condition.extension:icdBlock",
+      "description": "Extension added in target profile: Condition.extension:icdBlock",
       "severity": "WARNING"
     },
     {
       "id": "rule-22",
-      "type": "CARDINALITY",
-      "sourcePath": "Condition.recorder",
-      "targetPath": "Condition.recorder",
-      "description": "recorder ban lifted and MustSupport added: source [0..0] (completely banned) → target [0..1 mustSupport=true] (hemas no explicit min, inherits R4 base [0..1]). Ban removed; MS added on optional element.",
-      "severity": "INFO"
+      "type": "EXTENSION",
+      "sourcePath": "",
+      "targetPath": "Condition.extension:chronicity",
+      "description": "Extension added in target profile: Condition.extension:chronicity",
+      "severity": "WARNING"
     },
     {
       "id": "rule-23",
       "type": "STRUCTURAL",
-      "sourcePath": "Condition.stage",
-      "targetPath": "Condition.stage",
-      "description": "New stage[mustSupport=true] and stage.summary[mustSupport=true] added in target. Source does not constrain stage. Optional element in R4 base; MS added.",
+      "sourcePath": "",
+      "targetPath": "Condition.category:admissionDiagnosis",
+      "description": "New slice 'admissionDiagnosis' added in target profile",
       "severity": "INFO"
+    },
+    {
+      "id": "rule-24",
+      "type": "STRUCTURAL",
+      "sourcePath": "",
+      "targetPath": "Condition.category:dischargeDiagnosis",
+      "description": "New slice 'dischargeDiagnosis' added in target profile",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-25",
+      "type": "EXTENSION",
+      "sourcePath": "Condition.extension:studyRelevance",
+      "targetPath": "",
+      "description": "Extension removed in target profile: Condition.extension:studyRelevance (was mustSupport)",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-26",
+      "type": "EXTENSION",
+      "sourcePath": "Condition.extension:protocolCriterion",
+      "targetPath": "",
+      "description": "Extension removed in target profile: Condition.extension:protocolCriterion (was mustSupport)",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-27",
+      "type": "EXTENSION",
+      "sourcePath": "Condition.extension:adverseEventLink",
+      "targetPath": "",
+      "description": "Extension removed in target profile: Condition.extension:adverseEventLink (was mustSupport)",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-28",
+      "type": "STRUCTURAL",
+      "sourcePath": "Condition.category:inclusionCriteria",
+      "targetPath": "",
+      "description": "Slice 'inclusionCriteria' removed in target profile",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-29",
+      "type": "STRUCTURAL",
+      "sourcePath": "Condition.category:adverseEvent",
+      "targetPath": "",
+      "description": "Slice 'adverseEvent' removed in target profile",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-30",
+      "type": "STRUCTURAL",
+      "sourcePath": "Condition.category:comorbidity",
+      "targetPath": "",
+      "description": "Slice 'comorbidity' removed in target profile",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-31",
+      "type": "STRUCTURAL",
+      "sourcePath": "Condition.code.coding:meddra",
+      "targetPath": "",
+      "description": "Slice 'meddra' removed in target profile",
+      "severity": "WARNING"
     }
   ]
 }

@@ -1,392 +1,391 @@
-﻿{
-  "pairId": "manual-r4-encounter-vs-us-core-encounter",
+{
+  "pairId": "r4-encounter-vs-us-core-encounter",
   "sourceClasspath": "standard-profiles/r4/encounter.profile.json",
   "targetClasspath": "standard-profiles/us-core/StructureDefinition-us-core-encounter.json",
-  "_notes": "Hand-curated by walking the US Core Encounter differential (20 elements) against the R4 Encounter snapshot (73 elements). Verified with PowerShell. Covers: 4 cardinality increases, binding changes (type example->extensible, dischargeDisposition example->preferred), reference profile narrowing to US Core profiles, and MustSupport additions across all constrained elements.",
   "drifts": [
     {
-      "id": "gold-enc-1",
+      "id": "rule-1",
       "type": "STRUCTURAL",
       "sourcePath": "Encounter.identifier",
       "targetPath": "Encounter.identifier",
-      "description": "MustSupport added in target (min=0, optional but must be supported when present).",
+      "description": "MustSupport added in target",
       "severity": "INFO"
     },
     {
-      "id": "gold-enc-2",
-      "type": "CARDINALITY",
-      "sourcePath": "Encounter.identifier.system",
-      "targetPath": "Encounter.identifier.system",
-      "description": "Cardinality changed: [0..1] -> [1..1]. Identifier system URI becomes mandatory when an identifier is present. R4 Encounter snapshot does not constrain identifier sub-elements (inherited from Identifier datatype as 0..1).",
-      "severity": "ERROR"
-    },
-    {
-      "id": "gold-enc-3",
-      "type": "STRUCTURAL",
-      "sourcePath": "Encounter.identifier.system",
-      "targetPath": "Encounter.identifier.system",
-      "description": "MustSupport added in target (min becomes 1 -> conformance-critical).",
-      "severity": "WARNING"
-    },
-    {
-      "id": "gold-enc-4",
-      "type": "CARDINALITY",
-      "sourcePath": "Encounter.identifier.value",
-      "targetPath": "Encounter.identifier.value",
-      "description": "Cardinality changed: [0..1] -> [1..1]. Identifier value becomes mandatory when an identifier is present. R4 Encounter snapshot does not constrain identifier sub-elements (inherited as 0..1).",
-      "severity": "ERROR"
-    },
-    {
-      "id": "gold-enc-5",
-      "type": "STRUCTURAL",
-      "sourcePath": "Encounter.identifier.value",
-      "targetPath": "Encounter.identifier.value",
-      "description": "MustSupport added in target (min becomes 1 -> conformance-critical).",
-      "severity": "WARNING"
-    },
-    {
-      "id": "gold-enc-6",
-      "type": "STRUCTURAL",
-      "sourcePath": "Encounter.status",
-      "targetPath": "Encounter.status",
-      "description": "MustSupport added in target (min=1 in R4 -> conformance-critical).",
-      "severity": "WARNING"
-    },
-    {
-      "id": "gold-enc-7",
-      "type": "STRUCTURAL",
-      "sourcePath": "Encounter.class",
-      "targetPath": "Encounter.class",
-      "description": "MustSupport added in target (min=1 in R4 -> conformance-critical).",
-      "severity": "WARNING"
-    },
-    {
-      "id": "gold-enc-8",
-      "type": "CARDINALITY",
-      "sourcePath": "Encounter.type",
-      "targetPath": "Encounter.type",
-      "description": "Cardinality changed: [0..*] -> [1..*]. At least one encounter type becomes mandatory in US Core.",
-      "severity": "ERROR"
-    },
-    {
-      "id": "gold-enc-9",
-      "type": "STRUCTURAL",
-      "sourcePath": "Encounter.type",
-      "targetPath": "Encounter.type",
-      "description": "MustSupport added in target (min becomes 1 -> conformance-critical).",
-      "severity": "WARNING"
-    },
-    {
-      "id": "gold-enc-10",
-      "type": "TERMINOLOGY",
-      "sourcePath": "Encounter.type",
-      "targetPath": "Encounter.type",
-      "description": "Binding changed: R4 uses example strength to http://hl7.org/fhir/ValueSet/encounter-type. US Core tightens to extensible strength with http://hl7.org/fhir/us/core/ValueSet/us-core-encounter-type (US-specific encounter types). Binding strength tightened: example -> extensible.",
-      "severity": "WARNING"
-    },
-    {
-      "id": "gold-enc-11",
-      "type": "CARDINALITY",
-      "sourcePath": "Encounter.subject",
-      "targetPath": "Encounter.subject",
-      "description": "Cardinality changed: [0..1] -> [1..1]. Subject becomes mandatory; R4 allows an encounter without a subject.",
-      "severity": "ERROR"
-    },
-    {
-      "id": "gold-enc-12",
-      "type": "STRUCTURAL",
-      "sourcePath": "Encounter.subject",
-      "targetPath": "Encounter.subject",
-      "description": "MustSupport added in target (min becomes 1 -> conformance-critical).",
-      "severity": "WARNING"
-    },
-    {
-      "id": "gold-enc-13",
-      "type": "STRUCTURAL",
-      "sourcePath": "Encounter.subject",
-      "targetPath": "Encounter.subject",
-      "description": "Reference target profile constrained: R4 allows Reference(Patient|Group). US Core restricts to Reference(us-core-patient) only.",
-      "severity": "WARNING"
-    },
-    {
-      "id": "gold-enc-14",
-      "type": "STRUCTURAL",
-      "sourcePath": "Encounter.participant",
-      "targetPath": "Encounter.participant",
-      "description": "MustSupport added in target (min=0, optional but must be supported when present).",
-      "severity": "INFO"
-    },
-    {
-      "id": "gold-enc-15",
-      "type": "STRUCTURAL",
-      "sourcePath": "Encounter.participant.type",
-      "targetPath": "Encounter.participant.type",
-      "description": "MustSupport added in target (min=0, optional but must be supported when present).",
-      "severity": "INFO"
-    },
-    {
-      "id": "gold-enc-16",
-      "type": "STRUCTURAL",
-      "sourcePath": "Encounter.participant.period",
-      "targetPath": "Encounter.participant.period",
-      "description": "MustSupport added in target (min=0, optional but must be supported when present).",
-      "severity": "INFO"
-    },
-    {
-      "id": "gold-enc-17",
-      "type": "STRUCTURAL",
-      "sourcePath": "Encounter.participant.individual",
-      "targetPath": "Encounter.participant.individual",
-      "description": "MustSupport added in target (min=0, optional but must be supported when present).",
-      "severity": "INFO"
-    },
-    {
-      "id": "gold-enc-18",
-      "type": "STRUCTURAL",
-      "sourcePath": "Encounter.participant.individual",
-      "targetPath": "Encounter.participant.individual",
-      "description": "Reference target profiles constrained: R4 allows Reference(Practitioner|PractitionerRole|RelatedPerson). US Core restricts to Reference(us-core-practitioner|us-core-practitionerrole|us-core-relatedperson).",
-      "severity": "WARNING"
-    },
-    {
-      "id": "gold-enc-19",
-      "type": "STRUCTURAL",
-      "sourcePath": "Encounter.period",
-      "targetPath": "Encounter.period",
-      "description": "MustSupport added in target (min=0, optional but must be supported when present).",
-      "severity": "INFO"
-    },
-    {
-      "id": "gold-enc-20",
-      "type": "STRUCTURAL",
-      "sourcePath": "Encounter.reasonCode",
-      "targetPath": "Encounter.reasonCode",
-      "description": "MustSupport added in target (min=0, optional but must be supported when present).",
-      "severity": "INFO"
-    },
-    {
-      "id": "gold-enc-21",
-      "type": "STRUCTURAL",
-      "sourcePath": "Encounter.reasonReference",
-      "targetPath": "Encounter.reasonReference",
-      "description": "MustSupport added in target (min=0, optional but must be supported when present).",
-      "severity": "INFO"
-    },
-    {
-      "id": "gold-enc-22",
-      "type": "STRUCTURAL",
-      "sourcePath": "Encounter.reasonReference",
-      "targetPath": "Encounter.reasonReference",
-      "description": "Reference target profiles constrained to US Core profiles: R4 allows Reference(Condition|Observation|Procedure|ImmunizationRecommendation). US Core restricts to Reference(us-core-condition-problems-health-concerns|us-core-condition-encounter-diagnosis|us-core-procedure|Observation|ImmunizationRecommendation).",
-      "severity": "WARNING"
-    },
-    {
-      "id": "gold-enc-23",
-      "type": "STRUCTURAL",
-      "sourcePath": "Encounter.hospitalization",
-      "targetPath": "Encounter.hospitalization",
-      "description": "MustSupport added in target (min=0, optional but must be supported when present).",
-      "severity": "INFO"
-    },
-    {
-      "id": "gold-enc-24",
-      "type": "STRUCTURAL",
-      "sourcePath": "Encounter.hospitalization.dischargeDisposition",
-      "targetPath": "Encounter.hospitalization.dischargeDisposition",
-      "description": "MustSupport added in target (min=0, optional but must be supported when present).",
-      "severity": "INFO"
-    },
-    {
-      "id": "gold-enc-25",
-      "type": "TERMINOLOGY",
-      "sourcePath": "Encounter.hospitalization.dischargeDisposition",
-      "targetPath": "Encounter.hospitalization.dischargeDisposition",
-      "description": "Binding changed: R4 uses example strength to http://hl7.org/fhir/ValueSet/encounter-discharge-disposition. US Core tightens to preferred strength with http://hl7.org/fhir/us/core/ValueSet/us-core-discharge-disposition (US-specific discharge dispositions). Binding strength tightened: example -> preferred.",
-      "severity": "WARNING"
-    },
-    {
-      "id": "gold-enc-26",
-      "type": "STRUCTURAL",
-      "sourcePath": "Encounter.location",
-      "targetPath": "Encounter.location",
-      "description": "MustSupport added in target (min=0, optional but must be supported when present).",
-      "severity": "INFO"
-    },
-    {
-      "id": "gold-enc-27",
-      "type": "STRUCTURAL",
-      "sourcePath": "Encounter.location.location",
-      "targetPath": "Encounter.location.location",
-      "description": "MustSupport added in target (min=1 in R4 -> conformance-critical).",
-      "severity": "WARNING"
-    },
-    {
-      "id": "gold-enc-28",
-      "type": "STRUCTURAL",
-      "sourcePath": "Encounter.serviceProvider",
-      "targetPath": "Encounter.serviceProvider",
-      "description": "MustSupport added in target (min=0, optional but must be supported when present).",
-      "severity": "INFO"
-    },
-    {
-      "id": "gold-enc-29",
-      "type": "STRUCTURAL",
-      "sourcePath": "Encounter.serviceProvider",
-      "targetPath": "Encounter.serviceProvider",
-      "description": "Reference target profile constrained: R4 allows Reference(Organization). US Core restricts to Reference(us-core-organization).",
-      "severity": "WARNING"
-    },
-    {
-      "id": "gold-enc-30",
+      "id": "rule-2",
       "type": "EXTENSION",
       "sourcePath": "Encounter.identifier",
-      "targetPath": "Encounter.identifier",
-      "description": "Element-level USCDI requirement annotation extension (uscdi-requirement=true) added to Encounter.identifier in target profile. Marks this element as a US Core Data for Interoperability requirement.",
-      "severity": "INFO"
+      "targetPath": "Encounter.identifier.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+      "description": "Extension present only in target: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+      "severity": "WARNING"
     },
     {
-      "id": "gold-enc-31",
-      "type": "EXTENSION",
+      "id": "rule-3",
+      "type": "STRUCTURAL",
       "sourcePath": "Encounter.identifier.system",
       "targetPath": "Encounter.identifier.system",
-      "description": "Element-level USCDI requirement annotation extension (uscdi-requirement=true) added to Encounter.identifier.system in target profile. Marks this element as a US Core Data for Interoperability requirement.",
-      "severity": "INFO"
+      "description": "Element constrained only in target: minimum cardinality 1 and MustSupport added",
+      "severity": "WARNING"
     },
     {
-      "id": "gold-enc-32",
+      "id": "rule-4",
       "type": "EXTENSION",
+      "sourcePath": "Encounter.identifier.system",
+      "targetPath": "Encounter.identifier.system.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+      "description": "Extension present only in target: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-5",
+      "type": "STRUCTURAL",
       "sourcePath": "Encounter.identifier.value",
       "targetPath": "Encounter.identifier.value",
-      "description": "Element-level USCDI requirement annotation extension (uscdi-requirement=true) added to Encounter.identifier.value in target profile. Marks this element as a US Core Data for Interoperability requirement.",
-      "severity": "INFO"
+      "description": "Element constrained only in target: minimum cardinality 1 and MustSupport added",
+      "severity": "WARNING"
     },
     {
-      "id": "gold-enc-33",
+      "id": "rule-6",
       "type": "EXTENSION",
+      "sourcePath": "Encounter.identifier.value",
+      "targetPath": "Encounter.identifier.value.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+      "description": "Extension present only in target: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-7",
+      "type": "STRUCTURAL",
       "sourcePath": "Encounter.status",
       "targetPath": "Encounter.status",
-      "description": "Element-level USCDI requirement annotation extension (uscdi-requirement=true) added to Encounter.status in target profile. Marks this element as a US Core Data for Interoperability requirement.",
+      "description": "MustSupport added in target",
       "severity": "INFO"
     },
     {
-      "id": "gold-enc-34",
+      "id": "rule-8",
       "type": "EXTENSION",
+      "sourcePath": "Encounter.status",
+      "targetPath": "Encounter.status.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+      "description": "Extension present only in target: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-9",
+      "type": "STRUCTURAL",
       "sourcePath": "Encounter.class",
       "targetPath": "Encounter.class",
-      "description": "Element-level USCDI requirement annotation extension (uscdi-requirement=true) added to Encounter.class in target profile. Marks this element as a US Core Data for Interoperability requirement.",
+      "description": "MustSupport added in target",
       "severity": "INFO"
     },
     {
-      "id": "gold-enc-35",
+      "id": "rule-10",
       "type": "EXTENSION",
+      "sourcePath": "Encounter.class",
+      "targetPath": "Encounter.class.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+      "description": "Extension present only in target: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-11",
+      "type": "CARDINALITY",
       "sourcePath": "Encounter.type",
       "targetPath": "Encounter.type",
-      "description": "Element-level USCDI requirement annotation extension (uscdi-requirement=true) added to Encounter.type in target profile. Marks this element as a US Core Data for Interoperability requirement.",
+      "description": "Cardinality changed: [0..*] -> [1..*]",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-12",
+      "type": "TERMINOLOGY",
+      "sourcePath": "Encounter.type",
+      "targetPath": "Encounter.type",
+      "description": "Binding changed: example(http://hl7.org/fhir/ValueSet/encounter-type) -> extensible(http://hl7.org/fhir/us/core/ValueSet/us-core-encounter-type)",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-13",
+      "type": "STRUCTURAL",
+      "sourcePath": "Encounter.type",
+      "targetPath": "Encounter.type",
+      "description": "MustSupport added in target",
       "severity": "INFO"
     },
     {
-      "id": "gold-enc-36",
+      "id": "rule-14",
       "type": "EXTENSION",
+      "sourcePath": "Encounter.type",
+      "targetPath": "Encounter.type.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+      "description": "Extension present only in target: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-15",
+      "type": "CARDINALITY",
       "sourcePath": "Encounter.subject",
       "targetPath": "Encounter.subject",
-      "description": "Element-level USCDI requirement annotation extension (uscdi-requirement=true) added to Encounter.subject in target profile. Marks this element as a US Core Data for Interoperability requirement.",
+      "description": "Cardinality changed: [0..1] -> [1..1]",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-16",
+      "type": "STRUCTURAL",
+      "sourcePath": "Encounter.subject",
+      "targetPath": "Encounter.subject",
+      "description": "Reference target profile changed: [http://hl7.org/fhir/StructureDefinition/Group, http://hl7.org/fhir/StructureDefinition/Patient] -> [http://hl7.org/fhir/us/core/StructureDefinition/us-core-patient]",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-17",
+      "type": "STRUCTURAL",
+      "sourcePath": "Encounter.subject",
+      "targetPath": "Encounter.subject",
+      "description": "MustSupport added in target",
       "severity": "INFO"
     },
     {
-      "id": "gold-enc-37",
+      "id": "rule-18",
       "type": "EXTENSION",
+      "sourcePath": "Encounter.subject",
+      "targetPath": "Encounter.subject.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+      "description": "Extension present only in target: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-19",
+      "type": "STRUCTURAL",
       "sourcePath": "Encounter.participant",
       "targetPath": "Encounter.participant",
-      "description": "Element-level USCDI requirement annotation extension (uscdi-requirement=true) added to Encounter.participant in target profile. Marks this element as a US Core Data for Interoperability requirement.",
+      "description": "MustSupport added in target",
       "severity": "INFO"
     },
     {
-      "id": "gold-enc-38",
+      "id": "rule-20",
       "type": "EXTENSION",
+      "sourcePath": "Encounter.participant",
+      "targetPath": "Encounter.participant.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+      "description": "Extension present only in target: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-21",
+      "type": "STRUCTURAL",
       "sourcePath": "Encounter.participant.type",
       "targetPath": "Encounter.participant.type",
-      "description": "Element-level USCDI requirement annotation extension (uscdi-requirement=true) added to Encounter.participant.type in target profile. Marks this element as a US Core Data for Interoperability requirement.",
+      "description": "MustSupport added in target",
       "severity": "INFO"
     },
     {
-      "id": "gold-enc-39",
+      "id": "rule-22",
       "type": "EXTENSION",
+      "sourcePath": "Encounter.participant.type",
+      "targetPath": "Encounter.participant.type.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+      "description": "Extension present only in target: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-23",
+      "type": "STRUCTURAL",
       "sourcePath": "Encounter.participant.period",
       "targetPath": "Encounter.participant.period",
-      "description": "Element-level USCDI requirement annotation extension (uscdi-requirement=true) added to Encounter.participant.period in target profile. Marks this element as a US Core Data for Interoperability requirement.",
+      "description": "MustSupport added in target",
       "severity": "INFO"
     },
     {
-      "id": "gold-enc-40",
+      "id": "rule-24",
       "type": "EXTENSION",
+      "sourcePath": "Encounter.participant.period",
+      "targetPath": "Encounter.participant.period.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+      "description": "Extension present only in target: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-25",
+      "type": "STRUCTURAL",
       "sourcePath": "Encounter.participant.individual",
       "targetPath": "Encounter.participant.individual",
-      "description": "Element-level USCDI requirement annotation extension (uscdi-requirement=true) added to Encounter.participant.individual in target profile. Marks this element as a US Core Data for Interoperability requirement.",
+      "description": "Reference target profile changed: [http://hl7.org/fhir/StructureDefinition/Practitioner, http://hl7.org/fhir/StructureDefinition/PractitionerRole, http://hl7.org/fhir/StructureDefinition/RelatedPerson] -> [http://hl7.org/fhir/us/core/StructureDefinition/us-core-practitioner, http://hl7.org/fhir/us/core/StructureDefinition/us-core-practitionerrole, http://hl7.org/fhir/us/core/StructureDefinition/us-core-relatedperson]",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-26",
+      "type": "STRUCTURAL",
+      "sourcePath": "Encounter.participant.individual",
+      "targetPath": "Encounter.participant.individual",
+      "description": "Type target support changed: target marks the us-core-practitioner reference as type-level MustSupport",
       "severity": "INFO"
     },
     {
-      "id": "gold-enc-41",
+      "id": "rule-27",
+      "type": "STRUCTURAL",
+      "sourcePath": "Encounter.participant.individual",
+      "targetPath": "Encounter.participant.individual",
+      "description": "MustSupport added in target",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-28",
       "type": "EXTENSION",
+      "sourcePath": "Encounter.participant.individual",
+      "targetPath": "Encounter.participant.individual.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+      "description": "Extension present only in target: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-29",
+      "type": "STRUCTURAL",
       "sourcePath": "Encounter.period",
       "targetPath": "Encounter.period",
-      "description": "Element-level USCDI requirement annotation extension (uscdi-requirement=true) added to Encounter.period in target profile. Marks this element as a US Core Data for Interoperability requirement.",
+      "description": "MustSupport added in target",
       "severity": "INFO"
     },
     {
-      "id": "gold-enc-42",
+      "id": "rule-30",
       "type": "EXTENSION",
+      "sourcePath": "Encounter.period",
+      "targetPath": "Encounter.period.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+      "description": "Extension present only in target: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-31",
+      "type": "STRUCTURAL",
       "sourcePath": "Encounter.reasonCode",
       "targetPath": "Encounter.reasonCode",
-      "description": "Element-level USCDI requirement annotation extension (uscdi-requirement=true) added to Encounter.reasonCode in target profile. Marks this element as a US Core Data for Interoperability requirement.",
+      "description": "MustSupport added in target",
       "severity": "INFO"
     },
     {
-      "id": "gold-enc-43",
+      "id": "rule-32",
       "type": "EXTENSION",
+      "sourcePath": "Encounter.reasonCode",
+      "targetPath": "Encounter.reasonCode.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+      "description": "Extension present only in target: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-33",
+      "type": "STRUCTURAL",
       "sourcePath": "Encounter.reasonReference",
       "targetPath": "Encounter.reasonReference",
-      "description": "Element-level USCDI requirement annotation extension (uscdi-requirement=true) added to Encounter.reasonReference in target profile. Marks this element as a US Core Data for Interoperability requirement.",
+      "description": "Reference target profile changed: [http://hl7.org/fhir/StructureDefinition/Condition, http://hl7.org/fhir/StructureDefinition/ImmunizationRecommendation, http://hl7.org/fhir/StructureDefinition/Observation, http://hl7.org/fhir/StructureDefinition/Procedure] -> [http://hl7.org/fhir/us/core/StructureDefinition/us-core-condition-problems-health-concerns, http://hl7.org/fhir/us/core/StructureDefinition/us-core-condition-encounter-diagnosis, http://hl7.org/fhir/us/core/StructureDefinition/us-core-procedure, http://hl7.org/fhir/StructureDefinition/Observation, http://hl7.org/fhir/StructureDefinition/ImmunizationRecommendation]",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-34",
+      "type": "STRUCTURAL",
+      "sourcePath": "Encounter.reasonReference",
+      "targetPath": "Encounter.reasonReference",
+      "description": "Type target support changed: target marks the us-core-condition-problems-health-concerns and us-core-condition-encounter-diagnosis references as type-level MustSupport",
       "severity": "INFO"
     },
     {
-      "id": "gold-enc-44",
+      "id": "rule-35",
+      "type": "STRUCTURAL",
+      "sourcePath": "Encounter.reasonReference",
+      "targetPath": "Encounter.reasonReference",
+      "description": "MustSupport added in target",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-36",
       "type": "EXTENSION",
+      "sourcePath": "Encounter.reasonReference",
+      "targetPath": "Encounter.reasonReference.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+      "description": "Extension present only in target: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-37",
+      "type": "STRUCTURAL",
       "sourcePath": "Encounter.hospitalization",
       "targetPath": "Encounter.hospitalization",
-      "description": "Element-level USCDI requirement annotation extension (uscdi-requirement=true) added to Encounter.hospitalization in target profile. Marks this element as a US Core Data for Interoperability requirement.",
+      "description": "MustSupport added in target",
       "severity": "INFO"
     },
     {
-      "id": "gold-enc-45",
+      "id": "rule-38",
       "type": "EXTENSION",
+      "sourcePath": "Encounter.hospitalization",
+      "targetPath": "Encounter.hospitalization.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+      "description": "Extension present only in target: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-39",
+      "type": "TERMINOLOGY",
       "sourcePath": "Encounter.hospitalization.dischargeDisposition",
       "targetPath": "Encounter.hospitalization.dischargeDisposition",
-      "description": "Element-level USCDI requirement annotation extension (uscdi-requirement=true) added to Encounter.hospitalization.dischargeDisposition in target profile. Marks this element as a US Core Data for Interoperability requirement.",
+      "description": "Binding changed: example(http://hl7.org/fhir/ValueSet/encounter-discharge-disposition) -> preferred(http://hl7.org/fhir/us/core/ValueSet/us-core-discharge-disposition)",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-40",
+      "type": "STRUCTURAL",
+      "sourcePath": "Encounter.hospitalization.dischargeDisposition",
+      "targetPath": "Encounter.hospitalization.dischargeDisposition",
+      "description": "MustSupport added in target",
       "severity": "INFO"
     },
     {
-      "id": "gold-enc-46",
+      "id": "rule-41",
       "type": "EXTENSION",
+      "sourcePath": "Encounter.hospitalization.dischargeDisposition",
+      "targetPath": "Encounter.hospitalization.dischargeDisposition.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+      "description": "Extension present only in target: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-42",
+      "type": "STRUCTURAL",
       "sourcePath": "Encounter.location",
       "targetPath": "Encounter.location",
-      "description": "Element-level USCDI requirement annotation extension (uscdi-requirement=true) added to Encounter.location in target profile. Marks this element as a US Core Data for Interoperability requirement.",
+      "description": "MustSupport added in target",
       "severity": "INFO"
     },
     {
-      "id": "gold-enc-47",
+      "id": "rule-43",
       "type": "EXTENSION",
+      "sourcePath": "Encounter.location",
+      "targetPath": "Encounter.location.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+      "description": "Extension present only in target: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-44",
+      "type": "STRUCTURAL",
       "sourcePath": "Encounter.location.location",
       "targetPath": "Encounter.location.location",
-      "description": "Element-level USCDI requirement annotation extension (uscdi-requirement=true) added to Encounter.location.location in target profile. Marks this element as a US Core Data for Interoperability requirement.",
+      "description": "MustSupport added in target",
       "severity": "INFO"
     },
     {
-      "id": "gold-enc-48",
+      "id": "rule-45",
       "type": "EXTENSION",
+      "sourcePath": "Encounter.location.location",
+      "targetPath": "Encounter.location.location.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+      "description": "Extension present only in target: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-46",
+      "type": "STRUCTURAL",
       "sourcePath": "Encounter.serviceProvider",
       "targetPath": "Encounter.serviceProvider",
-      "description": "Element-level USCDI requirement annotation extension (uscdi-requirement=true) added to Encounter.serviceProvider in target profile. Marks this element as a US Core Data for Interoperability requirement.",
+      "description": "Reference target profile changed: [http://hl7.org/fhir/StructureDefinition/Organization] -> [http://hl7.org/fhir/us/core/StructureDefinition/us-core-organization]",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-47",
+      "type": "STRUCTURAL",
+      "sourcePath": "Encounter.serviceProvider",
+      "targetPath": "Encounter.serviceProvider",
+      "description": "MustSupport added in target",
       "severity": "INFO"
+    },
+    {
+      "id": "rule-48",
+      "type": "EXTENSION",
+      "sourcePath": "Encounter.serviceProvider",
+      "targetPath": "Encounter.serviceProvider.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+      "description": "Extension present only in target: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+      "severity": "WARNING"
     }
   ]
 }

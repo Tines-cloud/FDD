@@ -2,14 +2,13 @@
   "pairId": "tk-soft-patient-vs-r4-patient",
   "sourceClasspath": "custom-profiles/tk-soft/tk-soft-patient.json",
   "targetClasspath": "standard-profiles/r4/patient.profile.json",
-  "_notes": "Source: tk-soft-patient (constrained custom profile). Target: R4 base patient (unconstrained). Most drifts are relaxations: source enforces cardinalities and MustSupport that the R4 base does not. Custom extensions and slicing are removed in target.",
   "drifts": [
     {
       "id": "rule-1",
       "type": "STRUCTURAL",
       "sourcePath": "Patient",
       "targetPath": "Patient",
-      "description": "Source constraints removed: [tk-pat-1 (error: Patient must have at least a family name or a given name), tk-pat-2 (warning: Active patients should have at least one telecom)]. R4 base has no custom root constraints.",
+      "description": "Constraints removed in target: [tk-pat-1, tk-pat-2]",
       "severity": "WARNING"
     },
     {
@@ -17,288 +16,560 @@
       "type": "STRUCTURAL",
       "sourcePath": "Patient.extension",
       "targetPath": "Patient.extension",
-      "description": "Source extension slicing removed in target (R4 base has no extension slicing). Source defines slices: employeeId, preferredLanguage, ethnicGroup.",
+      "description": "Slicing changed: rules=open, discriminators=[value:url] -> none",
       "severity": "WARNING"
     },
     {
       "id": "rule-3",
-      "type": "EXTENSION",
-      "sourcePath": "Patient.extension:employeeId",
-      "targetPath": "Patient.extension:employeeId",
-      "description": "Extension employeeId[0..1 mustSupport=true] present in source is removed in target (R4 base does not define this extension).",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-4",
-      "type": "EXTENSION",
-      "sourcePath": "Patient.extension:preferredLanguage",
-      "targetPath": "Patient.extension:preferredLanguage",
-      "description": "Extension preferredLanguage[0..1 mustSupport=true] present in source is removed in target.",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-5",
-      "type": "EXTENSION",
-      "sourcePath": "Patient.extension:ethnicGroup",
-      "targetPath": "Patient.extension:ethnicGroup",
-      "description": "Extension ethnicGroup[0..1 mustSupport=false] present in source is removed in target.",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-6",
       "type": "CARDINALITY",
       "sourcePath": "Patient.identifier",
       "targetPath": "Patient.identifier",
-      "description": "identifier cardinality relaxed: source [1..* mustSupport=true] → target [0..* mustSupport=false]. Min decreased and MustSupport removed.",
+      "description": "Cardinality changed: [1..*] -> [0..*]",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-4",
+      "type": "STRUCTURAL",
+      "sourcePath": "Patient.identifier",
+      "targetPath": "Patient.identifier",
+      "description": "MustSupport removed in target",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-5",
+      "type": "STRUCTURAL",
+      "sourcePath": "Patient.identifier",
+      "targetPath": "Patient.identifier",
+      "description": "Slicing changed: rules=open, discriminators=[pattern:type] -> none",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-6",
+      "type": "STRUCTURAL",
+      "sourcePath": "Patient.active",
+      "targetPath": "Patient.active",
+      "description": "MustSupport removed in target",
       "severity": "INFO"
     },
     {
       "id": "rule-7",
-      "type": "STRUCTURAL",
-      "sourcePath": "Patient.identifier",
-      "targetPath": "Patient.identifier",
-      "description": "MustSupport removed on identifier (source mustSupport=true; R4 base mustSupport=false).",
+      "type": "CARDINALITY",
+      "sourcePath": "Patient.name",
+      "targetPath": "Patient.name",
+      "description": "Cardinality changed: [1..*] -> [0..*]",
       "severity": "INFO"
     },
     {
       "id": "rule-8",
       "type": "STRUCTURAL",
-      "sourcePath": "Patient.identifier",
-      "targetPath": "Patient.identifier",
-      "description": "Identifier slicing removed in target: source has named slices [mrn[1..1], national[0..1]]; R4 base has no identifier slicing.",
-      "severity": "WARNING"
+      "sourcePath": "Patient.name",
+      "targetPath": "Patient.name",
+      "description": "MustSupport removed in target",
+      "severity": "INFO"
     },
     {
       "id": "rule-9",
-      "type": "STRUCTURAL",
-      "sourcePath": "Patient.identifier:mrn",
-      "targetPath": "Patient.identifier:mrn",
-      "description": "Mandatory slice mrn[1..1 mustSupport=true] removed in target (R4 base has no named identifier slices).",
-      "severity": "WARNING"
+      "type": "CARDINALITY",
+      "sourcePath": "Patient.telecom",
+      "targetPath": "Patient.telecom",
+      "description": "Cardinality changed: [1..5] -> [0..*]",
+      "severity": "INFO"
     },
     {
       "id": "rule-10",
       "type": "STRUCTURAL",
-      "sourcePath": "Patient.identifier:national",
-      "targetPath": "Patient.identifier:national",
-      "description": "Optional slice national[0..1 mustSupport=true] removed in target.",
-      "severity": "WARNING"
+      "sourcePath": "Patient.telecom",
+      "targetPath": "Patient.telecom",
+      "description": "MustSupport removed in target",
+      "severity": "INFO"
     },
     {
       "id": "rule-11",
       "type": "CARDINALITY",
-      "sourcePath": "Patient.identifier:mrn.system",
-      "targetPath": "Patient.identifier.system",
-      "description": "identifier:mrn.system cardinality relaxed from [1..1 mustSupport=true] to [0..1 mustSupport=false] (R4 base, no slice constraint).",
+      "sourcePath": "Patient.gender",
+      "targetPath": "Patient.gender",
+      "description": "Cardinality changed: [1..1] -> [0..1]",
       "severity": "INFO"
     },
     {
       "id": "rule-12",
-      "type": "CARDINALITY",
-      "sourcePath": "Patient.identifier:mrn.value",
-      "targetPath": "Patient.identifier.value",
-      "description": "identifier:mrn.value cardinality relaxed from [1..1 mustSupport=true] to [0..1 mustSupport=false] (R4 base, no slice constraint).",
-      "severity": "INFO"
+      "type": "TERMINOLOGY",
+      "sourcePath": "Patient.gender",
+      "targetPath": "Patient.gender",
+      "description": "Binding changed: required(http://hl7.org/fhir/ValueSet/administrative-gender) -> required(http://hl7.org/fhir/ValueSet/administrative-gender|4.0.1)",
+      "severity": "ERROR"
     },
     {
       "id": "rule-13",
       "type": "STRUCTURAL",
-      "sourcePath": "Patient.active",
-      "targetPath": "Patient.active",
-      "description": "MustSupport removed on active (source mustSupport=true; R4 base mustSupport=false, both [0..1]).",
+      "sourcePath": "Patient.gender",
+      "targetPath": "Patient.gender",
+      "description": "MustSupport removed in target",
       "severity": "INFO"
     },
     {
       "id": "rule-14",
       "type": "CARDINALITY",
-      "sourcePath": "Patient.name",
-      "targetPath": "Patient.name",
-      "description": "name cardinality relaxed: source [1..*] → target [0..*]. Min decreased.",
+      "sourcePath": "Patient.birthDate",
+      "targetPath": "Patient.birthDate",
+      "description": "Cardinality changed: [1..1] -> [0..1]",
       "severity": "INFO"
     },
     {
       "id": "rule-15",
       "type": "STRUCTURAL",
-      "sourcePath": "Patient.name",
-      "targetPath": "Patient.name",
-      "description": "MustSupport removed on name (source mustSupport=true; R4 base mustSupport=false).",
+      "sourcePath": "Patient.birthDate",
+      "targetPath": "Patient.birthDate",
+      "description": "MustSupport removed in target",
       "severity": "INFO"
     },
     {
       "id": "rule-16",
       "type": "STRUCTURAL",
-      "sourcePath": "Patient.name",
-      "targetPath": "Patient.name",
-      "description": "MustSupport removed on name.family, name.given, and name.prefix (source mustSupport=true on all; R4 base does not constrain name sub-elements).",
+      "sourcePath": "Patient.deceased[x]",
+      "targetPath": "Patient.deceased[x]",
+      "description": "MustSupport removed in target",
       "severity": "INFO"
     },
     {
       "id": "rule-17",
-      "type": "CARDINALITY",
-      "sourcePath": "Patient.telecom",
-      "targetPath": "Patient.telecom",
-      "description": "telecom cardinality relaxed: source [1..5 mustSupport=true] → target [0..* mustSupport=false]. Min decreased and max cap removed.",
+      "type": "STRUCTURAL",
+      "sourcePath": "Patient.address",
+      "targetPath": "Patient.address",
+      "description": "MustSupport removed in target",
       "severity": "INFO"
     },
     {
       "id": "rule-18",
-      "type": "STRUCTURAL",
-      "sourcePath": "Patient.telecom",
-      "targetPath": "Patient.telecom",
-      "description": "MustSupport removed on telecom (source mustSupport=true; R4 base mustSupport=false).",
-      "severity": "INFO"
+      "type": "TERMINOLOGY",
+      "sourcePath": "Patient.maritalStatus",
+      "targetPath": "Patient.maritalStatus",
+      "description": "Binding changed: extensible(https://tk-soft.example.com/fhir/ValueSet/marital-status) -> extensible(http://hl7.org/fhir/ValueSet/marital-status)",
+      "severity": "WARNING"
     },
     {
       "id": "rule-19",
       "type": "CARDINALITY",
-      "sourcePath": "Patient.telecom",
-      "targetPath": "Patient.telecom",
-      "description": "telecom.system and telecom.value cardinality relaxed from [1..1 mustSupport=true] to [0..1 mustSupport=false] (R4 base has no telecom sub-element constraints).",
+      "sourcePath": "Patient.photo",
+      "targetPath": "Patient.photo",
+      "description": "Cardinality changed: [0..0] -> [0..*]",
       "severity": "INFO"
     },
     {
       "id": "rule-20",
-      "type": "STRUCTURAL",
-      "sourcePath": "Patient.telecom.use",
-      "targetPath": "Patient.telecom.use",
-      "description": "telecom.use MustSupport removed and required binding on contact-point-use removed (source mustSupport=true required; R4 base does not constrain telecom.use).",
-      "severity": "INFO"
+      "type": "EXTENSION",
+      "sourcePath": "Patient.contact",
+      "targetPath": "Patient.contact.extension(http://hl7.org/fhir/StructureDefinition/structuredefinition-explicit-type-name)",
+      "description": "Extension added in target element: http://hl7.org/fhir/StructureDefinition/structuredefinition-explicit-type-name",
+      "severity": "WARNING"
     },
     {
       "id": "rule-21",
-      "type": "CARDINALITY",
-      "sourcePath": "Patient.gender",
-      "targetPath": "Patient.gender",
-      "description": "gender cardinality relaxed: source [1..1 mustSupport=true] → target [0..1 mustSupport=false]. Min decreased and MustSupport removed.",
-      "severity": "INFO"
+      "type": "TERMINOLOGY",
+      "sourcePath": "Patient.contact.relationship",
+      "targetPath": "Patient.contact.relationship",
+      "description": "Binding changed: extensible(https://tk-soft.example.com/fhir/ValueSet/contact-relationship) -> extensible(http://hl7.org/fhir/ValueSet/patient-contactrelationship)",
+      "severity": "WARNING"
     },
     {
       "id": "rule-22",
       "type": "STRUCTURAL",
-      "sourcePath": "Patient.gender",
-      "targetPath": "Patient.gender",
-      "description": "MustSupport removed on gender (source mustSupport=true; R4 base mustSupport=false).",
+      "sourcePath": "Patient.contact.relationship",
+      "targetPath": "Patient.contact.relationship",
+      "description": "MustSupport removed in target",
       "severity": "INFO"
     },
     {
-      "id": "rule-22b",
-      "type": "TERMINOLOGY",
-      "sourcePath": "Patient.gender",
-      "targetPath": "Patient.gender",
-      "description": "Binding version pin added in target: Source uses required(http://hl7.org/fhir/ValueSet/administrative-gender) without version pin. R4 base uses required(http://hl7.org/fhir/ValueSet/administrative-gender|4.0.1) with explicit version pin.",
-      "severity": "WARNING"
-    },
-    {
       "id": "rule-23",
-      "type": "CARDINALITY",
-      "sourcePath": "Patient.birthDate",
-      "targetPath": "Patient.birthDate",
-      "description": "birthDate cardinality relaxed: source [1..1 mustSupport=true] → target [0..1 mustSupport=false]. Min decreased and MustSupport removed.",
+      "type": "STRUCTURAL",
+      "sourcePath": "Patient.contact.name",
+      "targetPath": "Patient.contact.name",
+      "description": "MustSupport removed in target",
       "severity": "INFO"
     },
     {
       "id": "rule-24",
       "type": "STRUCTURAL",
-      "sourcePath": "Patient.birthDate",
-      "targetPath": "Patient.birthDate",
-      "description": "MustSupport removed on birthDate (source mustSupport=true; R4 base mustSupport=false).",
+      "sourcePath": "Patient.contact.telecom",
+      "targetPath": "Patient.contact.telecom",
+      "description": "MustSupport removed in target",
       "severity": "INFO"
     },
     {
       "id": "rule-25",
-      "type": "STRUCTURAL",
-      "sourcePath": "Patient.deceased[x]",
-      "targetPath": "Patient.deceased[x]",
-      "description": "deceased[x] MustSupport removed (source mustSupport=true; R4 base mustSupport=false).",
-      "severity": "INFO"
+      "type": "TERMINOLOGY",
+      "sourcePath": "Patient.communication.language",
+      "targetPath": "Patient.communication.language",
+      "description": "Binding changed: extensible(https://tk-soft.example.com/fhir/ValueSet/languages) -> preferred(http://hl7.org/fhir/ValueSet/languages)",
+      "severity": "WARNING"
     },
     {
       "id": "rule-26",
       "type": "STRUCTURAL",
-      "sourcePath": "Patient.address",
-      "targetPath": "Patient.address",
-      "description": "MustSupport removed on address (source mustSupport=true; R4 base mustSupport=false).",
+      "sourcePath": "Patient.communication.language",
+      "targetPath": "Patient.communication.language",
+      "description": "MustSupport removed in target",
       "severity": "INFO"
     },
     {
       "id": "rule-27",
       "type": "STRUCTURAL",
-      "sourcePath": "Patient.address",
-      "targetPath": "Patient.address",
-      "description": "MustSupport removed on address.line, address.city, address.state, address.postalCode, and address.country (source mustSupport=true on all; R4 base does not constrain address sub-elements).",
-      "severity": "INFO"
+      "sourcePath": "Patient.generalPractitioner",
+      "targetPath": "Patient.generalPractitioner",
+      "description": "Reference target profile changed: [https://tk-soft.example.com/fhir/StructureDefinition/Practitioner] -> [http://hl7.org/fhir/StructureDefinition/Organization, http://hl7.org/fhir/StructureDefinition/Practitioner, http://hl7.org/fhir/StructureDefinition/PractitionerRole]",
+      "severity": "WARNING"
     },
     {
       "id": "rule-28",
-      "type": "TERMINOLOGY",
-      "sourcePath": "Patient.maritalStatus",
-      "targetPath": "Patient.maritalStatus",
-      "description": "maritalStatus binding changed: source extensible(https://tk-soft.example.com/fhir/ValueSet/marital-status) → target extensible(http://hl7.org/fhir/ValueSet/marital-status). Different value sets, same strength.",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-29",
-      "type": "CARDINALITY",
-      "sourcePath": "Patient.photo",
-      "targetPath": "Patient.photo",
-      "description": "photo cardinality relaxed: source [0..0] → target [0..*]. Ban removed in R4 base.",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-30",
-      "type": "TERMINOLOGY",
-      "sourcePath": "Patient.contact.relationship",
-      "targetPath": "Patient.contact.relationship",
-      "description": "contact.relationship binding changed: source extensible(https://tk-soft.example.com/fhir/ValueSet/contact-relationship) → target extensible(http://hl7.org/fhir/ValueSet/patient-contactrelationship). Different value sets, same strength.",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-31",
-      "type": "STRUCTURAL",
-      "sourcePath": "Patient.contact",
-      "targetPath": "Patient.contact",
-      "description": "MustSupport removed on contact.relationship, contact.name, and contact.telecom (source mustSupport=true; R4 base does not constrain contact sub-elements).",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-32",
-      "type": "TERMINOLOGY",
-      "sourcePath": "Patient.communication.language",
-      "targetPath": "Patient.communication.language",
-      "description": "communication.language binding changed: source extensible(https://tk-soft.example.com/fhir/ValueSet/languages) → target preferred(http://hl7.org/fhir/ValueSet/languages). Different value set and strength weakened from extensible to preferred.",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-33",
       "type": "STRUCTURAL",
       "sourcePath": "Patient.generalPractitioner",
       "targetPath": "Patient.generalPractitioner",
-      "description": "MustSupport removed on generalPractitioner (source mustSupport=true; R4 base mustSupport=false).",
+      "description": "MustSupport removed in target",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-29",
+      "type": "STRUCTURAL",
+      "sourcePath": "Patient.managingOrganization",
+      "targetPath": "Patient.managingOrganization",
+      "description": "Reference target profile changed: [https://tk-soft.example.com/fhir/StructureDefinition/Organization] -> [http://hl7.org/fhir/StructureDefinition/Organization]",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-30",
+      "type": "STRUCTURAL",
+      "sourcePath": "Patient.managingOrganization",
+      "targetPath": "Patient.managingOrganization",
+      "description": "MustSupport removed in target",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-31",
+      "type": "EXTENSION",
+      "sourcePath": "Patient.extension:employeeId",
+      "targetPath": "",
+      "description": "Extension removed in target profile: Patient.extension:employeeId (was mustSupport)",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-32",
+      "type": "EXTENSION",
+      "sourcePath": "Patient.extension:preferredLanguage",
+      "targetPath": "",
+      "description": "Extension removed in target profile: Patient.extension:preferredLanguage (was mustSupport)",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-33",
+      "type": "EXTENSION",
+      "sourcePath": "Patient.extension:ethnicGroup",
+      "targetPath": "",
+      "description": "Extension removed in target profile: Patient.extension:ethnicGroup",
       "severity": "INFO"
     },
     {
       "id": "rule-34",
       "type": "STRUCTURAL",
-      "sourcePath": "Patient.generalPractitioner",
-      "targetPath": "Patient.generalPractitioner",
-      "description": "Reference target removed: source constrains to tk-soft/Practitioner; R4 base has no target profile constraint on generalPractitioner.",
+      "sourcePath": "Patient.identifier:mrn",
+      "targetPath": "",
+      "description": "Slice 'mrn' removed in target profile",
       "severity": "WARNING"
     },
     {
       "id": "rule-35",
       "type": "STRUCTURAL",
-      "sourcePath": "Patient.managingOrganization",
-      "targetPath": "Patient.managingOrganization",
-      "description": "MustSupport removed on managingOrganization (source mustSupport=true; R4 base mustSupport=false).",
+      "sourcePath": "Patient.identifier.id",
+      "targetPath": "",
+      "description": "Element removed in target profile: Patient.identifier.id",
       "severity": "INFO"
     },
     {
       "id": "rule-36",
       "type": "STRUCTURAL",
-      "sourcePath": "Patient.managingOrganization",
-      "targetPath": "Patient.managingOrganization",
-      "description": "Reference target removed: source constrains to tk-soft/Organization; R4 base has no target profile constraint on managingOrganization.",
+      "sourcePath": "Patient.identifier.extension",
+      "targetPath": "",
+      "description": "Element removed in target profile: Patient.identifier.extension",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-37",
+      "type": "STRUCTURAL",
+      "sourcePath": "Patient.identifier.use",
+      "targetPath": "",
+      "description": "Element removed in target profile: Patient.identifier.use",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-38",
+      "type": "STRUCTURAL",
+      "sourcePath": "Patient.identifier.type",
+      "targetPath": "",
+      "description": "Element removed in target profile: Patient.identifier.type",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-39",
+      "type": "STRUCTURAL",
+      "sourcePath": "Patient.identifier.system",
+      "targetPath": "",
+      "description": "Element removed in target profile: Patient.identifier.system (was required)",
       "severity": "WARNING"
+    },
+    {
+      "id": "rule-40",
+      "type": "STRUCTURAL",
+      "sourcePath": "Patient.identifier.value",
+      "targetPath": "",
+      "description": "Element removed in target profile: Patient.identifier.value (was required)",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-41",
+      "type": "STRUCTURAL",
+      "sourcePath": "Patient.identifier.period",
+      "targetPath": "",
+      "description": "Element removed in target profile: Patient.identifier.period",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-42",
+      "type": "STRUCTURAL",
+      "sourcePath": "Patient.identifier.assigner",
+      "targetPath": "",
+      "description": "Element removed in target profile: Patient.identifier.assigner",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-43",
+      "type": "STRUCTURAL",
+      "sourcePath": "Patient.identifier:national",
+      "targetPath": "",
+      "description": "Slice 'national' removed in target profile",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-44",
+      "type": "STRUCTURAL",
+      "sourcePath": "Patient.name.id",
+      "targetPath": "",
+      "description": "Element removed in target profile: Patient.name.id",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-45",
+      "type": "STRUCTURAL",
+      "sourcePath": "Patient.name.extension",
+      "targetPath": "",
+      "description": "Element removed in target profile: Patient.name.extension",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-46",
+      "type": "STRUCTURAL",
+      "sourcePath": "Patient.name.use",
+      "targetPath": "",
+      "description": "Element removed in target profile: Patient.name.use",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-47",
+      "type": "STRUCTURAL",
+      "sourcePath": "Patient.name.text",
+      "targetPath": "",
+      "description": "Element removed in target profile: Patient.name.text",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-48",
+      "type": "STRUCTURAL",
+      "sourcePath": "Patient.name.family",
+      "targetPath": "",
+      "description": "Element removed in target profile: Patient.name.family (was mustSupport)",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-49",
+      "type": "STRUCTURAL",
+      "sourcePath": "Patient.name.given",
+      "targetPath": "",
+      "description": "Element removed in target profile: Patient.name.given (was mustSupport)",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-50",
+      "type": "STRUCTURAL",
+      "sourcePath": "Patient.name.prefix",
+      "targetPath": "",
+      "description": "Element removed in target profile: Patient.name.prefix (was mustSupport)",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-51",
+      "type": "STRUCTURAL",
+      "sourcePath": "Patient.name.suffix",
+      "targetPath": "",
+      "description": "Element removed in target profile: Patient.name.suffix",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-52",
+      "type": "STRUCTURAL",
+      "sourcePath": "Patient.name.period",
+      "targetPath": "",
+      "description": "Element removed in target profile: Patient.name.period",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-53",
+      "type": "STRUCTURAL",
+      "sourcePath": "Patient.telecom.id",
+      "targetPath": "",
+      "description": "Element removed in target profile: Patient.telecom.id",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-54",
+      "type": "STRUCTURAL",
+      "sourcePath": "Patient.telecom.extension",
+      "targetPath": "",
+      "description": "Element removed in target profile: Patient.telecom.extension",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-55",
+      "type": "STRUCTURAL",
+      "sourcePath": "Patient.telecom.system",
+      "targetPath": "",
+      "description": "Element removed in target profile: Patient.telecom.system (was required)",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-56",
+      "type": "STRUCTURAL",
+      "sourcePath": "Patient.telecom.value",
+      "targetPath": "",
+      "description": "Element removed in target profile: Patient.telecom.value (was required)",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-57",
+      "type": "STRUCTURAL",
+      "sourcePath": "Patient.telecom.use",
+      "targetPath": "",
+      "description": "Element removed in target profile: Patient.telecom.use (was mustSupport)",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-58",
+      "type": "STRUCTURAL",
+      "sourcePath": "Patient.telecom.rank",
+      "targetPath": "",
+      "description": "Element removed in target profile: Patient.telecom.rank",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-59",
+      "type": "STRUCTURAL",
+      "sourcePath": "Patient.telecom.period",
+      "targetPath": "",
+      "description": "Element removed in target profile: Patient.telecom.period",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-60",
+      "type": "STRUCTURAL",
+      "sourcePath": "Patient.address.id",
+      "targetPath": "",
+      "description": "Element removed in target profile: Patient.address.id",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-61",
+      "type": "STRUCTURAL",
+      "sourcePath": "Patient.address.extension",
+      "targetPath": "",
+      "description": "Element removed in target profile: Patient.address.extension",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-62",
+      "type": "STRUCTURAL",
+      "sourcePath": "Patient.address.use",
+      "targetPath": "",
+      "description": "Element removed in target profile: Patient.address.use",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-63",
+      "type": "STRUCTURAL",
+      "sourcePath": "Patient.address.type",
+      "targetPath": "",
+      "description": "Element removed in target profile: Patient.address.type",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-64",
+      "type": "STRUCTURAL",
+      "sourcePath": "Patient.address.text",
+      "targetPath": "",
+      "description": "Element removed in target profile: Patient.address.text",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-65",
+      "type": "STRUCTURAL",
+      "sourcePath": "Patient.address.line",
+      "targetPath": "",
+      "description": "Element removed in target profile: Patient.address.line (was mustSupport)",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-66",
+      "type": "STRUCTURAL",
+      "sourcePath": "Patient.address.city",
+      "targetPath": "",
+      "description": "Element removed in target profile: Patient.address.city (was mustSupport)",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-67",
+      "type": "STRUCTURAL",
+      "sourcePath": "Patient.address.district",
+      "targetPath": "",
+      "description": "Element removed in target profile: Patient.address.district",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-68",
+      "type": "STRUCTURAL",
+      "sourcePath": "Patient.address.state",
+      "targetPath": "",
+      "description": "Element removed in target profile: Patient.address.state (was mustSupport)",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-69",
+      "type": "STRUCTURAL",
+      "sourcePath": "Patient.address.postalCode",
+      "targetPath": "",
+      "description": "Element removed in target profile: Patient.address.postalCode (was mustSupport)",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-70",
+      "type": "STRUCTURAL",
+      "sourcePath": "Patient.address.country",
+      "targetPath": "",
+      "description": "Element removed in target profile: Patient.address.country (was mustSupport)",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-71",
+      "type": "STRUCTURAL",
+      "sourcePath": "Patient.address.period",
+      "targetPath": "",
+      "description": "Element removed in target profile: Patient.address.period",
+      "severity": "INFO"
     }
   ]
 }

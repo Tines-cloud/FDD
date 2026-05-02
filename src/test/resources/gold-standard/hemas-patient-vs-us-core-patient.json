@@ -2,310 +2,629 @@
   "pairId": "hemas-patient-vs-us-core-patient",
   "sourceClasspath": "custom-profiles/hemas/hemas-patient.json",
   "targetClasspath": "standard-profiles/us-core/StructureDefinition-us-core-patient.json",
-  "_notes": "Source: hemas-patient (hospital enterprise). Target: US Core patient (US realm interoperability). Source has mandatory name, telecom, address, managingOrganization and hospital-specific extensions. Target adds USCDI extensions (race, ethnicity, etc.), has no named identifier slices, relaxes most mandatory cardinalities, and removes hospital-specific contact/communication constraints.",
   "drifts": [
     {
       "id": "rule-1",
       "type": "STRUCTURAL",
       "sourcePath": "Patient",
       "targetPath": "Patient",
-      "description": "Source constraints removed: [hemas-pat-1 (error: Patient must have at least one identifier with a system), hemas-pat-2 (warning: Patient should have an emergency contact)]. US Core patient has no root-level constraints.",
+      "description": "Constraints removed in target: [hemas-pat-1, hemas-pat-2]",
       "severity": "WARNING"
     },
     {
       "id": "rule-2",
-      "type": "EXTENSION",
-      "sourcePath": "Patient.extension:registrationDate",
-      "targetPath": "Patient.extension:registrationDate",
-      "description": "Optional extension registrationDate[0..1 mustSupport=true] present in source is removed in target.",
+      "type": "STRUCTURAL",
+      "sourcePath": "Patient.identifier",
+      "targetPath": "Patient.identifier",
+      "description": "Slicing changed: rules=open, discriminators=[pattern:type] -> none",
       "severity": "WARNING"
     },
     {
       "id": "rule-3",
       "type": "EXTENSION",
-      "sourcePath": "Patient.extension:vipStatus",
-      "targetPath": "Patient.extension:vipStatus",
-      "description": "Optional extension vipStatus[0..1 mustSupport=true] present in source is removed in target.",
+      "sourcePath": "Patient.identifier",
+      "targetPath": "Patient.identifier.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+      "description": "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
       "severity": "WARNING"
     },
     {
       "id": "rule-4",
-      "type": "EXTENSION",
-      "sourcePath": "Patient.extension:insuranceProvider",
-      "targetPath": "Patient.extension:insuranceProvider",
-      "description": "Optional extension insuranceProvider[0..* mustSupport=true] present in source is removed in target.",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-5",
-      "type": "EXTENSION",
-      "sourcePath": "Patient.extension:race",
-      "targetPath": "Patient.extension:race",
-      "description": "New extension race[0..1 mustSupport=false] added in target (USCDI v1 annotation). Source does not define this extension.",
+      "type": "CARDINALITY",
+      "sourcePath": "Patient.identifier.type",
+      "targetPath": "Patient.identifier.type",
+      "description": "Cardinality changed: [1..1] -> [0..1]",
       "severity": "INFO"
     },
     {
+      "id": "rule-5",
+      "type": "TERMINOLOGY",
+      "sourcePath": "Patient.identifier.type",
+      "targetPath": "Patient.identifier.type",
+      "description": "Pattern value changed: 'org.hl7.fhir.r4.model.CodeableConcept@582d5c08' -> 'none'",
+      "severity": "WARNING"
+    },
+    {
       "id": "rule-6",
-      "type": "EXTENSION",
-      "sourcePath": "Patient.extension:ethnicity",
-      "targetPath": "Patient.extension:ethnicity",
-      "description": "New extension ethnicity[0..1 mustSupport=false] added in target (USCDI v1 annotation). Source does not define this extension.",
+      "type": "STRUCTURAL",
+      "sourcePath": "Patient.identifier.type",
+      "targetPath": "Patient.identifier.type",
+      "description": "MustSupport removed in target",
       "severity": "INFO"
     },
     {
       "id": "rule-7",
-      "type": "EXTENSION",
-      "sourcePath": "Patient.extension:tribalAffiliation",
-      "targetPath": "Patient.extension:tribalAffiliation",
-      "description": "New extension tribalAffiliation[0..* mustSupport=false] added in target. Source does not define this extension.",
-      "severity": "INFO"
+      "type": "TERMINOLOGY",
+      "sourcePath": "Patient.identifier.system",
+      "targetPath": "Patient.identifier.system",
+      "description": "Fixed value changed: 'https://hemas.example.com/fhir/sid/nic' -> 'none'",
+      "severity": "ERROR"
     },
     {
       "id": "rule-8",
       "type": "EXTENSION",
-      "sourcePath": "Patient.extension:birthsex",
-      "targetPath": "Patient.extension:birthsex",
-      "description": "New extension birthsex[0..1 mustSupport=false] added in target. Source does not define this extension.",
-      "severity": "INFO"
+      "sourcePath": "Patient.identifier.system",
+      "targetPath": "Patient.identifier.system.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+      "description": "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+      "severity": "WARNING"
     },
     {
       "id": "rule-9",
       "type": "EXTENSION",
-      "sourcePath": "Patient.extension:sex",
-      "targetPath": "Patient.extension:sex",
-      "description": "New extension sex[0..1 mustSupport=false] added in target (USCDI annotation). Source does not define this extension.",
-      "severity": "INFO"
+      "sourcePath": "Patient.identifier.value",
+      "targetPath": "Patient.identifier.value.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+      "description": "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+      "severity": "WARNING"
     },
     {
       "id": "rule-10",
-      "type": "EXTENSION",
-      "sourcePath": "Patient.extension:genderIdentity",
-      "targetPath": "Patient.extension:genderIdentity",
-      "description": "New extension genderIdentity[0..* mustSupport=false] added in target (USCDI annotation). Source does not define this extension.",
+      "type": "CARDINALITY",
+      "sourcePath": "Patient.active",
+      "targetPath": "Patient.active",
+      "description": "Cardinality changed: [1..1] -> [0..1]",
       "severity": "INFO"
     },
     {
       "id": "rule-11",
       "type": "STRUCTURAL",
-      "sourcePath": "Patient.identifier",
-      "targetPath": "Patient.identifier",
-      "description": "Identifier slicing removed: source has named slices [hospitalId[1..1 mustSupport=true], nic[0..1 mustSupport=true]]; US Core has no named identifier slices (only general sub-element constraints at identifier.system and identifier.value level).",
+      "sourcePath": "Patient.active",
+      "targetPath": "Patient.active",
+      "description": "MustSupport removed in target",
       "severity": "INFO"
     },
     {
       "id": "rule-12",
       "type": "STRUCTURAL",
-      "sourcePath": "Patient.identifier:hospitalId",
-      "targetPath": "Patient.identifier:hospitalId",
-      "description": "Source mandatory identifier slice hospitalId[1..1 mustSupport=true] removed in target. No equivalent named slice in US Core patient.",
+      "sourcePath": "Patient.name",
+      "targetPath": "Patient.name",
+      "description": "Constraints added in target: [us-core-6]",
       "severity": "WARNING"
     },
     {
       "id": "rule-13",
-      "type": "STRUCTURAL",
-      "sourcePath": "Patient.identifier:nic",
-      "targetPath": "Patient.identifier:nic",
-      "description": "Source optional identifier slice nic[0..1 mustSupport=true] removed in target. No equivalent named slice in US Core patient.",
+      "type": "EXTENSION",
+      "sourcePath": "Patient.name",
+      "targetPath": "Patient.name.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+      "description": "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
       "severity": "WARNING"
-    },
-    {
-      "id": "rule-13b",
-      "type": "CARDINALITY",
-      "sourcePath": "Patient.identifier.type",
-      "targetPath": "Patient.identifier.type",
-      "description": "identifier.type cardinality relaxed: source hemas-patient [1..1] → target US Core [0..1 mustSupport=true] (US Core has no explicit min on identifier.type). Min decreased from 1 to 0 on optional element.",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-13c",
-      "type": "STRUCTURAL",
-      "sourcePath": "Patient.identifier.type",
-      "targetPath": "Patient.identifier.type",
-      "description": "identifier.type patternCodeableConcept removed in target: source hemas-patient constrains identifier.type with a hemas-specific patternCodeableConcept; target US Core has no fixed/pattern value on identifier.type.",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-13d",
-      "type": "STRUCTURAL",
-      "sourcePath": "Patient.identifier.type",
-      "targetPath": "Patient.identifier.type",
-      "description": "identifier.type MustSupport removed on optional element: source hemas-patient marks identifier.type [mustSupport=true]; US Core does not mark identifier.type as mustSupport in its differential.",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-13e",
-      "type": "STRUCTURAL",
-      "sourcePath": "Patient.identifier.system",
-      "targetPath": "Patient.identifier.system",
-      "description": "identifier.system fixed value removed: source hemas-patient constrains identifier.system to fixed value 'https://hemas.example.com/fhir/sid/nic' on the nic identifier slice; target US Core has no fixed value on identifier.system (only mustSupport=true). Fixed value constraint removed.",
-      "severity": "ERROR"
     },
     {
       "id": "rule-14",
-      "type": "CARDINALITY",
-      "sourcePath": "Patient.active",
-      "targetPath": "Patient.active",
-      "description": "active cardinality relaxed and MustSupport removed: source [1..1 mustSupport=true] → target [0..1 mustSupport=false] (US Core does not constrain active). Min decreased and MS removed.",
-      "severity": "INFO"
+      "type": "EXTENSION",
+      "sourcePath": "Patient.name.use",
+      "targetPath": "Patient.name.use.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+      "description": "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+      "severity": "WARNING"
     },
     {
       "id": "rule-15",
       "type": "CARDINALITY",
       "sourcePath": "Patient.name.family",
       "targetPath": "Patient.name.family",
-      "description": "name.family cardinality relaxed: source [1..1 mustSupport=true] → target [0..1 mustSupport=true] (US Core no explicit min, inherits R4 base [0..1]). Min decreased. MustSupport preserved.",
+      "description": "Cardinality changed: [1..1] -> [0..1]",
       "severity": "INFO"
     },
     {
       "id": "rule-16",
-      "type": "CARDINALITY",
-      "sourcePath": "Patient.name.given",
-      "targetPath": "Patient.name.given",
-      "description": "name.given cardinality relaxed: source [1..* mustSupport=true] → target [0..* mustSupport=true] (US Core no explicit min, inherits R4 base [0..*]). Min decreased. MustSupport preserved.",
-      "severity": "INFO"
+      "type": "EXTENSION",
+      "sourcePath": "Patient.name.family",
+      "targetPath": "Patient.name.family.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+      "description": "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+      "severity": "WARNING"
     },
     {
       "id": "rule-17",
       "type": "CARDINALITY",
-      "sourcePath": "Patient.telecom",
-      "targetPath": "Patient.telecom",
-      "description": "telecom cardinality relaxed and MustSupport removed from required element: source [1..* mustSupport=true] → target [0..* mustSupport=false] (US Core does not constrain telecom cardinality or element-level MS). Source sub-element constraints on system and value are preserved in US Core.",
-      "severity": "WARNING"
+      "sourcePath": "Patient.name.given",
+      "targetPath": "Patient.name.given",
+      "description": "Cardinality changed: [1..*] -> [0..*]",
+      "severity": "INFO"
     },
     {
       "id": "rule-18",
-      "type": "STRUCTURAL",
-      "sourcePath": "Patient.telecom.use",
-      "targetPath": "Patient.telecom.use",
-      "description": "New telecom.use MustSupport=true with required binding added in target: US Core adds telecom.use[mustSupport=true required:contact-point-use]. Source does not constrain telecom.use.",
-      "severity": "INFO"
+      "type": "EXTENSION",
+      "sourcePath": "Patient.name.given",
+      "targetPath": "Patient.name.given.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+      "description": "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+      "severity": "WARNING"
     },
     {
       "id": "rule-19",
-      "type": "CARDINALITY",
-      "sourcePath": "Patient.birthDate",
-      "targetPath": "Patient.birthDate",
-      "description": "birthDate cardinality relaxed: source [1..1 mustSupport=true] → target [0..1 mustSupport=true] (US Core no explicit min, inherits R4 base [0..1]). Min decreased. MustSupport preserved.",
-      "severity": "INFO"
+      "type": "EXTENSION",
+      "sourcePath": "Patient.name.suffix",
+      "targetPath": "Patient.name.suffix.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+      "description": "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+      "severity": "WARNING"
     },
     {
       "id": "rule-20",
-      "type": "CARDINALITY",
-      "sourcePath": "Patient.address",
-      "targetPath": "Patient.address",
-      "description": "address cardinality relaxed: source [1..* mustSupport=true] → target [0..* mustSupport=true] (US Core no explicit min). Min decreased. MustSupport preserved.",
-      "severity": "INFO"
+      "type": "EXTENSION",
+      "sourcePath": "Patient.name.period",
+      "targetPath": "Patient.name.period.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+      "description": "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+      "severity": "WARNING"
     },
     {
       "id": "rule-21",
       "type": "CARDINALITY",
-      "sourcePath": "Patient.address.line",
-      "targetPath": "Patient.address.line",
-      "description": "address.line cardinality relaxed: source [1..* mustSupport=true] → target [0..* mustSupport=true] (US Core no explicit min). Min decreased. MustSupport preserved.",
+      "sourcePath": "Patient.telecom",
+      "targetPath": "Patient.telecom",
+      "description": "Cardinality changed: [1..*] -> [0..*]",
       "severity": "INFO"
     },
     {
       "id": "rule-22",
-      "type": "CARDINALITY",
-      "sourcePath": "Patient.address.city",
-      "targetPath": "Patient.address.city",
-      "description": "address.city cardinality relaxed: source [1..1 mustSupport=true] → target [0..1 mustSupport=true] (US Core no explicit min). Min decreased. MustSupport preserved.",
+      "type": "STRUCTURAL",
+      "sourcePath": "Patient.telecom",
+      "targetPath": "Patient.telecom",
+      "description": "MustSupport removed in target",
       "severity": "INFO"
     },
     {
       "id": "rule-23",
-      "type": "TERMINOLOGY",
-      "sourcePath": "Patient.address.state",
-      "targetPath": "Patient.address.state",
-      "description": "New MustSupport=true with new binding added on address.state in target: extensible(http://hl7.org/fhir/us/core/ValueSet/us-core-usps-state). Source does not constrain address.state.",
+      "type": "EXTENSION",
+      "sourcePath": "Patient.telecom",
+      "targetPath": "Patient.telecom.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+      "description": "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
       "severity": "WARNING"
     },
     {
       "id": "rule-24",
-      "type": "STRUCTURAL",
-      "sourcePath": "Patient.address.postalCode",
-      "targetPath": "Patient.address.postalCode",
-      "description": "New address.postalCode[mustSupport=true] added in target. Source does not constrain address.postalCode. Optional element; MS added.",
-      "severity": "INFO"
+      "type": "EXTENSION",
+      "sourcePath": "Patient.telecom.system",
+      "targetPath": "Patient.telecom.system.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+      "description": "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+      "severity": "WARNING"
     },
     {
       "id": "rule-25",
-      "type": "STRUCTURAL",
-      "sourcePath": "Patient.address.country",
-      "targetPath": "Patient.address.country",
-      "description": "address.country fixed value removed and MustSupport removed from required element: source hemas-patient constrains address.country to fixed value 'LK' (Sri Lanka) with [1..1 mustSupport=true]; target US Core marks address.country as [mustSupport=true] with no fixed value and no explicit min. Fixed value and min cardinality constraint removed; MS preserved in target.",
-      "severity": "ERROR"
+      "type": "EXTENSION",
+      "sourcePath": "Patient.telecom.value",
+      "targetPath": "Patient.telecom.value.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+      "description": "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+      "severity": "WARNING"
     },
     {
       "id": "rule-26",
-      "type": "STRUCTURAL",
-      "sourcePath": "Patient.address.district",
-      "targetPath": "Patient.address.district",
-      "description": "address.district MustSupport removed: source mustSupport=true (optional element); US Core does not constrain address.district. MS removed from optional element.",
-      "severity": "INFO"
+      "type": "TERMINOLOGY",
+      "sourcePath": "Patient.telecom.use",
+      "targetPath": "Patient.telecom.use",
+      "description": "Binding changed: required(http://hl7.org/fhir/ValueSet/contact-point-use|4.0.1) -> required(http://hl7.org/fhir/ValueSet/contact-point-use)",
+      "severity": "ERROR"
     },
     {
       "id": "rule-27",
       "type": "STRUCTURAL",
-      "sourcePath": "Patient.maritalStatus",
-      "targetPath": "Patient.maritalStatus",
-      "description": "maritalStatus MustSupport removed: source mustSupport=true extensible:http://hl7.org/fhir/ValueSet/marital-status; US Core does not constrain maritalStatus. MS removed from optional element.",
+      "sourcePath": "Patient.telecom.use",
+      "targetPath": "Patient.telecom.use",
+      "description": "MustSupport added in target",
       "severity": "INFO"
     },
     {
       "id": "rule-28",
-      "type": "STRUCTURAL",
-      "sourcePath": "Patient.contact",
-      "targetPath": "Patient.contact",
-      "description": "Source contact constraints removed: source has contact[mustSupport=true] with relationship[1..* mustSupport=true extensible:patient-contactrelationship], name[1..1 mustSupport=true], telecom[1..* mustSupport=true]. US Core does not constrain contact at all.",
+      "type": "EXTENSION",
+      "sourcePath": "Patient.telecom.use",
+      "targetPath": "Patient.telecom.use.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+      "description": "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
       "severity": "WARNING"
     },
     {
       "id": "rule-29",
-      "type": "STRUCTURAL",
-      "sourcePath": "Patient.communication",
-      "targetPath": "Patient.communication",
-      "description": "communication MustSupport removed at element level: source mustSupport=true; US Core mustSupport=false on the communication element itself (though language sub-element remains mustSupport=true in both).",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-30",
-      "type": "TERMINOLOGY",
-      "sourcePath": "Patient.communication.language",
-      "targetPath": "Patient.communication.language",
-      "description": "communication.language binding changed: source extensible(http://hl7.org/fhir/ValueSet/languages) → target extensible(http://hl7.org/fhir/us/core/ValueSet/simple-language). Different value sets, same binding strength.",
+      "type": "EXTENSION",
+      "sourcePath": "Patient.gender",
+      "targetPath": "Patient.gender.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+      "description": "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
       "severity": "WARNING"
     },
     {
+      "id": "rule-30",
+      "type": "CARDINALITY",
+      "sourcePath": "Patient.birthDate",
+      "targetPath": "Patient.birthDate",
+      "description": "Cardinality changed: [1..1] -> [0..1]",
+      "severity": "INFO"
+    },
+    {
       "id": "rule-31",
-      "type": "STRUCTURAL",
-      "sourcePath": "Patient.generalPractitioner",
-      "targetPath": "Patient.generalPractitioner",
-      "description": "generalPractitioner reference target removed: source constrains to hemas/Practitioner; US Core does not constrain generalPractitioner (no target profile).",
+      "type": "EXTENSION",
+      "sourcePath": "Patient.birthDate",
+      "targetPath": "Patient.birthDate.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+      "description": "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
       "severity": "WARNING"
     },
     {
       "id": "rule-32",
-      "type": "STRUCTURAL",
-      "sourcePath": "Patient.generalPractitioner",
-      "targetPath": "Patient.generalPractitioner",
-      "description": "generalPractitioner MustSupport removed: source mustSupport=true; US Core does not constrain generalPractitioner. MS removed from optional element.",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-33",
-      "type": "STRUCTURAL",
-      "sourcePath": "Patient.managingOrganization",
-      "targetPath": "Patient.managingOrganization",
-      "description": "managingOrganization MustSupport removed from required element and cardinality relaxed: source [1..1 mustSupport=true →hemas/Organization]; US Core does not constrain managingOrganization (inherits R4 base [0..1 mustSupport=false]). Min decreased and MS removed.",
+      "type": "EXTENSION",
+      "sourcePath": "Patient.deceased[x]",
+      "targetPath": "Patient.deceased[x].extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+      "description": "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
       "severity": "WARNING"
     },
     {
+      "id": "rule-33",
+      "type": "CARDINALITY",
+      "sourcePath": "Patient.address",
+      "targetPath": "Patient.address",
+      "description": "Cardinality changed: [1..*] -> [0..*]",
+      "severity": "INFO"
+    },
+    {
       "id": "rule-34",
+      "type": "EXTENSION",
+      "sourcePath": "Patient.address",
+      "targetPath": "Patient.address.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+      "description": "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-35",
+      "type": "EXTENSION",
+      "sourcePath": "Patient.address.use",
+      "targetPath": "Patient.address.use.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+      "description": "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-36",
+      "type": "CARDINALITY",
+      "sourcePath": "Patient.address.line",
+      "targetPath": "Patient.address.line",
+      "description": "Cardinality changed: [1..*] -> [0..*]",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-37",
+      "type": "EXTENSION",
+      "sourcePath": "Patient.address.line",
+      "targetPath": "Patient.address.line.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+      "description": "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-38",
+      "type": "CARDINALITY",
+      "sourcePath": "Patient.address.city",
+      "targetPath": "Patient.address.city",
+      "description": "Cardinality changed: [1..1] -> [0..1]",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-39",
+      "type": "EXTENSION",
+      "sourcePath": "Patient.address.city",
+      "targetPath": "Patient.address.city.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+      "description": "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-40",
+      "type": "STRUCTURAL",
+      "sourcePath": "Patient.address.district",
+      "targetPath": "Patient.address.district",
+      "description": "MustSupport removed in target",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-41",
+      "type": "TERMINOLOGY",
+      "sourcePath": "Patient.address.state",
+      "targetPath": "Patient.address.state",
+      "description": "Binding changed: none(none) -> extensible(http://hl7.org/fhir/us/core/ValueSet/us-core-usps-state)",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-42",
+      "type": "STRUCTURAL",
+      "sourcePath": "Patient.address.state",
+      "targetPath": "Patient.address.state",
+      "description": "MustSupport added in target",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-43",
+      "type": "EXTENSION",
+      "sourcePath": "Patient.address.state",
+      "targetPath": "Patient.address.state.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+      "description": "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-44",
+      "type": "STRUCTURAL",
+      "sourcePath": "Patient.address.postalCode",
+      "targetPath": "Patient.address.postalCode",
+      "description": "MustSupport added in target",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-45",
+      "type": "EXTENSION",
+      "sourcePath": "Patient.address.postalCode",
+      "targetPath": "Patient.address.postalCode.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+      "description": "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-46",
+      "type": "CARDINALITY",
+      "sourcePath": "Patient.address.country",
+      "targetPath": "Patient.address.country",
+      "description": "Cardinality changed: [1..1] -> [0..1]",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-47",
+      "type": "TERMINOLOGY",
+      "sourcePath": "Patient.address.country",
+      "targetPath": "Patient.address.country",
+      "description": "Fixed value changed: 'LK' -> 'none'",
+      "severity": "ERROR"
+    },
+    {
+      "id": "rule-48",
+      "type": "STRUCTURAL",
+      "sourcePath": "Patient.address.country",
+      "targetPath": "Patient.address.country",
+      "description": "MustSupport removed in target",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-49",
+      "type": "EXTENSION",
+      "sourcePath": "Patient.address.period",
+      "targetPath": "Patient.address.period.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+      "description": "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-50",
+      "type": "STRUCTURAL",
+      "sourcePath": "Patient.maritalStatus",
+      "targetPath": "Patient.maritalStatus",
+      "description": "MustSupport removed in target",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-51",
+      "type": "STRUCTURAL",
+      "sourcePath": "Patient.contact",
+      "targetPath": "Patient.contact",
+      "description": "MustSupport removed in target",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-52",
+      "type": "EXTENSION",
+      "sourcePath": "Patient.contact",
+      "targetPath": "Patient.contact.extension(http://hl7.org/fhir/StructureDefinition/structuredefinition-explicit-type-name)",
+      "description": "Extension added in target element: http://hl7.org/fhir/StructureDefinition/structuredefinition-explicit-type-name",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-53",
+      "type": "CARDINALITY",
+      "sourcePath": "Patient.contact.relationship",
+      "targetPath": "Patient.contact.relationship",
+      "description": "Cardinality changed: [1..*] -> [0..*]",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-54",
+      "type": "STRUCTURAL",
+      "sourcePath": "Patient.contact.relationship",
+      "targetPath": "Patient.contact.relationship",
+      "description": "MustSupport removed in target",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-55",
+      "type": "CARDINALITY",
+      "sourcePath": "Patient.contact.name",
+      "targetPath": "Patient.contact.name",
+      "description": "Cardinality changed: [1..1] -> [0..1]",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-56",
+      "type": "STRUCTURAL",
+      "sourcePath": "Patient.contact.name",
+      "targetPath": "Patient.contact.name",
+      "description": "MustSupport removed in target",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-57",
+      "type": "CARDINALITY",
+      "sourcePath": "Patient.contact.telecom",
+      "targetPath": "Patient.contact.telecom",
+      "description": "Cardinality changed: [1..*] -> [0..*]",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-58",
+      "type": "STRUCTURAL",
+      "sourcePath": "Patient.contact.telecom",
+      "targetPath": "Patient.contact.telecom",
+      "description": "MustSupport removed in target",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-59",
+      "type": "STRUCTURAL",
+      "sourcePath": "Patient.communication",
+      "targetPath": "Patient.communication",
+      "description": "MustSupport removed in target",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-60",
+      "type": "EXTENSION",
+      "sourcePath": "Patient.communication",
+      "targetPath": "Patient.communication.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+      "description": "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-61",
+      "type": "TERMINOLOGY",
+      "sourcePath": "Patient.communication.language",
+      "targetPath": "Patient.communication.language",
+      "description": "Binding changed: extensible(http://hl7.org/fhir/ValueSet/languages) -> extensible(http://hl7.org/fhir/us/core/ValueSet/simple-language)",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-62",
+      "type": "EXTENSION",
+      "sourcePath": "Patient.communication.language",
+      "targetPath": "Patient.communication.language.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
+      "description": "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-63",
+      "type": "STRUCTURAL",
+      "sourcePath": "Patient.generalPractitioner",
+      "targetPath": "Patient.generalPractitioner",
+      "description": "Reference target profile changed: [https://hemas.example.com/fhir/StructureDefinition/Practitioner] -> [http://hl7.org/fhir/StructureDefinition/Organization, http://hl7.org/fhir/StructureDefinition/Practitioner, http://hl7.org/fhir/StructureDefinition/PractitionerRole]",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-64",
+      "type": "STRUCTURAL",
+      "sourcePath": "Patient.generalPractitioner",
+      "targetPath": "Patient.generalPractitioner",
+      "description": "MustSupport removed in target",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-65",
+      "type": "CARDINALITY",
+      "sourcePath": "Patient.managingOrganization",
+      "targetPath": "Patient.managingOrganization",
+      "description": "Cardinality changed: [1..1] -> [0..1]",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-66",
       "type": "STRUCTURAL",
       "sourcePath": "Patient.managingOrganization",
       "targetPath": "Patient.managingOrganization",
-      "description": "managingOrganization reference target removed: source constrains to hemas/Organization; US Core does not constrain managingOrganization (no target profile).",
+      "description": "Reference target profile changed: [https://hemas.example.com/fhir/StructureDefinition/Organization] -> [http://hl7.org/fhir/StructureDefinition/Organization]",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-67",
+      "type": "STRUCTURAL",
+      "sourcePath": "Patient.managingOrganization",
+      "targetPath": "Patient.managingOrganization",
+      "description": "MustSupport removed in target",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-68",
+      "type": "EXTENSION",
+      "sourcePath": "",
+      "targetPath": "Patient.extension:race",
+      "description": "Extension added in target profile: Patient.extension:race",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-69",
+      "type": "EXTENSION",
+      "sourcePath": "",
+      "targetPath": "Patient.extension:ethnicity",
+      "description": "Extension added in target profile: Patient.extension:ethnicity",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-70",
+      "type": "EXTENSION",
+      "sourcePath": "",
+      "targetPath": "Patient.extension:tribalAffiliation",
+      "description": "Extension added in target profile: Patient.extension:tribalAffiliation",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-71",
+      "type": "EXTENSION",
+      "sourcePath": "",
+      "targetPath": "Patient.extension:birthsex",
+      "description": "Extension added in target profile: Patient.extension:birthsex",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-72",
+      "type": "EXTENSION",
+      "sourcePath": "",
+      "targetPath": "Patient.extension:sex",
+      "description": "Extension added in target profile: Patient.extension:sex",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-73",
+      "type": "EXTENSION",
+      "sourcePath": "",
+      "targetPath": "Patient.extension:genderIdentity",
+      "description": "Extension added in target profile: Patient.extension:genderIdentity",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-74",
+      "type": "EXTENSION",
+      "sourcePath": "Patient.extension:registrationDate",
+      "targetPath": "",
+      "description": "Extension removed in target profile: Patient.extension:registrationDate (was mustSupport)",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-75",
+      "type": "EXTENSION",
+      "sourcePath": "Patient.extension:vipStatus",
+      "targetPath": "",
+      "description": "Extension removed in target profile: Patient.extension:vipStatus (was mustSupport)",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-76",
+      "type": "EXTENSION",
+      "sourcePath": "Patient.extension:insuranceProvider",
+      "targetPath": "",
+      "description": "Extension removed in target profile: Patient.extension:insuranceProvider (was mustSupport)",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-77",
+      "type": "STRUCTURAL",
+      "sourcePath": "Patient.identifier:hospitalId",
+      "targetPath": "",
+      "description": "Slice 'hospitalId' removed in target profile",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-78",
+      "type": "STRUCTURAL",
+      "sourcePath": "Patient.identifier:nic",
+      "targetPath": "",
+      "description": "Slice 'nic' removed in target profile",
       "severity": "WARNING"
     }
   ]

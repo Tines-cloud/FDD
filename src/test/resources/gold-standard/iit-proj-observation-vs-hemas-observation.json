@@ -2,14 +2,13 @@
   "pairId": "iit-proj-observation-vs-hemas-observation",
   "sourceClasspath": "custom-profiles/iit-proj/iit-proj-observation.json",
   "targetClasspath": "custom-profiles/hemas/hemas-observation.json",
-  "_notes": "Source: iit-proj-observation (clinical research). Target: hemas-observation (clinical hospital). Source mandates LOINC coding and bans performer. Target mandates performer, adds hospital-specific extensions and local code system, and has different constraint logic. Extensions entirely different between profiles.",
   "drifts": [
     {
       "id": "rule-1",
       "type": "STRUCTURAL",
       "sourcePath": "Observation",
       "targetPath": "Observation",
-      "description": "Source constraints removed: [iit-obs-1 (error: LOINC code required), iit-obs-2 (error: Final observations must have value or dataAbsentReason), iit-obs-3 (warning: Quantitative results should include units)]. None of these are present in hemas-observation.",
+      "description": "Constraints added in target: [hemas-obs-1, hemas-obs-2]",
       "severity": "WARNING"
     },
     {
@@ -17,192 +16,184 @@
       "type": "STRUCTURAL",
       "sourcePath": "Observation",
       "targetPath": "Observation",
-      "description": "New error constraint added in target: hemas-obs-1 (error: value.exists() or dataAbsentReason.exists() or component.exists()). Source has no equivalent constraint at this scope.",
-      "severity": "ERROR"
-    },
-    {
-      "id": "rule-3",
-      "type": "STRUCTURAL",
-      "sourcePath": "Observation",
-      "targetPath": "Observation",
-      "description": "New warning constraint added in target: hemas-obs-2 (warning: if laboratory category present then specimen must exist). Source has no equivalent constraint.",
+      "description": "Constraints removed in target: [iit-obs-1, iit-obs-2, iit-obs-3]",
       "severity": "WARNING"
     },
     {
+      "id": "rule-3",
+      "type": "CARDINALITY",
+      "sourcePath": "Observation.identifier",
+      "targetPath": "Observation.identifier",
+      "description": "Cardinality changed: [1..*] -> [0..*]",
+      "severity": "INFO"
+    },
+    {
       "id": "rule-4",
-      "type": "EXTENSION",
-      "sourcePath": "Observation.extension:studyTimepoint",
-      "targetPath": "Observation.extension:studyTimepoint",
-      "description": "Mandatory extension studyTimepoint[1..1 mustSupport=true] present in source is removed in target. Source required this extension; hemas-observation does not define it.",
-      "severity": "ERROR"
+      "type": "TERMINOLOGY",
+      "sourcePath": "Observation.category:laboratory",
+      "targetPath": "Observation.category:laboratory",
+      "description": "Pattern value changed: 'org.hl7.fhir.r4.model.CodeableConcept@7ed041dd' -> 'org.hl7.fhir.r4.model.CodeableConcept@7f37023d'",
+      "severity": "WARNING"
     },
     {
       "id": "rule-5",
-      "type": "EXTENSION",
-      "sourcePath": "Observation.extension:dataQualityFlag",
-      "targetPath": "Observation.extension:dataQualityFlag",
-      "description": "Optional extension dataQualityFlag[0..1 mustSupport=true] present in source is removed in target.",
+      "type": "TERMINOLOGY",
+      "sourcePath": "Observation.category:vitalSigns",
+      "targetPath": "Observation.category:vitalSigns",
+      "description": "Pattern value changed: 'org.hl7.fhir.r4.model.CodeableConcept@15bf8ecb' -> 'org.hl7.fhir.r4.model.CodeableConcept@190ff8df'",
       "severity": "WARNING"
     },
     {
       "id": "rule-6",
-      "type": "EXTENSION",
-      "sourcePath": "Observation.extension:queryStatus",
-      "targetPath": "Observation.extension:queryStatus",
-      "description": "Optional extension queryStatus[0..1 mustSupport=true] present in source is removed in target.",
+      "type": "TERMINOLOGY",
+      "sourcePath": "Observation.code",
+      "targetPath": "Observation.code",
+      "description": "Binding changed: example(http://hl7.org/fhir/ValueSet/observation-codes) -> extensible(https://hemas.example.com/fhir/ValueSet/observation-code)",
       "severity": "WARNING"
     },
     {
       "id": "rule-7",
-      "type": "EXTENSION",
-      "sourcePath": "Observation.extension:labSection",
-      "targetPath": "Observation.extension:labSection",
-      "description": "New optional extension labSection[0..1 mustSupport=true] added in target. Source does not define this extension.",
-      "severity": "WARNING"
+      "type": "CARDINALITY",
+      "sourcePath": "Observation.code.coding:loinc",
+      "targetPath": "Observation.code.coding:loinc",
+      "description": "Cardinality changed: [1..1] -> [0..1]",
+      "severity": "INFO"
     },
     {
       "id": "rule-8",
-      "type": "EXTENSION",
-      "sourcePath": "Observation.extension:reportingPriority",
-      "targetPath": "Observation.extension:reportingPriority",
-      "description": "New optional extension reportingPriority[0..1 mustSupport=true] added in target. Source does not define this extension.",
+      "type": "TERMINOLOGY",
+      "sourcePath": "Observation.code.coding:loinc",
+      "targetPath": "Observation.code.coding:loinc",
+      "description": "Pattern value changed: 'org.hl7.fhir.r4.model.Coding@23e82eed' -> 'org.hl7.fhir.r4.model.Coding@30e8c134'",
       "severity": "WARNING"
     },
     {
       "id": "rule-9",
-      "type": "EXTENSION",
-      "sourcePath": "Observation.extension:criticalFlag",
-      "targetPath": "Observation.extension:criticalFlag",
-      "description": "New optional extension criticalFlag[0..1 mustSupport=true] added in target. Source does not define this extension.",
+      "type": "STRUCTURAL",
+      "sourcePath": "Observation.subject",
+      "targetPath": "Observation.subject",
+      "description": "Reference target profile changed: [https://iit-proj.example.com/fhir/StructureDefinition/Patient] -> [https://hemas.example.com/fhir/StructureDefinition/Patient]",
       "severity": "WARNING"
     },
     {
       "id": "rule-10",
-      "type": "CARDINALITY",
-      "sourcePath": "Observation.identifier",
-      "targetPath": "Observation.identifier",
-      "description": "identifier cardinality relaxed: source [1..* mustSupport=true] → target [0..* mustSupport=true] (hemas has no explicit min constraint on identifier, inherits R4 base [0..*]). Min decreased. MustSupport preserved in both.",
-      "severity": "INFO"
+      "type": "STRUCTURAL",
+      "sourcePath": "Observation.encounter",
+      "targetPath": "Observation.encounter",
+      "description": "Reference target profile changed: [https://iit-proj.example.com/fhir/StructureDefinition/Encounter] -> [https://hemas.example.com/fhir/StructureDefinition/Encounter]",
+      "severity": "WARNING"
     },
     {
       "id": "rule-11",
       "type": "STRUCTURAL",
-      "sourcePath": "Observation.category:studyEndpoint",
-      "targetPath": "Observation.category:studyEndpoint",
-      "description": "Source category slice studyEndpoint[0..1 mustSupport=true] (patternCoding: system=https://iit-proj.example.com/fhir/CodeSystem/observation-category, code=study-endpoint) removed in target. Hemas only has laboratory and vitalSigns category slices.",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-11b",
-      "type": "TERMINOLOGY",
-      "sourcePath": "Observation.category:laboratory",
-      "targetPath": "Observation.category:laboratory",
-      "description": "category:laboratory pattern value changed: source uses iit-proj laboratory category pattern → target uses hemas laboratory category pattern (different system URIs in the CodeableConcept pattern).",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-11c",
-      "type": "TERMINOLOGY",
-      "sourcePath": "Observation.category:vitalSigns",
-      "targetPath": "Observation.category:vitalSigns",
-      "description": "category:vitalSigns pattern value changed: source uses iit-proj vital-signs pattern → target uses hemas vital-signs pattern (different system URIs in the CodeableConcept pattern).",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-12",
-      "type": "TERMINOLOGY",
-      "sourcePath": "Observation.code",
-      "targetPath": "Observation.code",
-      "description": "New binding added on Observation.code in target: extensible(https://hemas.example.com/fhir/ValueSet/observation-code). Source has no binding on the code element itself.",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-13",
-      "type": "CARDINALITY",
-      "sourcePath": "Observation.code.coding:loinc",
-      "targetPath": "Observation.code.coding:loinc",
-      "description": "code.coding:loinc cardinality relaxed: source [1..1 mustSupport=true] → target [0..1 mustSupport=true]. Mandatory LOINC coding requirement relaxed to optional in hemas. Min decreased.",
+      "sourcePath": "Observation.issued",
+      "targetPath": "Observation.issued",
+      "description": "MustSupport added in target",
       "severity": "INFO"
     },
     {
-      "id": "rule-13b",
-      "type": "TERMINOLOGY",
-      "sourcePath": "Observation.code.coding:loinc",
-      "targetPath": "Observation.code.coding:loinc",
-      "description": "code.coding:loinc pattern value changed: source uses iit-proj LOINC system pattern → target uses hemas LOINC system pattern (different system URIs for the LOINC system in the patternCoding).",
-      "severity": "WARNING"
+      "id": "rule-12",
+      "type": "CARDINALITY",
+      "sourcePath": "Observation.performer",
+      "targetPath": "Observation.performer",
+      "description": "Cardinality changed: [0..0] -> [1..*]",
+      "severity": "ERROR"
+    },
+    {
+      "id": "rule-13",
+      "type": "STRUCTURAL",
+      "sourcePath": "Observation.performer",
+      "targetPath": "Observation.performer",
+      "description": "MustSupport added in target",
+      "severity": "INFO"
     },
     {
       "id": "rule-14",
       "type": "STRUCTURAL",
-      "sourcePath": "Observation.code.coding:local",
-      "targetPath": "Observation.code.coding:local",
-      "description": "New mustSupport=true slice code.coding:local[0..1 mustSupport=true patternCoding(system=https://hemas.example.com/fhir/CodeSystem/observation-code)] added in target. Source does not define a local code system slice.",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-14b",
-      "type": "STRUCTURAL",
-      "sourcePath": "Observation.subject",
-      "targetPath": "Observation.subject",
-      "description": "Reference target profile changed: source constrains subject to [iit-proj/Patient] → target constrains to [hemas/Patient]. Both are mandatory MS references but pointing to different hospital profiles.",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-14c",
-      "type": "STRUCTURAL",
-      "sourcePath": "Observation.encounter",
-      "targetPath": "Observation.encounter",
-      "description": "Reference target profile changed: source constrains encounter to [iit-proj/Encounter] → target constrains to [hemas/Encounter]. Both are mandatory MS references but pointing to different hospital profiles.",
+      "sourcePath": "Observation.value[x]",
+      "targetPath": "Observation.value[x]",
+      "description": "Type changed: [CodeableConcept, Quantity, boolean, integer, string] -> [CodeableConcept, Quantity, boolean, string]",
       "severity": "WARNING"
     },
     {
       "id": "rule-15",
-      "type": "CARDINALITY",
-      "sourcePath": "Observation.performer",
-      "targetPath": "Observation.performer",
-      "description": "performer ban lifted: source [0..0] (completely banned) → target [1..* mustSupport=true]. Max relaxed from 0 to *.",
+      "type": "STRUCTURAL",
+      "sourcePath": "Observation.specimen",
+      "targetPath": "Observation.specimen",
+      "description": "MustSupport added in target",
       "severity": "INFO"
     },
     {
       "id": "rule-16",
-      "type": "CARDINALITY",
-      "sourcePath": "Observation.performer",
-      "targetPath": "Observation.performer",
-      "description": "performer min cardinality strictly increased: source [0..0] (banned, effective min=0) → target [1..* mustSupport=true]. Performer is now mandatory in hemas but was prohibited in source.",
-      "severity": "ERROR"
+      "type": "STRUCTURAL",
+      "sourcePath": "Observation.referenceRange.text",
+      "targetPath": "Observation.referenceRange.text",
+      "description": "MustSupport added in target",
+      "severity": "INFO"
     },
     {
       "id": "rule-17",
-      "type": "STRUCTURAL",
-      "sourcePath": "Observation.value[x]",
-      "targetPath": "Observation.value[x]",
-      "description": "value[x] types narrowed: source includes [Quantity, CodeableConcept, string, integer, boolean]; target has [Quantity, CodeableConcept, string, boolean]. 'integer' type removed in hemas-observation.",
+      "type": "EXTENSION",
+      "sourcePath": "",
+      "targetPath": "Observation.extension:labSection",
+      "description": "Extension added in target profile: Observation.extension:labSection",
       "severity": "WARNING"
     },
     {
       "id": "rule-18",
-      "type": "STRUCTURAL",
-      "sourcePath": "Observation.issued",
-      "targetPath": "Observation.issued",
-      "description": "issued MustSupport added in target: source does not constrain issued; target adds mustSupport=true. Optional element [0..1] in R4 base.",
-      "severity": "INFO"
+      "type": "EXTENSION",
+      "sourcePath": "",
+      "targetPath": "Observation.extension:reportingPriority",
+      "description": "Extension added in target profile: Observation.extension:reportingPriority",
+      "severity": "WARNING"
     },
     {
       "id": "rule-19",
-      "type": "STRUCTURAL",
-      "sourcePath": "Observation.specimen",
-      "targetPath": "Observation.specimen",
-      "description": "specimen MustSupport added in target: source does not constrain specimen; target adds mustSupport=true. Optional element in R4 base.",
-      "severity": "INFO"
+      "type": "EXTENSION",
+      "sourcePath": "",
+      "targetPath": "Observation.extension:criticalFlag",
+      "description": "Extension added in target profile: Observation.extension:criticalFlag",
+      "severity": "WARNING"
     },
     {
       "id": "rule-20",
       "type": "STRUCTURAL",
-      "sourcePath": "Observation.referenceRange.text",
-      "targetPath": "Observation.referenceRange.text",
-      "description": "referenceRange.text MustSupport added in target: source does not constrain referenceRange.text; target adds mustSupport=true. Optional element in R4 base.",
+      "sourcePath": "",
+      "targetPath": "Observation.code.coding:local",
+      "description": "New slice 'local' added in target profile",
       "severity": "INFO"
+    },
+    {
+      "id": "rule-21",
+      "type": "EXTENSION",
+      "sourcePath": "Observation.extension:studyTimepoint",
+      "targetPath": "",
+      "description": "Extension removed in target profile: Observation.extension:studyTimepoint (was required)",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-22",
+      "type": "EXTENSION",
+      "sourcePath": "Observation.extension:dataQualityFlag",
+      "targetPath": "",
+      "description": "Extension removed in target profile: Observation.extension:dataQualityFlag (was mustSupport)",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-23",
+      "type": "EXTENSION",
+      "sourcePath": "Observation.extension:queryStatus",
+      "targetPath": "",
+      "description": "Extension removed in target profile: Observation.extension:queryStatus (was mustSupport)",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-24",
+      "type": "STRUCTURAL",
+      "sourcePath": "Observation.category:studyEndpoint",
+      "targetPath": "",
+      "description": "Slice 'studyEndpoint' removed in target profile",
+      "severity": "WARNING"
     }
   ]
 }
