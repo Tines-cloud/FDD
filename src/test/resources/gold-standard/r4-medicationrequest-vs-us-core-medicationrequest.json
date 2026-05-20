@@ -1,391 +1,406 @@
 {
-  "pairId": "r4-medicationrequest-vs-us-core-medicationrequest",
+  "pairId": "manual-r4-medicationrequest-vs-us-core-medicationrequest",
   "sourceClasspath": "standard-profiles/r4/medicationrequest.profile.json",
   "targetClasspath": "standard-profiles/us-core/StructureDefinition-us-core-medicationrequest.json",
+  "_notes": "Hand-curated by reading the US Core MedicationRequest differential (21 elements) line by line against the R4 MedicationRequest snapshot. Key R4 facts: status min=1 required:medicationrequest-status|4.0.1; intent min=1 required:medicationrequest-intent|4.0.1; category min=0 example:medicationrequest-category; reported[x] min=0 Reference(boolean|Patient|Practitioner|PractitionerRole|RelatedPerson|Organization); medication[x] min=1 example:medication-codes Reference(CodeableConcept|Medication); subject min=1 Reference(Patient|Group); encounter min=0 Reference(Encounter); authoredOn min=0; requester min=0; reasonCode min=0 example:condition-code; reasonReference min=0; dosageInstruction min=0; dispenseRequest min=0.",
   "drifts": [
     {
-      "id": "rule-1",
+      "id": "gold-mr-1",
       "type": "STRUCTURAL",
       "sourcePath": "MedicationRequest",
       "targetPath": "MedicationRequest",
-      "description": "Constraint added in target: us-core-21 requires requester when intent is order, original-order, reflex-order, filler-order, or instance-order",
-      "severity": "WARNING"
+      "description": "Constraint 'us-core-21' added (severity: error): requester SHALL be present if intent is 'order', 'original-order', 'reflex-order', 'filler-order', or 'instance-order'. Not present in R4 base MedicationRequest.",
+      "severity": "ERROR"
     },
     {
-      "id": "rule-2",
+      "id": "gold-mr-2",
       "type": "STRUCTURAL",
       "sourcePath": "MedicationRequest.status",
       "targetPath": "MedicationRequest.status",
-      "description": "MustSupport added in target",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-3",
-      "type": "EXTENSION",
-      "sourcePath": "MedicationRequest.status",
-      "targetPath": "MedicationRequest.status.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "Extension present only in target: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+      "description": "MustSupport added in target (min=1 in R4 -> conformance-critical).",
       "severity": "WARNING"
     },
     {
-      "id": "rule-4",
+      "id": "gold-mr-3",
+      "type": "TERMINOLOGY",
+      "sourcePath": "MedicationRequest.status",
+      "targetPath": "MedicationRequest.status",
+      "description": "Binding version pin removed: R4 binds to 'medicationrequest-status|4.0.1' (version-locked). US Core binds to 'medicationrequest-status' (no version pin). Strength remains required in both.",
+      "severity": "WARNING"
+    },
+    {
+      "id": "gold-mr-4",
       "type": "STRUCTURAL",
       "sourcePath": "MedicationRequest.intent",
       "targetPath": "MedicationRequest.intent",
-      "description": "MustSupport added in target",
-      "severity": "INFO"
+      "description": "MustSupport added in target (min=1 in R4 -> conformance-critical).",
+      "severity": "WARNING"
     },
     {
-      "id": "rule-5",
-      "type": "EXTENSION",
+      "id": "gold-mr-5",
+      "type": "TERMINOLOGY",
       "sourcePath": "MedicationRequest.intent",
-      "targetPath": "MedicationRequest.intent.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "Extension present only in target: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+      "targetPath": "MedicationRequest.intent",
+      "description": "Binding version pin removed: R4 binds to 'medicationrequest-intent|4.0.1' (version-locked). US Core binds to 'medicationrequest-intent' (no version pin). Strength remains required in both.",
       "severity": "WARNING"
     },
     {
-      "id": "rule-6",
+      "id": "gold-mr-6",
       "type": "STRUCTURAL",
       "sourcePath": "MedicationRequest.category",
       "targetPath": "MedicationRequest.category",
-      "description": "MustSupport added in target",
+      "description": "MustSupport added in target (min=0, optional but must be supported when present).",
       "severity": "INFO"
     },
     {
-      "id": "rule-7",
+      "id": "gold-mr-7",
       "type": "STRUCTURAL",
       "sourcePath": "MedicationRequest.category",
       "targetPath": "MedicationRequest.category",
-      "description": "Slicing changed: none -> rules=open, discriminators=[pattern:$this]",
-      "severity": "WARNING"
+      "description": "Slicing added on category: discriminator type=pattern, path=$this, rules=open. No slicing exists in R4 base.",
+      "severity": "INFO"
     },
     {
-      "id": "rule-8",
-      "type": "EXTENSION",
-      "sourcePath": "MedicationRequest.category",
-      "targetPath": "MedicationRequest.category.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "Extension present only in target: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-9",
+      "id": "gold-mr-8",
       "type": "STRUCTURAL",
-      "sourcePath": "",
+      "sourcePath": null,
       "targetPath": "MedicationRequest.category:us-core",
-      "description": "Slice present only in target: MedicationRequest.category:us-core (required binding=http://hl7.org/fhir/ValueSet/medicationrequest-category, mustSupport=true)",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-10",
-      "type": "STRUCTURAL",
-      "sourcePath": "MedicationRequest.reported[x]",
-      "targetPath": "MedicationRequest.reported[x]",
-      "description": "Reference target profile changed: [http://hl7.org/fhir/StructureDefinition/Organization, http://hl7.org/fhir/StructureDefinition/Patient, http://hl7.org/fhir/StructureDefinition/Practitioner, http://hl7.org/fhir/StructureDefinition/PractitionerRole, http://hl7.org/fhir/StructureDefinition/RelatedPerson] -> [http://hl7.org/fhir/us/core/StructureDefinition/us-core-organization, http://hl7.org/fhir/us/core/StructureDefinition/us-core-patient, http://hl7.org/fhir/us/core/StructureDefinition/us-core-practitioner, http://hl7.org/fhir/us/core/StructureDefinition/us-core-practitionerrole, http://hl7.org/fhir/us/core/StructureDefinition/us-core-relatedperson]",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-11",
-      "type": "STRUCTURAL",
-      "sourcePath": "MedicationRequest.reported[x]",
-      "targetPath": "MedicationRequest.reported[x]",
-      "description": "MustSupport added in target, including type-level MustSupport on reportedBoolean and reportedReference",
+      "description": "New slice 'us-core' added (min=0, max=*, mustSupport=true). Slice is open (not mandatory). No equivalent in R4 base.",
       "severity": "INFO"
     },
     {
-      "id": "rule-12",
-      "type": "EXTENSION",
-      "sourcePath": "MedicationRequest.reported[x]",
-      "targetPath": "MedicationRequest.reported[x].extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "Extension present only in target: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+      "id": "gold-mr-9",
+      "type": "TERMINOLOGY",
+      "sourcePath": null,
+      "targetPath": "MedicationRequest.category:us-core",
+      "description": "Binding added on slice 'us-core': required strength to http://hl7.org/fhir/ValueSet/medicationrequest-category. R4 base has example binding on parent category; this slice introduces required strength binding.",
       "severity": "WARNING"
     },
     {
-      "id": "rule-13",
+      "id": "gold-mr-10",
+      "type": "STRUCTURAL",
+      "sourcePath": "MedicationRequest.reported[x]",
+      "targetPath": "MedicationRequest.reported[x]",
+      "description": "MustSupport added in target (min=0, optional but must be supported when present).",
+      "severity": "INFO"
+    },
+    {
+      "id": "gold-mr-11",
+      "type": "STRUCTURAL",
+      "sourcePath": "MedicationRequest.reported[x]",
+      "targetPath": "MedicationRequest.reported[x]",
+      "description": "Reference target profiles constrained: R4 allows Reference(Patient|Practitioner|PractitionerRole|RelatedPerson|Organization). US Core restricts to Reference(us-core-practitioner|us-core-organization|us-core-patient|us-core-practitionerrole|us-core-relatedperson).",
+      "severity": "WARNING"
+    },
+    {
+      "id": "gold-mr-12",
+      "type": "STRUCTURAL",
+      "sourcePath": "MedicationRequest.medication[x]",
+      "targetPath": "MedicationRequest.medication[x]",
+      "description": "MustSupport added in target (min=1 in R4 -> conformance-critical).",
+      "severity": "WARNING"
+    },
+    {
+      "id": "gold-mr-13",
+      "type": "STRUCTURAL",
+      "sourcePath": "MedicationRequest.medication[x]",
+      "targetPath": "MedicationRequest.medication[x]",
+      "description": "Reference target profile constrained: R4 allows Reference(CodeableConcept|Medication). US Core restricts the Reference type to Reference(us-core-medication), narrowing from generic Medication.",
+      "severity": "WARNING"
+    },
+    {
+      "id": "gold-mr-14",
       "type": "TERMINOLOGY",
       "sourcePath": "MedicationRequest.medication[x]",
       "targetPath": "MedicationRequest.medication[x]",
-      "description": "Binding changed: example(http://hl7.org/fhir/ValueSet/medication-codes) -> extensible(http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1010.4)",
+      "description": "Binding changed: R4 uses example strength to http://hl7.org/fhir/ValueSet/medication-codes. US Core adds extensible binding to http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1010.4 (US medication clinical drug codes). Binding strength tightened: example -> extensible.",
       "severity": "WARNING"
     },
     {
-      "id": "rule-14",
-      "type": "STRUCTURAL",
-      "sourcePath": "MedicationRequest.medication[x]",
-      "targetPath": "MedicationRequest.medication[x]",
-      "description": "Reference target profile changed: [http://hl7.org/fhir/StructureDefinition/Medication] -> [http://hl7.org/fhir/us/core/StructureDefinition/us-core-medication]",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-15",
-      "type": "STRUCTURAL",
-      "sourcePath": "MedicationRequest.medication[x]",
-      "targetPath": "MedicationRequest.medication[x]",
-      "description": "MustSupport added in target",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-16",
-      "type": "EXTENSION",
-      "sourcePath": "MedicationRequest.medication[x]",
-      "targetPath": "MedicationRequest.medication[x].extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "Extension present only in target: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-17",
+      "id": "gold-mr-15",
       "type": "STRUCTURAL",
       "sourcePath": "MedicationRequest.subject",
       "targetPath": "MedicationRequest.subject",
-      "description": "Reference target profile changed: [http://hl7.org/fhir/StructureDefinition/Group, http://hl7.org/fhir/StructureDefinition/Patient] -> [http://hl7.org/fhir/us/core/StructureDefinition/us-core-patient]",
+      "description": "MustSupport added in target (min=1 in R4 -> conformance-critical).",
       "severity": "WARNING"
     },
     {
-      "id": "rule-18",
+      "id": "gold-mr-16",
       "type": "STRUCTURAL",
       "sourcePath": "MedicationRequest.subject",
       "targetPath": "MedicationRequest.subject",
-      "description": "MustSupport added in target",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-19",
-      "type": "EXTENSION",
-      "sourcePath": "MedicationRequest.subject",
-      "targetPath": "MedicationRequest.subject.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "Extension present only in target: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+      "description": "Reference target profile constrained: R4 allows Reference(Patient|Group). US Core restricts to Reference(us-core-patient) only.",
       "severity": "WARNING"
     },
     {
-      "id": "rule-20",
+      "id": "gold-mr-17",
       "type": "STRUCTURAL",
       "sourcePath": "MedicationRequest.encounter",
       "targetPath": "MedicationRequest.encounter",
-      "description": "Reference target profile changed: [http://hl7.org/fhir/StructureDefinition/Encounter] -> [http://hl7.org/fhir/us/core/StructureDefinition/us-core-encounter]",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-21",
-      "type": "STRUCTURAL",
-      "sourcePath": "MedicationRequest.encounter",
-      "targetPath": "MedicationRequest.encounter",
-      "description": "MustSupport added in target",
+      "description": "MustSupport added in target (min=0, optional but must be supported when present).",
       "severity": "INFO"
     },
     {
-      "id": "rule-22",
-      "type": "EXTENSION",
+      "id": "gold-mr-18",
+      "type": "STRUCTURAL",
       "sourcePath": "MedicationRequest.encounter",
-      "targetPath": "MedicationRequest.encounter.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "Extension present only in target: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+      "targetPath": "MedicationRequest.encounter",
+      "description": "Reference target profile constrained: R4 allows Reference(Encounter). US Core restricts to Reference(us-core-encounter).",
       "severity": "WARNING"
     },
     {
-      "id": "rule-23",
+      "id": "gold-mr-19",
       "type": "STRUCTURAL",
       "sourcePath": "MedicationRequest.authoredOn",
       "targetPath": "MedicationRequest.authoredOn",
-      "description": "MustSupport added in target",
+      "description": "MustSupport added in target (min=0, optional but must be supported when present).",
       "severity": "INFO"
     },
     {
-      "id": "rule-24",
-      "type": "EXTENSION",
-      "sourcePath": "MedicationRequest.authoredOn",
-      "targetPath": "MedicationRequest.authoredOn.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "Extension present only in target: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-25",
+      "id": "gold-mr-20",
       "type": "STRUCTURAL",
       "sourcePath": "MedicationRequest.requester",
       "targetPath": "MedicationRequest.requester",
-      "description": "Reference target profile changed: [http://hl7.org/fhir/StructureDefinition/Device, http://hl7.org/fhir/StructureDefinition/Organization, http://hl7.org/fhir/StructureDefinition/Patient, http://hl7.org/fhir/StructureDefinition/Practitioner, http://hl7.org/fhir/StructureDefinition/PractitionerRole, http://hl7.org/fhir/StructureDefinition/RelatedPerson] -> [http://hl7.org/fhir/StructureDefinition/Device, http://hl7.org/fhir/us/core/StructureDefinition/us-core-organization, http://hl7.org/fhir/us/core/StructureDefinition/us-core-patient, http://hl7.org/fhir/us/core/StructureDefinition/us-core-practitioner, http://hl7.org/fhir/us/core/StructureDefinition/us-core-practitionerrole, http://hl7.org/fhir/us/core/StructureDefinition/us-core-relatedperson]",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-26",
-      "type": "STRUCTURAL",
-      "sourcePath": "MedicationRequest.requester",
-      "targetPath": "MedicationRequest.requester",
-      "description": "Type target support changed: target marks the us-core-practitioner reference as type-level MustSupport",
+      "description": "MustSupport added in target (min=0, optional but must be supported when present). Conditionally required by us-core-21 when intent is an order type.",
       "severity": "INFO"
     },
     {
-      "id": "rule-27",
+      "id": "gold-mr-21",
       "type": "STRUCTURAL",
       "sourcePath": "MedicationRequest.requester",
       "targetPath": "MedicationRequest.requester",
-      "description": "MustSupport added in target",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-28",
-      "type": "EXTENSION",
-      "sourcePath": "MedicationRequest.requester",
-      "targetPath": "MedicationRequest.requester.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "Extension present only in target: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+      "description": "Reference target profiles constrained: R4 allows Reference(Practitioner|PractitionerRole|Organization|Patient|RelatedPerson|Device). US Core restricts to Reference(us-core-practitioner|us-core-patient|us-core-organization|us-core-practitionerrole|us-core-relatedperson|Device). Device is preserved; human-facing references replaced with US Core profiles.",
       "severity": "WARNING"
     },
     {
-      "id": "rule-29",
+      "id": "gold-mr-22",
       "type": "TERMINOLOGY",
       "sourcePath": "MedicationRequest.reasonCode",
       "targetPath": "MedicationRequest.reasonCode",
-      "description": "Binding changed: example(http://hl7.org/fhir/ValueSet/condition-code) -> extensible(http://hl7.org/fhir/us/core/ValueSet/us-core-condition-code)",
+      "description": "Binding changed: R4 uses example strength to http://hl7.org/fhir/ValueSet/condition-code. US Core tightens to extensible strength with http://hl7.org/fhir/us/core/ValueSet/us-core-condition-code (US-specific condition codes). Binding strength tightened: example -> extensible. No mustSupport added.",
       "severity": "WARNING"
     },
     {
-      "id": "rule-30",
-      "type": "EXTENSION",
-      "sourcePath": "MedicationRequest.reasonCode",
-      "targetPath": "MedicationRequest.reasonCode.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "Extension present only in target: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-31",
-      "type": "EXTENSION",
-      "sourcePath": "MedicationRequest.reasonReference",
-      "targetPath": "MedicationRequest.reasonReference.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "Extension present only in target: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-32",
+      "id": "gold-mr-23",
       "type": "STRUCTURAL",
       "sourcePath": "MedicationRequest.dosageInstruction",
       "targetPath": "MedicationRequest.dosageInstruction",
-      "description": "MustSupport added in target",
+      "description": "MustSupport added in target (min=0, optional but must be supported when present).",
       "severity": "INFO"
     },
     {
-      "id": "rule-33",
-      "type": "EXTENSION",
-      "sourcePath": "MedicationRequest.dosageInstruction",
-      "targetPath": "MedicationRequest.dosageInstruction.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "Extension present only in target: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-34",
+      "id": "gold-mr-24",
       "type": "STRUCTURAL",
       "sourcePath": "MedicationRequest.dosageInstruction.text",
       "targetPath": "MedicationRequest.dosageInstruction.text",
-      "description": "MustSupport added in target",
+      "description": "MustSupport added in target (min=0, optional but must be supported when present). R4 MedicationRequest snapshot does not explicitly constrain Dosage sub-elements; this is the first explicit constraint on dosageInstruction.text.",
       "severity": "INFO"
     },
     {
-      "id": "rule-35",
-      "type": "EXTENSION",
-      "sourcePath": "MedicationRequest.dosageInstruction.text",
-      "targetPath": "MedicationRequest.dosageInstruction.text.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "Extension present only in target: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-36",
+      "id": "gold-mr-25",
       "type": "STRUCTURAL",
       "sourcePath": "MedicationRequest.dosageInstruction.timing",
       "targetPath": "MedicationRequest.dosageInstruction.timing",
-      "description": "MustSupport added in target",
+      "description": "MustSupport added in target (min=0, optional but must be supported when present). R4 MedicationRequest snapshot does not explicitly constrain Dosage sub-elements; this is the first explicit constraint on dosageInstruction.timing.",
       "severity": "INFO"
     },
     {
-      "id": "rule-37",
-      "type": "EXTENSION",
-      "sourcePath": "MedicationRequest.dosageInstruction.timing",
-      "targetPath": "MedicationRequest.dosageInstruction.timing.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "Extension present only in target: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-38",
+      "id": "gold-mr-26",
       "type": "STRUCTURAL",
       "sourcePath": "MedicationRequest.dosageInstruction.doseAndRate",
       "targetPath": "MedicationRequest.dosageInstruction.doseAndRate",
-      "description": "MustSupport added in target",
+      "description": "MustSupport added in target (min=0, optional but must be supported when present). R4 MedicationRequest snapshot does not explicitly constrain Dosage sub-elements; this is the first explicit constraint on dosageInstruction.doseAndRate.",
       "severity": "INFO"
     },
     {
-      "id": "rule-39",
-      "type": "EXTENSION",
-      "sourcePath": "MedicationRequest.dosageInstruction.doseAndRate",
-      "targetPath": "MedicationRequest.dosageInstruction.doseAndRate.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "Extension present only in target: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-40",
+      "id": "gold-mr-27",
       "type": "STRUCTURAL",
       "sourcePath": "MedicationRequest.dosageInstruction.doseAndRate.dose[x]",
       "targetPath": "MedicationRequest.dosageInstruction.doseAndRate.dose[x]",
-      "description": "MustSupport added in target, including type-level MustSupport on Quantity",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-41",
-      "type": "TERMINOLOGY",
-      "sourcePath": "MedicationRequest.dosageInstruction.doseAndRate.dose[x]",
-      "targetPath": "MedicationRequest.dosageInstruction.doseAndRate.dose[x]",
-      "description": "Preferred binding added in target: http://hl7.org/fhir/ValueSet/ucum-common with additional maxValueSet http://hl7.org/fhir/ValueSet/ucum-units",
+      "description": "MustSupport added in target. New binding added: preferred strength to http://hl7.org/fhir/ValueSet/ucum-common (UCUM common units). R4 has no explicit constraint on this element.",
       "severity": "WARNING"
     },
     {
-      "id": "rule-42",
-      "type": "EXTENSION",
-      "sourcePath": "MedicationRequest.dosageInstruction.doseAndRate.dose[x]",
-      "targetPath": "MedicationRequest.dosageInstruction.doseAndRate.dose[x].extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "Extension present only in target: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-43",
+      "id": "gold-mr-28",
       "type": "STRUCTURAL",
       "sourcePath": "MedicationRequest.dispenseRequest",
       "targetPath": "MedicationRequest.dispenseRequest",
-      "description": "MustSupport added in target",
+      "description": "MustSupport added in target (min=0, optional but must be supported when present).",
       "severity": "INFO"
     },
     {
-      "id": "rule-44",
-      "type": "EXTENSION",
-      "sourcePath": "MedicationRequest.dispenseRequest",
-      "targetPath": "MedicationRequest.dispenseRequest.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "Extension present only in target: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-45",
+      "id": "gold-mr-29",
       "type": "STRUCTURAL",
       "sourcePath": "MedicationRequest.dispenseRequest.numberOfRepeatsAllowed",
       "targetPath": "MedicationRequest.dispenseRequest.numberOfRepeatsAllowed",
-      "description": "MustSupport added in target",
+      "description": "MustSupport added in target (min=0, optional but must be supported when present).",
       "severity": "INFO"
     },
     {
-      "id": "rule-46",
-      "type": "EXTENSION",
-      "sourcePath": "MedicationRequest.dispenseRequest.numberOfRepeatsAllowed",
-      "targetPath": "MedicationRequest.dispenseRequest.numberOfRepeatsAllowed.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "Extension present only in target: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-47",
+      "id": "gold-mr-30",
       "type": "STRUCTURAL",
       "sourcePath": "MedicationRequest.dispenseRequest.quantity",
       "targetPath": "MedicationRequest.dispenseRequest.quantity",
-      "description": "MustSupport added in target",
+      "description": "MustSupport added in target (min=0, optional but must be supported when present).",
+      "severity": "INFO"    },
+    {
+      "id": "gold-mr-31",
+      "type": "EXTENSION",
+      "sourcePath": "MedicationRequest.status",
+      "targetPath": "MedicationRequest.status",
+      "description": "Element-level USCDI requirement annotation extension (uscdi-requirement=true) added to MedicationRequest.status in target profile. Marks this element as a US Core Data for Interoperability requirement.",
       "severity": "INFO"
     },
     {
-      "id": "rule-48",
+      "id": "gold-mr-32",
+      "type": "EXTENSION",
+      "sourcePath": "MedicationRequest.intent",
+      "targetPath": "MedicationRequest.intent",
+      "description": "Element-level USCDI requirement annotation extension (uscdi-requirement=true) added to MedicationRequest.intent in target profile. Marks this element as a US Core Data for Interoperability requirement.",
+      "severity": "INFO"
+    },
+    {
+      "id": "gold-mr-33",
+      "type": "EXTENSION",
+      "sourcePath": "MedicationRequest.category",
+      "targetPath": "MedicationRequest.category",
+      "description": "Element-level USCDI requirement annotation extension (uscdi-requirement=true) added to MedicationRequest.category in target profile. Marks this element as a US Core Data for Interoperability requirement.",
+      "severity": "INFO"
+    },
+    {
+      "id": "gold-mr-34",
+      "type": "EXTENSION",
+      "sourcePath": null,
+      "targetPath": "MedicationRequest.category:us-core",
+      "description": "Element-level USCDI requirement annotation extension (uscdi-requirement=true) added to MedicationRequest.category:us-core in target profile. Marks this slice as a US Core Data for Interoperability requirement. No equivalent element in R4 base.",
+      "severity": "INFO"
+    },
+    {
+      "id": "gold-mr-35",
+      "type": "EXTENSION",
+      "sourcePath": "MedicationRequest.reported[x]",
+      "targetPath": "MedicationRequest.reported[x]",
+      "description": "Element-level USCDI requirement annotation extension (uscdi-requirement=true) added to MedicationRequest.reported[x] in target profile. Marks this element as a US Core Data for Interoperability requirement.",
+      "severity": "INFO"
+    },
+    {
+      "id": "gold-mr-36",
+      "type": "EXTENSION",
+      "sourcePath": "MedicationRequest.medication[x]",
+      "targetPath": "MedicationRequest.medication[x]",
+      "description": "Element-level USCDI requirement annotation extension (uscdi-requirement=true) added to MedicationRequest.medication[x] in target profile. Marks this element as a US Core Data for Interoperability requirement.",
+      "severity": "INFO"
+    },
+    {
+      "id": "gold-mr-37",
+      "type": "EXTENSION",
+      "sourcePath": "MedicationRequest.subject",
+      "targetPath": "MedicationRequest.subject",
+      "description": "Element-level USCDI requirement annotation extension (uscdi-requirement=true) added to MedicationRequest.subject in target profile. Marks this element as a US Core Data for Interoperability requirement.",
+      "severity": "INFO"
+    },
+    {
+      "id": "gold-mr-38",
+      "type": "EXTENSION",
+      "sourcePath": "MedicationRequest.encounter",
+      "targetPath": "MedicationRequest.encounter",
+      "description": "Element-level USCDI requirement annotation extension (uscdi-requirement=true) added to MedicationRequest.encounter in target profile. Marks this element as a US Core Data for Interoperability requirement.",
+      "severity": "INFO"
+    },
+    {
+      "id": "gold-mr-39",
+      "type": "EXTENSION",
+      "sourcePath": "MedicationRequest.authoredOn",
+      "targetPath": "MedicationRequest.authoredOn",
+      "description": "Element-level USCDI requirement annotation extension (uscdi-requirement=true) added to MedicationRequest.authoredOn in target profile. Marks this element as a US Core Data for Interoperability requirement.",
+      "severity": "INFO"
+    },
+    {
+      "id": "gold-mr-40",
+      "type": "EXTENSION",
+      "sourcePath": "MedicationRequest.requester",
+      "targetPath": "MedicationRequest.requester",
+      "description": "Element-level USCDI requirement annotation extension (uscdi-requirement=true) added to MedicationRequest.requester in target profile. Marks this element as a US Core Data for Interoperability requirement.",
+      "severity": "INFO"
+    },
+    {
+      "id": "gold-mr-41",
+      "type": "EXTENSION",
+      "sourcePath": "MedicationRequest.reasonCode",
+      "targetPath": "MedicationRequest.reasonCode",
+      "description": "Element-level USCDI requirement annotation extension (uscdi-requirement=true) added to MedicationRequest.reasonCode in target profile. Marks this element as a US Core Data for Interoperability requirement.",
+      "severity": "INFO"
+    },
+    {
+      "id": "gold-mr-42",
+      "type": "EXTENSION",
+      "sourcePath": "MedicationRequest.reasonReference",
+      "targetPath": "MedicationRequest.reasonReference",
+      "description": "Element-level USCDI requirement annotation extension (uscdi-requirement=true) added to MedicationRequest.reasonReference in target profile. Marks this element as a US Core Data for Interoperability requirement.",
+      "severity": "INFO"
+    },
+    {
+      "id": "gold-mr-43",
+      "type": "EXTENSION",
+      "sourcePath": "MedicationRequest.dosageInstruction",
+      "targetPath": "MedicationRequest.dosageInstruction",
+      "description": "Element-level USCDI requirement annotation extension (uscdi-requirement=true) added to MedicationRequest.dosageInstruction in target profile. Marks this element as a US Core Data for Interoperability requirement.",
+      "severity": "INFO"
+    },
+    {
+      "id": "gold-mr-44",
+      "type": "EXTENSION",
+      "sourcePath": "MedicationRequest.dosageInstruction.text",
+      "targetPath": "MedicationRequest.dosageInstruction.text",
+      "description": "Element-level USCDI requirement annotation extension (uscdi-requirement=true) added to MedicationRequest.dosageInstruction.text in target profile. Marks this element as a US Core Data for Interoperability requirement.",
+      "severity": "INFO"
+    },
+    {
+      "id": "gold-mr-45",
+      "type": "EXTENSION",
+      "sourcePath": "MedicationRequest.dosageInstruction.timing",
+      "targetPath": "MedicationRequest.dosageInstruction.timing",
+      "description": "Element-level USCDI requirement annotation extension (uscdi-requirement=true) added to MedicationRequest.dosageInstruction.timing in target profile. Marks this element as a US Core Data for Interoperability requirement.",
+      "severity": "INFO"
+    },
+    {
+      "id": "gold-mr-46",
+      "type": "EXTENSION",
+      "sourcePath": "MedicationRequest.dosageInstruction.doseAndRate",
+      "targetPath": "MedicationRequest.dosageInstruction.doseAndRate",
+      "description": "Element-level USCDI requirement annotation extension (uscdi-requirement=true) added to MedicationRequest.dosageInstruction.doseAndRate in target profile. Marks this element as a US Core Data for Interoperability requirement.",
+      "severity": "INFO"
+    },
+    {
+      "id": "gold-mr-47",
+      "type": "EXTENSION",
+      "sourcePath": "MedicationRequest.dosageInstruction.doseAndRate.dose[x]",
+      "targetPath": "MedicationRequest.dosageInstruction.doseAndRate.dose[x]",
+      "description": "Element-level USCDI requirement annotation extension (uscdi-requirement=true) added to MedicationRequest.dosageInstruction.doseAndRate.dose[x] in target profile. Marks this element as a US Core Data for Interoperability requirement.",
+      "severity": "INFO"
+    },
+    {
+      "id": "gold-mr-48",
+      "type": "EXTENSION",
+      "sourcePath": "MedicationRequest.dispenseRequest",
+      "targetPath": "MedicationRequest.dispenseRequest",
+      "description": "Element-level USCDI requirement annotation extension (uscdi-requirement=true) added to MedicationRequest.dispenseRequest in target profile. Marks this element as a US Core Data for Interoperability requirement.",
+      "severity": "INFO"
+    },
+    {
+      "id": "gold-mr-49",
+      "type": "EXTENSION",
+      "sourcePath": "MedicationRequest.dispenseRequest.numberOfRepeatsAllowed",
+      "targetPath": "MedicationRequest.dispenseRequest.numberOfRepeatsAllowed",
+      "description": "Element-level USCDI requirement annotation extension (uscdi-requirement=true) added to MedicationRequest.dispenseRequest.numberOfRepeatsAllowed in target profile. Marks this element as a US Core Data for Interoperability requirement.",
+      "severity": "INFO"
+    },
+    {
+      "id": "gold-mr-50",
       "type": "EXTENSION",
       "sourcePath": "MedicationRequest.dispenseRequest.quantity",
-      "targetPath": "MedicationRequest.dispenseRequest.quantity.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "Extension present only in target: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
-      "severity": "WARNING"
-    }
+      "targetPath": "MedicationRequest.dispenseRequest.quantity",
+      "description": "Element-level USCDI requirement annotation extension (uscdi-requirement=true) added to MedicationRequest.dispenseRequest.quantity in target profile. Marks this element as a US Core Data for Interoperability requirement.",
+      "severity": "INFO"    }
   ]
 }

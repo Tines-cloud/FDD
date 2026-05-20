@@ -43,7 +43,7 @@ fdd:
 
     openrouter:
       api-key: ${OPENROUTER_API_KEY:}
-      model: google/gemini-2.5-flash
+      model: openai/gpt-5.4
       base-url: https://openrouter.ai/api
 
   validation:

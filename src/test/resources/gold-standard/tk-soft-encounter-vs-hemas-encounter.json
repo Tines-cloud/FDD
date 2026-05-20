@@ -2,13 +2,14 @@
   "pairId": "tk-soft-encounter-vs-hemas-encounter",
   "sourceClasspath": "custom-profiles/tk-soft/tk-soft-encounter.json",
   "targetClasspath": "custom-profiles/hemas/hemas-encounter.json",
+  "_notes": "Hand-curated by reading both differentials in full. Source (tk-soft) has 2 root constraints (1 error, 1 warning) and focuses on clinic encounters with wardTransfer/triageCategory extensions, simple identifier constraints, and clinical data elements. Target (hemas) replaces extensions with hospital-specific ones (bedNumber, wardName, attendingConsultant), adds 3 root constraints (2 errors: hemas-enc-1 and hemas-enc-3, 1 warning: hemas-enc-2), introduces identifier slicing with mandatory admissionNumber slice [1..1], adds serviceType element, makes priority MustSupport, changes type/priority/admitSource/dischargeDisposition bindings to hemas ValueSets, removes bindings on participant.type and reasonCode, widens reference targets for participant.individual, diagnosis.condition, and location.location to R4 base (no type constraint), changes subject to hemas Patient, makes serviceProvider mandatory (min=1) with hemas Organization reference, and adds hospitalization.preAdmissionIdentifier/dietPreference and location.status elements. Encounter.status, class, participant (root), period, period.start, reasonCode (cardinality), diagnosis, diagnosis.use, hospitalization are structurally unchanged.",
   "drifts": [
     {
       "id": "rule-1",
       "type": "STRUCTURAL",
       "sourcePath": "Encounter",
       "targetPath": "Encounter",
-      "description": "Constraints added in target: [hemas-enc-1, hemas-enc-2, hemas-enc-3]",
+      "description": "Root constraints removed in target: [tk-enc-1 (error: Encounter must have a period when status is finished), tk-enc-2 (warning: Inpatient encounters should have hospitalization details)]. These constraints no longer apply in target profile.",
       "severity": "WARNING"
     },
     {
@@ -16,231 +17,255 @@
       "type": "STRUCTURAL",
       "sourcePath": "Encounter",
       "targetPath": "Encounter",
-      "description": "Constraints removed in target: [tk-enc-1, tk-enc-2]",
-      "severity": "WARNING"
+      "description": "New constraint 'hemas-enc-1' added in target (severity: error): 'Finished encounters must have an end date' — expression: status = 'finished' implies period.end.exists(). Not present in source profile.",
+      "severity": "ERROR"
     },
     {
       "id": "rule-3",
       "type": "STRUCTURAL",
-      "sourcePath": "Encounter.identifier",
-      "targetPath": "Encounter.identifier",
-      "description": "Slicing changed: none -> rules=open, discriminators=[pattern:type]",
+      "sourcePath": "Encounter",
+      "targetPath": "Encounter",
+      "description": "New constraint 'hemas-enc-2' added in target (severity: warning): 'Emergency encounters should have a priority' — expression: class.code = 'EMER' implies priority.exists(). Not present in source profile.",
       "severity": "WARNING"
     },
     {
       "id": "rule-4",
-      "type": "CARDINALITY",
-      "sourcePath": "Encounter.identifier.type",
-      "targetPath": "Encounter.identifier.type",
-      "description": "Cardinality changed: [0..1] -> [1..1]",
+      "type": "STRUCTURAL",
+      "sourcePath": "Encounter",
+      "targetPath": "Encounter",
+      "description": "New constraint 'hemas-enc-3' added in target (severity: error): 'Inpatient encounters must have a location' — expression: class.code = 'IMP' implies location.exists(). Not present in source profile.",
       "severity": "ERROR"
     },
     {
       "id": "rule-5",
-      "type": "TERMINOLOGY",
-      "sourcePath": "Encounter.identifier.type",
-      "targetPath": "Encounter.identifier.type",
-      "description": "Pattern value changed: 'none' -> 'org.hl7.fhir.r4.model.CodeableConcept@e4b7c76'",
+      "type": "EXTENSION",
+      "sourcePath": "Encounter.extension:wardTransfer",
+      "targetPath": "",
+      "description": "Extension slice 'wardTransfer' (0..*, MustSupport=true) removed in target profile. Was defined in source for tracking ward transfer events.",
       "severity": "WARNING"
     },
     {
       "id": "rule-6",
-      "type": "STRUCTURAL",
-      "sourcePath": "Encounter.identifier.type",
-      "targetPath": "Encounter.identifier.type",
-      "description": "MustSupport added in target",
-      "severity": "INFO"
+      "type": "EXTENSION",
+      "sourcePath": "Encounter.extension:triageCategory",
+      "targetPath": "",
+      "description": "Extension slice 'triageCategory' (0..1, MustSupport=true) removed in target profile. Was defined in source for capturing triage category.",
+      "severity": "WARNING"
     },
     {
       "id": "rule-7",
-      "type": "TERMINOLOGY",
-      "sourcePath": "Encounter.identifier.system",
-      "targetPath": "Encounter.identifier.system",
-      "description": "Fixed value changed: 'none' -> 'https://hemas.example.com/fhir/sid/admission-number'",
-      "severity": "ERROR"
+      "type": "EXTENSION",
+      "sourcePath": "",
+      "targetPath": "Encounter.extension:bedNumber",
+      "description": "New extension slice 'bedNumber' added in target (0..1, MustSupport=true). Hospital-specific extension for the assigned bed number. Not present in source profile.",
+      "severity": "WARNING"
     },
     {
       "id": "rule-8",
-      "type": "TERMINOLOGY",
-      "sourcePath": "Encounter.type",
-      "targetPath": "Encounter.type",
-      "description": "Binding changed: extensible(https://tk-soft.example.com/fhir/ValueSet/encounter-type) -> extensible(https://hemas.example.com/fhir/ValueSet/encounter-type)",
+      "type": "EXTENSION",
+      "sourcePath": "",
+      "targetPath": "Encounter.extension:wardName",
+      "description": "New extension slice 'wardName' added in target (0..1, MustSupport=true). Hospital-specific extension for the ward name. Not present in source profile.",
       "severity": "WARNING"
     },
     {
       "id": "rule-9",
-      "type": "TERMINOLOGY",
-      "sourcePath": "Encounter.serviceType",
-      "targetPath": "Encounter.serviceType",
-      "description": "Binding changed: example(http://hl7.org/fhir/ValueSet/service-type) -> extensible(https://hemas.example.com/fhir/ValueSet/service-type)",
+      "type": "EXTENSION",
+      "sourcePath": "",
+      "targetPath": "Encounter.extension:attendingConsultant",
+      "description": "New extension slice 'attendingConsultant' added in target (0..1, MustSupport=true). Hospital-specific extension for the attending consultant. Not present in source profile.",
       "severity": "WARNING"
     },
     {
       "id": "rule-10",
       "type": "STRUCTURAL",
-      "sourcePath": "Encounter.serviceType",
-      "targetPath": "Encounter.serviceType",
-      "description": "MustSupport added in target",
+      "sourcePath": "Encounter.identifier",
+      "targetPath": "Encounter.identifier",
+      "description": "Slicing added in target on Encounter.identifier: discriminator type=pattern, path=type, rules=open. Allows named identifier slices for specific identifier types (e.g., admissionNumber). Source had no slicing on identifier.",
       "severity": "INFO"
     },
     {
       "id": "rule-11",
-      "type": "TERMINOLOGY",
-      "sourcePath": "Encounter.priority",
-      "targetPath": "Encounter.priority",
-      "description": "Binding changed: extensible(https://tk-soft.example.com/fhir/ValueSet/encounter-priority) -> extensible(https://hemas.example.com/fhir/ValueSet/encounter-priority)",
-      "severity": "WARNING"
+      "type": "CARDINALITY",
+      "sourcePath": "Encounter.identifier",
+      "targetPath": "Encounter.identifier:admissionNumber",
+      "description": "New mandatory slice 'admissionNumber' added in target [1..1, MustSupport=true]. Requires exactly one admission number identifier with type coded as VN (Visit Number) from http://terminology.hl7.org/CodeSystem/v2-0203. Internal constraints: type min=1 (patternCodeableConcept=VN), system min=1, value min=1. Not present in source.",
+      "severity": "ERROR"
     },
     {
       "id": "rule-12",
       "type": "STRUCTURAL",
-      "sourcePath": "Encounter.priority",
-      "targetPath": "Encounter.priority",
-      "description": "MustSupport added in target",
-      "severity": "INFO"
+      "sourcePath": "",
+      "targetPath": "Encounter.identifier:admissionNumber",
+      "description": "MustSupport added on mandatory slice 'admissionNumber' [1..1]. New MS=true slice on a now-required identifier element.",
+      "severity": "WARNING"
     },
     {
       "id": "rule-13",
-      "type": "STRUCTURAL",
-      "sourcePath": "Encounter.subject",
-      "targetPath": "Encounter.subject",
-      "description": "Reference target profile changed: [https://tk-soft.example.com/fhir/StructureDefinition/Patient] -> [https://hemas.example.com/fhir/StructureDefinition/Patient]",
-      "severity": "WARNING"
+      "type": "CARDINALITY",
+      "sourcePath": "Encounter.identifier.system",
+      "targetPath": "Encounter.identifier.system",
+      "description": "Cardinality changed at root level: [1..1] -> [0..1]. Source requires system on ALL identifiers (min=1 at root). Target removes this root-level constraint (system only required within the admissionNumber slice). Effective relaxation for non-admissionNumber identifiers.",
+      "severity": "INFO"
     },
     {
       "id": "rule-14",
       "type": "STRUCTURAL",
-      "sourcePath": "Encounter.participant.individual",
-      "targetPath": "Encounter.participant.individual",
-      "description": "Reference target profile changed: [https://tk-soft.example.com/fhir/StructureDefinition/Practitioner] -> [http://hl7.org/fhir/StructureDefinition/Practitioner, http://hl7.org/fhir/StructureDefinition/PractitionerRole, http://hl7.org/fhir/StructureDefinition/RelatedPerson]",
-      "severity": "WARNING"
+      "sourcePath": "Encounter.identifier.system",
+      "targetPath": "Encounter.identifier.system",
+      "description": "MustSupport removed at root level. Source had identifier.system as MustSupport=true at root. Target removes root-level MustSupport (system is only MustSupport within the admissionNumber slice).",
+      "severity": "INFO"
     },
     {
       "id": "rule-15",
-      "type": "TERMINOLOGY",
-      "sourcePath": "Encounter.reasonCode",
-      "targetPath": "Encounter.reasonCode",
-      "description": "Binding changed: extensible(https://tk-soft.example.com/fhir/ValueSet/encounter-reason) -> preferred(http://hl7.org/fhir/ValueSet/encounter-reason)",
-      "severity": "WARNING"
+      "type": "CARDINALITY",
+      "sourcePath": "Encounter.identifier.value",
+      "targetPath": "Encounter.identifier.value",
+      "description": "Cardinality changed at root level: [1..1] -> [0..1]. Source requires value on ALL identifiers (min=1 at root). Target removes this root-level constraint (value only required within the admissionNumber slice). Effective relaxation for non-admissionNumber identifiers.",
+      "severity": "INFO"
     },
     {
       "id": "rule-16",
       "type": "STRUCTURAL",
-      "sourcePath": "Encounter.diagnosis.condition",
-      "targetPath": "Encounter.diagnosis.condition",
-      "description": "Reference target profile changed: [https://tk-soft.example.com/fhir/StructureDefinition/Condition] -> [http://hl7.org/fhir/StructureDefinition/Condition, http://hl7.org/fhir/StructureDefinition/Procedure]",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-17",
-      "type": "STRUCTURAL",
-      "sourcePath": "Encounter.hospitalization.preAdmissionIdentifier",
-      "targetPath": "Encounter.hospitalization.preAdmissionIdentifier",
-      "description": "MustSupport added in target",
+      "sourcePath": "Encounter.identifier.value",
+      "targetPath": "Encounter.identifier.value",
+      "description": "MustSupport removed at root level. Source had identifier.value as MustSupport=true at root. Target removes root-level MustSupport (value is only MustSupport within the admissionNumber slice).",
       "severity": "INFO"
     },
     {
-      "id": "rule-18",
+      "id": "rule-17",
       "type": "TERMINOLOGY",
-      "sourcePath": "Encounter.hospitalization.admitSource",
-      "targetPath": "Encounter.hospitalization.admitSource",
-      "description": "Binding changed: extensible(https://tk-soft.example.com/fhir/ValueSet/admit-source) -> extensible(https://hemas.example.com/fhir/ValueSet/admit-source)",
+      "sourcePath": "Encounter.type",
+      "targetPath": "Encounter.type",
+      "description": "Binding changed: Source uses extensible(https://tk-soft.example.com/fhir/ValueSet/encounter-type). Target uses extensible(https://hemas.example.com/fhir/ValueSet/encounter-type). Same binding strength but different ValueSet — target uses hemas-specific encounter types.",
       "severity": "WARNING"
+    },
+    {
+      "id": "rule-18",
+      "type": "STRUCTURAL",
+      "sourcePath": "",
+      "targetPath": "Encounter.serviceType",
+      "description": "New MustSupport element 'serviceType' added in target (min=0, MustSupport=true, extensible:hemas service-type binding). Captures the specific service type of the encounter. Not present in source profile.",
+      "severity": "INFO"
     },
     {
       "id": "rule-19",
       "type": "STRUCTURAL",
-      "sourcePath": "Encounter.hospitalization.dietPreference",
-      "targetPath": "Encounter.hospitalization.dietPreference",
-      "description": "MustSupport added in target",
+      "sourcePath": "Encounter.priority",
+      "targetPath": "Encounter.priority",
+      "description": "MustSupport added in target (min=0, optional element). Source defined priority with a binding but MustSupport=false. Target adds MustSupport=true.",
       "severity": "INFO"
     },
     {
       "id": "rule-20",
       "type": "TERMINOLOGY",
-      "sourcePath": "Encounter.hospitalization.dischargeDisposition",
-      "targetPath": "Encounter.hospitalization.dischargeDisposition",
-      "description": "Binding changed: extensible(https://tk-soft.example.com/fhir/ValueSet/discharge-disposition) -> extensible(https://hemas.example.com/fhir/ValueSet/discharge-disposition)",
+      "sourcePath": "Encounter.priority",
+      "targetPath": "Encounter.priority",
+      "description": "Binding changed: Source uses extensible(https://tk-soft.example.com/fhir/ValueSet/encounter-priority). Target uses extensible(https://hemas.example.com/fhir/ValueSet/encounter-priority). Same binding strength but different ValueSet.",
       "severity": "WARNING"
     },
     {
       "id": "rule-21",
       "type": "STRUCTURAL",
-      "sourcePath": "Encounter.location.location",
-      "targetPath": "Encounter.location.location",
-      "description": "Reference target profile changed: [https://tk-soft.example.com/fhir/StructureDefinition/Location] -> [http://hl7.org/fhir/StructureDefinition/Location]",
+      "sourcePath": "Encounter.subject",
+      "targetPath": "Encounter.subject",
+      "description": "Reference target profile changed: Source constrains to [https://tk-soft.example.com/fhir/StructureDefinition/Patient]. Target constrains to [https://hemas.example.com/fhir/StructureDefinition/Patient].",
       "severity": "WARNING"
     },
     {
       "id": "rule-22",
-      "type": "STRUCTURAL",
-      "sourcePath": "Encounter.location.status",
-      "targetPath": "Encounter.location.status",
-      "description": "MustSupport added in target",
+      "type": "TERMINOLOGY",
+      "sourcePath": "Encounter.participant.type",
+      "targetPath": "Encounter.participant.type",
+      "description": "Binding removed in target: Source uses extensible(http://hl7.org/fhir/ValueSet/encounter-participant-type). Target has no explicit binding on participant.type (inherits R4 base). Binding constraint relaxed.",
       "severity": "INFO"
     },
     {
       "id": "rule-23",
-      "type": "CARDINALITY",
-      "sourcePath": "Encounter.serviceProvider",
-      "targetPath": "Encounter.serviceProvider",
-      "description": "Cardinality changed: [0..1] -> [1..1]",
-      "severity": "ERROR"
-    },
-    {
-      "id": "rule-24",
       "type": "STRUCTURAL",
-      "sourcePath": "Encounter.serviceProvider",
-      "targetPath": "Encounter.serviceProvider",
-      "description": "Reference target profile changed: [https://tk-soft.example.com/fhir/StructureDefinition/Organization] -> [https://hemas.example.com/fhir/StructureDefinition/Organization]",
+      "sourcePath": "Encounter.participant.individual",
+      "targetPath": "Encounter.participant.individual",
+      "description": "Reference target profile changed: Source constrains to [https://tk-soft.example.com/fhir/StructureDefinition/Practitioner]. Target has no explicit type constraint (inherits R4 base: Practitioner|PractitionerRole|RelatedPerson) — reference is widened.",
       "severity": "WARNING"
     },
     {
+      "id": "rule-24",
+      "type": "TERMINOLOGY",
+      "sourcePath": "Encounter.reasonCode",
+      "targetPath": "Encounter.reasonCode",
+      "description": "Binding removed in target: Source uses extensible(https://tk-soft.example.com/fhir/ValueSet/encounter-reason). Target has no explicit binding on reasonCode (inherits R4 base). Binding constraint relaxed.",
+      "severity": "INFO"
+    },
+    {
       "id": "rule-25",
-      "type": "EXTENSION",
-      "sourcePath": "",
-      "targetPath": "Encounter.extension:bedNumber",
-      "description": "Extension added in target profile: Encounter.extension:bedNumber",
+      "type": "STRUCTURAL",
+      "sourcePath": "Encounter.diagnosis.condition",
+      "targetPath": "Encounter.diagnosis.condition",
+      "description": "Reference target profile changed: Source constrains to [https://tk-soft.example.com/fhir/StructureDefinition/Condition]. Target has no explicit type constraint (inherits R4 base: Condition|Procedure) — reference is widened.",
       "severity": "WARNING"
     },
     {
       "id": "rule-26",
-      "type": "EXTENSION",
+      "type": "STRUCTURAL",
       "sourcePath": "",
-      "targetPath": "Encounter.extension:wardName",
-      "description": "Extension added in target profile: Encounter.extension:wardName",
-      "severity": "WARNING"
+      "targetPath": "Encounter.hospitalization.preAdmissionIdentifier",
+      "description": "New MustSupport element 'hospitalization.preAdmissionIdentifier' added in target (min=0, MustSupport=true). Captures pre-admission identifier details. Not present in source profile.",
+      "severity": "INFO"
     },
     {
       "id": "rule-27",
-      "type": "EXTENSION",
-      "sourcePath": "",
-      "targetPath": "Encounter.extension:attendingConsultant",
-      "description": "Extension added in target profile: Encounter.extension:attendingConsultant",
+      "type": "TERMINOLOGY",
+      "sourcePath": "Encounter.hospitalization.admitSource",
+      "targetPath": "Encounter.hospitalization.admitSource",
+      "description": "Binding changed: Source uses extensible(https://tk-soft.example.com/fhir/ValueSet/admit-source). Target uses extensible(https://hemas.example.com/fhir/ValueSet/admit-source). Same binding strength but different ValueSet.",
       "severity": "WARNING"
     },
     {
       "id": "rule-28",
       "type": "STRUCTURAL",
       "sourcePath": "",
-      "targetPath": "Encounter.identifier:admissionNumber",
-      "description": "New slice 'admissionNumber' added in target profile",
-      "severity": "ERROR"
+      "targetPath": "Encounter.hospitalization.dietPreference",
+      "description": "New MustSupport element 'hospitalization.dietPreference' added in target (min=0, MustSupport=true). Captures patient dietary preferences during hospitalisation. Not present in source profile.",
+      "severity": "INFO"
     },
     {
       "id": "rule-29",
-      "type": "EXTENSION",
-      "sourcePath": "Encounter.extension:wardTransfer",
-      "targetPath": "",
-      "description": "Extension removed in target profile: Encounter.extension:wardTransfer (was mustSupport)",
+      "type": "TERMINOLOGY",
+      "sourcePath": "Encounter.hospitalization.dischargeDisposition",
+      "targetPath": "Encounter.hospitalization.dischargeDisposition",
+      "description": "Binding changed: Source uses extensible(https://tk-soft.example.com/fhir/ValueSet/discharge-disposition). Target uses extensible(https://hemas.example.com/fhir/ValueSet/discharge-disposition). Same binding strength but different ValueSet.",
       "severity": "WARNING"
     },
     {
       "id": "rule-30",
-      "type": "EXTENSION",
-      "sourcePath": "Encounter.extension:triageCategory",
-      "targetPath": "",
-      "description": "Extension removed in target profile: Encounter.extension:triageCategory (was mustSupport)",
+      "type": "STRUCTURAL",
+      "sourcePath": "Encounter.location.location",
+      "targetPath": "Encounter.location.location",
+      "description": "Reference target profile changed: Source constrains to [https://tk-soft.example.com/fhir/StructureDefinition/Location]. Target has no explicit type constraint (inherits R4 base: Location) — reference is widened to base R4.",
+      "severity": "WARNING"
+    },
+    {
+      "id": "rule-31",
+      "type": "STRUCTURAL",
+      "sourcePath": "",
+      "targetPath": "Encounter.location.status",
+      "description": "New MustSupport element 'location.status' added in target (min=0, MustSupport=true). Captures the status of the encounter location. Not present in source profile.",
+      "severity": "INFO"
+    },
+    {
+      "id": "rule-32",
+      "type": "CARDINALITY",
+      "sourcePath": "Encounter.serviceProvider",
+      "targetPath": "Encounter.serviceProvider",
+      "description": "Cardinality changed: [0..1] -> [1..1]. Source has no explicit minimum (inherits R4 base min=0). Target makes serviceProvider mandatory — every encounter must have an associated organisation.",
+      "severity": "ERROR"
+    },
+    {
+      "id": "rule-33",
+      "type": "STRUCTURAL",
+      "sourcePath": "Encounter.serviceProvider",
+      "targetPath": "Encounter.serviceProvider",
+      "description": "Reference target profile changed: Source constrains to [https://tk-soft.example.com/fhir/StructureDefinition/Organization]. Target constrains to [https://hemas.example.com/fhir/StructureDefinition/Organization].",
       "severity": "WARNING"
     }
   ]

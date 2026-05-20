@@ -65,7 +65,7 @@ data class GroqProperties(
 
 data class OpenRouterProperties(
     val apiKey: String = "",
-    val model: String = "google/gemini-2.5-flash",
+    val model: String = "openai/gpt-5.4",
     val baseUrl: String = "https://openrouter.ai/api"
 )
 
