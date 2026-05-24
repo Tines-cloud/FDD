@@ -2,13 +2,14 @@
   "pairId": "au-core-organization-vs-us-core-organization",
   "sourceClasspath": "standard-profiles/au-core/StructureDefinition-au-core-organization.json",
   "targetClasspath": "standard-profiles/us-core/StructureDefinition-us-core-organization.json",
+  "_notes": "Source: AU Core Organization (Australian realm). Target: US Core Organization (US realm). Both make name[min=1 MS], telecom[MS], address[MS] mandatory. Key differences: AU Core uses system-discriminator slicing with AU-specific identifier slices (hpio, abn) and error constraint au-core-org-01; US Core replaces with $this-discriminator slicing and NPI/CLIA/NAIC error-constrained slices plus identifier sub-element constraints; US Core adds active[min=1] mandatory (ERROR); US Core adds detailed address and telecom sub-element MS constraints; AU Core marks type as MS; US Core does not.",
   "drifts": [
     {
       "id": "rule-1",
       "type": "STRUCTURAL",
       "sourcePath": "Organization.identifier",
       "targetPath": "Organization.identifier",
-      "description": "Type profile constraint changed: source allows AU-specific identifier profiles (au-hpio, au-paioidentifier, au-cspregistrationnumber, au-australianbusinessnumber, au-australiancompanynumber, au-australianregistredbodynumber, au-nataaccreditationnumber, au-pharmacyapprovalnumber) in addition to base Identifier, while target uses only base Identifier",
+      "description": "identifier slicing discriminator changed: source uses pattern:system discriminator (AU-specific hpio/abn profile-based slices); target uses pattern:$this discriminator (US-specific NPI/CLIA/NAIC slices). Slicing approach fundamentally changed between realms.",
       "severity": "WARNING"
     },
     {
@@ -16,23 +17,23 @@
       "type": "STRUCTURAL",
       "sourcePath": "Organization.identifier",
       "targetPath": "Organization.identifier",
-      "description": "Slicing changed: rules=open, discriminators=[pattern:system] -> rules=open, discriminators=[pattern:$this]",
+      "description": "Source error constraint au-core-org-01(error) on identifier removed in target: AU Core defines an error constraint on identifier (requiring identifier to be present when organization is active); US Core has no equivalent root identifier constraint.",
       "severity": "WARNING"
     },
     {
       "id": "rule-3",
       "type": "STRUCTURAL",
-      "sourcePath": "Organization.identifier",
-      "targetPath": "Organization.identifier",
-      "description": "Constraint removed in target: au-core-org-01 requires a National Organisation Identifier (type=NOI) to be an HPI-O or PAI-O",
+      "sourcePath": "Organization.identifier:hpio",
+      "targetPath": "Organization.identifier:hpio",
+      "description": "identifier:hpio AU slice [max=1, mustSupport=true, types=Identifier[au-hpio]] removed in target: no equivalent slice in US Core Organization.",
       "severity": "WARNING"
     },
     {
       "id": "rule-4",
-      "type": "EXTENSION",
-      "sourcePath": "Organization.identifier.extension(http://hl7.org/fhir/StructureDefinition/obligation)",
-      "targetPath": "Organization.identifier",
-      "description": "Extension removed in target element: http://hl7.org/fhir/StructureDefinition/obligation",
+      "type": "STRUCTURAL",
+      "sourcePath": "Organization.identifier:abn",
+      "targetPath": "Organization.identifier:abn",
+      "description": "identifier:abn AU slice [mustSupport=true, types=Identifier[au-australianbusinessnumber]] removed in target: no equivalent slice in US Core Organization.",
       "severity": "WARNING"
     },
     {
@@ -40,7 +41,7 @@
       "type": "STRUCTURAL",
       "sourcePath": "Organization.identifier.system",
       "targetPath": "Organization.identifier.system",
-      "description": "MustSupport added in target",
+      "description": "identifier.system MustSupport added on optional element in target: US Core adds identifier.system[max=1, mustSupport=true]; source AU Core has no sub-element constraint on identifier.system. MS added on optional element.",
       "severity": "INFO"
     },
     {
@@ -48,200 +49,112 @@
       "type": "STRUCTURAL",
       "sourcePath": "Organization.identifier.value",
       "targetPath": "Organization.identifier.value",
-      "description": "MustSupport added in target",
+      "description": "identifier.value MustSupport added on optional element in target: US Core adds identifier.value[max=1, mustSupport=true]; source AU Core has no sub-element constraint on identifier.value. MS added on optional element.",
       "severity": "INFO"
     },
     {
       "id": "rule-7",
       "type": "STRUCTURAL",
-      "sourcePath": "Organization.identifier:hpio",
-      "targetPath": "",
-      "description": "Slice removed in target profile: Organization.identifier:hpio (max=1, profile=http://hl7.org.au/fhir/StructureDefinition/au-hpio, mustSupport=true)",
-      "severity": "WARNING"
+      "sourcePath": "Organization.identifier:NPI",
+      "targetPath": "Organization.identifier:NPI",
+      "description": "New identifier:NPI slice with error constraints added in target: US Core adds identifier:NPI[mustSupport=true] with error constraints us-core-16(error) and us-core-17(error) requiring valid NPI format; source AU Core has no NPI slice.",
+      "severity": "ERROR"
     },
     {
       "id": "rule-8",
       "type": "STRUCTURAL",
-      "sourcePath": "Organization.identifier:abn",
-      "targetPath": "",
-      "description": "Slice removed in target profile: Organization.identifier:abn (profile=http://hl7.org.au/fhir/StructureDefinition/au-australianbusinessnumber, mustSupport=true)",
-      "severity": "WARNING"
+      "sourcePath": "Organization.identifier:CLIA",
+      "targetPath": "Organization.identifier:CLIA",
+      "description": "New identifier:CLIA slice with error constraint added in target: US Core adds identifier:CLIA with error constraint us-core-18(error) requiring valid CLIA format; source AU Core has no CLIA slice.",
+      "severity": "ERROR"
     },
     {
       "id": "rule-9",
       "type": "STRUCTURAL",
-      "sourcePath": "",
-      "targetPath": "Organization.identifier:NPI",
-      "description": "Slice added in target profile: Organization.identifier:NPI with fixed system http://hl7.org/fhir/sid/us-npi, mustSupport=true, and constraints us-core-16/us-core-17",
-      "severity": "WARNING"
+      "sourcePath": "Organization.identifier:NAIC",
+      "targetPath": "Organization.identifier:NAIC",
+      "description": "New identifier:NAIC slice with error constraint added in target: US Core adds identifier:NAIC with error constraint us-core-19(error) requiring valid NAIC format; source AU Core has no NAIC slice.",
+      "severity": "ERROR"
     },
     {
       "id": "rule-10",
-      "type": "STRUCTURAL",
-      "sourcePath": "",
-      "targetPath": "Organization.identifier:CLIA",
-      "description": "Slice added in target profile: Organization.identifier:CLIA with fixed system urn:oid:2.16.840.1.113883.4.7 and constraint us-core-18",
-      "severity": "WARNING"
+      "type": "CARDINALITY",
+      "sourcePath": "Organization.active",
+      "targetPath": "Organization.active",
+      "description": "active min cardinality strictly increased: target adds active[min=1, mustSupport=true]; source AU Core does not constrain active (effective min=0 from R4 base). Min increased 0→1; active becomes mandatory.",
+      "severity": "ERROR"
     },
     {
       "id": "rule-11",
       "type": "STRUCTURAL",
-      "sourcePath": "",
-      "targetPath": "Organization.identifier:NAIC",
-      "description": "Slice added in target profile: Organization.identifier:NAIC with fixed system urn:oid:2.16.840.1.113883.6.300 and constraint us-core-19",
-      "severity": "WARNING"
+      "sourcePath": "Organization.type",
+      "targetPath": "Organization.type",
+      "description": "type MustSupport removed on optional element: source AU Core marks type[mustSupport=true]; target US Core does not constrain type in its differential. MS removed on optional element.",
+      "severity": "INFO"
     },
     {
       "id": "rule-12",
-      "type": "CARDINALITY",
-      "sourcePath": "Organization.active",
-      "targetPath": "Organization.active",
-      "description": "Cardinality changed: [0..1] -> [1..1]",
-      "severity": "WARNING"
+      "type": "STRUCTURAL",
+      "sourcePath": "Organization.telecom.system",
+      "targetPath": "Organization.telecom.system",
+      "description": "telecom.system MustSupport added on optional element in target: US Core adds telecom.system[mustSupport=true]; source AU Core marks telecom as MS but does not constrain sub-elements. MS added on optional element.",
+      "severity": "INFO"
     },
     {
       "id": "rule-13",
       "type": "STRUCTURAL",
-      "sourcePath": "Organization.active",
-      "targetPath": "Organization.active",
-      "description": "MustSupport added in target",
+      "sourcePath": "Organization.telecom.value",
+      "targetPath": "Organization.telecom.value",
+      "description": "telecom.value MustSupport added on optional element in target: US Core adds telecom.value[mustSupport=true]; source AU Core does not constrain telecom.value. MS added on optional element.",
       "severity": "INFO"
     },
     {
       "id": "rule-14",
-      "type": "TERMINOLOGY",
-      "sourcePath": "Organization.type",
-      "targetPath": "Organization.type",
-      "description": "Binding changed: preferred(https://healthterminologies.gov.au/fhir/ValueSet/healthcare-organisation-role-type-1) -> example(http://hl7.org/fhir/ValueSet/organization-type)",
-      "severity": "WARNING"
+      "type": "STRUCTURAL",
+      "sourcePath": "Organization.address.line",
+      "targetPath": "Organization.address.line",
+      "description": "address.line MustSupport added on optional element in target: US Core adds address.line[max=4, mustSupport=true]; source AU Core marks address as MS but does not constrain sub-elements. MS added on optional element.",
+      "severity": "INFO"
     },
     {
       "id": "rule-15",
       "type": "STRUCTURAL",
-      "sourcePath": "Organization.type",
-      "targetPath": "Organization.type",
-      "description": "MustSupport removed in target",
+      "sourcePath": "Organization.address.city",
+      "targetPath": "Organization.address.city",
+      "description": "address.city MustSupport added on optional element in target: US Core adds address.city[max=1, mustSupport=true]; source AU Core does not constrain address.city. MS added on optional element.",
       "severity": "INFO"
     },
     {
       "id": "rule-16",
-      "type": "EXTENSION",
-      "sourcePath": "Organization.type.extension(http://hl7.org/fhir/StructureDefinition/obligation)",
-      "targetPath": "Organization.type",
-      "description": "Extension removed in target element: http://hl7.org/fhir/StructureDefinition/obligation",
-      "severity": "WARNING"
+      "type": "STRUCTURAL",
+      "sourcePath": "Organization.address.state",
+      "targetPath": "Organization.address.state",
+      "description": "address.state MustSupport added on optional element in target: US Core adds address.state[max=1, mustSupport=true]; source AU Core does not constrain address.state. MS added on optional element.",
+      "severity": "INFO"
     },
     {
       "id": "rule-17",
-      "type": "EXTENSION",
-      "sourcePath": "Organization.name.extension(http://hl7.org/fhir/StructureDefinition/obligation)",
-      "targetPath": "Organization.name",
-      "description": "Extension removed in target element: http://hl7.org/fhir/StructureDefinition/obligation",
+      "type": "TERMINOLOGY",
+      "sourcePath": "Organization.address.state",
+      "targetPath": "Organization.address.state",
+      "description": "address.state new binding added in target: US Core adds extensible(http://hl7.org/fhir/us/core/ValueSet/us-core-usps-state) [US postal state codes]; source has no binding on address.state. New US realm-specific binding applied.",
       "severity": "WARNING"
     },
     {
       "id": "rule-18",
-      "type": "EXTENSION",
-      "sourcePath": "Organization.telecom.extension(http://hl7.org/fhir/StructureDefinition/obligation)",
-      "targetPath": "Organization.telecom",
-      "description": "Extension removed in target element: http://hl7.org/fhir/StructureDefinition/obligation",
-      "severity": "WARNING"
+      "type": "STRUCTURAL",
+      "sourcePath": "Organization.address.postalCode",
+      "targetPath": "Organization.address.postalCode",
+      "description": "address.postalCode MustSupport added on optional element in target: US Core adds address.postalCode[max=1, mustSupport=true]; source AU Core does not constrain address.postalCode. MS added on optional element.",
+      "severity": "INFO"
     },
     {
       "id": "rule-19",
       "type": "STRUCTURAL",
-      "sourcePath": "Organization.telecom.system",
-      "targetPath": "Organization.telecom.system",
-      "description": "MustSupport added in target",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-20",
-      "type": "STRUCTURAL",
-      "sourcePath": "Organization.telecom.value",
-      "targetPath": "Organization.telecom.value",
-      "description": "MustSupport added in target",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-21",
-      "type": "STRUCTURAL",
-      "sourcePath": "Organization.address",
-      "targetPath": "Organization.address",
-      "description": "Type profile constraint changed: source uses Address with AU profile http://hl7.org.au/fhir/StructureDefinition/au-address, while target uses only the base Address type",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-22",
-      "type": "EXTENSION",
-      "sourcePath": "Organization.address.extension(http://hl7.org/fhir/StructureDefinition/obligation)",
-      "targetPath": "Organization.address",
-      "description": "Extension removed in target element: http://hl7.org/fhir/StructureDefinition/obligation",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-23",
-      "type": "CARDINALITY",
-      "sourcePath": "Organization.address.line",
-      "targetPath": "Organization.address.line",
-      "description": "Cardinality changed: [0..*] -> [0..4]",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-24",
-      "type": "STRUCTURAL",
-      "sourcePath": "Organization.address.line",
-      "targetPath": "Organization.address.line",
-      "description": "MustSupport added in target",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-25",
-      "type": "STRUCTURAL",
-      "sourcePath": "Organization.address.city",
-      "targetPath": "Organization.address.city",
-      "description": "MustSupport added in target",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-26",
-      "type": "STRUCTURAL",
-      "sourcePath": "Organization.address.state",
-      "targetPath": "Organization.address.state",
-      "description": "MustSupport added in target",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-27",
-      "type": "TERMINOLOGY",
-      "sourcePath": "Organization.address.state",
-      "targetPath": "Organization.address.state",
-      "description": "Binding added in target: extensible(http://hl7.org/fhir/us/core/ValueSet/us-core-usps-state)",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-28",
-      "type": "STRUCTURAL",
-      "sourcePath": "Organization.address.postalCode",
-      "targetPath": "Organization.address.postalCode",
-      "description": "MustSupport added in target",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-29",
-      "type": "STRUCTURAL",
       "sourcePath": "Organization.address.country",
       "targetPath": "Organization.address.country",
-      "description": "MustSupport added in target",
+      "description": "address.country MustSupport added on optional element in target: US Core adds address.country[max=1, mustSupport=true]; source AU Core does not constrain address.country. MS added on optional element.",
       "severity": "INFO"
-    },
-    {
-      "id": "rule-30",
-      "type": "TERMINOLOGY",
-      "sourcePath": "Organization.contact.purpose",
-      "targetPath": "Organization.contact.purpose",
-      "description": "Binding changed: extensible(http://terminology.hl7.org.au/ValueSet/contact-purpose) -> extensible(http://hl7.org/fhir/ValueSet/contactentity-type)",
-      "severity": "WARNING"
     }
   ]
 }

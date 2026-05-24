@@ -9,6 +9,7 @@ import com.example.fdd.exception.MapValidationException
 import com.example.fdd.model.DriftReport
 import com.example.fdd.validation.impl.DefaultMapValidator
 import org.hl7.fhir.r4.model.StructureDefinition
+import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
@@ -81,7 +82,7 @@ class MapValidatorTest {
     }
 
     @Test
-    @DisplayName("Invalid FML throws MapValidationException after exhausting max cycles")
+    @DisplayName("Invalid syntax FML fails deterministically without invoking reflexion")
     fun validateAndRepair_invalidFml_throwsAfterMaxAttempts() {
         val invalidFml = "this is not valid FML"
 
@@ -93,21 +94,30 @@ class MapValidatorTest {
         }
 
         assertTrue(
-            ex.message!!.contains("attempts") || ex.message!!.contains("stuck") || ex.message!!.contains("converging"),
+            ex.message!!.contains("syntax") || ex.message!!.contains("deterministic"),
             "Expected a compilation failure message, got: ${ex.message}"
         )
         // All cycle errors must appear in the details list - one entry per error per cycle
         assertTrue(ex.attemptErrors.isNotEmpty())
         // Every entry must carry a [Cycle N] prefix
         assertTrue(ex.attemptErrors.all { it.startsWith("[Cycle ") })
-        // Reflexion is called exactly 2 times (after cycle 1 and 2, not after cycle 3)
-        verify(llmClient, times(2)).chatWithHistory(any(), any(), any(), any())
+        // Syntax errors stay on deterministic path and must never be sent to LLM.
+        verify(llmClient, never()).chatWithHistory(any(), any(), any(), any())
     }
 
     @Test
     @DisplayName("Reflexion fixes all errors in the FML via multi-turn conversation")
     fun validateAndRepair_reflexionAttemptsSelfCorrection() {
-        val invalidFml = "broken FML"
+        val invalidFml = """
+            map "http://example.org/fhir/StructureMap/fixed" = "FixedMap"
+
+            uses "http://hl7.org/fhir/StructureDefinition/Patient" as source
+            uses "http://hl7.org/fhir/StructureDefinition/Patient" as target
+
+            group FixedMap(source src : Patient, target tgt : Patient) {
+              src.id as id -> tgt.id = bogus(id) "broken-transform";
+            }
+        """.trimIndent()
         val improvedFml = """
             map "http://example.org/fhir/StructureMap/fixed" = "FixedMap"
 
@@ -128,5 +138,115 @@ class MapValidatorTest {
         // validationMessages: [Cycle 1 errors...] + success entry
         assertTrue(result.validationMessages.isNotEmpty())
         assertTrue(result.validationMessages.last().contains("successful"))
+    }
+
+    @Test
+    @DisplayName("Missing semicolon before an indented comment is fixed on the rule line, not the comment")
+    fun validateAndRepair_missingSemicolonBeforeIndentedComment_fixesRuleLine() {
+        val invalidFml = """
+            map "http://example.org/fhir/StructureMap/test" = "TestMap"
+
+            uses "http://hl7.org/fhir/StructureDefinition/Patient" as source
+            uses "http://hl7.org/fhir/StructureDefinition/Patient" as target
+
+            group TestMap(source src : Patient, target tgt : Patient) {
+              src.id as id -> tgt.id = id
+              // explanatory comment should stay untouched
+              src.gender as g -> tgt.gender = g "patient-gender";
+            }
+        """.trimIndent()
+
+        val result = validator.validateAndRepair(invalidFml, source, target, emptyDriftReport)
+
+        verify(llmClient, never()).chatWithHistory(any(), any(), any(), any())
+        assertTrue(result.syntacticallyValid)
+        assertTrue(result.structureMapFml.contains("src.id as id -> tgt.id = id;"))
+        assertFalse(result.structureMapFml.contains("comment should stay untouched;"))
+    }
+
+    @Test
+    @DisplayName("AP25: compound FHIRPath source specifier is rewritten to plain 'src ->' without invoking LLM")
+    fun validateAndRepair_ap25_compoundFhirPathSource_rewrittenDeterministically() {
+        // The LLM generates compound FHIRPath expressions as source specifiers, which HAPI
+        // rejects with "Found '.' expecting ';'".  sanitizeFml must fix these before validation.
+        // After AP25 rewrites the compound condition to plain 'src -> tgt.id as v "name";',
+        // the rule is a valid (no-op binding) rule that HAPI accepts.
+        val fmlWithAp25 = """
+            map "http://example.org/fhir/StructureMap/test" = "TestMap"
+
+            uses "http://hl7.org/fhir/StructureDefinition/Patient" as source
+            uses "http://hl7.org/fhir/StructureDefinition/Patient" as target
+
+            group TestMap(source src : Patient, target tgt : Patient) {
+              src.id as v -> tgt.id = v "patient-id";
+              src.id.empty() and (tgt.id.exists()).not() -> tgt.id as w "patient-default-id";
+            }
+        """.trimIndent()
+
+        val result = validator.validateAndRepair(fmlWithAp25, source, target, emptyDriftReport)
+
+        // sanitizeFml should have rewritten the compound condition — LLM must not be invoked
+        verify(llmClient, never()).chatWithHistory(any(), any(), any(), any())
+        assertTrue(result.syntacticallyValid)
+        // The compound source must be gone; the rewritten form must use plain 'src ->'
+        assertFalse(result.structureMapFml.contains("src.id.empty() and"))
+        assertTrue(result.structureMapFml.contains("src -> tgt.id as w"))
+    }
+
+    @Test
+    @DisplayName("AP26: bare target assignment without source arrow is prefixed with 'tgt ->' without invoking LLM")
+    fun validateAndRepair_ap26_bareTargetAssignment_prefixedDeterministically() {
+        // The LLM generates target-only groups where rules have no source ('->'),
+        // which HAPI rejects with "Found '=' expecting ';'".  sanitizeFml must fix these.
+        val fmlWithAp26 = """
+            map "http://example.org/fhir/StructureMap/test" = "TestMap"
+
+            uses "http://hl7.org/fhir/StructureDefinition/Patient" as source
+            uses "http://hl7.org/fhir/StructureDefinition/Patient" as target
+
+            group TestMap(source src : Patient, target tgt : Patient) {
+              src.id as v -> tgt.id = v "patient-id";
+            }
+
+            group DefaultStatus(target tgt : Patient) {
+              tgt.gender = 'unknown' "default-gender";
+            }
+        """.trimIndent()
+
+        val result = validator.validateAndRepair(fmlWithAp26, source, target, emptyDriftReport)
+
+        // sanitizeFml should have prefixed 'tgt -> ' — LLM must not be invoked
+        verify(llmClient, never()).chatWithHistory(any(), any(), any(), any())
+        assertTrue(result.syntacticallyValid)
+        // The bare assignment must be gone; the valid form must be present
+        assertTrue(result.structureMapFml.contains("tgt -> tgt.gender = 'unknown'"))
+    }
+
+    @Test
+    @DisplayName("Repeated non-syntax errors are pruned after one failed LLM repair attempt")
+    fun validateAndRepair_repeatedNonSyntaxError_prunesStubbornRule() {
+        val stubbornFml = """
+            map "http://example.org/fhir/StructureMap/test" = "TestMap"
+
+            uses "http://hl7.org/fhir/StructureDefinition/Patient" as source
+            uses "http://hl7.org/fhir/StructureDefinition/Patient" as target
+
+            group TestMap(source src : Patient, target tgt : Patient) {
+              src.id as v -> tgt.id = bogus(v) "bad-transform";
+              src.gender as g -> tgt.gender = g "patient-gender";
+            }
+        """.trimIndent()
+
+        // Simulate an LLM that fails to repair the same non-syntax error.
+        whenever(llmClient.chatWithHistory(any(), any(), any(), any())).thenReturn(stubbornFml)
+
+        val result = validator.validateAndRepair(stubbornFml, source, target, emptyDriftReport)
+
+        // After one failed repair turn, the stubborn line is pruned rather than repeated forever.
+        verify(llmClient, times(1)).chatWithHistory(any(), any(), any(), any())
+        assertTrue(result.syntacticallyValid)
+        assertTrue(result.structureMapFml.contains("PRUNED after repeated unresolved error"))
+        assertTrue(result.structureMapFml.contains("// PRUNED after repeated unresolved error: src.id as v -> tgt.id = bogus(v) \"bad-transform\";"))
+        assertTrue(result.structureMapFml.contains("src.gender as g -> tgt.gender = g \"patient-gender\";"))
     }
 }

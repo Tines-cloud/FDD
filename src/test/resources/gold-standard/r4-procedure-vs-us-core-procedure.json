@@ -2,126 +2,127 @@
   "pairId": "r4-procedure-vs-us-core-procedure",
   "sourceClasspath": "standard-profiles/r4/procedure.profile.json",
   "targetClasspath": "standard-profiles/us-core/StructureDefinition-us-core-procedure.json",
+  "_notes": "Hand-curated by reading the US Core Procedure differential (6 elements) line by line against the R4 Procedure snapshot. Key R4 facts: status min=1 required:event-status|4.0.1 (version-pinned); code min=0 example:procedure-code; subject min=1 Reference(Patient|Group); basedOn min=0 Reference(CarePlan|ServiceRequest); performed[x] min=0. Root constraint us-core-7 (severity=error): Performed SHALL be present if the status is 'completed' or 'in-progress'. USCDI annotation extensions present on basedOn, status, code, subject, performed[x].",
   "drifts": [
     {
-      "id": "rule-1",
+      "id": "gold-proc-1",
       "type": "STRUCTURAL",
       "sourcePath": "Procedure",
       "targetPath": "Procedure",
-      "description": "Constraint added in target: us-core-7 requires performed[x] when status is completed or in-progress",
-      "severity": "WARNING"
+      "description": "Constraint 'us-core-7' added (severity: error): Performed SHALL be present if the status is 'completed' or 'in-progress'. Not present in R4 base Procedure.",
+      "severity": "ERROR"
     },
     {
-      "id": "rule-2",
+      "id": "gold-proc-2",
       "type": "STRUCTURAL",
       "sourcePath": "Procedure.basedOn",
       "targetPath": "Procedure.basedOn",
-      "description": "Reference target profile changed: [http://hl7.org/fhir/StructureDefinition/CarePlan, http://hl7.org/fhir/StructureDefinition/ServiceRequest] -> [http://hl7.org/fhir/us/core/StructureDefinition/us-core-careplan, http://hl7.org/fhir/us/core/StructureDefinition/us-core-servicerequest]",
+      "description": "Reference target profiles constrained: R4 allows Reference(CarePlan|ServiceRequest). US Core restricts to Reference(us-core-careplan|us-core-servicerequest). MustSupport is NOT added on this element.",
       "severity": "WARNING"
     },
     {
-      "id": "rule-3",
+      "id": "gold-proc-3",
       "type": "EXTENSION",
       "sourcePath": "Procedure.basedOn",
-      "targetPath": "Procedure.basedOn.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "Extension present only in target: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
-      "severity": "WARNING"
+      "targetPath": "Procedure.basedOn",
+      "description": "Element-level USCDI requirement annotation extension (uscdi-requirement=true) added to Procedure.basedOn in target profile. Marks this element as a US Core Data for Interoperability requirement.",
+      "severity": "INFO"
     },
     {
-      "id": "rule-4",
+      "id": "gold-proc-4",
       "type": "STRUCTURAL",
       "sourcePath": "Procedure.status",
       "targetPath": "Procedure.status",
-      "description": "MustSupport added in target",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-5",
-      "type": "EXTENSION",
-      "sourcePath": "Procedure.status",
-      "targetPath": "Procedure.status.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "Extension present only in target: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+      "description": "MustSupport added in target (min=1 in R4 -> conformance-critical).",
       "severity": "WARNING"
     },
     {
-      "id": "rule-6",
+      "id": "gold-proc-5",
+      "type": "TERMINOLOGY",
+      "sourcePath": "Procedure.status",
+      "targetPath": "Procedure.status",
+      "description": "Binding version pin removed: R4 binds to 'event-status|4.0.1' (version-locked). US Core binds to 'event-status' (no version pin). Strength remains required in both.",
+      "severity": "WARNING"
+    },
+    {
+      "id": "gold-proc-6",
+      "type": "EXTENSION",
+      "sourcePath": "Procedure.status",
+      "targetPath": "Procedure.status",
+      "description": "Element-level USCDI requirement annotation extension (uscdi-requirement=true) added to Procedure.status in target profile. Marks this element as a US Core Data for Interoperability requirement.",
+      "severity": "INFO"
+    },
+    {
+      "id": "gold-proc-7",
       "type": "CARDINALITY",
       "sourcePath": "Procedure.code",
       "targetPath": "Procedure.code",
-      "description": "Cardinality changed: [0..1] -> [1..1]",
+      "description": "Cardinality changed: [0..1] -> [1..1]. Procedure code becomes mandatory in US Core; R4 allows a Procedure without a code.",
+      "severity": "ERROR"
+    },
+    {
+      "id": "gold-proc-8",
+      "type": "STRUCTURAL",
+      "sourcePath": "Procedure.code",
+      "targetPath": "Procedure.code",
+      "description": "MustSupport added in target (min becomes 1 -> conformance-critical).",
       "severity": "WARNING"
     },
     {
-      "id": "rule-7",
+      "id": "gold-proc-9",
       "type": "TERMINOLOGY",
       "sourcePath": "Procedure.code",
       "targetPath": "Procedure.code",
-      "description": "Binding changed: example(http://hl7.org/fhir/ValueSet/procedure-code) -> extensible(http://hl7.org/fhir/us/core/ValueSet/us-core-procedure-code)",
+      "description": "Binding changed: R4 uses example strength to http://hl7.org/fhir/ValueSet/procedure-code. US Core tightens to extensible strength with http://hl7.org/fhir/us/core/ValueSet/us-core-procedure-code (US-specific procedure codes including CPT, SNOMED CT). Binding strength tightened: example -> extensible.",
       "severity": "WARNING"
     },
     {
-      "id": "rule-8",
-      "type": "STRUCTURAL",
+      "id": "gold-proc-10",
+      "type": "EXTENSION",
       "sourcePath": "Procedure.code",
       "targetPath": "Procedure.code",
-      "description": "MustSupport added in target",
+      "description": "Element-level USCDI requirement annotation extension (uscdi-requirement=true) added to Procedure.code in target profile. Marks this element as a US Core Data for Interoperability requirement.",
       "severity": "INFO"
     },
     {
-      "id": "rule-9",
-      "type": "EXTENSION",
-      "sourcePath": "Procedure.code",
-      "targetPath": "Procedure.code.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "Extension present only in target: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-10",
+      "id": "gold-proc-11",
       "type": "STRUCTURAL",
       "sourcePath": "Procedure.subject",
       "targetPath": "Procedure.subject",
-      "description": "Reference target profile changed: [http://hl7.org/fhir/StructureDefinition/Group, http://hl7.org/fhir/StructureDefinition/Patient] -> [http://hl7.org/fhir/us/core/StructureDefinition/us-core-patient]",
+      "description": "MustSupport added in target (min=1 in R4 -> conformance-critical).",
       "severity": "WARNING"
     },
     {
-      "id": "rule-11",
+      "id": "gold-proc-12",
       "type": "STRUCTURAL",
       "sourcePath": "Procedure.subject",
       "targetPath": "Procedure.subject",
-      "description": "MustSupport added in target",
-      "severity": "INFO"
+      "description": "Reference target profile constrained: R4 allows Reference(Patient|Group). US Core restricts to Reference(us-core-patient) only.",
+      "severity": "WARNING"
     },
     {
-      "id": "rule-12",
+      "id": "gold-proc-13",
       "type": "EXTENSION",
       "sourcePath": "Procedure.subject",
-      "targetPath": "Procedure.subject.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "Extension present only in target: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-13",
-      "type": "STRUCTURAL",
-      "sourcePath": "Procedure.performed[x]",
-      "targetPath": "Procedure.performed[x]",
-      "description": "MustSupport added in target",
+      "targetPath": "Procedure.subject",
+      "description": "Element-level USCDI requirement annotation extension (uscdi-requirement=true) added to Procedure.subject in target profile. Marks this element as a US Core Data for Interoperability requirement.",
       "severity": "INFO"
     },
     {
-      "id": "rule-14",
+      "id": "gold-proc-14",
       "type": "STRUCTURAL",
       "sourcePath": "Procedure.performed[x]",
       "targetPath": "Procedure.performed[x]",
-      "description": "Type-level MustSupport added in target for the dateTime choice",
+      "description": "MustSupport added in target (min=0, optional but must be supported when present). Note: constraint us-core-7 conditionally requires it at runtime when status is 'completed' or 'in-progress'.",
       "severity": "INFO"
     },
     {
-      "id": "rule-15",
+      "id": "gold-proc-15",
       "type": "EXTENSION",
       "sourcePath": "Procedure.performed[x]",
-      "targetPath": "Procedure.performed[x].extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "Extension present only in target: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
-      "severity": "WARNING"
+      "targetPath": "Procedure.performed[x]",
+      "description": "Element-level USCDI requirement annotation extension (uscdi-requirement=true) added to Procedure.performed[x] in target profile. Marks this element as a US Core Data for Interoperability requirement.",
+      "severity": "INFO"
     }
   ]
 }

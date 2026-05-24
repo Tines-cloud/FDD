@@ -1,239 +1,200 @@
-{
-  "pairId": "r4-observation-vs-us-core-observation",
-  "sourceClasspath": "standard-profiles/r4/observation.profile.json",
-  "targetClasspath": "standard-profiles/us-core/StructureDefinition-us-core-observation-lab.json",
-  "drifts": [
-    {
-      "id": "rule-1",
-      "type": "STRUCTURAL",
-      "sourcePath": "Observation",
-      "targetPath": "Observation",
-      "description": "Constraint added in target: us-core-2 requires either value[x] or dataAbsentReason when component and hasMember are absent",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-2",
-      "type": "STRUCTURAL",
-      "sourcePath": "Observation.status",
-      "targetPath": "Observation.status",
-      "description": "MustSupport added in target",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-3",
-      "type": "EXTENSION",
-      "sourcePath": "Observation.status",
-      "targetPath": "Observation.status.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "Extension present only in target: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-4",
-      "type": "CARDINALITY",
-      "sourcePath": "Observation.category",
-      "targetPath": "Observation.category",
-      "description": "Cardinality changed: [0..*] -> [1..*]",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-5",
-      "type": "STRUCTURAL",
-      "sourcePath": "Observation.category",
-      "targetPath": "Observation.category",
-      "description": "MustSupport added in target",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-6",
-      "type": "STRUCTURAL",
-      "sourcePath": "Observation.category",
-      "targetPath": "Observation.category",
-      "description": "Slicing changed: none -> rules=open, discriminators=[pattern:$this]",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-7",
-      "type": "EXTENSION",
-      "sourcePath": "Observation.category",
-      "targetPath": "Observation.category.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "Extension present only in target: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-8",
-      "type": "STRUCTURAL",
-      "sourcePath": "",
-      "targetPath": "Observation.category:us-core",
-      "description": "Slice present only in target: Observation.category:us-core (min=1, max=1, mustSupport=true, required pattern Coding(system=http://terminology.hl7.org/CodeSystem/observation-category, code=laboratory), with required binding http://hl7.org/fhir/us/core/ValueSet/us-core-clinical-result-observation-category)",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-9",
-      "type": "TERMINOLOGY",
-      "sourcePath": "Observation.code",
-      "targetPath": "Observation.code",
-      "description": "Binding changed: example(http://hl7.org/fhir/ValueSet/observation-codes) -> extensible(http://hl7.org/fhir/us/core/ValueSet/us-core-laboratory-test-codes)",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-10",
-      "type": "STRUCTURAL",
-      "sourcePath": "Observation.code",
-      "targetPath": "Observation.code",
-      "description": "MustSupport added in target",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-11",
-      "type": "EXTENSION",
-      "sourcePath": "Observation.code",
-      "targetPath": "Observation.code.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "Extension present only in target: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-12",
-      "type": "CARDINALITY",
-      "sourcePath": "Observation.subject",
-      "targetPath": "Observation.subject",
-      "description": "Cardinality changed: [0..1] -> [1..1]",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-13",
-      "type": "STRUCTURAL",
-      "sourcePath": "Observation.subject",
-      "targetPath": "Observation.subject",
-      "description": "Reference target profile changed: [http://hl7.org/fhir/StructureDefinition/Device, http://hl7.org/fhir/StructureDefinition/Group, http://hl7.org/fhir/StructureDefinition/Location, http://hl7.org/fhir/StructureDefinition/Patient] -> [http://hl7.org/fhir/us/core/StructureDefinition/us-core-patient]",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-14",
-      "type": "STRUCTURAL",
-      "sourcePath": "Observation.subject",
-      "targetPath": "Observation.subject",
-      "description": "MustSupport added in target",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-15",
-      "type": "EXTENSION",
-      "sourcePath": "Observation.subject",
-      "targetPath": "Observation.subject.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "Extension present only in target: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-16",
-      "type": "STRUCTURAL",
-      "sourcePath": "Observation.effective[x]",
-      "targetPath": "Observation.effective[x]",
-      "description": "MustSupport added in target",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-17",
-      "type": "STRUCTURAL",
-      "sourcePath": "Observation.effective[x]",
-      "targetPath": "Observation.effective[x]",
-      "description": "Type-level MustSupport added in target for the dateTime choice",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-18",
-      "type": "STRUCTURAL",
-      "sourcePath": "Observation.effective[x]",
-      "targetPath": "Observation.effective[x]",
-      "description": "Constraint added in target: us-core-1 requires effectiveDateTime precision of at least day when dateTime is used",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-19",
-      "type": "EXTENSION",
-      "sourcePath": "Observation.effective[x]",
-      "targetPath": "Observation.effective[x].extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "Extension present only in target: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-20",
-      "type": "STRUCTURAL",
-      "sourcePath": "Observation.value[x]",
-      "targetPath": "Observation.value[x]",
-      "description": "MustSupport added in target",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-21",
-      "type": "STRUCTURAL",
-      "sourcePath": "Observation.value[x]",
-      "targetPath": "Observation.value[x]",
-      "description": "Type-level MustSupport added in target for the Quantity, CodeableConcept, and string choices",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-22",
-      "type": "STRUCTURAL",
-      "sourcePath": "Observation.value[x]",
-      "targetPath": "Observation.value[x]",
-      "description": "Constraint added in target: us-core-3 requires UCUM system for valueQuantity units",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-23",
-      "type": "STRUCTURAL",
-      "sourcePath": "Observation.value[x]",
-      "targetPath": "Observation.value[x]",
-      "description": "Constraint added in target: us-core-4 recommends SNOMED CT for valueCodeableConcept coded results",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-24",
-      "type": "EXTENSION",
-      "sourcePath": "Observation.value[x]",
-      "targetPath": "Observation.value[x].extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "Extension present only in target: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-25",
-      "type": "STRUCTURAL",
-      "sourcePath": "Observation.dataAbsentReason",
-      "targetPath": "Observation.dataAbsentReason",
-      "description": "MustSupport added in target",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-26",
-      "type": "EXTENSION",
-      "sourcePath": "Observation.dataAbsentReason",
-      "targetPath": "Observation.dataAbsentReason.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "Extension present only in target: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-27",
-      "type": "STRUCTURAL",
-      "sourcePath": "Observation.specimen",
-      "targetPath": "Observation.specimen",
-      "description": "Reference target profile changed: [http://hl7.org/fhir/StructureDefinition/Specimen] -> [http://hl7.org/fhir/us/core/StructureDefinition/us-core-specimen]",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-28",
-      "type": "STRUCTURAL",
-      "sourcePath": "Observation.specimen",
-      "targetPath": "Observation.specimen",
-      "description": "MustSupport added in target",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-29",
-      "type": "EXTENSION",
-      "sourcePath": "Observation.specimen",
-      "targetPath": "Observation.specimen.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "Extension present only in target: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
-      "severity": "WARNING"
-    }
-  ]
+﻿{
+    "pairId":  "manual-r4-observation-vs-us-core-observation",
+    "sourceClasspath":  "standard-profiles/r4/observation.profile.json",
+    "targetClasspath":  "standard-profiles/us-core/StructureDefinition-us-core-observation-lab.json",
+    "_notes":  "Hand-curated by reading the US Core Observation Lab differential (5 elements) and snapshot (51 elements) line by line against the R4 Observation snapshot (50 elements). Note: us-core-observation-lab inherits from us-core-observation-clinical-result which itself inherits from R4 Observation. Profile-level drifts include inherited constraints (us-core-1, us-core-2) and elements constrained in the parent profile (status, category, subject, effective[x], dataAbsentReason) that are visible in the final snapshot. Key R4 facts: status min=1 required:observation-status|4.0.1; category min=0 preferred:observation-category; code min=1 example:observation-codes; subject min=0 Reference(Patient|Group|Device|Location); effective[x] min=0; value[x] min=0; dataAbsentReason min=0; specimen min=0 Reference(Specimen).",
+    "drifts":  [
+                   {
+                       "id":  "gold-obs-1",
+                       "type":  "STRUCTURAL",
+                       "sourcePath":  "Observation",
+                       "targetPath":  "Observation",
+                       "description":  "Constraint \u0027us-core-2\u0027 added (severity: error): If there is no component or hasMember element then either a value[x] or a dataAbsentReason must be present. Inherited from us-core-observation-clinical-result parent profile; not present in R4 base Observation.",
+                       "severity":  "ERROR"
+                   },
+                   {
+                       "id":  "gold-obs-2",
+                       "type":  "STRUCTURAL",
+                       "sourcePath":  "Observation.status",
+                       "targetPath":  "Observation.status",
+                       "description":  "MustSupport added in target (min=1 in R4 -\u003e conformance-critical). Binding unchanged: both use required:observation-status (R4 has version pin |4.0.1 which is preserved in the snapshot, not removed).",
+                       "severity":  "WARNING"
+                   },
+                   {
+                       "id":  "gold-obs-3",
+                       "type":  "CARDINALITY",
+                       "sourcePath":  "Observation.category",
+                       "targetPath":  "Observation.category",
+                       "description":  "Cardinality changed: [0..*] -\u003e [1..*]. At least one category becomes mandatory. R4 allows an Observation without any category.",
+                       "severity":  "ERROR"
+                   },
+                   {
+                       "id":  "gold-obs-4",
+                       "type":  "STRUCTURAL",
+                       "sourcePath":  "Observation.category",
+                       "targetPath":  "Observation.category",
+                       "description":  "MustSupport added in target (min becomes 1 -\u003e conformance-critical).",
+                       "severity":  "WARNING"
+                   },
+                   {
+                       "id":  "gold-obs-5",
+                       "type":  "STRUCTURAL",
+                       "sourcePath":  "Observation.category",
+                       "targetPath":  "Observation.category",
+                       "description":  "Slicing added on category: discriminator type=pattern, path=$this, rules=open. No slicing exists in R4 base.",
+                       "severity":  "INFO"
+                   },
+                   {
+                       "id":  "gold-obs-6",
+                       "type":  "CARDINALITY",
+                       "sourcePath":  null,
+                       "targetPath":  "Observation.category:us-core",
+                       "description":  "Mandatory slice \u0027us-core\u0027 added: min=1, max=1. Requires exactly one category coded as \u0027laboratory\u0027 from http://terminology.hl7.org/CodeSystem/observation-category. No equivalent slice exists in R4 base.",
+                       "severity":  "ERROR"
+                   },
+                   {
+                       "id":  "gold-obs-7",
+                       "type":  "STRUCTURAL",
+                       "sourcePath":  null,
+                       "targetPath":  "Observation.category:us-core",
+                       "description":  "MustSupport added on mandatory slice \u0027us-core\u0027 (min=1 -\u003e conformance-critical). patternCodeableConcept fixed to system=http://terminology.hl7.org/CodeSystem/observation-category code=laboratory.",
+                       "severity":  "WARNING"
+                   },
+                   {
+                       "id":  "gold-obs-8",
+                       "type":  "STRUCTURAL",
+                       "sourcePath":  "Observation.code",
+                       "targetPath":  "Observation.code",
+                       "description":  "MustSupport added in target (min=1 in R4 -\u003e conformance-critical).",
+                       "severity":  "WARNING"
+                   },
+                   {
+                       "id":  "gold-obs-9",
+                       "type":  "TERMINOLOGY",
+                       "sourcePath":  "Observation.code",
+                       "targetPath":  "Observation.code",
+                       "description":  "Binding changed: R4 uses example strength to http://hl7.org/fhir/ValueSet/observation-codes. US Core tightens to extensible strength with http://hl7.org/fhir/us/core/ValueSet/us-core-laboratory-test-codes (LOINC laboratory codes). Binding strength tightened: example -\u003e extensible.",
+                       "severity":  "WARNING"
+                   },
+                   {
+                       "id":  "gold-obs-10",
+                       "type":  "CARDINALITY",
+                       "sourcePath":  "Observation.subject",
+                       "targetPath":  "Observation.subject",
+                       "description":  "Cardinality changed: [0..1] -\u003e [1..1]. Subject becomes mandatory; R4 allows an Observation without a subject.",
+                       "severity":  "ERROR"
+                   },
+                   {
+                       "id":  "gold-obs-11",
+                       "type":  "STRUCTURAL",
+                       "sourcePath":  "Observation.subject",
+                       "targetPath":  "Observation.subject",
+                       "description":  "MustSupport added in target (min becomes 1 -\u003e conformance-critical).",
+                       "severity":  "WARNING"
+                   },
+                   {
+                       "id":  "gold-obs-12",
+                       "type":  "STRUCTURAL",
+                       "sourcePath":  "Observation.subject",
+                       "targetPath":  "Observation.subject",
+                       "description":  "Reference target profile constrained: R4 allows Reference(Patient|Group|Device|Location). US Core restricts to Reference(us-core-patient) only.",
+                       "severity":  "WARNING"
+                   },
+                   {
+                       "id":  "gold-obs-13",
+                       "type":  "STRUCTURAL",
+                       "sourcePath":  "Observation.effective[x]",
+                       "targetPath":  "Observation.effective[x]",
+                       "description":  "MustSupport added in target (min=0, optional but must be supported when present).",
+                       "severity":  "INFO"
+                   },
+                   {
+                       "id":  "gold-obs-14",
+                       "type":  "STRUCTURAL",
+                       "sourcePath":  "Observation.effective[x]",
+                       "targetPath":  "Observation.effective[x]",
+                       "description":  "Constraint \u0027us-core-1\u0027 added (severity: error): DateTime must be at least to day (length \u003e= 10 characters). Inherited from us-core-observation-clinical-result parent profile; not present in R4 base Observation.",
+                       "severity":  "ERROR"
+                   },
+                   {
+                       "id":  "gold-obs-15",
+                       "type":  "STRUCTURAL",
+                       "sourcePath":  "Observation.value[x]",
+                       "targetPath":  "Observation.value[x]",
+                       "description":  "MustSupport added in target (min=0, optional but must be supported when present).",
+                       "severity":  "INFO"
+                   },
+                   {
+                       "id":  "gold-obs-16",
+                       "type":  "STRUCTURAL",
+                       "sourcePath":  "Observation.value[x]",
+                       "targetPath":  "Observation.value[x]",
+                       "description":  "Constraint \u0027us-core-3\u0027 added (severity: error): SHALL use UCUM for coded quantity units. Expression: value.ofType(Quantity).system.empty() or value.ofType(Quantity).system = \u0027http://unitsofmeasure.org\u0027. Inherited from us-core-observation-clinical-result parent profile; not present in R4 base Observation.",
+                       "severity":  "ERROR"
+                   },
+                   {
+                       "id":  "gold-obs-17",
+                       "type":  "STRUCTURAL",
+                       "sourcePath":  "Observation.value[x]",
+                       "targetPath":  "Observation.value[x]",
+                       "description":  "Constraint \u0027us-core-4\u0027 added (severity: warning): SHOULD use SNOMED CT for coded Results. Not present in R4 base Observation.",
+                       "severity":  "WARNING"
+                   },
+                   {
+                       "id":  "gold-obs-18",
+                       "type":  "STRUCTURAL",
+                       "sourcePath":  "Observation.dataAbsentReason",
+                       "targetPath":  "Observation.dataAbsentReason",
+                       "description":  "MustSupport added in target (min=0, optional but must be supported when present).",
+                       "severity":  "INFO"
+                   },
+                   {
+                       "id":  "gold-obs-19",
+                       "type":  "STRUCTURAL",
+                       "sourcePath":  "Observation.specimen",
+                       "targetPath":  "Observation.specimen",
+                       "description":  "MustSupport added in target (min=0, optional but must be supported when present).",
+                       "severity":  "INFO"
+                   },
+                   {
+                       "id":  "gold-obs-20",
+                       "type":  "STRUCTURAL",
+                       "sourcePath":  "Observation.specimen",
+                       "targetPath":  "Observation.specimen",
+                       "description":  "Reference target profile constrained: R4 allows Reference(Specimen). US Core restricts to Reference(us-core-specimen).",
+                       "severity":  "WARNING"
+                   },
+                   {
+                       "id":  "gold-obs-21",
+                       "type":  "EXTENSION",
+                       "sourcePath":  null,
+                       "targetPath":  "Observation.category:us-core",
+                       "description":  "Element-level USCDI requirement annotation extension (uscdi-requirement=true) added to Observation.category:us-core in target profile. Marks this slice as a US Core Data for Interoperability requirement. No equivalent element in R4 base.",
+                       "severity":  "INFO"
+                   },
+                   {
+                       "id":  "gold-obs-22",
+                       "type":  "EXTENSION",
+                       "sourcePath":  "Observation.code",
+                       "targetPath":  "Observation.code",
+                       "description":  "Element-level USCDI requirement annotation extension (uscdi-requirement=true) added to Observation.code in target profile. Marks this element as a US Core Data for Interoperability requirement.",
+                       "severity":  "INFO"
+                   },
+                   {
+                       "id":  "gold-obs-23",
+                       "type":  "EXTENSION",
+                       "sourcePath":  "Observation.value[x]",
+                       "targetPath":  "Observation.value[x]",
+                       "description":  "Element-level USCDI requirement annotation extension (uscdi-requirement=true) added to Observation.value[x] in target profile. Marks this element as a US Core Data for Interoperability requirement.",
+                       "severity":  "INFO"
+                   },
+                   {
+                       "id":  "gold-obs-24",
+                       "type":  "EXTENSION",
+                       "sourcePath":  "Observation.specimen",
+                       "targetPath":  "Observation.specimen",
+                       "description":  "Element-level USCDI requirement annotation extension (uscdi-requirement=true) added to Observation.specimen in target profile. Marks this element as a US Core Data for Interoperability requirement.",
+                       "severity":  "INFO"
+                   }
+               ]
 }

@@ -1,263 +1,240 @@
-{
-  "pairId": "tk-soft-condition-vs-hemas-condition",
-  "sourceClasspath": "custom-profiles/tk-soft/tk-soft-condition.json",
-  "targetClasspath": "custom-profiles/hemas/hemas-condition.json",
-  "drifts": [
-    {
-      "id": "rule-1",
-      "type": "STRUCTURAL",
-      "sourcePath": "Condition",
-      "targetPath": "Condition",
-      "description": "Constraints added in target: [hemas-con-1, hemas-con-2]",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-2",
-      "type": "STRUCTURAL",
-      "sourcePath": "Condition",
-      "targetPath": "Condition",
-      "description": "Constraints removed in target: [tk-con-1, tk-con-2]",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-3",
-      "type": "TERMINOLOGY",
-      "sourcePath": "Condition.code",
-      "targetPath": "Condition.code",
-      "description": "Binding changed: extensible(https://tk-soft.example.com/fhir/ValueSet/condition-code) -> extensible(https://hemas.example.com/fhir/ValueSet/condition-code)",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-4",
-      "type": "STRUCTURAL",
-      "sourcePath": "Condition.code.coding",
-      "targetPath": "Condition.code.coding",
-      "description": "Slicing changed: none -> rules=open, discriminators=[pattern:$this]",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-5",
-      "type": "STRUCTURAL",
-      "sourcePath": "Condition.code.text",
-      "targetPath": "Condition.code.text",
-      "description": "MustSupport added in target",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-6",
-      "type": "STRUCTURAL",
-      "sourcePath": "Condition.subject",
-      "targetPath": "Condition.subject",
-      "description": "Reference target profile changed: [https://tk-soft.example.com/fhir/StructureDefinition/Patient] -> [https://hemas.example.com/fhir/StructureDefinition/Patient]",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-7",
-      "type": "CARDINALITY",
-      "sourcePath": "Condition.encounter",
-      "targetPath": "Condition.encounter",
-      "description": "Cardinality changed: [0..1] -> [1..1]",
-      "severity": "ERROR"
-    },
-    {
-      "id": "rule-8",
-      "type": "STRUCTURAL",
-      "sourcePath": "Condition.encounter",
-      "targetPath": "Condition.encounter",
-      "description": "Reference target profile changed: [https://tk-soft.example.com/fhir/StructureDefinition/Encounter] -> [https://hemas.example.com/fhir/StructureDefinition/Encounter]",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-9",
-      "type": "STRUCTURAL",
-      "sourcePath": "Condition.onset[x]",
-      "targetPath": "Condition.onset[x]",
-      "description": "Type changed: [Age, Period, dateTime] -> [Period, dateTime]",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-10",
-      "type": "STRUCTURAL",
-      "sourcePath": "Condition.abatement[x]",
-      "targetPath": "Condition.abatement[x]",
-      "description": "Type changed: [Age, Period, dateTime] -> [Period, dateTime]",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-11",
-      "type": "STRUCTURAL",
-      "sourcePath": "Condition.recorder",
-      "targetPath": "Condition.recorder",
-      "description": "Reference target profile changed: [https://tk-soft.example.com/fhir/StructureDefinition/Practitioner] -> [http://hl7.org/fhir/StructureDefinition/Patient, http://hl7.org/fhir/StructureDefinition/Practitioner, http://hl7.org/fhir/StructureDefinition/PractitionerRole, http://hl7.org/fhir/StructureDefinition/RelatedPerson]",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-12",
-      "type": "STRUCTURAL",
-      "sourcePath": "Condition.stage",
-      "targetPath": "Condition.stage",
-      "description": "MustSupport added in target",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-13",
-      "type": "STRUCTURAL",
-      "sourcePath": "Condition.stage.summary",
-      "targetPath": "Condition.stage.summary",
-      "description": "MustSupport added in target",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-14",
-      "type": "EXTENSION",
-      "sourcePath": "",
-      "targetPath": "Condition.extension:hospitalDepartment",
-      "description": "Extension added in target profile: Condition.extension:hospitalDepartment",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-15",
-      "type": "EXTENSION",
-      "sourcePath": "",
-      "targetPath": "Condition.extension:icdBlock",
-      "description": "Extension added in target profile: Condition.extension:icdBlock",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-16",
-      "type": "EXTENSION",
-      "sourcePath": "",
-      "targetPath": "Condition.extension:chronicity",
-      "description": "Extension added in target profile: Condition.extension:chronicity",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-17",
-      "type": "STRUCTURAL",
-      "sourcePath": "",
-      "targetPath": "Condition.category:admissionDiagnosis",
-      "description": "New slice 'admissionDiagnosis' added in target profile",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-18",
-      "type": "STRUCTURAL",
-      "sourcePath": "",
-      "targetPath": "Condition.category:dischargeDiagnosis",
-      "description": "New slice 'dischargeDiagnosis' added in target profile",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-19",
-      "type": "STRUCTURAL",
-      "sourcePath": "",
-      "targetPath": "Condition.code.coding:icd10",
-      "description": "New slice 'icd10' added in target profile",
-      "severity": "ERROR"
-    },
-    {
-      "id": "rule-20",
-      "type": "STRUCTURAL",
-      "sourcePath": "",
-      "targetPath": "Condition.code.coding:snomed",
-      "description": "New slice 'snomed' added in target profile",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-21",
-      "type": "EXTENSION",
-      "sourcePath": "Condition.extension:conditionDuration",
-      "targetPath": "",
-      "description": "Extension removed in target profile: Condition.extension:conditionDuration (was mustSupport)",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-22",
-      "type": "EXTENSION",
-      "sourcePath": "Condition.extension:conditionSeverityScore",
-      "targetPath": "",
-      "description": "Extension removed in target profile: Condition.extension:conditionSeverityScore (was mustSupport)",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-23",
-      "type": "EXTENSION",
-      "sourcePath": "Condition.extension:diagnosisGroup",
-      "targetPath": "",
-      "description": "Extension removed in target profile: Condition.extension:diagnosisGroup (was mustSupport)",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-24",
-      "type": "STRUCTURAL",
-      "sourcePath": "Condition.category:problemList",
-      "targetPath": "",
-      "description": "Slice 'problemList' removed in target profile",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-25",
-      "type": "STRUCTURAL",
-      "sourcePath": "Condition.category:encounterDiagnosis",
-      "targetPath": "",
-      "description": "Slice 'encounterDiagnosis' removed in target profile",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-26",
-      "type": "STRUCTURAL",
-      "sourcePath": "Condition.code.coding.id",
-      "targetPath": "",
-      "description": "Element removed in target profile: Condition.code.coding.id",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-27",
-      "type": "STRUCTURAL",
-      "sourcePath": "Condition.code.coding.extension",
-      "targetPath": "",
-      "description": "Element removed in target profile: Condition.code.coding.extension",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-28",
-      "type": "STRUCTURAL",
-      "sourcePath": "Condition.code.coding.system",
-      "targetPath": "",
-      "description": "Element removed in target profile: Condition.code.coding.system (was required)",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-29",
-      "type": "STRUCTURAL",
-      "sourcePath": "Condition.code.coding.version",
-      "targetPath": "",
-      "description": "Element removed in target profile: Condition.code.coding.version",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-30",
-      "type": "STRUCTURAL",
-      "sourcePath": "Condition.code.coding.code",
-      "targetPath": "",
-      "description": "Element removed in target profile: Condition.code.coding.code (was required)",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-31",
-      "type": "STRUCTURAL",
-      "sourcePath": "Condition.code.coding.display",
-      "targetPath": "",
-      "description": "Element removed in target profile: Condition.code.coding.display",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-32",
-      "type": "STRUCTURAL",
-      "sourcePath": "Condition.code.coding.userSelected",
-      "targetPath": "",
-      "description": "Element removed in target profile: Condition.code.coding.userSelected",
-      "severity": "INFO"
-    }
-  ]
+﻿{
+    "pairId":  "tk-soft-condition-vs-hemas-condition",
+    "sourceClasspath":  "custom-profiles/tk-soft/tk-soft-condition.json",
+    "targetClasspath":  "custom-profiles/hemas/hemas-condition.json",
+    "_notes":  "Hand-curated by reading both differentials in full. Source (tk-soft) has 2 root constraints, 3 custom extensions (conditionDuration, conditionSeverityScore, diagnosisGroup), and category slices for problemList and encounterDiagnosis. Target (hemas) replaces all extensions with hospital-specific ones (hospitalDepartment, icdBlock, chronicity), replaces category slices with admissionDiagnosis and dischargeDiagnosis, changes code binding to hemas VS, adds code.coding slicing with mandatory icd10 [1..1] and optional snomed slices, adds code.text, makes encounter mandatory (min=1), changes all reference targets to hemas profiles, narrows onset[x] and abatement[x] by removing Age type, adds stage/stage.summary, and widens recorder reference. clinicalStatus, verificationStatus, severity, bodySite, recordedDate, note are identical.",
+    "drifts":  [
+                   {
+                       "id":  "rule-1",
+                       "type":  "STRUCTURAL",
+                       "sourcePath":  "Condition",
+                       "targetPath":  "Condition",
+                       "description":  "Root constraints removed in target: [tk-con-1 (error: Condition must have either a code or a category), tk-con-2 (warning: Resolved conditions should have an abatement date)]. These constraints no longer apply in target profile.",
+                       "severity":  "WARNING"
+                   },
+                   {
+                       "id":  "rule-2",
+                       "type":  "STRUCTURAL",
+                       "sourcePath":  "Condition",
+                       "targetPath":  "Condition",
+                       "description":  "New constraint \u0027hemas-con-1\u0027 added in target (severity: error): \u0027Condition must have a code with at least one coding\u0027 â€” expression: code.coding.exists(). Not present in source profile.",
+                       "severity":  "ERROR"
+                   },
+                   {
+                       "id":  "rule-3",
+                       "type":  "STRUCTURAL",
+                       "sourcePath":  "Condition",
+                       "targetPath":  "Condition",
+                       "description":  "New constraint \u0027hemas-con-2\u0027 added in target (severity: warning): \u0027Confirmed conditions should have an onset\u0027 â€” expression: verificationStatus.coding.where(code=\u0027confirmed\u0027).exists() implies onset.exists(). Not present in source profile.",
+                       "severity":  "WARNING"
+                   },
+                   {
+                       "id":  "rule-4",
+                       "type":  "EXTENSION",
+                       "sourcePath":  "Condition.extension:conditionDuration",
+                       "targetPath":  "",
+                       "description":  "Extension slice \u0027conditionDuration\u0027 (0..1, MustSupport=true) removed in target profile. Was defined in source for capturing condition duration details.",
+                       "severity":  "WARNING"
+                   },
+                   {
+                       "id":  "rule-5",
+                       "type":  "EXTENSION",
+                       "sourcePath":  "Condition.extension:conditionSeverityScore",
+                       "targetPath":  "",
+                       "description":  "Extension slice \u0027conditionSeverityScore\u0027 (0..1, MustSupport=true) removed in target profile. Was defined in source for a numerical severity score.",
+                       "severity":  "WARNING"
+                   },
+                   {
+                       "id":  "rule-6",
+                       "type":  "EXTENSION",
+                       "sourcePath":  "Condition.extension:diagnosisGroup",
+                       "targetPath":  "",
+                       "description":  "Extension slice \u0027diagnosisGroup\u0027 (0..1, MustSupport=true) removed in target profile. Was defined in source for grouping diagnoses.",
+                       "severity":  "WARNING"
+                   },
+                   {
+                       "id":  "rule-7",
+                       "type":  "EXTENSION",
+                       "sourcePath":  "",
+                       "targetPath":  "Condition.extension:hospitalDepartment",
+                       "description":  "New extension slice \u0027hospitalDepartment\u0027 added in target (0..1, MustSupport=true). Hospital-specific extension for the originating department. Not present in source profile.",
+                       "severity":  "WARNING"
+                   },
+                   {
+                       "id":  "rule-8",
+                       "type":  "EXTENSION",
+                       "sourcePath":  "",
+                       "targetPath":  "Condition.extension:icdBlock",
+                       "description":  "New extension slice \u0027icdBlock\u0027 added in target (0..1, MustSupport=true). Hospital-specific extension for ICD classification block. Not present in source profile.",
+                       "severity":  "WARNING"
+                   },
+                   {
+                       "id":  "rule-9",
+                       "type":  "EXTENSION",
+                       "sourcePath":  "",
+                       "targetPath":  "Condition.extension:chronicity",
+                       "description":  "New extension slice \u0027chronicity\u0027 added in target (0..1, MustSupport=true). Hospital-specific extension for acute/chronic classification. Not present in source profile.",
+                       "severity":  "WARNING"
+                   },
+                   {
+                       "id":  "rule-10",
+                       "type":  "STRUCTURAL",
+                       "sourcePath":  "Condition.category:problemList",
+                       "targetPath":  "",
+                       "description":  "Slice \u0027problemList\u0027 (0..1, MustSupport=true, patternCodeableConcept=problem-list-item from condition-category) removed in target profile.",
+                       "severity":  "WARNING"
+                   },
+                   {
+                       "id":  "rule-11",
+                       "type":  "STRUCTURAL",
+                       "sourcePath":  "Condition.category:encounterDiagnosis",
+                       "targetPath":  "",
+                       "description":  "Slice \u0027encounterDiagnosis\u0027 (0..1, MustSupport=true, patternCodeableConcept=encounter-diagnosis from condition-category) removed in target profile.",
+                       "severity":  "WARNING"
+                   },
+                   {
+                       "id":  "rule-12",
+                       "type":  "STRUCTURAL",
+                       "sourcePath":  "",
+                       "targetPath":  "Condition.category:admissionDiagnosis",
+                       "description":  "New MustSupport slice \u0027admissionDiagnosis\u0027 added in target (0..1, MustSupport=true, patternCodeableConcept=encounter-diagnosis from http://terminology.hl7.org/CodeSystem/condition-category). Not present in source profile.",
+                       "severity":  "WARNING"
+                   },
+                   {
+                       "id":  "rule-13",
+                       "type":  "STRUCTURAL",
+                       "sourcePath":  "",
+                       "targetPath":  "Condition.category:dischargeDiagnosis",
+                       "description":  "New MustSupport slice \u0027dischargeDiagnosis\u0027 added in target (0..1, MustSupport=true, patternCodeableConcept=discharge-diagnosis from https://hemas.example.com/fhir/CodeSystem/condition-category). Not present in source profile.",
+                       "severity":  "WARNING"
+                   },
+                   {
+                       "id":  "rule-14",
+                       "type":  "TERMINOLOGY",
+                       "sourcePath":  "Condition.code",
+                       "targetPath":  "Condition.code",
+                       "description":  "Binding changed: Source uses extensible(https://tk-soft.example.com/fhir/ValueSet/condition-code). Target uses extensible(https://hemas.example.com/fhir/ValueSet/condition-code). Same binding strength but different ValueSet â€” target uses hemas-specific condition codes.",
+                       "severity":  "WARNING"
+                   },
+                   {
+                       "id":  "rule-15",
+                       "type":  "STRUCTURAL",
+                       "sourcePath":  "Condition.code.coding",
+                       "targetPath":  "Condition.code.coding",
+                       "description":  "Slicing added in target on Condition.code.coding: discriminator type=pattern, path=$this, rules=open. Allows named coding slices for specific terminologies (icd10, snomed). Source had no slicing on code.coding.",
+                       "severity":  "INFO"
+                   },
+                   {
+                       "id":  "rule-16",
+                       "type":  "CARDINALITY",
+                       "sourcePath":  "Condition.code.coding",
+                       "targetPath":  "Condition.code.coding:icd10",
+                       "description":  "New mandatory slice \u0027icd10\u0027 added in target [1..1, MustSupport=true]. Source has Condition.code.coding with min=1 but no named slices. Target introduces a mandatory ICD-10 coding slice â€” every condition code must include an ICD-10 coding.",
+                       "severity":  "ERROR"
+                   },
+                   {
+                       "id":  "rule-17",
+                       "type":  "STRUCTURAL",
+                       "sourcePath":  "",
+                       "targetPath":  "Condition.code.coding:icd10",
+                       "description":  "MustSupport added on mandatory slice \u0027icd10\u0027 [1..1]. New MS=true slice on a now-required coding element.",
+                       "severity":  "WARNING"
+                   },
+                   {
+                       "id":  "rule-18",
+                       "type":  "STRUCTURAL",
+                       "sourcePath":  "",
+                       "targetPath":  "Condition.code.coding:snomed",
+                       "description":  "New MustSupport slice \u0027snomed\u0027 added in target (0..1, MustSupport=true). Optional SNOMED CT coding slice. Not present in source profile.",
+                       "severity":  "WARNING"
+                   },
+                   {
+                       "id":  "rule-19",
+                       "type":  "CARDINALITY",
+                       "sourcePath":  "Condition.code.coding.system",
+                       "targetPath":  "Condition.code.coding.system",
+                       "description":  "Cardinality changed: [1..1] -\u003e [0..1] and MustSupport removed in target (constraint relaxed: source defines code.coding.system as min=1 mustSupport=true; target (hemas) does not define general code.coding.system constraints, inheriting R4 base min=0 mustSupport=false, instead constraining within named slices icd10/snomed).",
+                       "severity":  "INFO"
+                   },
+                   {
+                       "id":  "rule-20",
+                       "type":  "CARDINALITY",
+                       "sourcePath":  "Condition.code.coding.code",
+                       "targetPath":  "Condition.code.coding.code",
+                       "description":  "Cardinality changed: [1..1] -\u003e [0..1] and MustSupport removed in target (constraint relaxed: source defines code.coding.code as min=1 mustSupport=true; target (hemas) does not define general code.coding.code constraints, inheriting R4 base min=0 mustSupport=false, instead constraining within named slices icd10/snomed).",
+                       "severity":  "INFO"
+                   },
+                   {
+                       "id":  "rule-21",
+                       "type":  "STRUCTURAL",
+                       "sourcePath":  "",
+                       "targetPath":  "Condition.code.text",
+                       "description":  "New MustSupport element \u0027code.text\u0027 added in target (min=0, MustSupport=true). Human-readable description of the condition code. Not present in source profile.",
+                       "severity":  "INFO"
+                   },
+                   {
+                       "id":  "rule-22",
+                       "type":  "STRUCTURAL",
+                       "sourcePath":  "Condition.subject",
+                       "targetPath":  "Condition.subject",
+                       "description":  "Reference target profile changed: Source constrains to [https://tk-soft.example.com/fhir/StructureDefinition/Patient]. Target constrains to [https://hemas.example.com/fhir/StructureDefinition/Patient].",
+                       "severity":  "WARNING"
+                   },
+                   {
+                       "id":  "rule-23",
+                       "type":  "CARDINALITY",
+                       "sourcePath":  "Condition.encounter",
+                       "targetPath":  "Condition.encounter",
+                       "description":  "Cardinality changed: [0..1] -\u003e [1..1]. Source has no explicit minimum (inherits R4 base min=0). Target makes encounter mandatory â€” all conditions must be linked to a hospital encounter.",
+                       "severity":  "ERROR"
+                   },
+                   {
+                       "id":  "rule-24",
+                       "type":  "STRUCTURAL",
+                       "sourcePath":  "Condition.encounter",
+                       "targetPath":  "Condition.encounter",
+                       "description":  "Reference target profile changed: Source constrains to [https://tk-soft.example.com/fhir/StructureDefinition/Encounter]. Target constrains to [https://hemas.example.com/fhir/StructureDefinition/Encounter].",
+                       "severity":  "WARNING"
+                   },
+                   {
+                       "id":  "rule-25",
+                       "type":  "STRUCTURAL",
+                       "sourcePath":  "Condition.onset[x]",
+                       "targetPath":  "Condition.onset[x]",
+                       "description":  "Type narrowed: Source allows [dateTime, Age, Period]. Target restricts to [dateTime, Period] â€” Age type is removed.",
+                       "severity":  "WARNING"
+                   },
+                   {
+                       "id":  "rule-26",
+                       "type":  "STRUCTURAL",
+                       "sourcePath":  "Condition.abatement[x]",
+                       "targetPath":  "Condition.abatement[x]",
+                       "description":  "Type narrowed: Source allows [dateTime, Age, Period]. Target restricts to [dateTime, Period] â€” Age type is removed.",
+                       "severity":  "WARNING"
+                   },
+                   {
+                       "id":  "rule-27",
+                       "type":  "STRUCTURAL",
+                       "sourcePath":  "Condition.recorder",
+                       "targetPath":  "Condition.recorder",
+                       "description":  "Reference target profile changed: Source constrains to [https://tk-soft.example.com/fhir/StructureDefinition/Practitioner]. Target has no explicit type constraint (inherits R4 base: Practitioner|PractitionerRole|Patient|RelatedPerson) â€” reference is widened.",
+                       "severity":  "WARNING"
+                   },
+                   {
+                       "id":  "rule-28",
+                       "type":  "STRUCTURAL",
+                       "sourcePath":  "",
+                       "targetPath":  "Condition.stage",
+                       "description":  "New MustSupport element \u0027stage\u0027 added in target (min=0, MustSupport=true). Supports hospital-specific staging information. Not present in source profile.",
+                       "severity":  "INFO"
+                   },
+                   {
+                       "id":  "rule-29",
+                       "type":  "STRUCTURAL",
+                       "sourcePath":  "",
+                       "targetPath":  "Condition.stage.summary",
+                       "description":  "New MustSupport element \u0027stage.summary\u0027 added in target (min=0, MustSupport=true). Captures a summary of the condition stage. Not present in source profile.",
+                       "severity":  "INFO"
+                   }
+               ]
 }

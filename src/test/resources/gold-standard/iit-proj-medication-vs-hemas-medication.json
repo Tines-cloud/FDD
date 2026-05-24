@@ -2,13 +2,14 @@
   "pairId": "iit-proj-medication-vs-hemas-medication",
   "sourceClasspath": "custom-profiles/iit-proj/iit-proj-medication.json",
   "targetClasspath": "custom-profiles/hemas/hemas-medication.json",
+  "_notes": "Source: iit-proj-medication (clinical research, study drug tracking). Target: hemas-medication (hospital pharmacy). Source mandates batch tracking and bans manufacturer. Target adds pharmacy coding sub-constraints at general coding level, lifts manufacturer ban, and uses hemas-specific VS. Completely different extension sets. Batch mandatory in source becomes optional in target.",
   "drifts": [
     {
       "id": "rule-1",
       "type": "STRUCTURAL",
       "sourcePath": "Medication",
       "targetPath": "Medication",
-      "description": "Constraints added in target: [hemas-med-1, hemas-med-2]",
+      "description": "Source constraints removed: [iit-med-1 (error: study drug code system required), iit-med-2 (warning: blinded drug code implies ingredient must be empty)]. Not present in hemas-medication.",
       "severity": "WARNING"
     },
     {
@@ -16,208 +17,160 @@
       "type": "STRUCTURAL",
       "sourcePath": "Medication",
       "targetPath": "Medication",
-      "description": "Constraints removed in target: [iit-med-1, iit-med-2]",
-      "severity": "WARNING"
+      "description": "New error constraint added in target: hemas-med-1 (error: code.coding must exist). Source has no equivalent root constraint.",
+      "severity": "ERROR"
     },
     {
       "id": "rule-3",
-      "type": "TERMINOLOGY",
-      "sourcePath": "Medication.code",
-      "targetPath": "Medication.code",
-      "description": "Binding changed: example(http://hl7.org/fhir/ValueSet/medication-codes) -> extensible(https://hemas.example.com/fhir/ValueSet/medication-code)",
+      "type": "STRUCTURAL",
+      "sourcePath": "Medication",
+      "targetPath": "Medication",
+      "description": "New warning constraint added in target: hemas-med-2 (warning: active status implies form must exist). Source has no equivalent constraint.",
       "severity": "WARNING"
     },
     {
       "id": "rule-4",
-      "type": "STRUCTURAL",
-      "sourcePath": "Medication.code.coding",
-      "targetPath": "Medication.code.coding",
-      "description": "Slicing changed: rules=open, discriminators=[pattern:$this] -> none",
-      "severity": "WARNING"
+      "type": "EXTENSION",
+      "sourcePath": "Medication.extension:investigationalStatus",
+      "targetPath": "Medication.extension:investigationalStatus",
+      "description": "Mandatory extension investigationalStatus[1..1 mustSupport=true] present in source is removed in target. Source required this extension; hemas-medication does not define it.",
+      "severity": "ERROR"
     },
     {
       "id": "rule-5",
-      "type": "CARDINALITY",
-      "sourcePath": "Medication.manufacturer",
-      "targetPath": "Medication.manufacturer",
-      "description": "Cardinality changed: [0..0] -> [0..1]",
-      "severity": "INFO"
+      "type": "EXTENSION",
+      "sourcePath": "Medication.extension:blindingCode",
+      "targetPath": "Medication.extension:blindingCode",
+      "description": "Optional extension blindingCode[0..1 mustSupport=true] present in source is removed in target.",
+      "severity": "WARNING"
     },
     {
       "id": "rule-6",
-      "type": "STRUCTURAL",
-      "sourcePath": "Medication.manufacturer",
-      "targetPath": "Medication.manufacturer",
-      "description": "MustSupport added in target",
-      "severity": "INFO"
+      "type": "EXTENSION",
+      "sourcePath": "Medication.extension:protocolReference",
+      "targetPath": "Medication.extension:protocolReference",
+      "description": "Optional extension protocolReference[0..1 mustSupport=true] present in source is removed in target.",
+      "severity": "WARNING"
     },
     {
       "id": "rule-7",
-      "type": "TERMINOLOGY",
-      "sourcePath": "Medication.form",
-      "targetPath": "Medication.form",
-      "description": "Binding changed: extensible(https://iit-proj.example.com/fhir/ValueSet/medication-form) -> extensible(https://hemas.example.com/fhir/ValueSet/medication-form)",
+      "type": "EXTENSION",
+      "sourcePath": "Medication.extension:pharmacyCategory",
+      "targetPath": "Medication.extension:pharmacyCategory",
+      "description": "New optional extension pharmacyCategory[0..1 mustSupport=true] added in target. Source does not define this extension.",
       "severity": "WARNING"
     },
     {
       "id": "rule-8",
-      "type": "STRUCTURAL",
-      "sourcePath": "Medication.ingredient.item[x]",
-      "targetPath": "Medication.ingredient.item[x]",
-      "description": "Type changed: [CodeableConcept] -> [CodeableConcept, Reference]",
+      "type": "EXTENSION",
+      "sourcePath": "Medication.extension:storageCondition",
+      "targetPath": "Medication.extension:storageCondition",
+      "description": "New optional extension storageCondition[0..1 mustSupport=true] added in target. Source does not define this extension.",
       "severity": "WARNING"
     },
     {
       "id": "rule-9",
-      "type": "STRUCTURAL",
-      "sourcePath": "Medication.ingredient.item[x]",
-      "targetPath": "Medication.ingredient.item[x]",
-      "description": "Reference target profile changed: [] -> [http://hl7.org/fhir/StructureDefinition/Substance]",
+      "type": "EXTENSION",
+      "sourcePath": "Medication.extension:localDrugCode",
+      "targetPath": "Medication.extension:localDrugCode",
+      "description": "New optional extension localDrugCode[0..1 mustSupport=true] added in target. Source does not define this extension.",
       "severity": "WARNING"
     },
     {
       "id": "rule-10",
-      "type": "CARDINALITY",
-      "sourcePath": "Medication.batch",
-      "targetPath": "Medication.batch",
-      "description": "Cardinality changed: [1..1] -> [0..1]",
-      "severity": "INFO"
+      "type": "TERMINOLOGY",
+      "sourcePath": "Medication.code",
+      "targetPath": "Medication.code",
+      "description": "New binding added on Medication.code in target: extensible(https://hemas.example.com/fhir/ValueSet/medication-code). Source has no binding on the code element itself.",
+      "severity": "WARNING"
     },
     {
       "id": "rule-11",
-      "type": "CARDINALITY",
-      "sourcePath": "Medication.batch.lotNumber",
-      "targetPath": "Medication.batch.lotNumber",
-      "description": "Cardinality changed: [1..1] -> [0..1]",
-      "severity": "INFO"
+      "type": "STRUCTURAL",
+      "sourcePath": "Medication.code.coding",
+      "targetPath": "Medication.code.coding",
+      "description": "code.coding slicing removed in target: source has named slices [studyDrug[1..1 mustSupport=true], blindedDrug[0..1 mustSupport=true]]; hemas has no slicing on code.coding (constrains sub-elements at the general coding level instead).",
+      "severity": "WARNING"
     },
     {
       "id": "rule-12",
-      "type": "CARDINALITY",
-      "sourcePath": "Medication.batch.expirationDate",
-      "targetPath": "Medication.batch.expirationDate",
-      "description": "Cardinality changed: [1..1] -> [0..1]",
-      "severity": "INFO"
+      "type": "STRUCTURAL",
+      "sourcePath": "Medication.code.coding:studyDrug",
+      "targetPath": "Medication.code.coding:studyDrug",
+      "description": "Source mandatory slice studyDrug[1..1 mustSupport=true patternCoding(system=https://iit-proj.example.com/fhir/CodeSystem/study-drug)] removed in target. No equivalent slice in hemas.",
+      "severity": "WARNING"
     },
     {
       "id": "rule-13",
-      "type": "EXTENSION",
-      "sourcePath": "",
-      "targetPath": "Medication.extension:pharmacyCategory",
-      "description": "Extension added in target profile: Medication.extension:pharmacyCategory",
+      "type": "STRUCTURAL",
+      "sourcePath": "Medication.code.coding:blindedDrug",
+      "targetPath": "Medication.code.coding:blindedDrug",
+      "description": "Source optional slice blindedDrug[0..1 mustSupport=true] removed in target. No equivalent slice in hemas.",
       "severity": "WARNING"
     },
     {
       "id": "rule-14",
-      "type": "EXTENSION",
-      "sourcePath": "",
-      "targetPath": "Medication.extension:storageCondition",
-      "description": "Extension added in target profile: Medication.extension:storageCondition",
-      "severity": "WARNING"
+      "type": "CARDINALITY",
+      "sourcePath": "Medication.code.coding.system",
+      "targetPath": "Medication.code.coding.system",
+      "description": "New mandatory constraint on code.coding.system at general coding level in target: [1..1 mustSupport=true]. Source has no constraint on code.coding.system at this level (only within named slices via patternCoding). R4 base is [0..1 mustSupport=false]. Min strictly increased 0→1.",
+      "severity": "ERROR"
     },
     {
       "id": "rule-15",
-      "type": "EXTENSION",
-      "sourcePath": "",
-      "targetPath": "Medication.extension:localDrugCode",
-      "description": "Extension added in target profile: Medication.extension:localDrugCode",
-      "severity": "WARNING"
+      "type": "CARDINALITY",
+      "sourcePath": "Medication.code.coding.code",
+      "targetPath": "Medication.code.coding.code",
+      "description": "New mandatory constraint on code.coding.code at general coding level in target: [1..1 mustSupport=true]. Source has no constraint on code.coding.code at this level. R4 base is [0..1 mustSupport=false]. Min strictly increased 0→1.",
+      "severity": "ERROR"
     },
     {
       "id": "rule-16",
-      "type": "STRUCTURAL",
-      "sourcePath": "",
-      "targetPath": "Medication.code.coding.id",
-      "description": "Element added in target profile: Medication.code.coding.id",
+      "type": "CARDINALITY",
+      "sourcePath": "Medication.manufacturer",
+      "targetPath": "Medication.manufacturer",
+      "description": "manufacturer ban lifted and MustSupport added: source [0..0] (banned) → target [0..1 mustSupport=true] (hemas no explicit min, inherits R4 base [0..1]). Ban removed; MS added on optional element.",
       "severity": "INFO"
     },
     {
       "id": "rule-17",
-      "type": "STRUCTURAL",
-      "sourcePath": "",
-      "targetPath": "Medication.code.coding.extension",
-      "description": "Element added in target profile: Medication.code.coding.extension",
-      "severity": "INFO"
+      "type": "TERMINOLOGY",
+      "sourcePath": "Medication.form",
+      "targetPath": "Medication.form",
+      "description": "form binding changed: source extensible(https://iit-proj.example.com/fhir/ValueSet/medication-form) → target extensible(https://hemas.example.com/fhir/ValueSet/medication-form). Different value sets, same binding strength.",
+      "severity": "WARNING"
     },
     {
       "id": "rule-18",
       "type": "STRUCTURAL",
-      "sourcePath": "",
-      "targetPath": "Medication.code.coding.system",
-      "description": "Element added in target profile: Medication.code.coding.system",
-      "severity": "ERROR"
+      "sourcePath": "Medication.ingredient.item[x]",
+      "targetPath": "Medication.ingredient.item[x]",
+      "description": "ingredient.item[x] types widened: source [CodeableConcept only] → target [CodeableConcept | Reference(Substance)]. Reference(Substance) type added in hemas.",
+      "severity": "WARNING"
     },
     {
       "id": "rule-19",
-      "type": "STRUCTURAL",
-      "sourcePath": "",
-      "targetPath": "Medication.code.coding.version",
-      "description": "Element added in target profile: Medication.code.coding.version",
+      "type": "CARDINALITY",
+      "sourcePath": "Medication.batch",
+      "targetPath": "Medication.batch",
+      "description": "batch cardinality relaxed: source [1..1 mustSupport=true] → target [0..1 mustSupport=true] (hemas has no explicit min on batch, inherits R4 base [0..1]). Min decreased.",
       "severity": "INFO"
     },
     {
       "id": "rule-20",
-      "type": "STRUCTURAL",
-      "sourcePath": "",
-      "targetPath": "Medication.code.coding.code",
-      "description": "Element added in target profile: Medication.code.coding.code",
-      "severity": "ERROR"
+      "type": "CARDINALITY",
+      "sourcePath": "Medication.batch.lotNumber",
+      "targetPath": "Medication.batch.lotNumber",
+      "description": "batch.lotNumber cardinality relaxed: source [1..1 mustSupport=true] → target [0..1 mustSupport=true] (hemas has no explicit min, inherits R4 base [0..1]). Min decreased.",
+      "severity": "INFO"
     },
     {
       "id": "rule-21",
-      "type": "STRUCTURAL",
-      "sourcePath": "",
-      "targetPath": "Medication.code.coding.display",
-      "description": "Element added in target profile: Medication.code.coding.display",
+      "type": "CARDINALITY",
+      "sourcePath": "Medication.batch.expirationDate",
+      "targetPath": "Medication.batch.expirationDate",
+      "description": "batch.expirationDate cardinality relaxed: source [1..1 mustSupport=true] → target [0..1 mustSupport=true] (hemas has no explicit min, inherits R4 base [0..1]). Min decreased.",
       "severity": "INFO"
-    },
-    {
-      "id": "rule-22",
-      "type": "STRUCTURAL",
-      "sourcePath": "",
-      "targetPath": "Medication.code.coding.userSelected",
-      "description": "Element added in target profile: Medication.code.coding.userSelected",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-23",
-      "type": "EXTENSION",
-      "sourcePath": "Medication.extension:investigationalStatus",
-      "targetPath": "",
-      "description": "Extension removed in target profile: Medication.extension:investigationalStatus (was required)",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-24",
-      "type": "EXTENSION",
-      "sourcePath": "Medication.extension:blindingCode",
-      "targetPath": "",
-      "description": "Extension removed in target profile: Medication.extension:blindingCode (was mustSupport)",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-25",
-      "type": "EXTENSION",
-      "sourcePath": "Medication.extension:protocolReference",
-      "targetPath": "",
-      "description": "Extension removed in target profile: Medication.extension:protocolReference (was mustSupport)",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-26",
-      "type": "STRUCTURAL",
-      "sourcePath": "Medication.code.coding:studyDrug",
-      "targetPath": "",
-      "description": "Slice 'studyDrug' removed in target profile",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-27",
-      "type": "STRUCTURAL",
-      "sourcePath": "Medication.code.coding:blindedDrug",
-      "targetPath": "",
-      "description": "Slice 'blindedDrug' removed in target profile",
-      "severity": "WARNING"
     }
   ]
 }

@@ -2,206 +2,63 @@
   "pairId": "au-core-allergyintolerance-vs-us-core-allergyintolerance",
   "sourceClasspath": "standard-profiles/au-core/StructureDefinition-au-core-allergyintolerance.json",
   "targetClasspath": "standard-profiles/us-core/StructureDefinition-us-core-allergyintolerance.json",
+  "_notes": "Source: AU Core AllergyIntolerance (Australian realm). Target: US Core AllergyIntolerance (US realm). Both are thin profiles derived from R4 base AllergyIntolerance. Key differences: AU Core uses an Australian-specific code VS (hypersensitivity-intolerance) while US Core uses a US NLM clinical substances VS; AU Core does not add required bindings on clinicalStatus/verificationStatus in its differential while US Core explicitly re-declares them (required); AU Core adds onset[x] and reaction.severity as MS elements which US Core does not; US Core adds extensible clinical-findings binding on reaction.manifestation. Patient reference targets differ (au-core-patient vs us-core-patient).",
   "drifts": [
     {
       "id": "rule-1",
-      "type": "VERSION",
+      "type": "TERMINOLOGY",
       "sourcePath": "AllergyIntolerance.clinicalStatus",
       "targetPath": "AllergyIntolerance.clinicalStatus",
-      "description": "Binding version pin changed: required(http://hl7.org/fhir/ValueSet/allergyintolerance-clinical|4.0.1) -> required(http://hl7.org/fhir/ValueSet/allergyintolerance-clinical)",
-      "severity": "INFO"
+      "description": "clinicalStatus binding tightened in target: source does not explicitly declare a binding in its differential (inherits R4 required:allergyintolerance-clinical); target explicitly adds required(http://hl7.org/fhir/ValueSet/allergyintolerance-clinical). Required binding explicitly declared in target but not in source differential.",
+      "severity": "WARNING"
     },
     {
       "id": "rule-2",
-      "type": "EXTENSION",
-      "sourcePath": "AllergyIntolerance.clinicalStatus.extension(http://hl7.org/fhir/StructureDefinition/obligation)",
-      "targetPath": "AllergyIntolerance.clinicalStatus",
-      "description": "Obligation removed in target element: source includes SHALL:populate-if-known for AU Core Responder and SHALL:no-error for AU Core Requester",
+      "type": "TERMINOLOGY",
+      "sourcePath": "AllergyIntolerance.verificationStatus",
+      "targetPath": "AllergyIntolerance.verificationStatus",
+      "description": "verificationStatus binding tightened in target: source does not explicitly declare a binding in its differential (inherits R4 required:allergyintolerance-verification); target explicitly adds required(http://hl7.org/fhir/ValueSet/allergyintolerance-verification). Required binding explicitly declared in target but not in source differential.",
       "severity": "WARNING"
     },
     {
       "id": "rule-3",
-      "type": "EXTENSION",
-      "sourcePath": "AllergyIntolerance.clinicalStatus",
-      "targetPath": "AllergyIntolerance.clinicalStatus.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+      "type": "TERMINOLOGY",
+      "sourcePath": "AllergyIntolerance.code",
+      "targetPath": "AllergyIntolerance.code",
+      "description": "code binding changed: source extensible(https://healthterminologies.gov.au/fhir/ValueSet/indicator-hypersensitivity-intolerance-to-substance-2) [AU-specific VS] → target extensible(http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1186.8) [US NLM clinical substances VS]. Same binding strength (extensible), different value sets.",
       "severity": "WARNING"
     },
     {
       "id": "rule-4",
-      "type": "VERSION",
-      "sourcePath": "AllergyIntolerance.verificationStatus",
-      "targetPath": "AllergyIntolerance.verificationStatus",
-      "description": "Binding version pin changed: required(http://hl7.org/fhir/ValueSet/allergyintolerance-verification|4.0.1) -> required(http://hl7.org/fhir/ValueSet/allergyintolerance-verification)",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-5",
-      "type": "EXTENSION",
-      "sourcePath": "AllergyIntolerance.verificationStatus.extension(http://hl7.org/fhir/StructureDefinition/obligation)",
-      "targetPath": "AllergyIntolerance.verificationStatus",
-      "description": "Obligation removed in target element: source includes SHALL:populate-if-known for AU Core Responder and SHALL:no-error for AU Core Requester",
+      "type": "STRUCTURAL",
+      "sourcePath": "AllergyIntolerance.patient",
+      "targetPath": "AllergyIntolerance.patient",
+      "description": "patient reference target changed: source constrains to au-core-patient (http://hl7.org.au/fhir/core/StructureDefinition/au-core-patient) → target constrains to us-core-patient (http://hl7.org/fhir/us/core/StructureDefinition/us-core-patient). Different realm-specific patient profiles.",
       "severity": "WARNING"
     },
     {
+      "id": "rule-5",
+      "type": "STRUCTURAL",
+      "sourcePath": "AllergyIntolerance.onset[x]",
+      "targetPath": "AllergyIntolerance.onset[x]",
+      "description": "onset[x] MustSupport removed: source marks onset[x] mustSupport=true with types [dateTime, Age, Period, Range]; target US Core does not constrain onset[x] in its differential. MS removed on optional element.",
+      "severity": "INFO"
+    },
+    {
       "id": "rule-6",
-      "type": "EXTENSION",
-      "sourcePath": "AllergyIntolerance.verificationStatus",
-      "targetPath": "AllergyIntolerance.verificationStatus.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+      "type": "TERMINOLOGY",
+      "sourcePath": "AllergyIntolerance.reaction.manifestation",
+      "targetPath": "AllergyIntolerance.reaction.manifestation",
+      "description": "reaction.manifestation binding added in target: source has mustSupport=true with no explicit binding; target adds extensible(http://hl7.org/fhir/ValueSet/clinical-findings). Binding tightened from no explicit declaration (inherits R4 example binding) to extensible in target.",
       "severity": "WARNING"
     },
     {
       "id": "rule-7",
-      "type": "TERMINOLOGY",
-      "sourcePath": "AllergyIntolerance.code",
-      "targetPath": "AllergyIntolerance.code",
-      "description": "Primary binding changed: extensible(https://healthterminologies.gov.au/fhir/ValueSet/indicator-hypersensitivity-intolerance-to-substance-2) -> extensible(http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1186.8)",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-8",
-      "type": "TERMINOLOGY",
-      "sourcePath": "AllergyIntolerance.code",
-      "targetPath": "AllergyIntolerance.code",
-      "description": "Additional binding removed in target: candidate(https://healthterminologies.gov.au/fhir/ValueSet/adverse-reaction-substances-and-negated-findings-1)",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-9",
-      "type": "EXTENSION",
-      "sourcePath": "AllergyIntolerance.code.extension(http://hl7.org/fhir/StructureDefinition/obligation)",
-      "targetPath": "AllergyIntolerance.code",
-      "description": "Obligation removed in target element: source includes SHALL:populate-if-known for AU Core Responder and SHALL:no-error for AU Core Requester",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-10",
-      "type": "EXTENSION",
-      "sourcePath": "AllergyIntolerance.code",
-      "targetPath": "AllergyIntolerance.code.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-11",
-      "type": "STRUCTURAL",
-      "sourcePath": "AllergyIntolerance.patient",
-      "targetPath": "AllergyIntolerance.patient",
-      "description": "Reference target profile changed: [http://hl7.org.au/fhir/core/StructureDefinition/au-core-patient] -> [http://hl7.org/fhir/us/core/StructureDefinition/us-core-patient]",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-12",
-      "type": "EXTENSION",
-      "sourcePath": "AllergyIntolerance.patient.extension(http://hl7.org/fhir/StructureDefinition/obligation)",
-      "targetPath": "AllergyIntolerance.patient",
-      "description": "Obligation removed in target element: source includes SHALL:populate-if-known for AU Core Responder and SHALL:no-error for AU Core Requester",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-13",
-      "type": "EXTENSION",
-      "sourcePath": "AllergyIntolerance.patient",
-      "targetPath": "AllergyIntolerance.patient.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-14",
-      "type": "STRUCTURAL",
-      "sourcePath": "AllergyIntolerance.onset[x]",
-      "targetPath": "AllergyIntolerance.onset[x]",
-      "description": "Type changed: [dateTime, Age, Period, Range] -> [dateTime, Age, Period, Range, string]",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-15",
-      "type": "STRUCTURAL",
-      "sourcePath": "AllergyIntolerance.onset[x]",
-      "targetPath": "AllergyIntolerance.onset[x]",
-      "description": "MustSupport removed in target",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-16",
-      "type": "EXTENSION",
-      "sourcePath": "AllergyIntolerance.onset[x].extension(http://hl7.org/fhir/StructureDefinition/obligation)",
-      "targetPath": "AllergyIntolerance.onset[x]",
-      "description": "Obligation removed in target element: source includes SHALL:populate-if-known for AU Core Responder and SHALL:no-error for AU Core Requester",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-17",
-      "type": "EXTENSION",
-      "sourcePath": "AllergyIntolerance.reaction.extension(http://hl7.org/fhir/StructureDefinition/obligation)",
-      "targetPath": "AllergyIntolerance.reaction",
-      "description": "Obligation removed in target element: source includes SHALL:populate-if-known for AU Core Responder and SHALL:no-error for AU Core Requester",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-18",
-      "type": "EXTENSION",
-      "sourcePath": "AllergyIntolerance.reaction",
-      "targetPath": "AllergyIntolerance.reaction.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-19",
-      "type": "TERMINOLOGY",
-      "sourcePath": "AllergyIntolerance.reaction.substance",
-      "targetPath": "AllergyIntolerance.reaction.substance",
-      "description": "Binding changed: preferred(https://healthterminologies.gov.au/fhir/ValueSet/adverse-reaction-agent-1) -> example(http://hl7.org/fhir/ValueSet/substance-code)",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-20",
-      "type": "TERMINOLOGY",
-      "sourcePath": "AllergyIntolerance.reaction.manifestation",
-      "targetPath": "AllergyIntolerance.reaction.manifestation",
-      "description": "Binding changed: preferred(https://healthterminologies.gov.au/fhir/ValueSet/clinical-finding-1) -> extensible(http://hl7.org/fhir/ValueSet/clinical-findings)",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-21",
-      "type": "EXTENSION",
-      "sourcePath": "AllergyIntolerance.reaction.manifestation.extension(http://hl7.org/fhir/StructureDefinition/obligation)",
-      "targetPath": "AllergyIntolerance.reaction.manifestation",
-      "description": "Obligation removed in target element: source includes SHALL:populate-if-known for AU Core Responder and SHALL:no-error for AU Core Requester",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-22",
-      "type": "EXTENSION",
-      "sourcePath": "AllergyIntolerance.reaction.manifestation",
-      "targetPath": "AllergyIntolerance.reaction.manifestation.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-23",
       "type": "STRUCTURAL",
       "sourcePath": "AllergyIntolerance.reaction.severity",
       "targetPath": "AllergyIntolerance.reaction.severity",
-      "description": "MustSupport removed in target",
+      "description": "reaction.severity MustSupport removed: source marks reaction.severity mustSupport=true; target US Core does not constrain reaction.severity in its differential. MS removed on optional element.",
       "severity": "INFO"
-    },
-    {
-      "id": "rule-24",
-      "type": "EXTENSION",
-      "sourcePath": "AllergyIntolerance.reaction.severity.extension(http://hl7.org/fhir/StructureDefinition/obligation)",
-      "targetPath": "AllergyIntolerance.reaction.severity",
-      "description": "Obligation removed in target element: source includes SHALL:populate-if-known for AU Core Responder and SHALL:no-error for AU Core Requester",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-25",
-      "type": "TERMINOLOGY",
-      "sourcePath": "AllergyIntolerance.reaction.exposureRoute",
-      "targetPath": "AllergyIntolerance.reaction.exposureRoute",
-      "description": "Binding changed: preferred(https://healthterminologies.gov.au/fhir/ValueSet/route-of-administration-1) -> example(http://hl7.org/fhir/ValueSet/route-codes)",
-      "severity": "WARNING"
     }
   ]
 }

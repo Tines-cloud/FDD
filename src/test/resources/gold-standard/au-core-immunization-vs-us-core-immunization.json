@@ -2,53 +2,54 @@
   "pairId": "au-core-immunization-vs-us-core-immunization",
   "sourceClasspath": "standard-profiles/au-core/StructureDefinition-au-core-immunization.json",
   "targetClasspath": "standard-profiles/us-core/StructureDefinition-us-core-immunization.json",
+  "_notes": "Source: AU Core Immunization (Australian realm). Target: US Core Immunization (US realm). Both mark status, vaccineCode, patient, occurrence[x], primarySource as MS. Key differences: AU Core uses AU-specific vaccine code slicing (AMT+AIR required sub-slices) with no overall vaccineCode binding; US Core replaces this with a single extensible CVX VS binding on vaccineCode and adds no sub-slices; US Core adds a root warning constraint (us-core-5), an explicit required status binding, and statusReason MS; AU Core adds note MS absent in US Core; patient references differ (au-core vs us-core).",
   "drifts": [
     {
       "id": "rule-1",
-      "type": "VERSION",
-      "sourcePath": "Immunization.status",
-      "targetPath": "Immunization.status",
-      "description": "Binding version pin changed: required(http://hl7.org/fhir/ValueSet/immunization-status|4.0.1) -> required(http://hl7.org/fhir/ValueSet/immunization-status)",
-      "severity": "INFO"
+      "type": "STRUCTURAL",
+      "sourcePath": "Immunization",
+      "targetPath": "Immunization",
+      "description": "New warning constraint us-core-5(warning) added in target: US Core adds a root-level warning constraint on Immunization; source AU Core has no root-level constraint.",
+      "severity": "WARNING"
     },
     {
       "id": "rule-2",
-      "type": "EXTENSION",
-      "sourcePath": "Immunization.status.extension(http://hl7.org/fhir/StructureDefinition/obligation)",
+      "type": "TERMINOLOGY",
+      "sourcePath": "Immunization.status",
       "targetPath": "Immunization.status",
-      "description": "Extension removed in target element: http://hl7.org/fhir/StructureDefinition/obligation",
+      "description": "status binding explicitly added in target: US Core adds required(http://hl7.org/fhir/ValueSet/immunization-status); source AU Core does not declare a binding on status in its differential (inherits R4 required binding). Binding explicitly tightened/re-declared in target differential.",
       "severity": "WARNING"
     },
     {
       "id": "rule-3",
-      "type": "EXTENSION",
-      "sourcePath": "Immunization.status",
-      "targetPath": "Immunization.status.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
-      "severity": "WARNING"
+      "type": "STRUCTURAL",
+      "sourcePath": "Immunization.statusReason",
+      "targetPath": "Immunization.statusReason",
+      "description": "statusReason MustSupport added on optional element in target: US Core adds statusReason[mustSupport=true, bind=example:immunization-status-reason]; source AU Core does not constrain statusReason. MS added on optional element.",
+      "severity": "INFO"
     },
     {
       "id": "rule-4",
       "type": "STRUCTURAL",
-      "sourcePath": "Immunization.statusReason",
-      "targetPath": "Immunization.statusReason",
-      "description": "MustSupport added in target",
-      "severity": "INFO"
+      "sourcePath": "Immunization.vaccineCode.coding",
+      "targetPath": "Immunization.vaccineCode.coding",
+      "description": "vaccineCode.coding slicing removed in target: source AU Core defines pattern-type slicing on vaccineCode.coding with AU-specific named slices (amtVaccineCode, airVaccineCode); target US Core has no slicing on vaccineCode.coding.",
+      "severity": "WARNING"
     },
     {
       "id": "rule-5",
-      "type": "TERMINOLOGY",
-      "sourcePath": "Immunization.statusReason",
-      "targetPath": "Immunization.statusReason",
-      "description": "Binding changed: preferred(https://healthterminologies.gov.au/fhir/ValueSet/reason-vaccine-not-administered-3) -> example(http://hl7.org/fhir/ValueSet/immunization-status-reason)",
+      "type": "STRUCTURAL",
+      "sourcePath": "Immunization.vaccineCode.coding:amtVaccineCode",
+      "targetPath": "Immunization.vaccineCode.coding:amtVaccineCode",
+      "description": "vaccineCode.coding:amtVaccineCode slice removed in target: source has [max=1, mustSupport=true, required(https://healthterminologies.gov.au/fhir/ValueSet/amt-vaccine-1)]; target has no equivalent slice.",
       "severity": "WARNING"
     },
     {
       "id": "rule-6",
-      "type": "EXTENSION",
-      "sourcePath": "Immunization.statusReason",
-      "targetPath": "Immunization.statusReason.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
+      "type": "STRUCTURAL",
+      "sourcePath": "Immunization.vaccineCode.coding:airVaccineCode",
+      "targetPath": "Immunization.vaccineCode.coding:airVaccineCode",
+      "description": "vaccineCode.coding:airVaccineCode slice removed in target: source has [max=1, mustSupport=true, required(https://healthterminologies.gov.au/fhir/ValueSet/australian-immunisation-register-vaccine-1)]; target has no equivalent slice.",
       "severity": "WARNING"
     },
     {
@@ -56,200 +57,24 @@
       "type": "TERMINOLOGY",
       "sourcePath": "Immunization.vaccineCode",
       "targetPath": "Immunization.vaccineCode",
-      "description": "Binding changed: example(http://hl7.org/fhir/ValueSet/vaccine-code) with AU additional preferred bindings for https://healthterminologies.gov.au/fhir/ValueSet/amt-vaccine-1 and https://healthterminologies.gov.au/fhir/ValueSet/australian-immunisation-register-vaccine-1 -> extensible(http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1010.6)",
+      "description": "vaccineCode overall binding added in target: US Core adds extensible(http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1010.6) [CVX vaccine codes]; source AU Core has no overall binding on vaccineCode (only AU-specific required bindings on sub-slices). New US realm binding replaces AU sub-slice required bindings.",
       "severity": "WARNING"
     },
     {
       "id": "rule-8",
-      "type": "EXTENSION",
-      "sourcePath": "Immunization.vaccineCode.extension(http://hl7.org/fhir/StructureDefinition/obligation)",
-      "targetPath": "Immunization.vaccineCode",
-      "description": "Extension removed in target element: http://hl7.org/fhir/StructureDefinition/obligation",
+      "type": "STRUCTURAL",
+      "sourcePath": "Immunization.patient",
+      "targetPath": "Immunization.patient",
+      "description": "patient reference target changed: source constrains to au-core-patient (http://hl7.org.au/fhir/core/StructureDefinition/au-core-patient) → target constrains to us-core-patient (http://hl7.org/fhir/us/core/StructureDefinition/us-core-patient). Different realm-specific patient profiles.",
       "severity": "WARNING"
     },
     {
       "id": "rule-9",
-      "type": "EXTENSION",
-      "sourcePath": "Immunization.vaccineCode",
-      "targetPath": "Immunization.vaccineCode.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-10",
-      "type": "STRUCTURAL",
-      "sourcePath": "Immunization.vaccineCode",
-      "targetPath": "Immunization.vaccineCode",
-      "description": "Constraint added in target: us-core-5 SHOULD have a translation to the NDC value set",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-11",
-      "type": "STRUCTURAL",
-      "sourcePath": "Immunization.vaccineCode.coding",
-      "targetPath": "Immunization.vaccineCode.coding",
-      "description": "Slicing changed: rules=open, discriminators=[pattern:$this] -> none",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-12",
-      "type": "STRUCTURAL",
-      "sourcePath": "Immunization.vaccineCode.coding:amtVaccineCode",
-      "targetPath": "",
-      "description": "Slice removed in target profile: Immunization.vaccineCode.coding:amtVaccineCode (max=1, mustSupport=true, binding=required(https://healthterminologies.gov.au/fhir/ValueSet/amt-vaccine-1))",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-13",
-      "type": "STRUCTURAL",
-      "sourcePath": "Immunization.vaccineCode.coding:airVaccineCode",
-      "targetPath": "",
-      "description": "Slice removed in target profile: Immunization.vaccineCode.coding:airVaccineCode (max=1, mustSupport=true, binding=required(https://healthterminologies.gov.au/fhir/ValueSet/australian-immunisation-register-vaccine-1))",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-14",
-      "type": "STRUCTURAL",
-      "sourcePath": "Immunization.patient",
-      "targetPath": "Immunization.patient",
-      "description": "Reference target profile changed: [http://hl7.org.au/fhir/core/StructureDefinition/au-core-patient] -> [http://hl7.org/fhir/us/core/StructureDefinition/us-core-patient]",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-15",
-      "type": "EXTENSION",
-      "sourcePath": "Immunization.patient.extension(http://hl7.org/fhir/StructureDefinition/obligation)",
-      "targetPath": "Immunization.patient",
-      "description": "Extension removed in target element: http://hl7.org/fhir/StructureDefinition/obligation",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-16",
-      "type": "EXTENSION",
-      "sourcePath": "Immunization.patient",
-      "targetPath": "Immunization.patient.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-17",
-      "type": "STRUCTURAL",
-      "sourcePath": "Immunization.occurrence[x]",
-      "targetPath": "Immunization.occurrence[x]",
-      "description": "Type-level MustSupport added in target for the dateTime choice",
-      "severity": "INFO"
-    },
-    {
-      "id": "rule-18",
-      "type": "EXTENSION",
-      "sourcePath": "Immunization.occurrence[x].extension(http://hl7.org/fhir/StructureDefinition/obligation)",
-      "targetPath": "Immunization.occurrence[x]",
-      "description": "Extension removed in target element: http://hl7.org/fhir/StructureDefinition/obligation",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-19",
-      "type": "EXTENSION",
-      "sourcePath": "Immunization.occurrence[x]",
-      "targetPath": "Immunization.occurrence[x].extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-20",
-      "type": "EXTENSION",
-      "sourcePath": "Immunization.primarySource.extension(http://hl7.org/fhir/StructureDefinition/obligation)",
-      "targetPath": "Immunization.primarySource",
-      "description": "Extension removed in target element: http://hl7.org/fhir/StructureDefinition/obligation",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-21",
-      "type": "EXTENSION",
-      "sourcePath": "Immunization.primarySource",
-      "targetPath": "Immunization.primarySource.extension(http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement)",
-      "description": "Extension added in target element: http://hl7.org/fhir/us/core/StructureDefinition/uscdi-requirement",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-22",
       "type": "STRUCTURAL",
       "sourcePath": "Immunization.note",
       "targetPath": "Immunization.note",
-      "description": "MustSupport removed in target",
+      "description": "note MustSupport removed on optional element: source AU Core marks note[mustSupport=true]; target US Core does not constrain note in its differential. MS removed on optional element.",
       "severity": "INFO"
-    },
-    {
-      "id": "rule-23",
-      "type": "EXTENSION",
-      "sourcePath": "Immunization.note.extension(http://hl7.org/fhir/StructureDefinition/obligation)",
-      "targetPath": "Immunization.note",
-      "description": "Extension removed in target element: http://hl7.org/fhir/StructureDefinition/obligation",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-24",
-      "type": "STRUCTURAL",
-      "sourcePath": "Immunization.performer",
-      "targetPath": "Immunization.performer",
-      "description": "Slicing changed: rules=open, discriminators=[pattern:function] -> none",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-25",
-      "type": "TERMINOLOGY",
-      "sourcePath": "Immunization.performer.function",
-      "targetPath": "Immunization.performer.function",
-      "description": "Binding changed: extensible(http://terminology.hl7.org.au/ValueSet/v2-0443-extended) -> extensible(http://hl7.org/fhir/ValueSet/immunization-function)",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-26",
-      "type": "STRUCTURAL",
-      "sourcePath": "Immunization.performer:administeredBy",
-      "targetPath": "",
-      "description": "Slice removed in target profile: Immunization.performer:administeredBy (max=1, function min=1 max=1 with required pattern code AP, actor min=1 max=1)",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-27",
-      "type": "STRUCTURAL",
-      "sourcePath": "Immunization.performer:approvedBy",
-      "targetPath": "",
-      "description": "Slice removed in target profile: Immunization.performer:approvedBy (max=1, function min=1 max=1 with required pattern code OP, actor min=1 max=1)",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-28",
-      "type": "TERMINOLOGY",
-      "sourcePath": "Immunization.reasonCode",
-      "targetPath": "Immunization.reasonCode",
-      "description": "Binding changed: preferred(https://healthterminologies.gov.au/fhir/ValueSet/reason-vaccine-administered-1) -> example(http://hl7.org/fhir/ValueSet/immunization-reason)",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-29",
-      "type": "TERMINOLOGY",
-      "sourcePath": "Immunization.site",
-      "targetPath": "Immunization.site",
-      "description": "Binding changed: preferred(https://healthterminologies.gov.au/fhir/ValueSet/immunisation-anatomical-site-1) -> example(http://hl7.org/fhir/ValueSet/immunization-site)",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-30",
-      "type": "TERMINOLOGY",
-      "sourcePath": "Immunization.route",
-      "targetPath": "Immunization.route",
-      "description": "Binding changed: preferred(https://healthterminologies.gov.au/fhir/ValueSet/immunisation-route-of-administration-1) -> example(http://hl7.org/fhir/ValueSet/immunization-route)",
-      "severity": "WARNING"
-    },
-    {
-      "id": "rule-31",
-      "type": "TERMINOLOGY",
-      "sourcePath": "Immunization.protocolApplied.targetDisease",
-      "targetPath": "Immunization.protocolApplied.targetDisease",
-      "description": "Binding changed: preferred(https://healthterminologies.gov.au/fhir/ValueSet/vaccination-target-disease-1) -> example(http://hl7.org/fhir/ValueSet/immunization-target-disease)",
-      "severity": "WARNING"
     }
   ]
 }

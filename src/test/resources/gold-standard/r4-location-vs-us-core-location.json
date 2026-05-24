@@ -1,103 +1,104 @@
-{
-  "pairId": "r4-location-vs-us-core-location",
+﻿{
+  "pairId": "manual-r4-location-vs-us-core-location",
   "sourceClasspath": "standard-profiles/r4/location.profile.json",
   "targetClasspath": "standard-profiles/us-core/StructureDefinition-us-core-location.json",
+  "_notes": "Hand-curated by walking the US Core Location differential (10 elements) against the R4 Location snapshot (39 elements). Verified with PowerShell. Covers: 1 cardinality increase (name 0->1), new binding on address.state, reference profile narrowing (managingOrganization), and MustSupport additions. Note: R4 Location.status has a required binding but no version pin in R4 snapshot (unlike Patient.gender which had |4.0.1); US Core differential does not re-state the binding, so no binding version change.",
   "drifts": [
     {
-      "id": "rule-1",
+      "id": "gold-loc-1",
       "type": "STRUCTURAL",
       "sourcePath": "Location.status",
       "targetPath": "Location.status",
-      "description": "MustSupport added in target",
+      "description": "MustSupport added in target (min=0, optional but must be supported when present).",
       "severity": "INFO"
     },
     {
-      "id": "rule-2",
+      "id": "gold-loc-2",
       "type": "CARDINALITY",
       "sourcePath": "Location.name",
       "targetPath": "Location.name",
-      "description": "Cardinality changed: [0..1] -> [1..1]",
-      "severity": "WARNING"
+      "description": "Cardinality changed: [0..1] -> [1..1]. Location name becomes mandatory in US Core; R4 allows a location without a name.",
+      "severity": "ERROR"
     },
     {
-      "id": "rule-3",
+      "id": "gold-loc-3",
       "type": "STRUCTURAL",
       "sourcePath": "Location.name",
       "targetPath": "Location.name",
-      "description": "MustSupport added in target",
-      "severity": "INFO"
+      "description": "MustSupport added in target (min becomes 1 -> conformance-critical).",
+      "severity": "WARNING"
     },
     {
-      "id": "rule-4",
+      "id": "gold-loc-4",
       "type": "STRUCTURAL",
       "sourcePath": "Location.telecom",
       "targetPath": "Location.telecom",
-      "description": "MustSupport added in target",
+      "description": "MustSupport added in target (min=0, optional but must be supported when present).",
       "severity": "INFO"
     },
     {
-      "id": "rule-5",
+      "id": "gold-loc-5",
       "type": "STRUCTURAL",
       "sourcePath": "Location.address",
       "targetPath": "Location.address",
-      "description": "MustSupport added in target",
+      "description": "MustSupport added in target (min=0, optional but must be supported when present).",
       "severity": "INFO"
     },
     {
-      "id": "rule-6",
+      "id": "gold-loc-6",
       "type": "STRUCTURAL",
       "sourcePath": "Location.address.line",
       "targetPath": "Location.address.line",
-      "description": "MustSupport added in target",
+      "description": "MustSupport added in target (min=0, optional but must be supported when present). R4 Location snapshot does not constrain address sub-elements.",
       "severity": "INFO"
     },
     {
-      "id": "rule-7",
+      "id": "gold-loc-7",
       "type": "STRUCTURAL",
       "sourcePath": "Location.address.city",
       "targetPath": "Location.address.city",
-      "description": "MustSupport added in target",
+      "description": "MustSupport added in target (min=0, optional but must be supported when present). R4 Location snapshot does not constrain address sub-elements.",
       "severity": "INFO"
     },
     {
-      "id": "rule-8",
+      "id": "gold-loc-8",
       "type": "STRUCTURAL",
       "sourcePath": "Location.address.state",
       "targetPath": "Location.address.state",
-      "description": "MustSupport added in target",
+      "description": "MustSupport added in target (min=0, optional but must be supported when present). R4 Location snapshot does not constrain address sub-elements.",
       "severity": "INFO"
     },
     {
-      "id": "rule-9",
+      "id": "gold-loc-9",
       "type": "TERMINOLOGY",
       "sourcePath": "Location.address.state",
       "targetPath": "Location.address.state",
-      "description": "Binding added in target: extensible(http://hl7.org/fhir/us/core/ValueSet/us-core-usps-state)",
+      "description": "New binding added in target: extensible binding to http://hl7.org/fhir/us/core/ValueSet/us-core-usps-state (US USPS state codes). R4 Location base does not constrain address.state with any binding.",
       "severity": "WARNING"
     },
     {
-      "id": "rule-10",
+      "id": "gold-loc-10",
       "type": "STRUCTURAL",
       "sourcePath": "Location.address.postalCode",
       "targetPath": "Location.address.postalCode",
-      "description": "MustSupport added in target",
+      "description": "MustSupport added in target (min=0, optional but must be supported when present). R4 Location snapshot does not constrain address sub-elements.",
       "severity": "INFO"
     },
     {
-      "id": "rule-11",
+      "id": "gold-loc-11",
       "type": "STRUCTURAL",
       "sourcePath": "Location.managingOrganization",
       "targetPath": "Location.managingOrganization",
-      "description": "Reference target profile changed: [http://hl7.org/fhir/StructureDefinition/Organization] -> [http://hl7.org/fhir/us/core/StructureDefinition/us-core-organization]",
+      "description": "MustSupport added in target (min=0, optional but must be supported when present).",
+      "severity": "INFO"
+    },
+    {
+      "id": "gold-loc-12",
+      "type": "STRUCTURAL",
+      "sourcePath": "Location.managingOrganization",
+      "targetPath": "Location.managingOrganization",
+      "description": "Reference target profile constrained: R4 allows Reference(Organization). US Core restricts to Reference(us-core-organization).",
       "severity": "WARNING"
-    },
-    {
-      "id": "rule-12",
-      "type": "STRUCTURAL",
-      "sourcePath": "Location.managingOrganization",
-      "targetPath": "Location.managingOrganization",
-      "description": "MustSupport added in target",
-      "severity": "INFO"
     }
   ]
 }

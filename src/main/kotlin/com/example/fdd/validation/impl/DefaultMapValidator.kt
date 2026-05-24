@@ -18,6 +18,11 @@ import org.hl7.fhir.r4.model.StructureDefinition
 import org.hl7.fhir.r4.utils.StructureMapUtilities
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
+import java.nio.file.Files
+import java.nio.file.Path
+import java.nio.file.Paths
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 /**
  * Validates FML code by compiling it with HAPI-FHIR and auto-repairs errors using an LLM.
@@ -39,6 +44,7 @@ class DefaultMapValidator(
 
     private val log = LoggerFactory.getLogger(javaClass)
     private val maxAttempts: Int get() = properties.validation.maxAttempts
+    private val repairTraceDir: Path = Paths.get("output", "repair-trace")
 
     @Timed(value = "fdd.map.validation.duration", description = "Trust-but-Verify validation duration")
     override fun validateAndRepair(
@@ -48,6 +54,7 @@ class DefaultMapValidator(
         driftReport: DriftReport
     ): MapGenerationResult {
         var currentFml = fmlCode
+        val runId = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd-HHmmss-SSS"))
         // All errors from every cycle, each prefixed with "[Cycle N]" for grouping in output.
         val failureLog = mutableListOf<String>()
         // Conversation thread with the LLM: list of (userMessage, llmResponse) pairs.
@@ -59,11 +66,12 @@ class DefaultMapValidator(
 
         // Pre-process: rewrite known LLM syntax anti-patterns before first validation (no LLM cost)
         currentFml = sanitizeFml(currentFml)
+        persistFmlSnapshot(runId, 0, "initial-llm", currentFml)
 
         for (cycle in 1..maxAttempts) {
             log.info("Repair cycle {}/{}: scanning FML for ALL errors (no LLM cost)", cycle, maxAttempts)
 
-            // Auto-fix syntax-level errors deterministically - missing semicolons, unquoted rule
+            // Auto-fix syntax-level errors deterministically — missing semicolons, unquoted rule
             // names, unicode quotes, etc.  These never need AI.
             // MUST run BEFORE autoFixRuleNames: if a rule is missing both its semicolon AND its
             // quoted name, autoFixRuleNames exits early (line doesn't end with ";"). Running
@@ -72,9 +80,37 @@ class DefaultMapValidator(
 
             // Auto-fix "Complex rules must have an explicit name" errors (free, no LLM cost)
             currentFml = autoFixRuleNames(currentFml)
+            persistFmlSnapshot(runId, cycle, "post-deterministic-fixes", currentFml)
 
             // -- Scan for ALL errors (free, no LLM cost) --
-            val errors = collectAllErrors(currentFml)
+            var errors = collectAllErrors(currentFml)
+
+            // Never route syntax/parsing errors to LLM. Keep them on the deterministic path.
+            var syntaxErrors = errors.filter { isDeterministicSyntaxError(it) }
+            if (syntaxErrors.isNotEmpty()) {
+                val syntaxFixed = autoFixRuleNames(
+                    autoFixSyntaxErrors(
+                        applyDeterministicFixesForCollectedSyntaxErrors(currentFml, syntaxErrors)
+                    )
+                )
+                if (syntaxFixed != currentFml) {
+                    currentFml = syntaxFixed
+                    persistFmlSnapshot(runId, cycle, "post-syntax-deterministic", currentFml)
+                    errors = collectAllErrors(currentFml)
+                    syntaxErrors = errors.filter { isDeterministicSyntaxError(it) }
+                }
+
+                // If syntax still remains, deterministically prune those lines rather than looping.
+                if (syntaxErrors.isNotEmpty()) {
+                    val prunedSyntax = pruneUnresolvedSyntaxRules(currentFml, syntaxErrors)
+                    if (prunedSyntax != currentFml) {
+                        currentFml = autoFixRuleNames(autoFixSyntaxErrors(prunedSyntax))
+                        persistFmlSnapshot(runId, cycle, "post-syntax-prune", currentFml)
+                        errors = collectAllErrors(currentFml)
+                        syntaxErrors = errors.filter { isDeterministicSyntaxError(it) }
+                    }
+                }
+            }
 
             if (errors.isEmpty()) {
                 log.info("FML compiled successfully in cycle {}/{}", cycle, maxAttempts)
@@ -92,10 +128,70 @@ class DefaultMapValidator(
                 )
             }
 
+            // If the same NON-syntax error survived one full LLM repair attempt, do not let
+            // it loop forever. Prune the stubborn rule line from the map and re-validate.
+            // This keeps the map progressing instead of wasting further LLM calls on a line
+            // that is not converging.
+            if (errorsByCycle.isNotEmpty()) {
+                val prunedFml = pruneRepeatedUnresolvedRules(currentFml, errorsByCycle.last(), errors)
+                if (prunedFml != currentFml) {
+                    currentFml = autoFixRuleNames(autoFixSyntaxErrors(prunedFml))
+                    persistFmlSnapshot(runId, cycle, "post-stubborn-prune", currentFml)
+                    errors = collectAllErrors(currentFml)
+
+                    if (errors.isEmpty()) {
+                        log.info("FML compiled successfully in cycle {}/{} after pruning repeated non-syntax rule(s)", cycle, maxAttempts)
+                        if (cycle > 1) {
+                            log.warn("FML required {} repair cycle(s). Error trace:", cycle - 1)
+                            failureLog.forEach { entry -> log.warn("  {}", entry) }
+                        }
+                        val allMessages = failureLog.toMutableList().also {
+                            it.add("[Cycle $cycle] Compilation successful")
+                        }
+                        return MapGenerationResult(
+                            structureMapFml = currentFml,
+                            syntacticallyValid = true,
+                            validationMessages = allMessages
+                        )
+                    }
+                }
+            }
+
             // Record every individual error for this cycle
             errors.forEach { err -> failureLog.add("[Cycle $cycle] $err") }
             log.warn("Cycle {}: found {} error(s) in total:", cycle, errors.size)
             errors.forEachIndexed { idx, err -> log.warn("  [{}/{}] {}", idx + 1, errors.size, err) }
+
+            // Strict routing policy:
+            //   - syntax errors => deterministic code path only
+            //   - non-syntax errors => eligible for LLM repair
+            val nonSyntaxErrors = errors.filterNot { isDeterministicSyntaxError(it) }
+            if (nonSyntaxErrors.isEmpty()) {
+                // All remaining errors are syntax-level and deterministic fixes made no progress.
+                // Do not send these to LLM; fail fast instead of repeating reflexion loops.
+                throw MapValidationException(
+                    message = "Unresolved syntax errors remained after deterministic repair; refusing to send syntax errors to LLM",
+                    attemptErrors = failureLog.toList()
+                )
+            }
+
+            val priorNormErrors = errorsByCycle.flatten().map { normaliseError(it) }.toSet()
+            val deltaErrors = nonSyntaxErrors.filter { normaliseError(it) !in priorNormErrors }
+            val errorsForTurn = if (deltaErrors.isNotEmpty()) deltaErrors else nonSyntaxErrors
+            if (deltaErrors.isNotEmpty()) {
+                log.info(
+                    "Cycle {}: sending {} NEW error(s) to reflexion ({} total this cycle)",
+                    cycle,
+                    deltaErrors.size,
+                    nonSyntaxErrors.size
+                )
+            } else {
+                log.info(
+                    "Cycle {}: no new errors vs prior cycles, sending all {} current error(s)",
+                    cycle,
+                    nonSyntaxErrors.size
+                )
+            }
 
             // Hard oscillation guard: if the LLM keeps producing the same logical error set
             // across CONSECUTIVE cycles, it is clearly stuck and further LLM calls are wasteful.
@@ -150,10 +246,10 @@ class DefaultMapValidator(
 
             // -- Send ALL errors to LLM in ONE call --
             val turnNum = conversationHistory.size + 1
-            log.info("Reflexion turn {}: sending ALL {} error(s) in one LLM call", turnNum, errors.size)
+            log.info("Reflexion turn {}: sending {} error(s) in one LLM call", turnNum, errorsForTurn.size)
             currentFml = reflexion(
                 currentFml,
-                errors,
+                errorsForTurn,
                 source,
                 target,
                 driftReport,
@@ -164,6 +260,7 @@ class DefaultMapValidator(
             // Re-apply anti-pattern sanitization: the AI can reintroduce the same bad patterns
             // (multi-line then, not() wrapping, etc.) that were fixed before the loop started.
             currentFml = sanitizeFml(currentFml)
+            persistFmlSnapshot(runId, cycle, "post-reflexion-patch", currentFml)
             // Save this cycle's errors so the next follow-up can warn the LLM not to revert
             errorsByCycle.add(errors)
         }
@@ -201,6 +298,11 @@ class DefaultMapValidator(
         Regex("""\bat\s+(\d+)\s*,\s*\d+\s*:""").find(error)
             ?.groupValues?.get(1)?.toIntOrNull()
 
+    /** Extract the 1-based column number from a HAPI error message like "at 17, 7:". */
+    private fun extractColumnNumber(error: String): Int? =
+        Regex("""\bat\s+\d+\s*,\s*(\d+)\s*:""").find(error)
+            ?.groupValues?.get(1)?.toIntOrNull()
+
     /**
      * Compare errors from the previous cycle with errors from the current cycle.
      * If the same line number has errors in both cycles (even different errors),
@@ -231,6 +333,144 @@ class DefaultMapValidator(
         }
     }
 
+    /**
+     * If a NON-syntax error comes back unchanged after one full LLM repair turn, drop the
+     * offending rule line from the FML instead of allowing it to repeat indefinitely.
+     *
+     * We preserve line numbers by replacing the line with a comment rather than removing it.
+     */
+    private fun pruneRepeatedUnresolvedRules(
+        fml: String,
+        previousErrors: List<String>,
+        currentErrors: List<String>
+    ): String {
+        if (previousErrors.isEmpty() || currentErrors.isEmpty()) return fml
+
+        val previousNormErrors = previousErrors.map { normaliseError(it) }.toSet()
+        val lines = fml.lines().toMutableList()
+        val prunedLines = mutableSetOf<Int>()
+
+        currentErrors.forEach { error ->
+            val normalised = normaliseError(error)
+            if (normalised !in previousNormErrors) return@forEach
+
+            // Syntax errors stay on the deterministic fix path. This fallback is for semantic /
+            // structural errors that the LLM failed to repair on the prior turn.
+            if (error.contains(" expecting ")) return@forEach
+
+            val lineNum = locatePrunableRuleLine(lines, error) ?: return@forEach
+            if (lineNum !in 1..lines.size || !prunedLines.add(lineNum)) return@forEach
+
+            val line = lines[lineNum - 1]
+            val trimmed = line.trim()
+            if (trimmed.isEmpty() || trimmed.startsWith("//")) return@forEach
+
+            val looksLikeRuleLine = line.contains("->") || (line.contains('=') && trimmed.endsWith(";"))
+            if (!looksLikeRuleLine) return@forEach
+
+            val indent = line.length - line.trimStart().length
+            lines[lineNum - 1] = " ".repeat(indent) + "// PRUNED after repeated unresolved error: $trimmed"
+            log.warn("Pruning stubborn non-syntax rule at line {} after repeated error: {}", lineNum, error)
+        }
+
+        if (prunedLines.isEmpty()) return fml
+
+        log.warn("Pruned {} repeated non-syntax rule(s) after failed LLM repair attempt", prunedLines.size)
+        return lines.joinToString("\n")
+    }
+
+    /** True when an error is purely parser/syntax-level and must never be routed to LLM. */
+    private fun isDeterministicSyntaxError(error: String): Boolean {
+        val lower = error.lowercase()
+        return lower.contains("expecting") ||
+                lower.contains("complex rules must have an explicit name") ||
+                lower.contains("unknown structuremapinputmode code")
+    }
+
+    /**
+     * Apply deterministic, line-targeted fixes for a batch of collected syntax errors.
+     * This complements autoFixSyntaxErrors, which works from single-pass compile failures.
+     */
+    private fun applyDeterministicFixesForCollectedSyntaxErrors(fml: String, errors: List<String>): String {
+        var current = fml
+        errors
+            .asSequence()
+            .filter { isDeterministicSyntaxError(it) }
+            .distinctBy { normaliseError(it) }
+            .forEach { err ->
+                val fixed = trySyntaxFix(current, err)
+                if (fixed != null && fixed != current) {
+                    current = fixed
+                }
+            }
+        return current
+    }
+
+    /**
+     * Final deterministic fallback for syntax lines that could not be rewritten.
+     * Keeps progress by pruning the exact offending line rather than looping/LLM retries.
+     */
+    private fun pruneUnresolvedSyntaxRules(fml: String, syntaxErrors: List<String>): String {
+        if (syntaxErrors.isEmpty()) return fml
+
+        val lines = fml.lines().toMutableList()
+        val pruned = mutableSetOf<Int>()
+        val declarationLine = Regex("""^\s*(map\s+|uses\s+\"|imports\s+\"|group\s+\w+)""")
+
+        syntaxErrors.forEach { error ->
+            val lineNum = extractLineNumber(error) ?: return@forEach
+            if (lineNum !in 1..lines.size || !pruned.add(lineNum)) return@forEach
+
+            val line = lines[lineNum - 1]
+            val trimmed = line.trim()
+            if (trimmed.isEmpty() || trimmed.startsWith("//") || declarationLine.containsMatchIn(trimmed)) return@forEach
+
+            val looksLikePrunableSyntaxLine =
+                trimmed.contains("->") ||
+                        trimmed.startsWith(".") ||
+                        trimmed.startsWith("=") ||
+                        trimmed.startsWith("src") ||
+                        trimmed.startsWith("tgt") ||
+                        trimmed == "}"
+
+            if (!looksLikePrunableSyntaxLine) return@forEach
+
+            val indent = line.length - line.trimStart().length
+            lines[lineNum - 1] = " ".repeat(indent) + "// PRUNED unresolved syntax: $trimmed"
+            log.warn("Pruning unresolved syntax line {} after deterministic repair failure: {}", lineNum, error)
+        }
+
+        if (pruned.isEmpty()) return fml
+        log.warn("Pruned {} unresolved syntax line(s) to avoid reflexion loops", pruned.size)
+        return lines.joinToString("\n")
+    }
+
+    /**
+     * Prefer HAPI's explicit line number. If absent, fall back to a token-based scan for the
+     * transform / identifier mentioned in the error message so stubborn semantic errors can still
+     * be pruned deterministically.
+     */
+    private fun locatePrunableRuleLine(lines: List<String>, error: String): Int? {
+        extractLineNumber(error)?.let { return it }
+
+        val token = Regex("""(?:code|named?)\s+'([^']+)'""")
+            .find(error)
+            ?.groupValues
+            ?.getOrNull(1)
+            ?.takeIf { it.isNotBlank() }
+            ?: return null
+
+        val candidateIndex = lines.indexOfFirst { line ->
+            val trimmed = line.trim()
+            trimmed.contains("$token(") ||
+                    trimmed.contains(" $token(") ||
+                    trimmed.contains("'$token'") ||
+                    trimmed.contains("\"$token\"")
+        }
+
+        return if (candidateIndex >= 0) candidateIndex + 1 else null
+    }
+
     /** Try to compile the FML. Returns success/failure with the error message if any. */
     private fun tryCompile(fml: String): CompilationResult {
         return try {
@@ -248,7 +488,7 @@ class DefaultMapValidator(
      *
      * HAPI stops at the first error it finds. To surface all errors:
      * 1. Parse the FML → record the error.
-     * 2. **Replace** the bad line with a blank line (do NOT remove it - removing shifts
+     * 2. **Replace** the bad line with a blank line (do NOT remove it — removing shifts
      *    all subsequent line numbers, so error messages no longer match the original FML
      *    that the LLM will see).
      * 3. Parse again → repeat.
@@ -276,9 +516,17 @@ class DefaultMapValidator(
                 errors.takeLast(3).map { normaliseError(it) }.all { it == normaliseError(errorMsg) }
             ) {
                 log.warn(
-                    "collectAllErrors: same error repeated 3x - parser stuck, stopping. Error: {}",
+                    "collectAllErrors: same error repeated 3x — parser stuck, stopping. Error: {}",
                     errorMsg.take(100)
                 )
+                return errors
+            }
+
+            // HAPI parser null-state guard: once the parser gets confused it emits
+            // hundreds of "Found \"null\" expecting ..." errors at the last line.
+            // These are not real FML errors — stop collecting immediately.
+            if (errorMsg.contains("Found \"null\"")) {
+                log.warn("collectAllErrors: parser emitted null-token error — stopping early")
                 return errors
             }
 
@@ -290,24 +538,24 @@ class DefaultMapValidator(
                 ?.groupValues?.get(1)?.toIntOrNull()
 
             if (lineNum != null && lineNum >= 1 && lineNum <= lines.size) {
-                lines[lineNum - 1] = ""   // blank - do NOT removeAt
+                lines[lineNum - 1] = ""   // blank — do NOT removeAt
                 return@repeat
             }
 
-            // No line number in message - try to locate bad token in the text.
-            // Skip "null" - that is a HAPI internal state token, not an FML keyword.
+            // No line number in message — try to locate bad token in the text.
+            // Skip "null" — that is a HAPI internal state token, not an FML keyword.
             val badToken = Regex("""['"](\w+)['"]""")
                 .findAll(errorMsg).lastOrNull()?.groupValues?.get(1)
 
             if (badToken != null && badToken != "null") {
                 val idx = lines.indexOfFirst { it.contains(badToken) }
                 if (idx >= 0) {
-                    lines[idx] = ""  // blank - do NOT removeAt
+                    lines[idx] = ""  // blank — do NOT removeAt
                     return@repeat
                 }
             }
 
-            // Cannot locate the bad line - stop scanning
+            // Cannot locate the bad line — stop scanning
             return errors
         }
         return errors
@@ -379,7 +627,9 @@ class DefaultMapValidator(
         // INVALID:  where not(src.status = 'registered')
         // VALID:    where (src.status = 'registered').not()
         // Use a pattern that handles nested parens like not(src.field.exists())
-        val notWithArgs = Regex("""\bnot\(([^()]*(?:\([^()]*\)[^()]*)*)\)""")
+        // NOTE: require [^()]+ (one-or-more) NOT [^()]* so that .not() with empty
+        // args (already-correct form) is never matched and corrupted.
+        val notWithArgs = Regex("""\bnot\(([^()]+(?:\([^()]*\)[^()]*)*)\)""")
         result = notWithArgs.replace(result) { m ->
             rewrites++
             "(${m.groupValues[1]}).not()"
@@ -387,7 +637,7 @@ class DefaultMapValidator(
 
         // Anti-pattern 6a: multi-line rule where a continuation line starts with "."
         // Handles both  ".path = value "rule";"  and  ".path as a -> tgt.path "rule";"
-        // Excludes lines ending with "," - those are multi-parameter group call continuations.
+        // Excludes lines ending with "," — those are multi-parameter group call continuations.
         // Lines ending with ")" are allowed UNLESS the line is a group/uses declaration
         // (FHIRPath where-clause expressions end with ")" and their dot continuation
         // must be merged; group headers ending with ")" must NOT be merged).
@@ -419,7 +669,7 @@ class DefaultMapValidator(
             }
         } while (dotChanged)
 
-        // Anti-pattern 6b: multi-line rule where a continuation line starts with "=" -
+        // Anti-pattern 6b: multi-line rule where a continuation line starts with "=" —
         // the LLM splits  src -> tgt.field = "value" "rule";  across two lines, putting
         // the "= value" part on the next line (indented).  HAPI sees the first line as a
         // complete statement and then finds "=" where it expects ";".
@@ -439,7 +689,7 @@ class DefaultMapValidator(
             }
         } while (eqChanged)
 
-        // Anti-pattern 6c: "Unknown StructureMapInputMode code '.'" - the LLM prefixes
+        // Anti-pattern 6c: "Unknown StructureMapInputMode code '.'" — the LLM prefixes
         // the mode keyword with a dot in uses declarations or group parameters.
         // INVALID:  uses "url" as .source   /  uses "url" as .target
         // INVALID:  group X(source src : T, .target tgt : T2)
@@ -481,7 +731,7 @@ class DefaultMapValidator(
             "${indent}${sourceExpr} -> ${targetPart}"
         }
 
-        // Anti-pattern 8: empty parentheses alias "as ()" - LLM wraps alias in empty parens.
+        // Anti-pattern 8: empty parentheses alias "as ()" — LLM wraps alias in empty parens.
         // INVALID:  src.code as () -> tgt.code = code "rule";
         // VALID:    src.code as code -> tgt.code = code "rule";
         val emptyAlias = Regex("""(\w+)\s+as\s*\(\s*\)""")
@@ -521,7 +771,7 @@ class DefaultMapValidator(
             m.groupValues[1]
         }
 
-        // Anti-pattern 10b: leading "[...]" annotation on a rule line - LLM adds type-filter
+        // Anti-pattern 10b: leading "[...]" annotation on a rule line — LLM adds type-filter
         // annotations such as "[medication.ofType(CodeableConcept)]" before the rule source.
         // These have no meaning in FML and cause "Found '[' expecting ';'" at col 3.
         val leadingBracket = Regex("""^([ \t]*)\[[^\]]*][ \t]+(.+)$""", RegexOption.MULTILINE)
@@ -530,7 +780,7 @@ class DefaultMapValidator(
             "${m.groupValues[1]}${m.groupValues[2]}"
         }
 
-        // Anti-pattern 11: copy(varName) wrapping - LLM writes "tgt.field = copy(v)" but
+        // Anti-pattern 11: copy(varName) wrapping — LLM writes "tgt.field = copy(v)" but
         // HAPI FML has no copy() function in assignments.  Strip the wrapper: "= v".
         // "copy()" with no args is valid (pass-through rule body) and is NOT touched here.
         val copyWrap = Regex("""=\s*copy\((\w+)\)""")
@@ -568,14 +818,14 @@ class DefaultMapValidator(
             } else line
         }
 
-        // Anti-pattern 14: .ofType(TypeName) in source/target paths - FHIRPath function
+        // Anti-pattern 14: .ofType(TypeName) in source/target paths — FHIRPath function
         // that HAPI FML does not support in mapping expressions.
         // INVALID:  src.medication.ofType(CodeableConcept) as m -> ...
         // VALID:    src.medication as m -> ...
         // Strips the suffix; a where clause can be added manually if type filtering is needed.
         val ofTypeInPath = Regex("""\.(ofType|as)\(\w+\)""")
         result = ofTypeInPath.replace(result) { m ->
-            // Only strip .ofType() / .as() - not plain method calls with full paths
+            // Only strip .ofType() / .as() — not plain method calls with full paths
             rewrites++
             ""
         }
@@ -647,6 +897,141 @@ class DefaultMapValidator(
                 }
                 fixed
             } else line
+        }
+
+        // Anti-pattern 20: FHIRPath boolean/aggregate functions used as rule source specifier.
+        //
+        // HAPI FML source must be a plain element path. When the LLM writes:
+        //   src.f.empty() then tgt.f = 'default' "r";
+        //   src.f.exists() -> tgt.f = ... "r";
+        // HAPI emits "Found '(' expecting ';'" at the '(' of the function call.
+        //
+        // FIX: strip the .funcName(args) part from the source expression entirely.
+        // The remaining source path (e.g. src.f) is valid FML.
+        // trySyntaxFix(Fix P1) also handles this at the column level, but doing it
+        // here in sanitizeFml means the validator never even sees the error.
+        //
+        //   src.identifier.empty() then tgt.identifier = 'x' "r";
+        //   → src.identifier then tgt.identifier = 'x' "r";    (valid)
+        val fhirPathSourceFn = Regex(
+            """^([ \t]*)(\S.*?)\.(empty|exists|hasValue|hasExtension|count|resolve|matches)\s*\([^)]*\)(\s+(?:then|->).*)$""",
+            setOf(RegexOption.MULTILINE)
+        )
+        result = fhirPathSourceFn.replace(result) { m ->
+            rewrites++
+            // m.groupValues[1] = indent, [2] = path before .func, [4] = rest of line
+            "${m.groupValues[1]}${m.groupValues[2]}${m.groupValues[4]}"
+        }
+
+        // Anti-pattern 21: `then create tgt.field` / `then new tgt.field`.
+        //
+        // HAPI FML has no standalone `create` keyword in rule-body position.
+        // The LLM writes:  src -> tgt.f then create tgt.f.child "r";
+        // FIX: strip `then create tgt.f.child` — the rule body is complete without it.
+        // `src -> tgt.f "r";` is valid (simple element delegation rule).
+        val thenCreate = Regex(
+            """\s+then\s+(?:create|new)\s+(?:tgt|src)\.\w+"""
+        )
+        result = result.lines().joinToString("\n") { line ->
+            if (thenCreate.containsMatchIn(line)) {
+                rewrites++
+                thenCreate.replace(line, "")
+            } else line
+        }
+
+        // Anti-pattern 22: iif() FHIRPath function in transform position.
+        // HAPI FML does not support iif() as a transform type.
+        // Error: "Unknown StructureMapTransformType code 'iif'"
+        // The LLM writes:  src -> tgt.field = iif(cond, v1, v2) "r";
+        // FIX: rewrite to always-assign the second argument (the "then" branch).
+        // This is the safe-default: the mapping still copies the most relevant value.
+        val iifTransform = Regex(
+            """=\s*iif\s*\([^,]+,\s*([^,)]+)(?:,[^)]*)?\)"""
+        )
+        result = iifTransform.replace(result) { m ->
+            rewrites++
+            "= ${m.groupValues[1].trim()}"
+        }
+
+
+        // Anti-pattern 23: inline "then src ->" on a single line.
+        // AP7 handles the multi-line variant (then at end-of-line, src -> on next line).
+        // The LLM also emits both parts on one line:
+        //   src.f as v where COND then src -> tgt.f as w then Group(v, w) "name";
+        // Fix: remove "then src ->" and replace with just "->".
+        val inlineThenSrcArrow = Regex(
+            """(\S[^\n]*?)\s+then\s+src\s+->(\s+)""",
+            setOf(RegexOption.MULTILINE)
+        )
+        result = inlineThenSrcArrow.replace(result) { m ->
+            rewrites++
+            "${m.groupValues[1]} ->${m.groupValues[2]}"
+        }
+
+        // Anti-pattern 24: numeric array indexers in source/target paths.
+        // AP10a strips "[x]" polymorphic subscripts; this strips numeric ones.
+        // INVALID:  src.coding[0].system as v -> ...
+        // VALID:    src.coding.system as v -> ...
+        result = result.replace(Regex("""(\w+)\[(\d+)\]""")) { m ->
+            rewrites++
+            m.groupValues[1]
+        }
+
+        // Anti-pattern 25: Compound FHIRPath source specifier.
+        // The LLM generates "conditional default" rules using compound FHIRPath expressions
+        // as the rule's source specifier, e.g.:
+        //   src.identifier.empty() and (tgt.identifier.exists()).not() -> tgt.identifier as tId ...
+        // HAPI FML does not support compound FHIRPath (with 'and', '.empty()', '.not()') in a
+        // source specifier — only simple dotted paths are allowed before '->'.
+        // Error produced: "Found '.' expecting ';'"
+        // Fix: strip the compound condition entirely and replace with plain 'src ->'.
+        //   src.X.empty() and (tgt.X.exists()).not() -> REST   →   src -> REST
+        // NOTE: (tgt.FIELD.exists()).not() has nested parens — [^)]+ stops at the inner ')'
+        // inside exists().  We must explicitly spell out exists() inside the outer parens:
+        //   \(tgt\.\w+\.exists\(\)\)\.not\(\)
+        val ap25 = Regex(
+            """^(\s*)src(?:\.\w+)+\([^)]*\)\s+and\s+\(tgt(?:\.\w+)+\.exists\(\)\)\.not\(\)\s*->\s*(.+)$""",
+            setOf(RegexOption.MULTILINE)
+        )
+        result = ap25.replace(result) { m ->
+            rewrites++
+            "${m.groupValues[1]}src -> ${m.groupValues[2].trimStart()}"
+        }
+
+        // Anti-pattern 26: Bare target assignment without source in a target-only group.
+        // The LLM generates groups like:
+        //   group DefaultIdentifier(target tgt : Identifier) {
+        //     tgt.system = 'urn:ietf:rfc:3986' "default-identifier-system";
+        //   }
+        // HAPI FML requires every rule to have a source side and '->'.
+        // Error produced: "Found '=' expecting ';'"
+        // Fix: prepend 'tgt -> ' to make a valid FML rule.
+        //   tgt.FIELD = 'VALUE' "NAME";   →   tgt -> tgt.FIELD = 'VALUE' "NAME";
+        val ap26 = Regex(
+            """^(\s*)(tgt(?:\.\w+)+\s*=\s*'[^']*'\s+"[^"]+"\s*;)$""",
+            setOf(RegexOption.MULTILINE)
+        )
+        result = ap26.replace(result) { m ->
+            rewrites++
+            "${m.groupValues[1]}tgt -> ${m.groupValues[2].trimStart()}"
+        }
+
+        // Anti-pattern 27: unmatched top-level closing brace.
+        // Stray '}' at depth 0 causes cascaded parser errors like:
+        //   Found "src" expecting "group"
+        //   Found "}" expecting "group"
+        // Comment out only truly top-level unmatched braces.
+        var depth27 = 0
+        result = result.lines().joinToString("\n") { line ->
+            val trimmed = line.trim()
+            if (depth27 == 0 && trimmed == "}") {
+                rewrites++
+                "// [fdd-sanitized] unmatched top-level closing brace removed"
+            } else {
+                depth27 += line.count { it == '{' } - line.count { it == '}' }
+                if (depth27 < 0) depth27 = 0
+                line
+            }
         }
 
         if (rewrites > 0) {
@@ -729,7 +1114,7 @@ class DefaultMapValidator(
     ): String {
         val groupName = "_SetFdd${suffix}_"
         if (segments.size == 1) {
-            // Base case: single segment - direct assignment is valid
+            // Base case: single segment — direct assignment is valid
             val innerRule = "  src -> ${parentAlias}.${segments[0]} = ${literal} ${ruleName.dropLast(1)}-inner\";"
             return "group ${groupName}(source src : Resource, target ${parentAlias} : Element) {\n${innerRule}\n}"
         }
@@ -792,7 +1177,7 @@ class DefaultMapValidator(
     }
 
     /**
-     * Deterministically fix syntax-level FML errors - zero LLM cost.
+     * Deterministically fix syntax-level FML errors — zero LLM cost.
      *
      * This is the key principle: if the error is SYNTAX (missing semicolon, unquoted rule name,
      * wrong quote characters, double semicolons), we fix it in code. The AI is only called for
@@ -824,6 +1209,15 @@ class DefaultMapValidator(
             totalFixes++
         }
 
+        // Pass 1b: deterministically merge ALL continuation lines that begin with '.' or '='.
+        // These are the dominant repeated syntax failures in Experiment 2/3 and do not need AI.
+        val mergedContinuations = mergeBrokenContinuationLines(current)
+        if (mergedContinuations != current) {
+            log.info("autoFixSyntaxErrors: merged broken continuation lines before validation")
+            current = mergedContinuations
+            totalFixes++
+        }
+
         // Pass 2: iterative error-driven fixes
         repeat(100) {
             val result = tryCompile(current)
@@ -849,37 +1243,153 @@ class DefaultMapValidator(
         return current
     }
 
+    private fun mergeBrokenContinuationLines(fml: String): String {
+        val lines = fml.lines().toMutableList()
+        var changed = false
+        val groupOrUsesDecl = Regex("""^\s*(group\s+\w+|uses\s+"|imports\s+")""")
+        val inlineWhere = Regex("""(\w+)\.where\(([^)]+)\)(\s+(?:->|then\b))""")
+
+        var idx = lines.size - 1
+        while (idx > 0) {
+            val current = lines[idx]
+            val trimmed = current.trimStart()
+            if (trimmed.startsWith(".") || trimmed.startsWith("=")) {
+                val previous = lines[idx - 1].trimEnd()
+                if (previous.isNotBlank() &&
+                    !groupOrUsesDecl.containsMatchIn(previous) &&
+                    !previous.endsWith("{")
+                ) {
+                    val separator = if (trimmed.startsWith("=")) " " else ""
+                    var merged = previous + separator + trimmed
+                    merged = inlineWhere.replace(merged) { m ->
+                        "${m.groupValues[1]} where ${m.groupValues[2]}${m.groupValues[3]}"
+                    }
+                    lines[idx - 1] = merged
+                    lines.removeAt(idx)
+                    changed = true
+                }
+            }
+            idx--
+        }
+
+        return if (changed) lines.joinToString("\n") else fml
+    }
+
     /**
      * Try to fix a single known syntax error deterministically.
      * Returns the corrected FML, or null if this is not a fixable syntax error.
      *
      * Fixable patterns:
-     *   A. "Found X expecting ;" - missing semicolon on the preceding rule line
+     *   A. "Found X expecting ;" — missing semicolon on the preceding rule line
      *   B. "Found X expecting ;" on a line that ends with an unquoted rule name
-     *   C. "Found X expecting a token name" - rule missing a name string
+     *   C. "Found X expecting a token name" — rule missing a name string
      */
     private fun trySyntaxFix(fml: String, error: String): String? {
         val lines = fml.lines().toMutableList()
         val lineNum = extractLineNumber(error)
+        val colNum  = extractColumnNumber(error)
 
-        val expectingSemi = error.contains("expecting \";\"") || error.contains("expecting ';'")
+        val expectingSemi     = error.contains("expecting \";\"") || error.contains("expecting ';'")
         val expectingTokenName = error.contains("expecting a token name")
 
-        // Fix A: Unquoted rule name on the error line itself.
-        // HAPI says "Found 'word' expecting ';'" because the word is not a quoted string.
-        // Pattern: the rule line ends with  )  unquoted-word  ;
-        // Example: src -> tgt.x as v then CreateFoo(src, v) create-foo-name;
+        // ---------------------------------------------------------------
+        // Fix P (POSITION-AWARE): "Found 'X' expecting ';'" where HAPI gives us
+        // an exact line AND column.  We use the column to identify the offending
+        // token and splice in a ';' right before it, preserving the rest of the line.
+        //
+        // Handles:
+        //   • Found '(' expecting ';'  →  strip .funcName(args) at the col position
+        //   • Found '==' / '!=' / '<' / '<=' / '>' / '>=' expecting ';'
+        //                              →  truncate at the operator, terminate with ';'
+        //   • Any other unexpected token at a known column
+        //
+        // The HAPI column is 1-based.
+        // ---------------------------------------------------------------
+        if (expectingSemi && lineNum != null && colNum != null &&
+            lineNum >= 1 && lineNum <= lines.size
+        ) {
+            val line = lines[lineNum - 1]
+            val col0 = colNum - 1  // convert to 0-based
+
+            // ── Case P1: unexpected '(' ──────────────────────────────────
+            // HAPI parsed a dotted path, hit '(' and expected ';'.
+            // The offending token is '.funcName(' ending at col0.
+            // Strip from the last '.' before col0 through the matching ')'.
+            if (col0 < line.length && line[col0] == '(') {
+                val dotPos = line.lastIndexOf('.', col0 - 1)
+                val cutFrom = if (dotPos >= 0) dotPos else col0
+
+                // Find the matching closing ')' for this '('
+                var depth = 0
+                var closePos = col0
+                for (i in col0 until line.length) {
+                    when (line[i]) {
+                        '(' -> depth++
+                        ')' -> { depth--; if (depth == 0) { closePos = i; break } }
+                    }
+                }
+                // Everything before '.funcName' + everything after ')'
+                val before = line.substring(0, cutFrom)
+                val after  = if (closePos + 1 < line.length) line.substring(closePos + 1) else ""
+                var fixed  = before + after
+
+                // If nothing useful remains after stripping, end the statement
+                if (fixed.trimEnd().let { !it.endsWith(";") && !it.endsWith("{") && !it.endsWith("}") }) {
+                    fixed = fixed.trimEnd() + if (fixed.contains("->")) "" else ";"
+                }
+                if (fixed.trimEnd() != line.trimEnd()) {
+                    lines[lineNum - 1] = fixed
+                    log.debug("autoFixSyntaxErrors: stripped .func() call at col {} on line {}", colNum, lineNum)
+                    return lines.joinToString("\n")
+                }
+            }
+
+            // ── Case P2: unexpected comparison operator ( ==, !=, <, <=, >, >= ) ─
+            // HAPI finished parsing a source path and hit a comparison where ';' was expected.
+            // Truncate the line at the operator position and terminate with ';'.
+            val compOp = Regex("""(==|!=|<=?|>=?)""")
+            if (col0 < line.length) {
+                val opMatch = compOp.find(line, col0.coerceAtLeast(0))
+                if (opMatch != null && opMatch.range.first <= col0 + 2) {
+                    val before = line.substring(0, opMatch.range.first).trimEnd()
+                    val indent = line.length - line.trimStart().length
+                    val termLine = " ".repeat(indent) + before.trimStart().let {
+                        if (!it.endsWith(";") && !it.endsWith("{") && !it.endsWith("}")) "$it;" else it
+                    }
+                    lines[lineNum - 1] = termLine
+                    log.debug("autoFixSyntaxErrors: truncated comparison op '{}' at line {}", opMatch.value, lineNum)
+                    return lines.joinToString("\n")
+                }
+            }
+
+            // ── Case P3: unexpected bare keyword at known col (e.g. 'then' mid-expression) ─
+            // Generic fallback: truncate at col0 and add ';'
+            if (col0 >= 1 && col0 < line.length) {
+                val before = line.substring(0, col0).trimEnd()
+                if (before.isNotBlank() && before.length < line.length - 1) {
+                    val indent = line.length - line.trimStart().length
+                    val termLine = " ".repeat(indent) + before.trimStart().let {
+                        if (!it.endsWith(";") && !it.endsWith("{") && !it.endsWith("}")) "$it;" else it
+                    }
+                    lines[lineNum - 1] = termLine
+                    log.debug("autoFixSyntaxErrors: truncated at col {} on line {}", colNum, lineNum)
+                    return lines.joinToString("\n")
+                }
+            }
+        }
+
+        // ---------------------------------------------------------------
+        // Fix A: Unquoted rule name — "Found 'word' expecting ';'"
+        // Line ends with:  ) unquoted-word ;
+        // ---------------------------------------------------------------
         if (expectingSemi && lineNum != null && lineNum >= 1 && lineNum <= lines.size) {
             val line = lines[lineNum - 1]
-            // A rule line containing -> that ends with ) then bare_identifier ;
             val unquotedNameAfterParen = Regex("""^(.*\))\s+([\w][\w-]*)\s*;\s*$""")
             val m = unquotedNameAfterParen.find(line)
             if (m != null && line.contains("->")) {
                 val before = m.groupValues[1]
-                val name = m.groupValues[2]
-                val fmlKeywords = setOf(
-                    "src", "tgt", "source", "target", "group", "uses", "map", "then", "as", "where"
-                )
+                val name   = m.groupValues[2]
+                val fmlKeywords = setOf("src","tgt","source","target","group","uses","map","then","as","where")
                 if (name !in fmlKeywords && name.length > 1) {
                     lines[lineNum - 1] = "$before \"$name\";"
                     log.debug("autoFixSyntaxErrors: quoted unquoted rule name '{}' on line {}", name, lineNum)
@@ -888,24 +1398,19 @@ class DefaultMapValidator(
             }
         }
 
-        // Fix D: "Found '.' expecting ';'" on a line that itself starts with '.'.
-        // The sanitizer's multi-line dot merger should have handled this, but if the
-        // preceding line ended with a character excluded by the merge regex (e.g. a
-        // closing paren in a group declaration) the merge was skipped.
-        // Correct action: JOIN the dot line onto the preceding line, then immediately
-        // convert any "identifier.where(cond) ->" to "identifier where cond ->"
-        // (AP-19 transformation inline) so the merged line is directly compilable.
+        // ---------------------------------------------------------------
+        // Fix D: Dot-continuation line — "Found '.' expecting ';'"
+        // The current line starts with '.'; join it onto the preceding line.
+        // ---------------------------------------------------------------
         if (expectingSemi && lineNum != null && lineNum >= 2 && lineNum <= lines.size) {
             val dotLine = lines[lineNum - 1]
             if (dotLine.trimStart().startsWith(".")) {
                 val precedingIdx = lineNum - 2
-                val preceding = lines[precedingIdx].trimEnd()
-                val dotContent = dotLine.trim()
-                var merged = "$preceding$dotContent"
-                // Inline AP-19: convert "alias.where(cond) ->" → "alias where cond ->"
+                val preceding    = lines[precedingIdx].trimEnd()
+                var merged = "$preceding${dotLine.trim()}"
                 val apInlineWhere = Regex("""(\w+)\.where\(([^)]+)\)(\s+(?:->|then\b))""")
-                merged = apInlineWhere.replace(merged) { m ->
-                    "${m.groupValues[1]} where ${m.groupValues[2]}${m.groupValues[3]}"
+                merged = apInlineWhere.replace(merged) { mm ->
+                    "${mm.groupValues[1]} where ${mm.groupValues[2]}${mm.groupValues[3]}"
                 }
                 lines[precedingIdx] = merged
                 lines.removeAt(lineNum - 1)
@@ -914,19 +1419,19 @@ class DefaultMapValidator(
             }
         }
 
-        // Fix B: Missing semicolon on the line BEFORE the error.
-        // HAPI reports "Found X expecting ;" at the START of the next rule (line N).
-        // The rule that ended before line N is missing its terminating ';'.
+        // ---------------------------------------------------------------
+        // Fix B: Missing semicolon on the preceding rule line
+        // ---------------------------------------------------------------
         if (expectingSemi && lineNum != null) {
             for (i in (lineNum - 2) downTo maxOf(0, lineNum - 6)) {
                 if (i >= lines.size) continue
-                val trimmed = lines[i].trimEnd()
+                val rawLine    = lines[i]
+                val trimmedEnd = rawLine.trimEnd()
+                val trimmed    = rawLine.trim()
                 if (trimmed.isEmpty() || trimmed.startsWith("//")) continue
-                // Stop at a properly-terminated or structural line
-                if (trimmed.endsWith(";") || trimmed.endsWith("{") || trimmed.endsWith("}")) break
-                // This is a rule line with no terminating semicolon - add it
-                if (trimmed.isNotEmpty()) {
-                    lines[i] = "$trimmed;"
+                if (trimmedEnd.endsWith(";") || trimmedEnd.endsWith("{") || trimmedEnd.endsWith("}")) break
+                if (trimmedEnd.isNotEmpty()) {
+                    lines[i] = "$trimmedEnd;"
                     log.debug("autoFixSyntaxErrors: added missing ';' to line {}", i + 1)
                     return lines.joinToString("\n")
                 }
@@ -934,37 +1439,37 @@ class DefaultMapValidator(
             }
         }
 
-        // Fix C: "Found X expecting a token name" - rule missing its name string.
-        // autoFixRuleNames() only catches "Complex rules must have an explicit name".
-        // HAPI also emits this token-name variant for the same missing-name situation.
+        // ---------------------------------------------------------------
+        // Fix C: Missing rule name — "Found X expecting a token name"
+        // ---------------------------------------------------------------
         if (expectingTokenName && lineNum != null && lineNum >= 1 && lineNum <= lines.size) {
-            val line = lines[lineNum - 1]
+            val line    = lines[lineNum - 1]
             val trimmed = line.trimEnd()
-            // Case C1: line already ends with ; but is missing the quoted name
+            // C1: ends with ';' but no quoted name
             if (trimmed.endsWith(";") && trimmed.contains("->") &&
                 !Regex(""""[^"]*"\s*;$""").containsMatchIn(trimmed)
             ) {
-                val indent = line.length - line.trimStart().length
+                val indent   = line.length - line.trimStart().length
                 val ruleName = "rule_line$lineNum"
                 lines[lineNum - 1] = " ".repeat(indent) + trimmed.dropLast(1).trimEnd() + " \"$ruleName\";"
                 log.debug("autoFixSyntaxErrors: added generated rule name to line {}", lineNum)
                 return lines.joinToString("\n")
             }
-            // Case C2: line ends with ) and contains -> - add rule name + semicolon.
-            // This covers "src -> tgt then GroupName(src, tgt)" which needs a name.
+            // C2: ends with ')' and has '->'; add name + ';'
             if (trimmed.endsWith(")") && trimmed.contains("->")) {
-                val indent = line.length - line.trimStart().length
+                val indent   = line.length - line.trimStart().length
                 val ruleName = "rule_line$lineNum"
                 lines[lineNum - 1] = " ".repeat(indent) + trimmed.trimStart() + " \"$ruleName\";"
                 log.debug("autoFixSyntaxErrors: added rule name + ; to ) line {}", lineNum)
                 return lines.joinToString("\n")
             }
-            // Case C3: line is just a closing paren - merge onto the preceding line.
-            // This handles multi-line group calls where ) lands on its own line.
+            // C3: closing-paren-only line — merge onto preceding
             val trimmedFull = line.trim()
-            if ((trimmedFull == ")" || trimmedFull == ");" || trimmedFull.matches(Regex("""^\)\s*\{?$"""))) && lineNum >= 2) {
+            if ((trimmedFull == ")" || trimmedFull == ");" ||
+                        trimmedFull.matches(Regex("""^\)\s*\{?$"""))) && lineNum >= 2
+            ) {
                 val precedingIdx = lineNum - 2
-                val preceding = lines[precedingIdx].trimEnd()
+                val preceding    = lines[precedingIdx].trimEnd()
                 if (!preceding.endsWith(";") && !preceding.endsWith("{") && !preceding.endsWith("}")) {
                     lines[precedingIdx] = "$preceding$trimmedFull"
                     lines.removeAt(lineNum - 1)
@@ -974,10 +1479,48 @@ class DefaultMapValidator(
             }
         }
 
-        return null  // semantic error - let AI handle it
+        // ---------------------------------------------------------------
+        // Fix F: "Found 'then' expecting ';'" — trailing bare 'then'
+        // Strip the trailing 'then' and close the rule with ';'.
+        // ---------------------------------------------------------------
+        if (error.contains("Found 'then'") && lineNum != null && lineNum >= 1 && lineNum <= lines.size) {
+            val line     = lines[lineNum - 1]
+            val stripped = line.trimEnd().removeSuffix("then").trimEnd()
+            if (stripped != line.trimEnd() && stripped.contains("->")) {
+                val indent   = line.length - line.trimStart().length
+                val withName = if (!Regex(""""[^"]*"\s*$""").containsMatchIn(stripped))
+                    "$stripped \"rule_line$lineNum\";" else "$stripped;"
+                lines[lineNum - 1] = " ".repeat(indent) + withName.trimStart()
+                log.debug("autoFixSyntaxErrors: removed trailing 'then' on line {}", lineNum)
+                return lines.joinToString("\n")
+            }
+        }
+
+        // ---------------------------------------------------------------
+        // Fix G: "Found '->' expecting '('" — parser saw -> where it expected (
+        // meaning a rule has "then <something> ->" instead of proper "->" syntax.
+        // This happens when AP23 did not fire (e.g. post-LLM rewrite introduced
+        // a bare "then src ->" again on the same line).
+        // Fix: find the "then" immediately before "->" on the error line, remove it.
+        // ---------------------------------------------------------------
+        if (error.contains("Found '->'") && error.contains("expecting '('") &&
+            lineNum != null && lineNum >= 1 && lineNum <= lines.size
+        ) {
+            val line = lines[lineNum - 1]
+            // Remove any "then src ->" or bare "then ->" on the error line
+            val fixedLine = line
+                .replace(Regex("""\bthen\b\s+src\s+->"""), "->")
+                .replace(Regex("""\bthen\b\s+->"""),       "->")
+            if (fixedLine != line) {
+                lines[lineNum - 1] = fixedLine
+                log.debug("autoFixSyntaxErrors: removed spurious 'then' before '->' on line {}", lineNum)
+                return lines.joinToString("\n")
+            }
+        }
+
+        return null  // semantic error — let AI handle it
     }
 
-    /** Create a basic HAPI-FHIR context for FML parsing. */
     private fun createWorkerContext(): IWorkerContext {
         val validationSupport = ValidationSupportChain(
             DefaultProfileValidationSupport(fhirContext)
@@ -988,7 +1531,7 @@ class DefaultMapValidator(
     /* ---------- LLM Repair (Reflexion) ---------- */
 
     /**
-     * Find the zero-based [start..end] line range of the FML `group` block that contains
+     * Find the zero-based [start end] line range of the FML `group` block that contains
      * the given 1-based [targetLine].  Returns `null` when no enclosing group is found.
      */
     private fun extractGroupContaining(fml: String, targetLine: Int): IntRange? {
@@ -1090,10 +1633,10 @@ class DefaultMapValidator(
                 appendLine()
                 appendLine("Rules:")
                 appendLine("- Fix every error listed above.")
-                appendLine("- NEVER use dotted type names (e.g. Patient.Contact) in group parameters - use BackboneElement.")
+                appendLine("- NEVER use dotted type names (e.g. Patient.Contact) in group parameters — use BackboneElement.")
                 appendLine("- NEVER use [x] suffix on element names.")
                 appendLine("- NEVER use .ofType() or .as() as FHIRPath function calls in paths.")
-                appendLine("- NEVER write multi-level source paths (e.g. src.a.b) - use sub-groups instead.")
+                appendLine("- NEVER write multi-level source paths (e.g. src.a.b) — use sub-groups instead.")
                 appendLine("- Every rule must have a unique quoted name before the semicolon.")
                 appendLine("- Return ONLY the fixed group starting with 'group' and ending with '}'.")
             }
@@ -1106,7 +1649,7 @@ class DefaultMapValidator(
             log.info("Surgical repair: LLM response length: {}", rawResponse.length)
 
             val fixedGroup = extractGroupBlock(rawResponse) ?: run {
-                log.warn("Surgical repair: could not extract group block from response - skipping this group")
+                log.warn("Surgical repair: could not extract group block from response — skipping this group")
                 continue
             }
 
@@ -1145,92 +1688,135 @@ class DefaultMapValidator(
         allPriorErrors: List<List<String>>,
         regressions: List<LineRegression> = emptyList()
     ): String {
-        val systemPrompt = promptTemplateService.loadTemplate("reflexion-system.txt")
-        val errorList = errors.mapIndexed { idx, err -> "  ${idx + 1}. $err" }.joinToString("\n")
+        val priorNorm = allPriorErrors.flatten().map { normaliseError(it) }.toSet()
+        val newErrors = errors.filter { normaliseError(it) !in priorNorm }
+        val effectiveErrors = if (newErrors.isNotEmpty()) newErrors else errors
 
-        // Detect oscillation: current error already appeared in a prior cycle
-        val oscillatingErrors = errors.filter { err ->
+        val oscillatingErrors = effectiveErrors.filter { err ->
             allPriorErrors.any { priorCycle -> err in priorCycle }
         }
         val isOscillating = oscillatingErrors.isNotEmpty()
         val hasRegressions = regressions.isNotEmpty()
-        // Bump temperature aggressively when stuck so the LLM explores a different syntax
-        // instead of returning a near-identical FML draft.
         val temperature = when {
             isOscillating && hasRegressions -> 0.7
             isOscillating || hasRegressions -> 0.5
             else -> 0.1
         }
-        if (isOscillating) {
-            log.warn(
-                "Oscillation detected - {} error(s) already seen in prior cycles, raising temperature to {}",
-                oscillatingErrors.size,
-                temperature
-            )
-        }
-        if (hasRegressions) {
-            log.warn(
-                "Line-level regression detected on {} line(s), raising temperature to {}",
-                regressions.size,
-                temperature
-            )
-        }
 
-        val userMessage: String
-        val rawResponse: String
-
-        if (conversationHistory.isEmpty()) {
-            log.info("Reflexion turn 1: presenting {} error(s) to LLM with full context", errors.size)
-            userMessage = promptTemplateService.loadTemplate(
-                "reflexion-user.txt",
-                mapOf(
-                    "fmlCode" to fml,
-                    "errorCount" to errors.size.toString(),
-                    "errorList" to errorList,
-                    "sourceCanonical" to (source.url ?: ""),
-                    "targetCanonical" to (target.url ?: ""),
-                    "driftReport" to driftReport.toReflexionContext()
-                )
-            )
-            rawResponse = llmClient.chatWithHistory(systemPrompt, emptyList(), userMessage, temperature)
+        val turnNum = conversationHistory.size + 1
+        val attemptId = "cycle-${allPriorErrors.size + 1}-turn-$turnNum-errors-${effectiveErrors.size}"
+        val errorList = effectiveErrors.mapIndexed { idx, err ->
+            val lineNum = extractLineNumber(err)
+            val lineText = if (lineNum != null) fml.lines().getOrElse(lineNum - 1) { "" } else ""
+            "${idx + 1}. $err\n   line=${lineNum ?: "?"}\n   code=$lineText"
+        }.joinToString("\n")
+        val regressionSection = if (regressions.isEmpty()) {
+            "None"
         } else {
-            val turnNum = conversationHistory.size + 1
-            log.info(
-                "Reflexion turn {}: presenting {} error(s) to LLM with full FML context (oscillation={}, regressions={})",
-                turnNum,
-                errors.size,
-                isOscillating,
-                regressions.size
-            )
-
-            // Oscillation: the LLM has already tried to fix these exact errors at least once
-            // and returned the same broken FML.  Switch to a surgical, group-scoped repair:
-            // extract ONLY the group(s) containing broken lines and ask the LLM to fix them
-            // in isolation - a much smaller, more focused task where it is far more likely to
-            // succeed than regenerating the entire 200-line FML from scratch.
-            if (isOscillating) {
-                log.info("Oscillation detected - attempting surgical group-level repair before full-FML fallback")
-                val surgicalResult = surgicalRepairGroups(fml, oscillatingErrors, systemPrompt)
-                if (surgicalResult != null) {
-                    log.info("Surgical repair succeeded - recording synthetic history turn and returning patched FML")
-                    conversationHistory.add(
-                        Pair(
-                            "Surgical repair: isolated and rewrote the broken FML group(s) directly.",
-                            "Surgical fix applied. Continuing verification."
-                        )
-                    )
-                    return surgicalResult
-                }
-                log.info("Surgical repair not applicable - proceeding with full-FML reflexion fallback")
+            regressions.joinToString("\n") {
+                "- line ${it.lineNum}: was '${it.previousLineContent}' now '${it.currentLineContent}'"
             }
+        }
+        val userMessage = promptTemplateService.loadTemplate(
+            "reflexion-user.txt",
+            mapOf(
+                "attemptId" to attemptId,
+                "fmlCode" to fml,
+                "errorCount" to effectiveErrors.size.toString(),
+                "errorList" to errorList,
+                "sourceCanonical" to (source.url ?: ""),
+                "targetCanonical" to (target.url ?: ""),
+                "driftReport" to driftReport.toReflexionContext(),
+                "regressionSection" to regressionSection
+            )
+        )
 
-            userMessage = buildFollowUpMessage(fml, errors, allPriorErrors, oscillatingErrors, regressions)
-            rawResponse =
-                llmClient.chatWithHistory(systemPrompt, conversationHistory.toList(), userMessage, temperature)
+        log.info(
+            "Reflexion turn {}: patch-only repair with {} error(s) in ONE LLM call (oscillation={}, regressions={})",
+            turnNum,
+            effectiveErrors.size,
+            isOscillating,
+            regressions.size
+        )
+
+        val systemPrompt = promptTemplateService.loadTemplate("reflexion-system.txt")
+
+        val rawResponse = llmClient.chatWithHistory(systemPrompt, conversationHistory.toList(), userMessage, temperature)
+        val patched = applyPatchFixesFromLlm(fml, rawResponse)
+        conversationHistory.add(Pair(userMessage, rawResponse))
+        return patched
+    }
+
+    private fun applyPatchFixesFromLlm(fml: String, rawResponse: String): String {
+        val json = extractPatchPayload(rawResponse)
+        val regex = Regex(
+            """\{[\s\S]*?"line"\s*:\s*(\d+)[\s\S]*?"(?:fixedLine|replacement|newLine)"\s*:\s*"((?:\\\\.|[^"\\\\])*)"[\s\S]*?}"""
+        )
+        val matches = regex.findAll(json).toList()
+        if (matches.isEmpty()) {
+            // Backward compatibility: if model returned full FML, accept it instead of dropping the turn.
+            val extracted = FmlUtils.extractFml(rawResponse)
+            if (extracted.contains("map \"") && extracted != fml) {
+                log.info("Patch-only reflexion returned full FML; using full response as fallback")
+                return extracted
+            }
+            log.warn("Patch-only reflexion returned no line fixes; keeping current FML")
+            return fml
         }
 
-        conversationHistory.add(Pair(userMessage, rawResponse))
-        return FmlUtils.extractFml(rawResponse)
+        val lines = fml.lines().toMutableList()
+        val fixes = matches.mapNotNull { m ->
+            val lineNum = m.groupValues[1].toIntOrNull() ?: return@mapNotNull null
+            val fixedLine = unescapeJsonString(m.groupValues[2])
+            lineNum to fixedLine
+        }.sortedByDescending { it.first }
+
+        fixes.forEach { (lineNum, fixedLine) ->
+            if (lineNum in 1..lines.size) {
+                val idx = lineNum - 1
+                val replacementLines = fixedLine.split("\n")
+                lines.removeAt(idx)
+                lines.addAll(idx, replacementLines)
+            }
+        }
+
+        log.info("Patch-only reflexion applied {} line-level fix(es)", fixes.size)
+        return lines.joinToString("\n")
+    }
+
+    private fun extractPatchPayload(rawResponse: String): String {
+        val trimmed = rawResponse.trim()
+        val fenced = Regex("""```(?:json)?\s*([\s\S]*?)\s*```""")
+            .find(trimmed)
+            ?.groupValues?.get(1)
+        if (fenced != null) return fenced.trim()
+
+        val arrayStart = trimmed.indexOf('[')
+        val arrayEnd = trimmed.lastIndexOf(']')
+        if (arrayStart >= 0 && arrayEnd > arrayStart) {
+            return trimmed.substring(arrayStart, arrayEnd + 1)
+        }
+        return trimmed
+    }
+
+    private fun unescapeJsonString(value: String): String {
+        return value
+            .replace("\\\\", "\\")
+            .replace("\\\"", "\"")
+            .replace("\\n", "\n")
+            .replace("\\t", "\t")
+            .replace("\\r", "\r")
+    }
+
+    private fun persistFmlSnapshot(runId: String, cycle: Int, stage: String, fml: String) {
+        runCatching {
+            val dir = repairTraceDir.resolve(runId)
+            Files.createDirectories(dir)
+            val file = dir.resolve("cycle-${cycle.toString().padStart(2, '0')}-$stage.fml")
+            Files.writeString(file, fml)
+        }.onFailure {
+            log.debug("Could not persist FML snapshot: {}", it.message)
+        }
     }
 
     /**
