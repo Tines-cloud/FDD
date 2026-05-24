@@ -93,12 +93,12 @@ interoperability.
 
 **Research Questions:**
 
-| #   | Question                                                                                                                             |
-|-----|--------------------------------------------------------------------------------------------------------------------------------------|
-| RQ1 | How accurately can the system detect profile-level semantic drift between FHIR profiles across all five drift types?                 |
-| RQ2 | Can the system generate FHIR StructureMaps that compile successfully and provide repair logic for detected profile-level drifts?     |
-| RQ3 | Do the generated transformations preserve meaning and support controlled end-to-end data exchange in a test FHIR server environment? |
-| RQ4 | Can the system correctly classify drift types and provide human-understandable explanations?                                         |
+| #   | Question                                                                                                                                                              |
+|-----|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| RQ1 | What level of detection performance does the system achieve when identifying profile-level semantic drift between FHIR profiles across the five drift types?          |
+| RQ2 | What level of syntactic validity and repair coverage does the Trust-but-Verify workflow achieve when generating FHIR StructureMaps for detected profile-level drifts? |
+| RQ3 | How effectively do the generated transformations support controlled end-to-end data exchange and target-profile validation in a test FHIR server environment?         |
+| RQ4 | How effectively does the system classify detected drift items and present human-understandable explanations for profile-level semantic drift?                         |
 
 **Five Drift Categories:** Terminology · Extension · Structural · Cardinality · Version
 
@@ -1016,150 +1016,6 @@ The actual Data Shareability percentage varies per profile pair. FDD now prints 
 > This is structurally expected - jurisdiction-specific extensions on both sides cannot
 > be transferred and are correctly reported as source data loss, not as mapping failures.
 
----
-
-## Project Structure
-
-```
-src/main/kotlin/com/example/fdd/
-├-- FddApplication.kt              # @SpringBootApplication entry point
-├-- api/                            # REST controllers and DTOs
-│   ├-- DriftController.kt         # /api/drift/analyze + /api/drift/repair
-│   ├-- CacheManagementController.kt # /api/cache/* admin endpoints
-│   ├-- GlobalExceptionHandler.kt  # @ControllerAdvice (5 exception types -> HTTP codes)
-│   ├-- ProfileValidationController.kt  # /api/validate/* endpoints
-│   └-- dto/                       # Request/Response data classes
-│       ├-- AnalyzeRepairRequest.kt      # ProfileInput, Request,
-│       ├-- AnalyzeResponse.kt
-│       ├-- RepairResponse.kt
-│       └-- ErrorResponse.kt
-├-- ai/                             # LLM integration layer
-│   ├-- LlmClient.kt               # Interface
-│   ├-- SpringAiLlmClient.kt       # Spring AI ChatModel wrapper (@Retryable)
-│   ├-- PromptTemplateService.kt   # Mustache-based template loading + caching
-│   └-- LlmResponseCache.kt       # File-based SHA-256 keyed LLM response cache
-├-- cli/                            # CLI mode (--spring.profiles.active=cli)
-│   └-- CliRunner.kt               # ApplicationRunner with argument parsing
-├-- config/                         # Spring configuration
-│   ├-- AiConfig.kt                # ChatModel bean creation (6 LLM providers)
-│   ├-- FddProperties.kt          # Type-safe @ConfigurationProperties binding
-│   ├-- FhirConfig.kt             # HAPI FhirContext R4 (@Primary) + R5 (@Qualifier) beans
-│   ├-- MetricsConfig.kt          # Micrometer TimedAspect bean
-│   └-- OpenApiConfig.kt          # SpringDoc OpenAPI / Swagger configuration
-├-- exception/                      # Custom exceptions
-│   └-- Exceptions.kt             # FddException hierarchy (5 exception types)
-├-- fhir/                           # FHIR-specific services
-│   ├-- ProfileLoader.kt          # Interface (canonical/URL/classpath/JSON/file)
-│   ├-- DefaultProfileLoader.kt   # HAPI-FHIR backed implementation + validation downgrading
-│   ├-- ProfileContextBuilder.kt  # Interface - element extraction & normalisation
-│   └-- DefaultProfileContextBuilder.kt
-├-- startup/
-│   └-- StartupTasks.kt           # Output folder cleanup on boot
-├-- model/                          # Domain model
-│   ├-- ProfileContext.kt          # ElementSummary (22 fields), TypeSummary, etc.
-│   ├-- DriftReport.kt            # Drift analysis output aggregate
-│   ├-- DriftItem.kt              # Single drift finding
-│   ├-- DriftType.kt              # Enum: 5 drift categories
-│   ├-- MapGenerationResult.kt    # FML + validity + messages
-│   ├-- CoverageReport.kt         # CoverageReport, CoverageItem, CoverageStatus enum
-│   └-- GoldStandardPair.kt       # Gold-standard annotations for experiments
-├-- output/                         # File-based output persistence
-│   └-- OutputStore.kt             # Timestamped output folders, coverage report builder
-├-- service/                        # Business logic
-│   ├-- DriftAnalyzer.kt          # Interface - hybrid drift analysis
-│   ├-- DefaultDriftAnalyzer.kt   # Rules + LLM merge implementation
-│   ├-- RuleBasedDriftDetector.kt  # Interface - deterministic rules
-│   ├-- DefaultRuleBasedDriftDetector.kt  # 20+ rules across 5 drift types
-│   ├-- MapGenerator.kt           # Interface - LLM-powered FML generation
-│   ├-- DefaultMapGenerator.kt
-│   ├-- CoverageAnalyzer.kt       # Cross-reference drift vs FML (deterministic, no LLM)
-│   ├-- ProfileValidationService.kt # Validate all bundled profiles
-│   ├-- DriftOrchestrationService.kt     # Interface - 4-stage pipeline orchestration
-│   └-- DefaultDriftOrchestrationService.kt
-├-- validation/                     # Trust-but-Verify
-│   ├-- MapValidator.kt           # Interface - FML compilation + reflexion
-│   ├-- DefaultMapValidator.kt    # HAPI StructureMapUtilities + autoFixRuleNames + reflexion
-│   └-- DriftProfileValidator.kt  # Pre-flight profile compatibility check
-└-- util/
-    ├-- FmlUtils.kt               # Code-fence stripping utility
-    └-- FhirValidationUtils.kt    # Validation downgrading patterns
-
-src/main/resources/
-├-- application.yaml               # Main config (6 LLM providers, cache, actuator)
-├-- application-cli.yaml           # CLI profile (disables web server)
-├-- application-experiment.yaml    # Experiment profile (temp=0.1, verbose logging)
-├-- application-test.yaml          # Test profile (temp=0.0, dummy keys)
-├-- ai/                            # LLM prompt templates
-│   ├-- drift-analysis-system.txt
-│   ├-- drift-analysis-user.txt
-│   ├-- map-generation-system.txt
-│   ├-- map-generation-user.txt
-│   ├-- reflexion-system.txt
-│   └-- reflexion-user.txt
-├-- logback-spring.xml             # Console + rolling file appender config
-├-- standard-profiles/             # Standard FHIR profiles
-│   ├-- r4/                        # R4 base profiles (snapshot)
-│   ├-- r5/                        # R5 base profiles (snapshot)
-│   ├-- us-core/                   # US Core profiles
-│   └-- au-core/                   # AU Core profiles
-├-- custom-profiles/               # Custom FHIR profiles
-│   ├-- tk-soft/                   # TK-Soft profiles (differential)
-│   ├-- iit-proj/                  # IIT-Proj profiles (differential)
-│   └-- hemas/                     # Hemas profiles (differential)
-└-- fhir/profiles/                 # Optional: additional bundled profiles
-
-src/test/resources/
-├-- application-test.yaml           # Test profile config (dummy keys, no LLM)
-├-- gold-standard/                  # Gold-standard drift pair annotations
-│   ├-- r4-vs-us-core-patient.json
-│   ├-- ... (R4 vs US-Core, R4 vs R5, HEMAS, IIT-Proj, TK-Soft categories)
-│   └-- tk-soft-practitioner-vs-iit-proj-practitioner.json
-└-- fhir/instances/                 # synthetic source instances for Experiment 3
-    ├-- patient-r4-base.json        # R4 base Patient
-    ├-- patient-au-core.json        # AU Core Patient (IHI + Medicare identifiers)
-    ├-- condition-r4-base.json      # R4 base Condition (Type 2 diabetes)
-    ├-- observation-r4-base.json    # R4 base Observation (blood glucose lab)
-    ├-- encounter-r4-base.json      # R4 base Encounter (ambulatory consultation)
-    ├-- allergyintolerance-r4-base.json  # R4 base AllergyIntolerance (penicillin)
-    ├-- immunization-r4-base.json   # R4 base Immunization (COVID-19 mRNA)
-    ├-- medicationrequest-r4-base.json   # R4 base MedicationRequest (Metformin)
-    ├-- procedure-r4-base.json      # R4 base Procedure (appendectomy)
-    ├-- diagnosticreport-r4-base.json    # R4 base DiagnosticReport (CBC panel)
-    ├-- organization-r4-base.json   # R4 base Organization (hospital with NPI)
-    ├-- practitioner-r4-base.json   # R4 base Practitioner (physician with NPI)
-    ├-- location-r4-base.json       # R4 base Location (outpatient clinic)
-    ├-- careplan-r4-base.json       # R4 base CarePlan (diabetes management)
-    └-- medication-r4-base.json     # R4 base Medication (Metformin 500mg)
-
-src/test/kotlin/com/example/fdd/
-├-- FddApplicationTests.kt         # Spring context smoke test
-├-- ai/                             # AI layer tests
-│   ├-- SpringAiLlmClientTest.kt  # Retry, caching, error handling
-│   ├-- PromptTemplateServiceTest.kt  # Template loading, substitution, caching
-│   └-- LlmResponseCacheTest.kt   # File cache, TTL, disabled mode
-├-- api/                            # Controller tests
-│   ├-- DriftControllerTest.kt    # WebMvcTest for /api/drift/*
-│   ├-- CacheManagementControllerTest.kt  # WebMvcTest for /api/cache/*
-│   └-- GlobalExceptionHandlerTest.kt    # Exception -> HTTP status mapping
-├-- fhir/                           # FHIR layer tests
-│   ├-- ProfileLoaderTest.kt      # Canonical, JSON, URL resolution
-│   └-- ProfileContextBuilderTest.kt  # Element extraction, drift-focused filtering
-├-- service/                        # Service layer tests
-│   ├-- DriftAnalyzerTest.kt      # LLM response parsing, markdown stripping
-│   ├-- RuleBasedDriftDetectorTest.kt  # 25+ tests across all 5 drift types
-│   ├-- DriftOrchestrationServiceTest.kt  # Pipeline wiring, error propagation
-│   └-- MapGeneratorTest.kt       # FML extraction, prompt composition
-├-- cli/
-│   └-- CliRunnerTest.kt          # CLI argument parsing, mode dispatch, file I/O
-├-- util/
-│   └-- FmlUtilsTest.kt           # Code-fence stripping (parameterised)
-├-- validation/
-│   └-- MapValidatorTest.kt       # Trust-but-Verify reflexion loop
-└-- experiment/                     # Integration experiments (API key + Docker)
-    ├-- GoldStandardLoader.kt      # Loader + P/R/F1 metrics
-    ├-- Experiment1DriftDetectionTest.kt
-    ├-- Experiment2SyntacticValidityTest.kt
-    └-- Experiment3SemanticCorrectnessTest.kt
 ```
 
 ---
@@ -1170,20 +1026,13 @@ MIT License
 
 Copyright (c) 2026 Tines Kumar
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
