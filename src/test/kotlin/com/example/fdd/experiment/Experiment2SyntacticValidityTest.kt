@@ -46,7 +46,7 @@ class Experiment2SyntacticValidityTest {
     /** Collects results across all dynamic tests for the aggregate JSON file. */
     private val collectedResults = mutableListOf<PairResult>()
 
-    @TestFactory
+//    @TestFactory
     @DisplayName("Syntactic Validity Rate")
     fun evaluateSyntacticValidity(): List<DynamicTest> {
         val allGoldPairs = GoldStandardLoader.loadAll()

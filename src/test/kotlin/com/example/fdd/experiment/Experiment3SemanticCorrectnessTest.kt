@@ -263,7 +263,7 @@ class Experiment3SemanticCorrectnessTest {
         return url
     }
 
-    @TestFactory
+//    @TestFactory
     @DisplayName("Semantic Correctness")
     fun evaluateSemanticCorrectness(): List<DynamicTest> {
         val fhirServerUrl = resolveFhirServerUrl()

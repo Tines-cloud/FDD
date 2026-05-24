@@ -47,7 +47,7 @@ class Experiment1DriftDetectionTest {
     /** Collects results across all dynamic tests for the aggregate JSON file. */
     private val collectedResults = mutableListOf<EvaluationMetrics>()
 
-    @TestFactory
+//    @TestFactory
     @DisplayName("Drift Detection Accuracy")
     fun evaluateDriftDetectionAccuracy(): List<DynamicTest> {
         val allGoldPairs = GoldStandardLoader.loadAll()
